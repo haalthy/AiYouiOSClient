@@ -9,7 +9,9 @@
 import UIKit
 
 class TagFooterTableViewCell: UITableViewCell {
-
+    
+    @IBOutlet weak var tagsSelect: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

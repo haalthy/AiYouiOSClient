@@ -10,6 +10,25 @@ import UIKit
 
 class UserListTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var usernameDisplay: UILabel!
+    @IBOutlet weak var userProfileDisplay: UILabel!
+    
+    @IBOutlet weak var userFollowers: UILabel!
+    
+    @IBAction func addFollowing(sender: AnyObject) {
+        var keychainAccess = KeychainAccess();
+        var username = keychainAccess.getPasscode("haalthyUsernameIdentifier")
+        var password = keychainAccess.getPasscode("haalthyPasswordIdentifier")
+        if((username != nil) && (password != nil)){
+            print(keychainAccess.getPasscode("haalthyIdentifier")!)
+        }else{
+            println("show sign up")
+ //           self.performSegueWithIdentifier("signup", sender: nil)
+        }
+    }
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

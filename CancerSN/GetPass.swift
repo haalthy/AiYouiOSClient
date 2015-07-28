@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+class GetPass{
+    <#properties and methods#>
+}

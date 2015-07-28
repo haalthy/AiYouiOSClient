@@ -9,11 +9,13 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
+        
+  //      self.performSegueWithIdentifier("showTagsSegue", sender: nil);
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,5 +33,25 @@ class HomeViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated);
+//        var keychainAccess = KeychainAccess();
+        
+//        keychainAccess.setPasscode("haalthyIdentifier", passcode:"test");
+        
+        var keychainAccess = KeychainAccess()
+        var username = keychainAccess.getPasscode(usernameKeyChain)
+        var password = keychainAccess.getPasscode(passwordKeyChain)
+        println(username)
+        println(password)
+        
+        if((username != nil) && (password != nil)){
+            //show feeds
+//            keychainAccess.deletePasscode(usernameKeyChain)
+//            keychainAccess.deletePasscode(passwordKeyChain)
+//            self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
+        }else{
+            self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
+        }
+    }
 }

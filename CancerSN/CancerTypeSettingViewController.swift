@@ -8,12 +8,28 @@
 
 import UIKit
 
-class CancerTypeSettingViewController: UIViewController {
+class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate{
 
+    @IBOutlet weak var cancerTypePickerView: UIPickerView!
+    var pickerDataSource = [String]()
+    
+    @IBAction func selectCancerType(sender: UIButton) {
+        let profileSet = NSUserDefaults.standardUserDefaults()
+        var cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
+        var selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
+        profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
+        if(cancerType == "肺部"){
+            self.performSegueWithIdentifier("showMoreForLung", sender: nil)
+        }else{
+            self.performSegueWithIdentifier("signup", sender: nil)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        pickerDataSource = cancerTypeMapping.allKeys as! [String]
+        cancerTypePickerView.delegate = self
+        cancerTypePickerView.dataSource = self
+        cancerTypePickerView.selectRow(3, inComponent: 0, animated: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,15 +37,16 @@ class CancerTypeSettingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //MARK: - Delegates and data sources
+    //MARK: Data Sources
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
     }
-    */
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerDataSource.count
+    }
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+        return pickerDataSource[row]
+    }
 
 }

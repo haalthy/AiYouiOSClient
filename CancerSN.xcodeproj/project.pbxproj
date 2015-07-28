@@ -7,12 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */; };
+		2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264A51B607402001E52E7 /* Mario-icon.png */; };
+		2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */; };
+		2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */; };
+		2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264AD1B615D2A001E52E7 /* Main.storyboard */; };
+		2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */; };
+		2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */; };
+		2AA264BD1B631525001E52E7 /* CancerTypeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */; };
+		2AA264BF1B63F79B001E52E7 /* HaalthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */; };
+		2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */; };
+		2AA264C31B6557F4001E52E7 /* StageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C21B6557F4001E52E7 /* StageViewController.swift */; };
+		2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */; };
+		2AA264C71B659665001E52E7 /* MetastasisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C61B659665001E52E7 /* MetastasisViewController.swift */; };
+		2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C81B65B962001E52E7 /* SignupViewController.swift */; };
+		2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264D01B66AE71001E52E7 /* Mario.jpg */; };
+		2AA264D31B675180001E52E7 /* UserSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */; };
 		2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */; };
-		2AC59C161B5D77C600C4FE36 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C151B5D77C600C4FE36 /* ViewController.swift */; };
-		2AC59C191B5D77C600C4FE36 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C171B5D77C600C4FE36 /* Main.storyboard */; };
 		2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */; };
 		2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */; };
 		2AC59C2A1B5D77C700C4FE36 /* CancerSNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C291B5D77C700C4FE36 /* CancerSNTests.swift */; };
+		2AC59C361B5D798200C4FE36 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C351B5D798200C4FE36 /* HomeViewController.swift */; };
+		2AC59C381B5DB14000C4FE36 /* TagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C371B5DB14000C4FE36 /* TagViewController.swift */; };
+		2AC59C3A1B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C391B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift */; };
+		2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */; };
+		2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */; };
+		2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,16 +46,36 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
+		2AA264A51B607402001E52E7 /* Mario-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mario-icon.png"; sourceTree = "<group>"; };
+		2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListHeaderTableViewCell.swift; path = ../UserListHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainAccess.swift; path = ../KeychainAccess.swift; sourceTree = "<group>"; };
+		2AA264AE1B615D2A001E52E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = CancerSN/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GenderSettingViewController.swift; path = ../GenderSettingViewController.swift; sourceTree = "<group>"; };
+		2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgeSettingViewController.swift; sourceTree = "<group>"; };
+		2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancerTypeSettingViewController.swift; sourceTree = "<group>"; };
+		2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HaalthyConfigure.swift; sourceTree = "<group>"; };
+		2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathologicalSetingViewController.swift; sourceTree = "<group>"; };
+		2AA264C21B6557F4001E52E7 /* StageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StageViewController.swift; sourceTree = "<group>"; };
+		2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmokingSettingViewController.swift; sourceTree = "<group>"; };
+		2AA264C61B659665001E52E7 /* MetastasisViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetastasisViewController.swift; sourceTree = "<group>"; };
+		2AA264C81B65B962001E52E7 /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		2AA264D01B66AE71001E52E7 /* Mario.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Mario.jpg; sourceTree = "<group>"; };
+		2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchTableViewCell.swift; sourceTree = "<group>"; };
 		2AC59C0E1B5D77C600C4FE36 /* CancerSN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CancerSN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C121B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2AC59C151B5D77C600C4FE36 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		2AC59C181B5D77C600C4FE36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2AC59C1D1B5D77C600C4FE36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		2AC59C231B5D77C600C4FE36 /* CancerSNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CancerSNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C281B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C291B5D77C700C4FE36 /* CancerSNTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancerSNTests.swift; sourceTree = "<group>"; };
+		2AC59C351B5D798200C4FE36 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		2AC59C371B5DB14000C4FE36 /* TagViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
+		2AC59C391B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagFooterTableViewCell.swift; sourceTree = "<group>"; };
+		2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListTableViewCell.swift; sourceTree = "<group>"; };
+		2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListTableViewController.swift; path = ../UserListTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +96,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2AA264B61B61BFE1001E52E7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2AC59C371B5DB14000C4FE36 /* TagViewController.swift */,
+				2AC59C351B5D798200C4FE36 /* HomeViewController.swift */,
+				2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */,
+				2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */,
+				2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */,
+				2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */,
+				2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */,
+				2AA264C21B6557F4001E52E7 /* StageViewController.swift */,
+				2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */,
+				2AA264C61B659665001E52E7 /* MetastasisViewController.swift */,
+				2AA264C81B65B962001E52E7 /* SignupViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		2AA264B81B61C019001E52E7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2AC59C391B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift */,
+				2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */,
+				2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */,
+				2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */,
+				2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */,
+				2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		2AA264B91B61C065001E52E7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */,
+				2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		2AC59C051B5D77C600C4FE36 = {
 			isa = PBXGroup;
 			children = (
@@ -77,11 +157,11 @@
 		2AC59C101B5D77C600C4FE36 /* CancerSN */ = {
 			isa = PBXGroup;
 			children = (
+				2AA264B91B61C065001E52E7 /* Model */,
+				2AA264B81B61C019001E52E7 /* View */,
+				2AA264B61B61BFE1001E52E7 /* Controller */,
+				2AA264AD1B615D2A001E52E7 /* Main.storyboard */,
 				2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */,
-				2AC59C151B5D77C600C4FE36 /* ViewController.swift */,
-				2AC59C171B5D77C600C4FE36 /* Main.storyboard */,
-				2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */,
-				2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */,
 				2AC59C111B5D77C600C4FE36 /* Supporting Files */,
 			);
 			path = CancerSN;
@@ -90,6 +170,10 @@
 		2AC59C111B5D77C600C4FE36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2AA264D01B66AE71001E52E7 /* Mario.jpg */,
+				2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */,
+				2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */,
+				2AA264A51B607402001E52E7 /* Mario-icon.png */,
 				2AC59C121B5D77C600C4FE36 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -192,9 +276,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AC59C191B5D77C600C4FE36 /* Main.storyboard in Resources */,
 				2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */,
 				2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */,
+				2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */,
+				2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */,
+				2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,8 +298,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AC59C161B5D77C600C4FE36 /* ViewController.swift in Sources */,
+				2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */,
+				2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */,
+				2AA264BD1B631525001E52E7 /* CancerTypeSettingViewController.swift in Sources */,
+				2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */,
+				2AA264C71B659665001E52E7 /* MetastasisViewController.swift in Sources */,
+				2AC59C381B5DB14000C4FE36 /* TagViewController.swift in Sources */,
+				2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */,
+				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
+				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
+				2AA264BF1B63F79B001E52E7 /* HaalthyConfigure.swift in Sources */,
+				2AA264C31B6557F4001E52E7 /* StageViewController.swift in Sources */,
+				2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */,
+				2AA264D31B675180001E52E7 /* UserSearchTableViewCell.swift in Sources */,
+				2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */,
+				2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */,
 				2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */,
+				2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */,
+				2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */,
+				2AC59C361B5D798200C4FE36 /* HomeViewController.swift in Sources */,
+				2AC59C3A1B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,12 +340,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		2AC59C171B5D77C600C4FE36 /* Main.storyboard */ = {
+		2AA264AD1B615D2A001E52E7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				2AC59C181B5D77C600C4FE36 /* Base */,
+				2AA264AE1B615D2A001E52E7 /* Base */,
 			);
 			name = Main.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */ = {
@@ -411,6 +516,7 @@
 				2AC59C2F1B5D77C700C4FE36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2AC59C301B5D77C700C4FE36 /* Build configuration list for PBXNativeTarget "CancerSNTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +525,7 @@
 				2AC59C321B5D77C700C4FE36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

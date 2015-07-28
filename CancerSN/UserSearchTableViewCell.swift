@@ -1,16 +1,15 @@
 //
-//  TagListTableViewCell.swift
+//  UserSearchTableViewCell.swift
 //  CancerSN
 //
-//  Created by lily on 7/20/15.
+//  Created by lily on 7/27/15.
 //  Copyright (c) 2015 lily. All rights reserved.
 //
 
 import UIKit
 
-class TagListTableViewCell: UITableViewCell {
+class UserSearchTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var tagList: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
