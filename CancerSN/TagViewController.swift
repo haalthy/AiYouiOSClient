@@ -18,11 +18,10 @@ class TagViewController: UITableViewController {
     var tags: NSArray = []
     
     var selectedTags : NSMutableArray = []
+    
+    var updateTagsResponseData:NSMutableData = NSMutableData()
 
-    @IBAction func tagsSubmit(sender: AnyObject) {
-        self.delegate?.updateTagList(self.selectedTags)
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
+    var getTokenResponseData:NSMutableData = NSMutableData()
     
     var data :NSMutableData? = nil
     @IBOutlet var tagList: UITableView!
@@ -41,6 +40,102 @@ class TagViewController: UITableViewController {
 //            viewController.tagList = selectedTags
 //        }
 //    }
+    
+    func sendUpdateTagsHttpRequest(){
+        updateTagsResponseData = NSMutableData()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        var url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        var tagListDic = NSMutableDictionary()
+        tagListDic.setValue(selectedTags, forKey: "tags")
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(tagListDic, options: NSJSONWritingOptions.allZeros, error: nil)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        println(NSString(data: (request.HTTPBody)!, encoding: NSUTF8StringEncoding)!)
+        println(request.HTTPBody)
+        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
+        connection.start()
+    }
+    
+    @IBAction func tagsSubmit(sender: AnyObject) {
+        let favtags = NSUserDefaults.standardUserDefaults()
+        favtags.setObject(self.selectedTags, forKey: favTagsNSUserData)
+        self.delegate?.updateTagList(self.selectedTags)
+        
+        //update user fav tags on server
+        let keychainAccess = KeychainAccess()
+        let username = keychainAccess.getPasscode(usernameKeyChain)
+        let password = keychainAccess.getPasscode(passwordKeyChain)
+        
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if((username != nil) && (password != nil)){
+            if(accessToken != nil){
+//                updateTagsResponseData = NSMutableData()
+//                var url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
+//                var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+//                request.HTTPMethod = "POST"
+//                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(selectedTags, options: NSJSONWritingOptions.allZeros, error: nil)
+//                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//                request.addValue("application/json", forHTTPHeaderField: "Accept")
+//                var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
+//                connection.start()
+                sendUpdateTagsHttpRequest()
+            }
+        }
+    }
+    
+    func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
+        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
+        if( connectionURLStr.containsString(updateFavTagsURL)){
+            updateTagsResponseData.appendData(data)
+        }else if(connectionURLStr.containsString(getTagListURL)){
+            self.data!.appendData(data)
+        }else if(connectionURLStr.containsString(getOauthTokenURL)){
+            getTokenResponseData.appendData(data)
+        }
+    }
+    
+    func connectionDidFinishLoading(connection: NSURLConnection!)
+    {
+        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
+        if( connectionURLStr.containsString(updateFavTagsURL)){
+            let str: NSString = NSString(data: updateTagsResponseData, encoding: NSUTF8StringEncoding)!
+            println(str)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(updateTagsResponseData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if(jsonResult is NSDictionary){
+                if((jsonResult?.objectForKey("error") as! NSString).isEqualToString("invalid_token") ){
+                    let keychainAccess = KeychainAccess()
+                    let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
+                    let passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
+                    var urlPath: String = getOauthTokenURL + "username=" + usernameStr + "&password=" + passwordStr
+                    urlPath = urlPath.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+                    getTokenResponseData = NSMutableData()
+                    var url: NSURL = NSURL(string: urlPath)!
+                    var request: NSURLRequest = NSURLRequest(URL: url)
+                    var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
+                    connection.start()
+                }
+            }
+
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else if(connectionURLStr.containsString(getTagListURL)){
+            var error: NSErrorPointer=nil
+            var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSArray
+            self.tags = jsonResult
+            self.tableView.reloadData()
+        }else if(connectionURLStr.containsString(getOauthTokenURL)){
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTokenResponseData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            var accessToken  = jsonResult?.objectForKey("access_token")
+            var refreshToken = jsonResult?.objectForKey("refresh_token")
+            if(accessToken != nil && refreshToken != nil){
+                let profileSet = NSUserDefaults.standardUserDefaults()
+                profileSet.setObject(accessToken, forKey: accessNSUserData)
+                profileSet.setObject(refreshToken, forKey: refreshNSUserData)
+                sendUpdateTagsHttpRequest()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,34 +210,20 @@ class TagViewController: UITableViewController {
             // Configure the cell...
         else if(indexPath.section == 1){
             let cell = tableView.dequeueReusableCellWithIdentifier("list", forIndexPath: indexPath) as! TagListTableViewCell
-//            cell.tagList.text = tags[indexPath.row]
-            
             var tag: NSDictionary = tags[indexPath.row] as! NSDictionary
             cell.tagList.text = tag["name"] as? String
-//            tagBackgroundColor = cell.tagList!.backgroundColor!
-            cell.tagList.backgroundColor = tagLabelColor
+            if(selectedTags.containsObject(tags[indexPath.row])){
+                cell.tagList.backgroundColor = tagSelectedLabelColor
+            }else{
+                cell.tagList.backgroundColor = tagLabelColor
+            }
             return cell
-            
         }
         else{
             let cell = tableView.dequeueReusableCellWithIdentifier("footer", forIndexPath: indexPath) as! TagFooterTableViewCell
             cell.tagsSelect.titleLabel?.text = "确认"
             return cell
         }
-
-    }
-    func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
-        self.data!.appendData(data)
-    }
-
-    func connectionDidFinishLoading(connection: NSURLConnection!)
-    {
-        var error: NSErrorPointer=nil
-
-        var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: error) as! NSArray
-        
-        self.tags = jsonResult
-        self.tableView.reloadData()
 
     }
 
@@ -153,9 +234,9 @@ class TagViewController: UITableViewController {
             var selectedCell:TagListTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagListTableViewCell
             if(selectedTags.containsObject(tags[indexPath.row])==false){
                 selectedCell.tagList.backgroundColor = tagSelectedLabelColor
-                if(selectedTags.containsObject(tags[indexPath.row])==false){
-                    selectedTags.addObject(tags[indexPath.row])
-                }
+//                if(selectedTags.containsObject(tags[indexPath.row])==false){
+                selectedTags.addObject(tags[indexPath.row])
+//                }
             }else{
                 selectedCell.tagList.backgroundColor = tagLabelColor
                 selectedTags.removeObject(tags[indexPath.row])

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */; };
+		2A2435FE1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */; };
+		2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */; };
+		2A2436021B6F3D5D009F7F71 /* PostContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2436011B6F3D5D009F7F71 /* PostContentTableViewCell.swift */; };
+		2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */; };
+		2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */; };
 		2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */; };
 		2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264A51B607402001E52E7 /* Mario-icon.png */; };
 		2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */; };
@@ -23,6 +29,13 @@
 		2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C81B65B962001E52E7 /* SignupViewController.swift */; };
 		2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264D01B66AE71001E52E7 /* Mario.jpg */; };
 		2AA264D31B675180001E52E7 /* UserSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */; };
+		2AA264D51B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264D41B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift */; };
+		2AA264D71B67F7A4001E52E7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264D61B67F7A4001E52E7 /* LoginViewController.swift */; };
+		2AA264DB1B6836AB001E52E7 /* FeedsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264DA1B6836AB001E52E7 /* FeedsTableViewController.swift */; };
+		2AA2650E1B684D25001E52E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AA2650D1B684D25001E52E7 /* CoreData.framework */; };
+		2AA265111B684DA8001E52E7 /* CancerSN.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2650F1B684DA8001E52E7 /* CancerSN.xcdatamodeld */; };
+		2AA265151B694CDB001E52E7 /* GetAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA265141B694CDB001E52E7 /* GetAccessToken.swift */; };
+		2AA265171B69A7C7001E52E7 /* BoardcastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */; };
 		2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */; };
 		2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */; };
 		2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */; };
@@ -46,6 +59,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastListTableViewCell.swift; sourceTree = "<group>"; };
+		2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowPostDetailTableViewController.swift; sourceTree = "<group>"; };
+		2A2436011B6F3D5D009F7F71 /* PostContentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostContentTableViewCell.swift; path = ../PostContentTableViewCell.swift; sourceTree = "<group>"; };
+		2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewCell.swift; sourceTree = "<group>"; };
+		2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCommentViewController.swift; sourceTree = "<group>"; };
 		2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
 		2AA264A51B607402001E52E7 /* Mario-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mario-icon.png"; sourceTree = "<group>"; };
 		2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListHeaderTableViewCell.swift; path = ../UserListHeaderTableViewCell.swift; sourceTree = "<group>"; };
@@ -62,6 +81,13 @@
 		2AA264C81B65B962001E52E7 /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		2AA264D01B66AE71001E52E7 /* Mario.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Mario.jpg; sourceTree = "<group>"; };
 		2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchTableViewCell.swift; sourceTree = "<group>"; };
+		2AA264D41B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListHeaderAfterLoginTableViewCell.swift; sourceTree = "<group>"; };
+		2AA264D61B67F7A4001E52E7 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		2AA264DA1B6836AB001E52E7 /* FeedsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedsTableViewController.swift; path = ../FeedsTableViewController.swift; sourceTree = "<group>"; };
+		2AA2650D1B684D25001E52E7 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2AA265101B684DA8001E52E7 /* CancerSN.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CancerSN.xcdatamodel; sourceTree = "<group>"; };
+		2AA265141B694CDB001E52E7 /* GetAccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccessToken.swift; sourceTree = "<group>"; };
+		2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardcastViewController.swift; sourceTree = "<group>"; };
 		2AC59C0E1B5D77C600C4FE36 /* CancerSN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CancerSN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C121B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AA2650E1B684D25001E52E7 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +126,7 @@
 		2AA264B61B61BFE1001E52E7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2AA264DA1B6836AB001E52E7 /* FeedsTableViewController.swift */,
 				2AC59C371B5DB14000C4FE36 /* TagViewController.swift */,
 				2AC59C351B5D798200C4FE36 /* HomeViewController.swift */,
 				2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */,
@@ -110,6 +138,10 @@
 				2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */,
 				2AA264C61B659665001E52E7 /* MetastasisViewController.swift */,
 				2AA264C81B65B962001E52E7 /* SignupViewController.swift */,
+				2AA264D61B67F7A4001E52E7 /* LoginViewController.swift */,
+				2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */,
+				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
+				2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -117,12 +149,17 @@
 		2AA264B81B61C019001E52E7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2A2436011B6F3D5D009F7F71 /* PostContentTableViewCell.swift */,
 				2AC59C391B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift */,
 				2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */,
 				2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */,
 				2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */,
 				2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */,
 				2AA264D21B675180001E52E7 /* UserSearchTableViewCell.swift */,
+				2AA264D41B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift */,
+				2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */,
+				2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */,
+				2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -132,6 +169,7 @@
 			children = (
 				2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */,
 				2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */,
+				2AA265141B694CDB001E52E7 /* GetAccessToken.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -139,6 +177,8 @@
 		2AC59C051B5D77C600C4FE36 = {
 			isa = PBXGroup;
 			children = (
+				2AA2650F1B684DA8001E52E7 /* CancerSN.xcdatamodeld */,
+				2AA2650D1B684D25001E52E7 /* CoreData.framework */,
 				2AC59C101B5D77C600C4FE36 /* CancerSN */,
 				2AC59C261B5D77C600C4FE36 /* CancerSNTests */,
 				2AC59C0F1B5D77C600C4FE36 /* Products */,
@@ -301,22 +341,34 @@
 				2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */,
 				2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */,
 				2AA264BD1B631525001E52E7 /* CancerTypeSettingViewController.swift in Sources */,
+				2AA264D51B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift in Sources */,
 				2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */,
 				2AA264C71B659665001E52E7 /* MetastasisViewController.swift in Sources */,
+				2AA265171B69A7C7001E52E7 /* BoardcastViewController.swift in Sources */,
 				2AC59C381B5DB14000C4FE36 /* TagViewController.swift in Sources */,
 				2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */,
 				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
 				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
+				2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */,
+				2AA265111B684DA8001E52E7 /* CancerSN.xcdatamodeld in Sources */,
+				2AA264DB1B6836AB001E52E7 /* FeedsTableViewController.swift in Sources */,
+				2AA264D71B67F7A4001E52E7 /* LoginViewController.swift in Sources */,
+				2A2435FE1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift in Sources */,
 				2AA264BF1B63F79B001E52E7 /* HaalthyConfigure.swift in Sources */,
 				2AA264C31B6557F4001E52E7 /* StageViewController.swift in Sources */,
 				2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */,
 				2AA264D31B675180001E52E7 /* UserSearchTableViewCell.swift in Sources */,
 				2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */,
+				2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */,
 				2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */,
+				2AA265151B694CDB001E52E7 /* GetAccessToken.swift in Sources */,
+				2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */,
 				2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */,
 				2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */,
+				2A2436021B6F3D5D009F7F71 /* PostContentTableViewCell.swift in Sources */,
 				2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */,
 				2AC59C361B5D798200C4FE36 /* HomeViewController.swift in Sources */,
+				2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */,
 				2AC59C3A1B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,6 +580,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2AA2650F1B684DA8001E52E7 /* CancerSN.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2AA265101B684DA8001E52E7 /* CancerSN.xcdatamodel */,
+			);
+			currentVersion = 2AA265101B684DA8001E52E7 /* CancerSN.xcdatamodel */;
+			path = CancerSN.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2AC59C061B5D77C600C4FE36 /* Project object */;
 }

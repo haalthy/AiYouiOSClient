@@ -7,14 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
-class UserListTableViewController: UITableViewController {
+class UserListTableViewController: UITableViewController, UserListDelegate {
 
     var tagList: NSArray = []
     var userList : NSArray = []
-    var data :NSMutableData? = nil
+    var getSuggestUserData :NSMutableData? = nil
     var username : NSString = ""
     var password: NSString = ""
+    var addFollowingResponseData : NSMutableData? = nil
+    
+    @IBAction func cancelUserSearch(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,9 +28,6 @@ class UserListTableViewController: UITableViewController {
         let favtags = NSUserDefaults.standardUserDefaults()
         if((favtags.objectForKey(favTagsNSUserData)) != nil){
             tagList = favtags.objectForKey(favTagsNSUserData) as! NSArray
-        }
-        if(tagList.count == 0){
-            self.performSegueWithIdentifier("modalsegue", sender: nil)
         }
     
         // Uncomment the following line to preserve selection between presentations
@@ -38,7 +41,9 @@ class UserListTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        if(tagList.count == 0){
+            self.performSegueWithIdentifier("modalsegue", sender: nil)
+        }
         var keychainAccess = KeychainAccess()
         var username = keychainAccess.getPasscode(usernameKeyChain)
         var password = keychainAccess.getPasscode(passwordKeyChain)
@@ -55,7 +60,7 @@ class UserListTableViewController: UITableViewController {
 //        self.tabBarController?.tabBar.hidden = false
         self.navigationController?.navigationBar.hidden = true
         let urlPath: String = getSuggestUserByTagsURL
-        data = NSMutableData()
+        getSuggestUserData = NSMutableData()
         var url: NSURL = NSURL(string: urlPath)!
         var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
@@ -84,17 +89,36 @@ class UserListTableViewController: UITableViewController {
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
-        self.data!.appendData(data)
+        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
+        if( connectionURLStr.containsString(getSuggestUserByTagsURL)){
+            getSuggestUserData!.appendData(data)
+        }
     }
     
     func connectionDidFinishLoading(connection: NSURLConnection!)
     {
         var error: NSErrorPointer=nil
-        var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: error) as! NSArray
-        
-        self.userList = jsonResult
-        self.tableView.reloadData()
-        
+        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
+        if( connectionURLStr.containsString(getSuggestUserByTagsURL)){
+            var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(getSuggestUserData!, options: NSJSONReadingOptions.MutableContainers, error: error) as! NSArray
+            self.userList = jsonResult
+            //get current Following User
+//            var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+//            var context:NSManagedObjectContext = appDel.managedObjectContext!
+//            var followingUsersRequest = NSFetchRequest(entityName: "Following")
+//            followingUsersRequest.returnsObjectsAsFaults = false
+//            var followingUsers:NSArray = context.executeFetchRequest(followingUsersRequest, error: nil)!
+//            if(followingUsers.count>0){
+//                for (var followingUser in followingUsers){
+//                    for(var index = 0; index<userList.count; index++){
+//                        if(userList[index]["username"] == followingUser["username"]){
+//                        }
+//                    }
+//                }
+//            }
+            
+            self.tableView.reloadData()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -107,28 +131,41 @@ class UserListTableViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
-        return 3
+        return 4
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        if(section == 0){
-            return 1
-        }else if(section == 1){
-            return 1
+//        if(section == 0){
+//            return 1
+//        }else if(section == 1){
+//            return 1
+//        }
+//        else if(section == 2){
+//            return userList.count
+//        }else{
+//            return 0
+//        }
+        var numberOfRowsInSection:Int = 0
+        switch(section){
+        case 0,1,2:
+            numberOfRowsInSection = 1
+            break
+        case 3:
+            numberOfRowsInSection = userList.count
+            break
+        default:
+            numberOfRowsInSection = 0
+            break
         }
-        else if(section == 2){
-            return userList.count
-        }else{
-            return 0
-        }
+        return numberOfRowsInSection
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        if(indexPath.section == 2){
+        if(indexPath.section == 3){
             let cell = tableView.dequeueReusableCellWithIdentifier("userListCell", forIndexPath: indexPath) as! UserListTableViewCell
             
             let dataString = userList[indexPath.row]["image"] as! String
@@ -155,12 +192,19 @@ class UserListTableViewController: UITableViewController {
             cell.userProfileDisplay.text = userProfileStr
             
             cell.userFollowers.text = (userList[indexPath.row]["followCount"] as! NSNumber).stringValue + "个关注者"
+            cell.delegate = self
             return cell
         }else if(indexPath.section == 0){
             let cell = tableView.dequeueReusableCellWithIdentifier("userListHeaderCell", forIndexPath: indexPath) as! UserListHeaderTableViewCell
             if(username != "" && password != ""){
                 cell.hidden = true
             }
+            return cell
+        }else if(indexPath.section == 1){
+            let cell = tableView.dequeueReusableCellWithIdentifier("userListHeaderAfterLoginCell", forIndexPath: indexPath) as! UserListHeaderAfterLoginTableViewCell
+                if(username == "" || password == ""){
+                    cell.hidden = true
+                }
             return cell
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier("userSearchCell", forIndexPath: indexPath) as! UserSearchTableViewCell
@@ -171,18 +215,23 @@ class UserListTableViewController: UITableViewController {
     override func tableView(_tableView: UITableView,
         heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
             var headerRowHeight:CGFloat
+            var headerAfterLoginRowHeight:CGFloat
             if(username != "" && password != ""){
                 headerRowHeight = 0
+                headerAfterLoginRowHeight = 44
             }else{
                 headerRowHeight = 44
+                headerAfterLoginRowHeight = 0
             }
             var rowHeight: CGFloat
             switch indexPath.section{
             case 0: rowHeight = headerRowHeight
                 break
-            case 1: rowHeight = 44
+            case 1: rowHeight = headerAfterLoginRowHeight
                 break
-            case 2: rowHeight = 95
+            case 2: rowHeight = 44
+                break
+            case 3: rowHeight = 95
                 break
             default:rowHeight = 0
                 break
@@ -195,13 +244,14 @@ class UserListTableViewController: UITableViewController {
             (segue.destinationViewController as! TagViewController).delegate = self
         }
     }
+    func performLoginSegue() {
+        self.performSegueWithIdentifier("loginSegue", sender: nil)
+    }
 }
 
 extension UserListTableViewController: TagVCDelegate {
     func updateTagList(data: NSArray) {
         self.tagList = data
-        
-        let favtags = NSUserDefaults.standardUserDefaults()
-        favtags.setObject(tagList, forKey: favTagsNSUserData)
+
     }
 }

@@ -66,13 +66,13 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
         
-        var filePathToWrite = "\(paths)/portrait.jpg"
+        var filePathToWrite = "\(paths)/" + imageFileName
         
         var imageData: NSData = UIImagePNGRepresentation(selectedImage)
         
         fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
         
-        var getImagePath = paths.stringByAppendingPathComponent("portrait.jpg")
+        var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
         
         //store username, password, email in NSUserData
         let profileSet = NSUserDefaults.standardUserDefaults()
@@ -82,30 +82,6 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
         
         //upload UserInfo to Server
-        println(keychainAccess.getPasscode(usernameKeyChain))
-        println(keychainAccess.getPasscode(passwordKeyChain))
-        println(profileSet.objectForKey(favTagsNSUserData))
-        println(profileSet.objectForKey(genderNSUserData))
-        println(profileSet.objectForKey(ageNSUserData))
-        println(profileSet.objectForKey(cancerTypeNSUserData))
-        println(profileSet.objectForKey(pathologicalNSUserData))
-        println(profileSet.objectForKey(stageNSUserData))
-        println(profileSet.objectForKey(smokingNSUserData))
-        println(profileSet.objectForKey(metastasisNSUserData))
-        println(profileSet.objectForKey(emailNSUserData))        
-        /*
-        private String email;
-        private String username;
-        private String password;
-        private byte[] image;
-        private String gender;
-        private int isSmoking;
-        private String pathological;
-        private String stage;
-        private int age;
-        private String cancerType;
-        private String metastasis;
-        */
         
         var addUserBody = NSDictionary(objects: [(profileSet.objectForKey(emailNSUserData))!, (keychainAccess.getPasscode(usernameKeyChain))!, (keychainAccess.getPasscode(passwordKeyChain))!, (profileSet.objectForKey(genderNSUserData))!, (profileSet.objectForKey(smokingNSUserData))!, (profileSet.objectForKey(pathologicalNSUserData))!, (profileSet.objectForKey(stageNSUserData))!, (profileSet.objectForKey(ageNSUserData))!, (profileSet.objectForKey(cancerTypeNSUserData))!, (profileSet.objectForKey(metastasisNSUserData))!], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis"])
         let addUserUrl = NSURL(string: addNewUserURL)
@@ -115,12 +91,8 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-        
-//        var jsonObj = NSJSONSerialization.JSONObjectWithData(request.HTTPBody!, options: nil, error: nil) as! Dictionary<String, String>
-//        
-        println(NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding)!)
-        
         connection.start()
+        
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
