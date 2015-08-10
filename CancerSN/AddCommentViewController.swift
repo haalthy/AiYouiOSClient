@@ -11,7 +11,7 @@ import UIKit
 class AddCommentViewController: UIViewController {
     var post : NSDictionary = NSDictionary()
     
-    func sendSyncAddCommentRequeest(accessToken:String)->NSData{
+    func sendSyncAddCommentRequest(accessToken:String)->NSData{
         let urlPath:String = (addCommentsURL as String) + "?access_token=" + (accessToken as! String);
         println(urlPath)
         let url : NSURL = NSURL(string: urlPath)!
@@ -41,7 +41,7 @@ class AddCommentViewController: UIViewController {
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
         if(accessToken != nil){
-            var addCommentsRespData = self.sendSyncAddCommentRequeest(accessToken as! String)
+            var addCommentsRespData = self.sendSyncAddCommentRequest(accessToken as! String)
             let str: NSString = NSString(data: addCommentsRespData, encoding: NSUTF8StringEncoding)!
             println(str)
             var jsonResult = NSJSONSerialization.JSONObjectWithData(addCommentsRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
@@ -49,7 +49,7 @@ class AddCommentViewController: UIViewController {
             if(jsonResultDic.objectForKey("error") != nil){
                 getAccessToken.getAccessToken()
                 accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-                var addCommentsRespData = self.sendSyncAddCommentRequeest(accessToken as! String)
+                var addCommentsRespData = self.sendSyncAddCommentRequest(accessToken as! String)
                 let str: NSString = NSString(data: addCommentsRespData, encoding: NSUTF8StringEncoding)!
                 println(str)
             }

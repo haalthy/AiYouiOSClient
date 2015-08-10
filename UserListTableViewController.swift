@@ -20,6 +20,7 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     
     @IBAction func cancelUserSearch(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
+//        self.navigationController?.popToRootViewControllerAnimated(true)
     }
 
     override func viewDidLoad() {
@@ -29,14 +30,6 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
         if((favtags.objectForKey(favTagsNSUserData)) != nil){
             tagList = favtags.objectForKey(favTagsNSUserData) as! NSArray
         }
-    
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-//        self.navigationController?.navigationBar.hidden = false
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -75,12 +68,14 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
 
         let requestBodyStr:String = "{\"tags\":[" + tagListStr + "],\"rangeBegin\":0,\"rangeEnd\":5}"
         request.HTTPBody = requestBodyStr.dataUsingEncoding(NSUTF8StringEncoding)
-        
+        println(requestBodyStr)
         //request.HTTPBody = "{\"tags\":[2,4,9],\"rangeBegin\":0,\"rangeEnd\":5}".dataUsingEncoding(NSUTF8StringEncoding)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
         connection.start()
+        
+        self.tabBarController?.tabBar.hidden = false
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -166,12 +161,14 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         if(indexPath.section == 3){
+            var user: NSDictionary = userList[indexPath.row] as! NSDictionary
             let cell = tableView.dequeueReusableCellWithIdentifier("userListCell", forIndexPath: indexPath) as! UserListTableViewCell
-            
-            let dataString = userList[indexPath.row]["image"] as! String
-            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
-            
-            cell.userImage.image = UIImage(data: imageData)
+            if((userList[indexPath.row]["image"] is NSNull) == false){
+                let dataString = userList[indexPath.row]["image"] as! String
+                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                
+                cell.userImage.image = UIImage(data: imageData)
+            }
             
             cell.usernameDisplay.text = userList[indexPath.row]["username"] as? String
             

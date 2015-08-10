@@ -23,6 +23,8 @@ let updateFavTagsURL = haalthyServiceRestfulURL + "security/user/tag/update"
 let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
 let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
 let getPostByIdURL = haalthyServiceRestfulURL + "open/post/"
+let addPostURL = haalthyServiceRestfulURL + "security/post/add"
+let getFeedsURL = haalthyServiceRestfulURL + "security/post/feeds"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -53,5 +55,7 @@ let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否","是"])
 let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"], forKeys: ["肝转移","骨转移","肾上腺转移","脑转移"])
 
 //
-let latestUpdateTimestamp = "haalthyLatestUpdateTimestamp"
+let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
+let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
+
 

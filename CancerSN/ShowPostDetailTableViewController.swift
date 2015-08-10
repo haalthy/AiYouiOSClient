@@ -14,7 +14,7 @@ class ShowPostDetailTableViewController: UITableViewController {
     var commentList : NSArray = NSArray()
     let entity: String = "Broadcast"
 
-    func sendSyncGetCommentListRequeest()->NSData{
+    func sendSyncGetCommentListRequest()->NSData{
         let url : NSURL = NSURL(string: getCommentListByPostURL+((post.objectForKey("postID") as! NSNumber).stringValue))!
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "GET"
@@ -84,7 +84,7 @@ class ShowPostDetailTableViewController: UITableViewController {
             
         }
         savePostData()
-        var getCommentsRespData = self.sendSyncGetCommentListRequeest()
+        var getCommentsRespData = self.sendSyncGetCommentListRequest()
         let str: NSString = NSString(data: getCommentsRespData, encoding: NSUTF8StringEncoding)!
         println(str)
         var jsonResult = NSJSONSerialization.JSONObjectWithData(getCommentsRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)

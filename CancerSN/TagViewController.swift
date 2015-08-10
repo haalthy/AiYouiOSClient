@@ -12,20 +12,20 @@ protocol TagVCDelegate {
     func updateTagList(data: NSArray)
 }
 
+protocol PostTagVCDelegate{
+    func getPostTagList(data: NSArray)
+}
+
 class TagViewController: UITableViewController {
     var delegate: TagVCDelegate?
-
+    var postDelegate: PostTagVCDelegate?
     var tags: NSArray = []
-    
     var selectedTags : NSMutableArray = []
     
-    var updateTagsResponseData:NSMutableData = NSMutableData()
-
-    var getTokenResponseData:NSMutableData = NSMutableData()
+    var isBroadcastTagSelection = 0
+    var postBody:String = String()
     
-    var data :NSMutableData? = nil
     @IBOutlet var tagList: UITableView!
-    
     
     let tagLabelColor: UIColor = UIColor.init(red:0.8, green:0.8, blue:1, alpha:0.65)
     
@@ -33,16 +33,17 @@ class TagViewController: UITableViewController {
 
     let submitSelectedColor : UIColor = UIColor.init(red:0.9, green:0.7, blue:1, alpha:1)
     
-//    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-//        if (segue.identifier == "showSuggestUsers") {
-//            let viewController:UserListTableViewController = segue!.destinationViewController as! UserListTableViewController
-//            
-//            viewController.tagList = selectedTags
-//        }
-//    }
+    func sendSyncGetTagListRequet()->NSData{
+        let urlPath: String = getTagListURL
+        var url: NSURL = NSURL(string: urlPath)!
+        var request: NSURLRequest = NSURLRequest(URL: url)
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+    }
     
-    func sendUpdateTagsHttpRequest(){
-        updateTagsResponseData = NSMutableData()
+    func sendUpdateTagsHttpRequest()->NSData{
+        let getAccessToken: GetAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         var url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
         var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
@@ -54,118 +55,51 @@ class TagViewController: UITableViewController {
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         println(NSString(data: (request.HTTPBody)!, encoding: NSUTF8StringEncoding)!)
         println(request.HTTPBody)
-        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-        connection.start()
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
     }
+    
     
     @IBAction func tagsSubmit(sender: AnyObject) {
-        let favtags = NSUserDefaults.standardUserDefaults()
-        favtags.setObject(self.selectedTags, forKey: favTagsNSUserData)
-        self.delegate?.updateTagList(self.selectedTags)
-        
-        //update user fav tags on server
-        let keychainAccess = KeychainAccess()
-        let username = keychainAccess.getPasscode(usernameKeyChain)
-        let password = keychainAccess.getPasscode(passwordKeyChain)
-        
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        if((username != nil) && (password != nil)){
-            if(accessToken != nil){
-//                updateTagsResponseData = NSMutableData()
-//                var url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
-//                var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-//                request.HTTPMethod = "POST"
-//                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(selectedTags, options: NSJSONWritingOptions.allZeros, error: nil)
-//                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//                request.addValue("application/json", forHTTPHeaderField: "Accept")
-//                var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-//                connection.start()
-                sendUpdateTagsHttpRequest()
+        if self.isBroadcastTagSelection == 0{
+            let favtags = NSUserDefaults.standardUserDefaults()
+            favtags.setObject(self.selectedTags, forKey: favTagsNSUserData)
+            self.delegate?.updateTagList(self.selectedTags)
+            var keychain = KeychainAccess()
+            if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil){
+                var updateUserTagsRespData = self.sendUpdateTagsHttpRequest()
             }
+        }else{
+//            var post = NSMutableDictionary()
+//            post.setObject(self.postBody, forKey: "body")
+//            post.setObject(0, forKey: "closed")
+//            post.setObject(1, forKey: "isBroadcast")
+//            post.setObject(self.selectedTags, forKey: "tags")
+//            let haalthyService = HaalthyService()
+//            var respData = haalthyService.addPost(post as NSDictionary)
+//            let str: NSString = NSString(data: respData, encoding: NSUTF8StringEncoding)!
+//            println(str)
+            self.postDelegate?.getPostTagList(self.selectedTags)
         }
-    }
-    
-    func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
-        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
-        if( connectionURLStr.containsString(updateFavTagsURL)){
-            updateTagsResponseData.appendData(data)
-        }else if(connectionURLStr.containsString(getTagListURL)){
-            self.data!.appendData(data)
-        }else if(connectionURLStr.containsString(getOauthTokenURL)){
-            getTokenResponseData.appendData(data)
-        }
-    }
-    
-    func connectionDidFinishLoading(connection: NSURLConnection!)
-    {
-        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
-        if( connectionURLStr.containsString(updateFavTagsURL)){
-            let str: NSString = NSString(data: updateTagsResponseData, encoding: NSUTF8StringEncoding)!
-            println(str)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(updateTagsResponseData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            if(jsonResult is NSDictionary){
-                if((jsonResult?.objectForKey("error") as! NSString).isEqualToString("invalid_token") ){
-                    let keychainAccess = KeychainAccess()
-                    let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
-                    let passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
-                    var urlPath: String = getOauthTokenURL + "username=" + usernameStr + "&password=" + passwordStr
-                    urlPath = urlPath.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-                    getTokenResponseData = NSMutableData()
-                    var url: NSURL = NSURL(string: urlPath)!
-                    var request: NSURLRequest = NSURLRequest(URL: url)
-                    var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-                    connection.start()
-                }
-            }
-
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }else if(connectionURLStr.containsString(getTagListURL)){
-            var error: NSErrorPointer=nil
-            var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSArray
-            self.tags = jsonResult
-            self.tableView.reloadData()
-        }else if(connectionURLStr.containsString(getOauthTokenURL)){
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTokenResponseData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            var accessToken  = jsonResult?.objectForKey("access_token")
-            var refreshToken = jsonResult?.objectForKey("refresh_token")
-            if(accessToken != nil && refreshToken != nil){
-                let profileSet = NSUserDefaults.standardUserDefaults()
-                profileSet.setObject(accessToken, forKey: accessNSUserData)
-                profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-                sendUpdateTagsHttpRequest()
-            }
-        }
+        self.dismissViewControllerAnimated(false, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.hidden = true
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         tagList.separatorColor = UIColor.clearColor()
         
-        let urlPath: String = getTagListURL
-         data = NSMutableData()
-        var url: NSURL = NSURL(string: urlPath)!
-        var request: NSURLRequest = NSURLRequest(URL: url)
-        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-        connection.start()
+        var getTagListRespData:NSData = self.sendSyncGetTagListRequet()
+        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        if(jsonResult is NSArray){
+            self.tags = jsonResult as! NSArray
+        }
         self.extendedLayoutIncludesOpaqueBars = true;
-        
     }
-    
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        if(((UIDevice.currentDevice().systemVersion) as NSString).floatValue>=7){
-//            var topWindow = UIApplication.sharedApplication().keyWindow
-//            topWindow?.clipsToBounds = true;
-//            topWindow!.frame =  CGRectMake(0,20,topWindow!.frame.size.width,topWindow!.frame.size.height-20);
-//        }
-//    }
-    
+
+    override func viewWillDisappear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+    }
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
@@ -184,8 +118,6 @@ class TagViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
         if(section == 0){
             return 1
         }
@@ -234,9 +166,7 @@ class TagViewController: UITableViewController {
             var selectedCell:TagListTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagListTableViewCell
             if(selectedTags.containsObject(tags[indexPath.row])==false){
                 selectedCell.tagList.backgroundColor = tagSelectedLabelColor
-//                if(selectedTags.containsObject(tags[indexPath.row])==false){
                 selectedTags.addObject(tags[indexPath.row])
-//                }
             }else{
                 selectedCell.tagList.backgroundColor = tagLabelColor
                 selectedTags.removeObject(tags[indexPath.row])
@@ -246,10 +176,6 @@ class TagViewController: UITableViewController {
             selectedCell.tagsSelect.backgroundColor = submitSelectedColor
         }
     }
-    
-    // if tableView is set in attribute inspector with selection to multiple Selection it should work.
-    
-    // Just set it back in deselect
     
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         var generalDeselectedCell:UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as UITableViewCell

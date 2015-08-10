@@ -13,6 +13,13 @@
 		2A2436021B6F3D5D009F7F71 /* PostContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2436011B6F3D5D009F7F71 /* PostContentTableViewCell.swift */; };
 		2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */; };
 		2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */; };
+		2A3228A81B712C64006FB92D /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A71B712C64006FB92D /* AddItemViewController.swift */; };
+		2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A91B7135DB006FB92D /* AddPostViewController.swift */; };
+		2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228AB1B718307006FB92D /* HaalthyService.swift */; };
+		2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228AF1B72D885006FB92D /* MeTableViewController.swift */; };
+		2A3228B61B72ECC3006FB92D /* grayline.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A3228B51B72ECC3006FB92D /* grayline.png */; };
+		2A3228B81B758BE8006FB92D /* FeedsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228B71B758BE8006FB92D /* FeedsHeaderTableViewCell.swift */; };
+		2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228B91B7654FB006FB92D /* FeedsListTableViewCell.swift */; };
 		2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */; };
 		2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264A51B607402001E52E7 /* Mario-icon.png */; };
 		2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */; };
@@ -65,6 +72,13 @@
 		2A2436011B6F3D5D009F7F71 /* PostContentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostContentTableViewCell.swift; path = ../PostContentTableViewCell.swift; sourceTree = "<group>"; };
 		2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewCell.swift; sourceTree = "<group>"; };
 		2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCommentViewController.swift; sourceTree = "<group>"; };
+		2A3228A71B712C64006FB92D /* AddItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
+		2A3228A91B7135DB006FB92D /* AddPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
+		2A3228AB1B718307006FB92D /* HaalthyService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HaalthyService.swift; sourceTree = "<group>"; };
+		2A3228AF1B72D885006FB92D /* MeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeTableViewController.swift; sourceTree = "<group>"; };
+		2A3228B51B72ECC3006FB92D /* grayline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayline.png; sourceTree = "<group>"; };
+		2A3228B71B758BE8006FB92D /* FeedsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedsHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2A3228B91B7654FB006FB92D /* FeedsListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedsListTableViewCell.swift; sourceTree = "<group>"; };
 		2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
 		2AA264A51B607402001E52E7 /* Mario-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mario-icon.png"; sourceTree = "<group>"; };
 		2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListHeaderTableViewCell.swift; path = ../UserListHeaderTableViewCell.swift; sourceTree = "<group>"; };
@@ -142,6 +156,9 @@
 				2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */,
 				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
 				2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */,
+				2A3228A71B712C64006FB92D /* AddItemViewController.swift */,
+				2A3228A91B7135DB006FB92D /* AddPostViewController.swift */,
+				2A3228AF1B72D885006FB92D /* MeTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -160,6 +177,8 @@
 				2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */,
 				2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */,
 				2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */,
+				2A3228B71B758BE8006FB92D /* FeedsHeaderTableViewCell.swift */,
+				2A3228B91B7654FB006FB92D /* FeedsListTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -170,6 +189,7 @@
 				2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */,
 				2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */,
 				2AA265141B694CDB001E52E7 /* GetAccessToken.swift */,
+				2A3228AB1B718307006FB92D /* HaalthyService.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -210,6 +230,7 @@
 		2AC59C111B5D77C600C4FE36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2A3228B51B72ECC3006FB92D /* grayline.png */,
 				2AA264D01B66AE71001E52E7 /* Mario.jpg */,
 				2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */,
 				2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */,
@@ -316,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A3228B61B72ECC3006FB92D /* grayline.png in Resources */,
 				2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */,
 				2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */,
 				2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */,
@@ -340,6 +362,8 @@
 			files = (
 				2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */,
 				2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */,
+				2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */,
+				2A3228B81B758BE8006FB92D /* FeedsHeaderTableViewCell.swift in Sources */,
 				2AA264BD1B631525001E52E7 /* CancerTypeSettingViewController.swift in Sources */,
 				2AA264D51B67EAFB001E52E7 /* UserListHeaderAfterLoginTableViewCell.swift in Sources */,
 				2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */,
@@ -350,6 +374,7 @@
 				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
 				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
 				2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */,
+				2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */,
 				2AA265111B684DA8001E52E7 /* CancerSN.xcdatamodeld in Sources */,
 				2AA264DB1B6836AB001E52E7 /* FeedsTableViewController.swift in Sources */,
 				2AA264D71B67F7A4001E52E7 /* LoginViewController.swift in Sources */,
@@ -359,6 +384,8 @@
 				2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */,
 				2AA264D31B675180001E52E7 /* UserSearchTableViewCell.swift in Sources */,
 				2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */,
+				2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */,
+				2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */,
 				2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */,
 				2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */,
 				2AA265151B694CDB001E52E7 /* GetAccessToken.swift in Sources */,
@@ -370,6 +397,7 @@
 				2AC59C361B5D798200C4FE36 /* HomeViewController.swift in Sources */,
 				2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */,
 				2AC59C3A1B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift in Sources */,
+				2A3228A81B712C64006FB92D /* AddItemViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
