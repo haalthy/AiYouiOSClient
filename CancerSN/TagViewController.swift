@@ -35,6 +35,7 @@ class TagViewController: UITableViewController {
     
     func sendSyncGetTagListRequet()->NSData{
         let urlPath: String = getTagListURL
+        println(urlPath)
         var url: NSURL = NSURL(string: urlPath)!
         var request: NSURLRequest = NSURLRequest(URL: url)
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil

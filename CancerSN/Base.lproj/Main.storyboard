@@ -137,7 +137,7 @@
                         </connections>
                     </refreshControl>
                     <connections>
-                        <segue destination="3ct-wS-eMk" kind="modal" identifier="showSuggestUsersSegue" id="9yc-XD-hpp"/>
+                        <segue destination="3ct-wS-eMk" kind="push" identifier="showSuggestUsersSegue" id="9yc-XD-hpp"/>
                         <segue destination="3ct-wS-eMk" kind="modal" identifier="searchUserSegue" id="Tka-Vu-7eX"/>
                         <segue destination="wCm-4G-zfq" kind="push" id="V6n-0l-Kjd"/>
                     </connections>
@@ -275,7 +275,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zP3-uP-PBP">
-                                            <rect key="frame" x="262" y="9" width="50" height="28"/>
+                                            <rect key="frame" x="269" y="8" width="43" height="28"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <state key="normal" title="登陆">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1779,9 +1779,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="9yc-XD-hpp"/>
-        <segue reference="EG8-3T-fuM"/>
         <segue reference="qEp-LN-S0V"/>
+        <segue reference="9yc-XD-hpp"/>
+        <segue reference="GKh-z2-Dky"/>
         <segue reference="dok-u4-TTb"/>
         <segue reference="SqK-bq-mfk"/>
         <segue reference="o07-AA-lT1"/>
