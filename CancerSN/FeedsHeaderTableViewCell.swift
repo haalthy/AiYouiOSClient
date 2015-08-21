@@ -10,7 +10,6 @@ import UIKit
 
 class FeedsHeaderTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var username: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

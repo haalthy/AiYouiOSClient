@@ -53,6 +53,8 @@
 		2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */; };
 		2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */; };
 		2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */; };
+		2AE59DB41B83F71300BE910D /* myTagButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AE59DB31B83F71300BE910D /* myTagButton.png */; };
+		2AE59DB81B83FBBF00BE910D /* mytagsBtnImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +118,8 @@
 		2AC59C3B1B5E064B00C4FE36 /* TagFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagFooterTableViewCell.swift; sourceTree = "<group>"; };
 		2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListTableViewCell.swift; sourceTree = "<group>"; };
 		2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListTableViewController.swift; path = ../UserListTableViewController.swift; sourceTree = "<group>"; };
+		2AE59DB31B83F71300BE910D /* myTagButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myTagButton.png; sourceTree = "<group>"; };
+		2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mytagsBtnImg.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +234,8 @@
 		2AC59C111B5D77C600C4FE36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */,
+				2AE59DB31B83F71300BE910D /* myTagButton.png */,
 				2A3228B51B72ECC3006FB92D /* grayline.png */,
 				2AA264D01B66AE71001E52E7 /* Mario.jpg */,
 				2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */,
@@ -338,8 +344,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3228B61B72ECC3006FB92D /* grayline.png in Resources */,
+				2AE59DB81B83FBBF00BE910D /* mytagsBtnImg.png in Resources */,
 				2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */,
 				2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */,
+				2AE59DB41B83F71300BE910D /* myTagButton.png in Resources */,
 				2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */,
 				2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */,
 				2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */,

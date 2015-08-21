@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 //restful service URL setting
 
@@ -24,7 +25,7 @@ let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
 let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
 let getPostByIdURL = haalthyServiceRestfulURL + "open/post/"
 let addPostURL = haalthyServiceRestfulURL + "security/post/add"
-let getFeedsURL = haalthyServiceRestfulURL + "security/post/feeds"
+let getFeedsURL = haalthyServiceRestfulURL + "security/post/posts"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -57,5 +58,10 @@ let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"]
 //
 let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
 let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
+
+//
+let headerColor : UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:1)
+
+let tabBarColor : UIColor = UIColor.init(red:0.1, green:0.6, blue:0.7, alpha:0.3)
 
 

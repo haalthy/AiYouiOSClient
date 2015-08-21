@@ -14,6 +14,11 @@ class FeedsTableViewController: UITableViewController {
     var password:String?
     var feedList = NSArray()
     
+    @IBOutlet weak var myTags: UIButton!
+    
+    @IBAction func tags(sender: UIButton) {
+        println("click tag button")
+    }
     func getexistFeedsFromLocalDB(){
         var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         var context:NSManagedObjectContext = appDel.managedObjectContext!
@@ -30,6 +35,28 @@ class FeedsTableViewController: UITableViewController {
         refreshFeeds(refreshControl!)
     }
     
+    func setPatientProfile(feed: NSDictionary){
+        var profileStr:String = ""
+        if((feed.valueForKey("gender") != nil) && ((feed.valueForKey("gender") is NSNull) == false)){
+            var genderKey = (feed.valueForKey("gender")!) as! String
+            profileStr += (genderMapping.allKeysForObject(genderKey)[0] as! String) + ","
+        }
+        if((feed.valueForKey("age") != nil) && ((feed.valueForKey("age") is NSNull) == false)){
+            profileStr += (feed.valueForKey("age")!.stringValue) + ","
+        }
+        if((feed.valueForKey("cancerType") != nil) && ((feed.valueForKey("cancerType") is NSNull) == false)){
+            if(feed.valueForKey("cancerType") as! String != "lung"){
+                var cancerTypeKey = feed.valueForKey("cancerType")!
+                profileStr += cancerTypeMapping.allKeysForObject(cancerTypeKey)[0] as! String
+            }else if((feed.valueForKey("pathological") != nil) && ((feed.valueForKey("pathological") is NSNull) == false)){
+                
+                profileStr += pathologicalMapping.allKeysForObject(feed.valueForKey("pathological")!)[0] as! String
+            }
+        }
+        
+        feed.setValue(profileStr, forKey: "patientProfile")
+    }
+    
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
         var haalthyService = HaalthyService()
         var getFeedsByTagsData = haalthyService.getFeeds()
@@ -44,6 +71,7 @@ class FeedsTableViewController: UITableViewController {
             var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
             var context:NSManagedObjectContext = appDel.managedObjectContext!
             for feed in newFeedList{
+                setPatientProfile(feed as! NSDictionary)
                 var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) as! NSManagedObject
                 feedItem.setValue(feed["postID"], forKey: "postID")
                 feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
@@ -56,6 +84,7 @@ class FeedsTableViewController: UITableViewController {
                 feedItem.setValue(feed["isBroadcast"], forKey: "isBroadcast")
                 feedItem.setValue(feed["dateInserted"], forKey: "dateInserted")
                 feedItem.setValue(feed["dateUpdated"], forKey: "dateUpdated")
+                feedItem.setValue(feed["patientProfile"], forKey: "patientProfile")
                 let imgValue = feed["image"]
                 if( ((feed["image"]) is NSNull) == false ){
                     feedItem.setValue(feed["image"], forKey: "image")
@@ -87,6 +116,9 @@ class FeedsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
+        self.tableView.estimatedRowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        
         var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         var context:NSManagedObjectContext = appDel.managedObjectContext!
         
@@ -96,9 +128,25 @@ class FeedsTableViewController: UITableViewController {
         postsRequest.sortDescriptors = [NSSortDescriptor(key: "dateInserted", ascending: false)]
         
         feedList = context.executeFetchRequest(postsRequest, error: nil)!
-
+        
+        self.navigationController?.navigationBar.backgroundColor = headerColor
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+//        self.navigationController?.navigationBar.hidden = true
+        self.myTags.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+//        self.myTags.setImage(UIImage (named: "mytagsBtnImg.png"), forState: UIControlState.Normal)
+//        self.myTags.contentMode = UIViewContentMode.ScaleAspectFill
+//        self.tabBarController?.tabBar.barTintColor = tabBarColor
+//        self.tabBarController?.tabBar.tintColor = UIColor.whiteColor()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+//        self.navigationController?.navigationBar.hidden = false
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -148,12 +196,10 @@ class FeedsTableViewController: UITableViewController {
         }
     }
     
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! FeedsHeaderTableViewCell
-            
-            cell.username.text = username
+            cell.backgroundColor = headerColor
             return cell
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier("feedsList", forIndexPath: indexPath) as! FeedsListTableViewCell
@@ -167,48 +213,13 @@ class FeedsTableViewController: UITableViewController {
             return cell
         }
     }
-    
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
     
     override func tableView(_tableView: UITableView,
         heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
             var rowHeight:CGFloat
             switch indexPath.section{
-            case 0: rowHeight = 44
+            case 0: rowHeight = 0
                 break
             case 1: rowHeight = UITableViewAutomaticDimension
                 break

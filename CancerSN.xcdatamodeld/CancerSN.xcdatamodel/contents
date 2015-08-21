@@ -25,7 +25,9 @@
         <attribute name="dateUpdated" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="insertUsername" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="insertUserProfile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isBroadcast" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="patientProfile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="postID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
@@ -38,7 +40,7 @@
     </entity>
     <elements>
         <element name="Broadcast" positionX="-54" positionY="72" width="128" height="240"/>
-        <element name="Feed" positionX="-63" positionY="-18" width="128" height="240"/>
+        <element name="Feed" positionX="-63" positionY="-18" width="128" height="270"/>
         <element name="Following" positionX="-54" positionY="81" width="128" height="105"/>
     </elements>
 </model>
