@@ -26,6 +26,11 @@ let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
 let getPostByIdURL = haalthyServiceRestfulURL + "open/post/"
 let addPostURL = haalthyServiceRestfulURL + "security/post/add"
 let getFeedsURL = haalthyServiceRestfulURL + "security/post/posts"
+let getTreatmentsURL = haalthyServiceRestfulURL + "/open/patient/treatments/"
+let getTreatmentformatURL = haalthyServiceRestfulURL + "/open/patient/treatmentformat"
+let addTreatmentURL = haalthyServiceRestfulURL + "/security/patient/treatment/add"
+let getPatientStatusFormatURL = haalthyServiceRestfulURL + "/open/patient/patientstatusformat"
+let addPatientStatusURL = haalthyServiceRestfulURL + "/security/patient/patientStatus/add"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -43,6 +48,10 @@ let metastasisNSUserData = "haalthyUserMetastasis"
 let emailNSUserData = "haalthyUserEmail"
 let accessNSUserData = "haalthyUserAccessToken"
 let refreshNSUserData = "haalthyUserRefreshToken"
+let imageNSUserData = "haalthyUserImageToken"
+
+let newTreatmentBegindate = "haalthyNewTreatmentBeginDate"
+let newTreatmentEnddate = "haalthyNewTreatmentEndDate"
 
 //store ImageFilename
 let imageFileName = "portrait.jpg"
@@ -60,8 +69,13 @@ let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
 let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
 
 //
-let headerColor : UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:1)
-
+let headerColor : UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:0.9)
 let tabBarColor : UIColor = UIColor.init(red:0.1, green:0.6, blue:0.7, alpha:0.3)
+let highlightColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:1)
+let textColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
+let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:0.4)
+
+
+
 
 

@@ -137,6 +137,7 @@ class TagViewController: UITableViewController {
         if(indexPath.section == 0){
             let cell = tableView.dequeueReusableCellWithIdentifier("header", forIndexPath: indexPath) as! TagHeaderTableViewCell
             cell.header.text = "请选择您关注的标签"
+            cell.header.textColor = textColor
             return cell
             
         }
@@ -145,16 +146,24 @@ class TagViewController: UITableViewController {
             let cell = tableView.dequeueReusableCellWithIdentifier("list", forIndexPath: indexPath) as! TagListTableViewCell
             var tag: NSDictionary = tags[indexPath.row] as! NSDictionary
             cell.tagList.text = tag["name"] as? String
+            cell.tagList.layer.borderColor = textColor.CGColor
+            cell.tagList.layer.borderWidth = 2.0
+            cell.tagList.layer.cornerRadius = 5
+            cell.tagList.layer.masksToBounds = true
             if(selectedTags.containsObject(tags[indexPath.row])){
-                cell.tagList.backgroundColor = tagSelectedLabelColor
+                cell.tagList.backgroundColor = textColor
+                cell.tagList.textColor = UIColor.whiteColor()
             }else{
-                cell.tagList.backgroundColor = tagLabelColor
+                cell.tagList.backgroundColor = UIColor.whiteColor()
+                cell.tagList.textColor = textColor
             }
             return cell
         }
         else{
             let cell = tableView.dequeueReusableCellWithIdentifier("footer", forIndexPath: indexPath) as! TagFooterTableViewCell
             cell.tagsSelect.titleLabel?.text = "确认"
+            cell.tagsSelect.layer.cornerRadius = 5
+            cell.tagsSelect.clipsToBounds = true
             return cell
         }
 
@@ -166,15 +175,17 @@ class TagViewController: UITableViewController {
         if(indexPath.section == 1){
             var selectedCell:TagListTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagListTableViewCell
             if(selectedTags.containsObject(tags[indexPath.row])==false){
-                selectedCell.tagList.backgroundColor = tagSelectedLabelColor
+                selectedCell.tagList.backgroundColor = textColor
+                selectedCell.tagList.textColor = UIColor.whiteColor()
                 selectedTags.addObject(tags[indexPath.row])
             }else{
-                selectedCell.tagList.backgroundColor = tagLabelColor
+                selectedCell.tagList.backgroundColor = UIColor.whiteColor()
+                selectedCell.tagList.textColor = textColor
                 selectedTags.removeObject(tags[indexPath.row])
             }
         }else if(indexPath.section == 2){
             var selectedCell:TagFooterTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagFooterTableViewCell
-            selectedCell.tagsSelect.backgroundColor = submitSelectedColor
+
         }
     }
     
@@ -185,10 +196,11 @@ class TagViewController: UITableViewController {
             var deselectedCell:TagListTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagListTableViewCell
             deselectedCell.contentView.backgroundColor = UIColor.whiteColor()
             if(selectedTags.containsObject(tags[indexPath.row])){
-                deselectedCell.tagList.backgroundColor = tagSelectedLabelColor
-                
+                deselectedCell.tagList.backgroundColor = textColor
+                deselectedCell.tagList.textColor = UIColor.whiteColor()
             }else{
-                deselectedCell.tagList.backgroundColor = tagLabelColor
+                deselectedCell.tagList.backgroundColor = UIColor.whiteColor()
+                deselectedCell.tagList.textColor = textColor
             }
         }
     }

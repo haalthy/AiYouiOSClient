@@ -11,6 +11,9 @@ import UIKit
 class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     @IBOutlet weak var stagePickerView: UIPickerView!
     
+    @IBOutlet weak var selectBtn: UIButton!
+    
+    @IBOutlet weak var skipBtn: UIButton!
     var pickerDataSource = [String]()
 
     @IBAction func selectStage(sender: UIButton) {
@@ -22,11 +25,30 @@ class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pickerDataSource = stageMapping.allKeys as! [String]
+//        pickerDataSource = stageMapping.allKeys as! [String]
+        pickerDataSource = ["I","II","IV","V"]
         stagePickerView.delegate = self
         stagePickerView.dataSource = self
         stagePickerView.selectRow(1, inComponent: 0, animated: false)
+        selectBtn.layer.cornerRadius = 5
+        selectBtn.layer.masksToBounds = true
+        skipBtn.layer.cornerRadius = 5
+        skipBtn.layer.masksToBounds = true
 
+    }
+    
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {
+        var pickerLabel = UILabel()
+        if view == nil {
+            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))
+        }else{
+            pickerLabel = view as! UILabel
+        }
+        pickerLabel.textAlignment = NSTextAlignment.Center
+        pickerLabel.textColor = textColor
+        pickerLabel.text = pickerDataSource[row]
+        pickerLabel.font = UIFont.boldSystemFontOfSize(15)
+        return pickerLabel
     }
 
     override func didReceiveMemoryWarning() {

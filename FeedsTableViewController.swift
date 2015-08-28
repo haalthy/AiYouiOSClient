@@ -9,10 +9,32 @@
 import UIKit
 import CoreData
 
-class FeedsTableViewController: UITableViewController {
+class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     var username:String?
     var password:String?
     var feedList = NSArray()
+    
+    @IBAction func addPopover(sender: UIButton) {
+        self.performSegueWithIdentifier("addViewSegue", sender: self)
+    }
+    @IBAction func addActionPopover(sender: UIBarButtonItem) {
+        self.performSegueWithIdentifier("addViewSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "addViewSegue"{
+            var vc = segue.destinationViewController as! UIViewController
+            var controller = vc.popoverPresentationController
+            if controller != nil{
+                controller?.delegate = self
+            }
+        }
+    }
+    
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
+    }
     
     @IBOutlet weak var myTags: UIButton!
     
@@ -77,13 +99,17 @@ class FeedsTableViewController: UITableViewController {
                 feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
                 feedItem.setValue(feed["countComments"], forKey: "countComments")
                 feedItem.setValue(feed["body"], forKey: "body")
-                feedItem.setValue(feed["tags"], forKey: "tags")
+                if (feed["tags"]  is NSNull) == false{
+                    feedItem.setValue(feed["tags"], forKey: "tags")
+                }
                 feedItem.setValue(feed["countViews"], forKey: "countViews")
                 feedItem.setValue(feed["countBookmarks"], forKey: "countBookmarks")
                 feedItem.setValue(feed["closed"], forKey: "closed")
                 feedItem.setValue(feed["isBroadcast"], forKey: "isBroadcast")
                 feedItem.setValue(feed["dateInserted"], forKey: "dateInserted")
-                feedItem.setValue(feed["dateUpdated"], forKey: "dateUpdated")
+                if feed["dateUpdated"] is NSNull == false{
+                    feedItem.setValue(feed["dateUpdated"], forKey: "dateUpdated")
+                }
                 feedItem.setValue(feed["patientProfile"], forKey: "patientProfile")
                 let imgValue = feed["image"]
                 if( ((feed["image"]) is NSNull) == false ){
@@ -130,6 +156,7 @@ class FeedsTableViewController: UITableViewController {
         feedList = context.executeFetchRequest(postsRequest, error: nil)!
         
         self.navigationController?.navigationBar.backgroundColor = headerColor
+        
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -195,6 +222,7 @@ class FeedsTableViewController: UITableViewController {
             self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
         }
     }
+
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
@@ -232,5 +260,4 @@ class FeedsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-
 }

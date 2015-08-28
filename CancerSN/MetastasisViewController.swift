@@ -12,6 +12,9 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
 
     var metastasisList : NSMutableArray = []
     
+    @IBOutlet weak var selectBtn: UIButton!
+    @IBOutlet weak var skipBtn: UIButton!
+    
     @IBOutlet weak var liver: UIButton!
     @IBOutlet weak var bone: UIButton!
     @IBOutlet weak var adrenal: UIButton!
@@ -23,6 +26,8 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
     let selectedLabelColor : UIColor = UIColor.init(red:0.7, green:0.7, blue:1, alpha:1)
     
     @IBAction func selectMetastasis(sender: UIButton) {
+        sender.backgroundColor = textColor
+        sender.titleLabel?.textColor = UIColor.whiteColor()
         let metastasisDBStr:String = metastasisMapping.objectForKey((sender.titleLabel?.text)!) as! String
         if(metastasisList.containsObject(metastasisDBStr)){
             sender.backgroundColor = unselectedLabelColor
@@ -47,6 +52,15 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         profileSet.setObject(metastasisListStr, forKey: metastasisNSUserData)
     }
     
+    func setButtonFormat(sender: UIButton){
+        sender.layer.borderColor = textColor.CGColor
+        sender.layer.borderWidth = 2.0
+        sender.layer.cornerRadius = 5
+        sender.layer.masksToBounds = true
+        sender.backgroundColor = UIColor.whiteColor()
+        sender.titleLabel?.textColor = textColor
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -59,10 +73,20 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         bone.setTitle("骨转移", forState: .Normal)
         adrenal.setTitle("肾上腺转移", forState: .Normal)
         brain.setTitle("脑转移", forState: .Normal)
-        liver.backgroundColor = unselectedLabelColor
-        bone.backgroundColor = unselectedLabelColor
-        adrenal.backgroundColor = unselectedLabelColor
-        brain.backgroundColor = unselectedLabelColor
+//        liver.backgroundColor = unselectedLabelColor
+//        bone.backgroundColor = unselectedLabelColor
+//        adrenal.backgroundColor = unselectedLabelColor
+//        brain.backgroundColor = unselectedLabelColor
+        
+        selectBtn.layer.cornerRadius = 5
+        selectBtn.layer.masksToBounds = true
+        skipBtn.layer.cornerRadius = 5
+        skipBtn.layer.masksToBounds = true
+        
+        setButtonFormat(liver)
+        setButtonFormat(bone)
+        setButtonFormat(adrenal)
+        setButtonFormat(brain)
     }
     
     override func viewWillAppear(animated: Bool) {

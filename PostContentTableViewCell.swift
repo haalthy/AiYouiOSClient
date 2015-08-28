@@ -23,7 +23,7 @@ class PostContentTableViewCell: UITableViewCell {
     }
     
     func updateUI(){
-        username.text = post.objectForKey("insertUsername") as!     String
+        username.text = post.objectForKey("insertUsername") as! String
         postContent.text = post.objectForKey("body") as! String
         countComments.text = (post.objectForKey("countComments") as! NSNumber).stringValue + " reviews"
         if ((post.objectForKey("image") is NSNull) == false && (post.objectForKey("image") != nil)){

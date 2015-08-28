@@ -10,6 +10,10 @@
 import UIKit
 
 class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate{
+    @IBOutlet weak var selectAgeBtn: UIButton!
+    
+    @IBOutlet weak var skipAgeBtn: UIButton!
+    
     @IBOutlet weak var ageUIPickerView: UIPickerView!
     var pickerDataSource = [String]()
 
@@ -29,6 +33,24 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
         ageUIPickerView.delegate = self
         ageUIPickerView.dataSource = self
         ageUIPickerView.selectRow(60, inComponent: 0, animated: false)
+        selectAgeBtn.layer.cornerRadius = 5
+        selectAgeBtn.layer.masksToBounds = true
+        skipAgeBtn.layer.cornerRadius = 5
+        skipAgeBtn.layer.masksToBounds = true
+    }
+    
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {
+        var pickerLabel = UILabel()
+        if view == nil {
+            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))
+        }else{
+            pickerLabel = view as! UILabel
+        }
+        pickerLabel.textAlignment = NSTextAlignment.Center
+        pickerLabel.textColor = textColor
+        pickerLabel.text = pickerDataSource[row]
+        pickerLabel.font = UIFont.boldSystemFontOfSize(15)
+        return pickerLabel
     }
     
     //MARK: - Delegates and data sources

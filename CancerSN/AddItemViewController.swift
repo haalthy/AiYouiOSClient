@@ -13,6 +13,18 @@ class AddItemViewController: UIViewController {
     var isBroadcast : Int = 0
     let profileSet = NSUserDefaults.standardUserDefaults()
 
+    var isDismiss : Bool = false
+    
+    
+    @IBAction func addPatientStatusSegue(sender: UIButton) {
+        isDismiss = true
+    }
+    
+    @IBAction func addTreatmentSegue(sender: UIButton) {
+        isDismiss = true
+        self.performSegueWithIdentifier("addTreatmentSegue", sender: self)
+
+    }
     @IBAction func addBroadcast(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
             self.performSegueWithIdentifier("loginSegue", sender: nil)
@@ -30,10 +42,11 @@ class AddItemViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.preferredContentSize = CGSizeMake(180, 180)
     }
     @IBAction func cancel(sender: UIButton) {
-//        self.dismissViewControllerAnimated(false, completion: nil)
-        self.tabBarController?.selectedIndex = 1
+        self.dismissViewControllerAnimated(true, completion: nil)
+//        self.tabBarController?.selectedIndex = 1
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -42,7 +55,9 @@ class AddItemViewController: UIViewController {
         self.navigationController?.navigationBar.hidden = true
         let getAccessToken: GetAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
-
+        if isDismiss {
+            self.dismissViewControllerAnimated(false, completion: nil)
+        }
     }
     
     

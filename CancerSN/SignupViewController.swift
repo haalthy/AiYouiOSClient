@@ -10,6 +10,7 @@ import UIKit
 
 class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate  {
     
+    @IBOutlet weak var submitBtn: UIButton!
     func cropToSquare(image originalImage: UIImage) -> UIImage {
         // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
         let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage)!
@@ -69,6 +70,8 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         var filePathToWrite = "\(paths)/" + imageFileName
         
         var imageData: NSData = UIImagePNGRepresentation(selectedImage)
+        var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
+        println(imageDataStr)
         
         fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
         
@@ -77,6 +80,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         //store username, password, email in NSUserData
         let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.setObject(emailInput.text, forKey: emailNSUserData)
+        profileSet.setObject(imageDataStr, forKey: imageNSUserData)
         let keychainAccess = KeychainAccess()
         keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text)
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
@@ -93,7 +97,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
 //        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
 //        connection.start()
         var haalthyService = HaalthyService()
-        haalthyService.addUser()
+        var addUserRespData = haalthyService.addUser()
+        let str: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
+        println(str)
         var getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
     }
@@ -121,6 +127,8 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         emailInput.delegate = self
         usernameInput.delegate = self
         passwordInput.delegate = self
+        submitBtn.layer.cornerRadius = 5
+        submitBtn.layer.masksToBounds = true
     }
 
     func imageTapHandler(recognizer: UITapGestureRecognizer){
