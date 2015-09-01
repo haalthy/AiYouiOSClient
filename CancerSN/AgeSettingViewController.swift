@@ -20,7 +20,7 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
     @IBAction func selectAge(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         var selectedAge :String = pickerDataSource[ageUIPickerView.selectedRowInComponent(0)]
-        profileSet.setObject(selectedAge, forKey: ageNSUserData)
+        profileSet.setObject(selectedAge.toInt(), forKey: ageNSUserData)
     }
     
     override func viewDidLoad(){

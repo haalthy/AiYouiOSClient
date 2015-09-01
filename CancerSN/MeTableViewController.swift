@@ -12,6 +12,7 @@ class MeTableViewController: UITableViewController {
     
     var isLogin:Bool = true
     let keyChain:KeychainAccess = KeychainAccess()
+    var myProfile = NSDictionary()
     
     @IBAction func logout(sender: UIButton) {
         var keychain = KeychainAccess()
@@ -33,6 +34,14 @@ class MeTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        var haalthyService = HaalthyService()
+        var profileData = haalthyService.getMyProfile()
+        var jsonResult = NSJSONSerialization.JSONObjectWithData(profileData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        if jsonResult is NSDictionary{
+            myProfile = jsonResult as! NSDictionary
+        }
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -91,7 +100,19 @@ class MeTableViewController: UITableViewController {
                 //        separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
                 cell.contentView.addSubview(separatorLine)
                 if indexPath.section == 0{
-                    cell.imageView?.image = UIImage(named: "Mario.jpg")
+//                    cell.imageView?.image = UIImage(named: "Mario.jpg")
+                    var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                    
+                    var imageFilePath = "\(paths)/" + imageFileName
+                    cell.imageView!.image = UIImage(contentsOfFile: imageFilePath)
+                    if cell.imageView?.image == nil{
+                        if myProfile.objectForKey("image") != nil{
+                            let dataString = myProfile.objectForKey("image") as! String
+                            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                            cell.imageView?.image = UIImage(data: imageData)
+                        }
+                        
+                    }
                     cell.textLabel?.text = keyChain.getPasscode(usernameKeyChain) as! String
                 }else{
                     switch indexPath.row{

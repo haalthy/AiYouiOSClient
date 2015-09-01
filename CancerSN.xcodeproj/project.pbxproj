@@ -52,6 +52,7 @@
 		2AA265151B694CDB001E52E7 /* GetAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA265141B694CDB001E52E7 /* GetAccessToken.swift */; };
 		2AA265171B69A7C7001E52E7 /* BoardcastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */; };
 		2AA3363F1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3363E1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift */; };
+		2AAA37B91B96416C00576C7C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */; };
 		2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */; };
 		2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */; };
 		2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */; };
@@ -148,6 +149,7 @@
 		2AA265141B694CDB001E52E7 /* GetAccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccessToken.swift; sourceTree = "<group>"; };
 		2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardcastViewController.swift; sourceTree = "<group>"; };
 		2AA3363E1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewTreatmentDateViewController.swift; sourceTree = "<group>"; };
+		2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		2AC59C0E1B5D77C600C4FE36 /* CancerSN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CancerSN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C121B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				2AC59C351B5D798200C4FE36 /* HomeViewController.swift */,
 				2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */,
 				2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */,
+				2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */,
 				2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */,
 				2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */,
 				2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */,
@@ -553,6 +556,7 @@
 				2AF673691B88416F00E220CD /* CVAuxiliaryView.swift in Sources */,
 				2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */,
 				2AC59C3A1B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift in Sources */,
+				2AAA37B91B96416C00576C7C /* DiscoverTableViewController.swift in Sources */,
 				2A3228A81B712C64006FB92D /* AddItemViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

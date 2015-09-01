@@ -24,7 +24,12 @@ class TagViewController: UITableViewController {
     
     var isBroadcastTagSelection = 0
     var postBody:String = String()
-    
+    var keychain = KeychainAccess()
+    var haalthyService = HaalthyService()
+
+    @IBAction func cancel(sender: UIButton) {
+        self.dismissViewControllerAnimated(false, completion: nil)
+    }
     @IBOutlet var tagList: UITableView!
     
     let tagLabelColor: UIColor = UIColor.init(red:0.8, green:0.8, blue:1, alpha:0.65)
@@ -66,20 +71,10 @@ class TagViewController: UITableViewController {
             let favtags = NSUserDefaults.standardUserDefaults()
             favtags.setObject(self.selectedTags, forKey: favTagsNSUserData)
             self.delegate?.updateTagList(self.selectedTags)
-            var keychain = KeychainAccess()
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil){
                 var updateUserTagsRespData = self.sendUpdateTagsHttpRequest()
             }
         }else{
-//            var post = NSMutableDictionary()
-//            post.setObject(self.postBody, forKey: "body")
-//            post.setObject(0, forKey: "closed")
-//            post.setObject(1, forKey: "isBroadcast")
-//            post.setObject(self.selectedTags, forKey: "tags")
-//            let haalthyService = HaalthyService()
-//            var respData = haalthyService.addPost(post as NSDictionary)
-//            let str: NSString = NSString(data: respData, encoding: NSUTF8StringEncoding)!
-//            println(str)
             self.postDelegate?.getPostTagList(self.selectedTags)
         }
         self.dismissViewControllerAnimated(false, completion: nil)
@@ -96,6 +91,11 @@ class TagViewController: UITableViewController {
             self.tags = jsonResult as! NSArray
         }
         self.extendedLayoutIncludesOpaqueBars = true;
+        if (selectedTags.count == 0) && (keychain.getPasscode(usernameKeyChain) != nil){
+            var getUserFavTagsData = haalthyService.getUserFavTags()
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            self.selectedTags = jsonResult as! NSMutableArray
+        }
     }
 
     override func viewWillDisappear(animated: Bool) {

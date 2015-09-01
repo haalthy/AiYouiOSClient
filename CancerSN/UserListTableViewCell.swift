@@ -30,82 +30,80 @@ class UserListTableViewCell: UITableViewCell {
     @IBAction func addFollowing(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         if profileSet.objectForKey(accessNSUserData) != nil{
-            let accessToken : String = profileSet.objectForKey(accessNSUserData) as! String
-            let urlPath: String = addFollowingURL + usernameDisplay.text! + "?access_token=" + accessToken
-            addFollowingResponseData = NSMutableData()
-            var url: NSURL = NSURL(string: urlPath)!
-            var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-            var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-            connection.start()
+            var haalthyService = HaalthyService()
+            var addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         }else{
             self.delegate?.performLoginSegue()
         }
+        addFollowingBtn.enabled = false
+        addFollowingBtn.titleLabel?.text = "已关注"
     }
     
-    func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
-        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
-        if( connectionURLStr.containsString(addFollowingURL)){
-            addFollowingResponseData!.appendData(data)
-        }else if(connectionURLStr.containsString(getOauthTokenURL)){
-            getTokenResponseData!.appendData(data)
+    var user=NSDictionary(){
+        didSet{
+            updateUI()
         }
     }
     
-    func connectionDidFinishLoading(connection: NSURLConnection!)
-    {
-        var error: NSErrorPointer=nil
-        let connectionURLStr:NSString = (connection.currentRequest.URL)!.absoluteString!
-        if(connectionURLStr.containsString(addFollowingURL)){
-            let str: NSString = NSString(data: addFollowingResponseData!, encoding:NSUTF8StringEncoding)!
-            println(str)
-            var jsonResult: NSDictionary = NSJSONSerialization.JSONObjectWithData(addFollowingResponseData!, options: NSJSONReadingOptions.MutableContainers, error: error) as! NSDictionary
-            if(jsonResult["error"]==nil){
-                addFollowingBtn.enabled = false;
-                addFollowingBtn.setTitle("已关注", forState: .Normal)
-                //add following to local DB
-                var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context:NSManagedObjectContext = appDel.managedObjectContext!
-                var user = NSEntityDescription.insertNewObjectForEntityForName("Following", inManagedObjectContext: context) as! NSManagedObject
-                user.setValue(usernameDisplay.text!, forKey: "username")
-                user.setValue(userProfileDisplay.text!, forKey: "userProfile")
-                user.setValue(UIImageJPEGRepresentation(userImage.image, 1.0), forKey: "userImage")
-                context.save(nil)
-            }else{
-                var respError = jsonResult["error"] as! NSString
-                if(respError.isEqualToString("invalid_token") ){
-                    let keychainAccess = KeychainAccess()
-                    let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
-                    let passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
-                    var urlPath: String = getOauthTokenURL + "username=" + usernameStr + "&password=" + passwordStr
-                    urlPath = urlPath.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-                    getTokenResponseData = NSMutableData()
-                    var url: NSURL = NSURL(string: urlPath)!
-                    var request: NSURLRequest = NSURLRequest(URL: url)
-                    var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-                    connection.start()
-                }
-            }
-        }else if(connectionURLStr.containsString(getOauthTokenURL)){
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTokenResponseData!, options: NSJSONReadingOptions.MutableContainers, error: error)
-            var accessToken  = jsonResult?.objectForKey("access_token")
-            var refreshToken = jsonResult?.objectForKey("refresh_token")
-            if(accessToken != nil && refreshToken != nil){
-                let profileSet = NSUserDefaults.standardUserDefaults()
-                profileSet.setObject(accessToken, forKey: accessNSUserData)
-                profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-                let urlPath: String = addFollowingURL + usernameDisplay.text! + "?access_token=" + (accessToken as! String)
-                addFollowingResponseData = NSMutableData()
-                var url: NSURL = NSURL(string: urlPath)!
-                var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-                var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-                connection.start()
-            }
+    func updateUI(){
+        if((user["image"] is NSNull) == false){
+            let dataString = user["image"] as! String
+            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+            
+            userImage.image = UIImage(data: imageData)
         }
+        
+        usernameDisplay.text = user["username"] as? String
+        
+        var userProfileStr : String
+        var gender = user["gender"] as! String
+        var displayGender:String = ""
+        if(gender == "M"){
+            displayGender = "男"
+        }else if(gender == "F"){
+            displayGender = "女"
+        }
+        var age = String()
+        var stage = String()
+        var cancerType = String()
+        var pathological = String()
+        
+        if user["age"] != nil{
+            age = (user["age"] as! NSNumber).stringValue
+        }
+//        var pathological = user["pathological"] as! String
+        if user["stage"] != nil {
+            var stageStr = user["stage"]! as! String
+            var stages = stageMapping.allKeysForObject(stageStr.toInt()!) as! NSArray
+            stage = stages[0] as! String
+        }
+        
+        if user["cancerType"] != nil{
+            cancerType = (cancerTypeMapping.allKeysForObject(user["cancerType"]!))[0] as! String
+        }
+        
+        if user["pathological"] != nil{
+            pathological = (pathologicalMapping.allKeysForObject(user["pathological"]!))[0] as! String
+        }
+        
+        userProfileStr = displayGender + " " + age + "岁 " + cancerType + " " + pathological + " " + stage + "期"
+        
+        userProfileDisplay.text = userProfileStr
+        
+        userFollowers.text = (user["followCount"] as! NSNumber).stringValue + "关注"
+
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        addFollowingBtn.layer.cornerRadius = 5
+        addFollowingBtn.layer.borderWidth = 2.0
+        addFollowingBtn.layer.borderColor = mainColor.CGColor
+        addFollowingBtn.layer.masksToBounds = true
+        addFollowingBtn.backgroundColor = UIColor.whiteColor()
+        addFollowingBtn.titleLabel?.textColor = mainColor
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

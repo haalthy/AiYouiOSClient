@@ -13,6 +13,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var username:String?
     var password:String?
     var feedList = NSArray()
+    var latestFetchTimestamp = Int()
+    
+    @IBAction func discover(sender: UIButton) {
+        self.performSegueWithIdentifier("discoverSegue", sender: self)
+    }
     
     @IBAction func addPopover(sender: UIButton) {
         self.performSegueWithIdentifier("addViewSegue", sender: self)
@@ -48,6 +53,13 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         postsRequest.returnsObjectsAsFaults = false
         postsRequest.sortDescriptors = [NSSortDescriptor(key: "dateInserted", ascending: false)]
         feedList = context.executeFetchRequest(postsRequest, error: nil)!
+        if feedList.count > 0{
+            let feed = feedList[0] as! NSManagedObject
+            latestFetchTimestamp = feedList[0].valueForKey("dateInserted") as! Int
+        }else{
+            latestFetchTimestamp = 0
+        }
+        
     }
     
     func refreshFeeds(){
@@ -81,7 +93,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
         var haalthyService = HaalthyService()
-        var getFeedsByTagsData = haalthyService.getFeeds()
+        var getFeedsByTagsData = haalthyService.getFeeds(latestFetchTimestamp)
         var jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsByTagsData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         let str: NSString = NSString(data: getFeedsByTagsData, encoding: NSUTF8StringEncoding)!
         println(str)
@@ -119,7 +131,13 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             }
             newFeedList.addObjectsFromArray(feedList as [AnyObject])
             feedList = newFeedList as! NSArray
+            if feedList.count > 0{
+                latestFetchTimestamp = feedList[0].valueForKey("dateInserted") as! Int
+            }
             self.tableView.reloadData()
+//            if feedList.count == 0{
+//                self.performSegueWithIdentifier("discoverSegue", sender: nil)
+//            }
             //set timestamp
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(NSDate().timeIntervalSince1970, forKey: latestFeedsUpdateTimestamp)
@@ -129,9 +147,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         
     }
     
-    @IBAction func searchUser(sender: UIButton) {
-        self.performSegueWithIdentifier("searchUserSegue", sender: self)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,6 +172,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
+//        let search = UIBarButtonItem(title: "search", style: UIBarButtonItemStyle.Plain , target: self, action: "searchAction")
+//        let add = UIBarButtonItem(title: "add", style: UIBarButtonItemStyle.Plain , target: self, action: "addAction")
+//        let arrBtns = NSArray(array: [search, add])
+//        self.navigationItem.rightBarButtonItems = [search, add]
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -219,7 +238,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 refreshFeeds()
             }
         }else{
-            self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
+            self.performSegueWithIdentifier("discoverSegue", sender: nil)
         }
     }
 

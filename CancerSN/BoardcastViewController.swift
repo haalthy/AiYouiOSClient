@@ -91,7 +91,7 @@ class BoardcastViewController: UITableViewController{
     }
     
     func sendSyncGetUserFavTagsRequest(accessToken:String)->NSData{
-        let urlPath:String = (getUserFavTags as String) + "?access_token=" + (accessToken as! String);
+        let urlPath:String = (getUserFavTagsURL as String) + "?access_token=" + (accessToken as! String);
         let url : NSURL = NSURL(string: urlPath)!
         var request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "GET"

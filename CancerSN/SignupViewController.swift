@@ -70,6 +70,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         var filePathToWrite = "\(paths)/" + imageFileName
         
         var imageData: NSData = UIImagePNGRepresentation(selectedImage)
+        println(selectedImage.size.width, selectedImage.size.height)
         var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
         println(imageDataStr)
         
@@ -86,16 +87,6 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
         
         //upload UserInfo to Server
-        
-//        var addUserBody = NSDictionary(objects: [(profileSet.objectForKey(emailNSUserData))!, (keychainAccess.getPasscode(usernameKeyChain))!, (keychainAccess.getPasscode(passwordKeyChain))!, (profileSet.objectForKey(genderNSUserData))!, (profileSet.objectForKey(smokingNSUserData))!, (profileSet.objectForKey(pathologicalNSUserData))!, (profileSet.objectForKey(stageNSUserData))!, (profileSet.objectForKey(ageNSUserData))!, (profileSet.objectForKey(cancerTypeNSUserData))!, (profileSet.objectForKey(metastasisNSUserData))!], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis"])
-//        let addUserUrl = NSURL(string: addNewUserURL)
-//        let request: NSMutableURLRequest = NSMutableURLRequest(URL: addUserUrl!)
-//        request.HTTPMethod = "POST"
-//        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(addUserBody, options:  NSJSONWritingOptions.allZeros, error: nil)
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
-//        connection.start()
         var haalthyService = HaalthyService()
         var addUserRespData = haalthyService.addUser()
         let str: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
@@ -143,9 +134,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     //MARK: Delegates
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-//        portrait.contentMode = .ScaleAspectFit //3
-//        portrait.image = chosenImage //4
+        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2ß
         var selectedImage = UIImage()
         selectedImage = cropToSquare(image: chosenImage)
         
