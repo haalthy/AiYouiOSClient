@@ -38,6 +38,7 @@ class UserListTableViewCell: UITableViewCell {
         }
         addFollowingBtn.enabled = false
         addFollowingBtn.titleLabel?.text = "已关注"
+        addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
     }
     
     var user=NSDictionary(){
@@ -73,18 +74,26 @@ class UserListTableViewCell: UITableViewCell {
             age = (user["age"] as! NSNumber).stringValue
         }
 //        var pathological = user["pathological"] as! String
-        if user["stage"] != nil {
+        if (user["stage"] != nil) && !(user["stage"] is NSNull) {
             var stageStr = user["stage"]! as! String
-            var stages = stageMapping.allKeysForObject(stageStr.toInt()!) as! NSArray
-            stage = stages[0] as! String
+            var stages = stageMapping.allKeysForObject(stageStr.toInt()!) as NSArray
+            if stages.count > 0 {
+                stage = stages[0] as! String
+            }
         }
         
-        if user["cancerType"] != nil{
-            cancerType = (cancerTypeMapping.allKeysForObject(user["cancerType"]!))[0] as! String
+        if (user["cancerType"] != nil) && !(user["cancerType"] is NSNull) {
+            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
+            if cancerKeysForObject.count > 0 {
+                cancerType = (cancerKeysForObject)[0] as! String
+            }
         }
         
-        if user["pathological"] != nil{
-            pathological = (pathologicalMapping.allKeysForObject(user["pathological"]!))[0] as! String
+        if user["pathological"] != nil && !(user["pathological"] is NSNull){
+            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
+            if pathologicalKeysForObject.count > 0 {
+                pathological = pathologicalKeysForObject[0] as! String
+            }
         }
         
         userProfileStr = displayGender + " " + age + "岁 " + cancerType + " " + pathological + " " + stage + "期"

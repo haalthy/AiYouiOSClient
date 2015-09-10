@@ -9,11 +9,11 @@
 import Foundation
 
 class HaalthyService:NSObject{
+    let getAccessToken = GetAccessToken()
 
     func addPost(post : NSDictionary)->NSData{
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil {
-            let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
@@ -92,7 +92,6 @@ class HaalthyService:NSObject{
     }
     
     func getFeeds(latestFetchTimestamp:Int)->NSData{
-        let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
@@ -149,7 +148,6 @@ class HaalthyService:NSObject{
     func addTreatment(treatmentList:NSArray)->NSData{
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil {
-            let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
@@ -173,10 +171,9 @@ class HaalthyService:NSObject{
         return addTreatmentRespData!
     }
     
-    func addPatientStatus(patientStatus:NSDictionary)->NSData{
+    func addPatientStatus(patientStatus:NSDictionary, clinicReport:NSDictionary)->NSData{
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil {
-            let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
@@ -186,23 +183,29 @@ class HaalthyService:NSObject{
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-        var treatments = NSMutableDictionary()
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(patientStatus, options: NSJSONWritingOptions.allZeros, error: nil)
+        var requestBody = NSMutableDictionary()
+        requestBody.setValue(patientStatus, forKey: "patientStatus")
+        requestBody.setValue(clinicReport, forKey: "clinicReport")
+//        let inputStr: NSString = NSString(data: requestBody, encoding: NSUTF8StringEncoding)!
+//        println(inputStr)
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions.allZeros, error: nil)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var addPatientStatusRespData = NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)
         
         let str: NSString = NSString(data: addPatientStatusRespData!, encoding: NSUTF8StringEncoding)!
         println(str)
-        let inputStr: NSString = NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding)!
-        println(inputStr)
+//        let inputStr: NSString = NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding)!
+//        println(inputStr)
         return addPatientStatusRespData!
     }
     
-    func getMyProfile()->NSData{
-        let getAccessToken = GetAccessToken()
+    func getMyProfile()->NSData?{
         getAccessToken.getAccessToken()
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken == nil {
+            return nil
+        }
         let urlPath:String = (getMyProfileURL as String) + "?access_token=" + (accessToken as! String);
         let url : NSURL = NSURL(string: urlPath)!
         let request = NSMutableURLRequest(URL: url)
@@ -218,10 +221,9 @@ class HaalthyService:NSObject{
     }
     
     func getSuggestUserByTags(tagList:NSArray, rangeBegin: Int, rangeEnd: Int)->NSData{
-        let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let url:NSURL = NSURL(string: getSuggestUserByProfileURL)!
+        let url:NSURL = NSURL(string: getSuggestUserByTagsURL)!
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
         var requestBody = NSDictionary(objects: [tagList, rangeBegin, rangeEnd], forKeys: ["tags", "rangeBegin", "rangeEnd"])
@@ -229,14 +231,17 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var getSuggestUserByTagsData = NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil)
+        let inputStr: NSString = NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding)!
+        println(getSuggestUserByTagsURL)
+        println(inputStr)
         return getSuggestUserByTagsData!
     }
     
     func getSuggestUserByProfile(rangeBegin: Int, rangeEnd: Int)->NSData{
-        let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         let url:NSURL = NSURL(string: getSuggestUserByProfileURL + "?access_token=" + (accessToken as! String))!
+        println(getSuggestUserByProfileURL + "?access_token=" + (accessToken as! String))
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
         var requestBody = NSDictionary(objects: [rangeBegin, rangeEnd], forKeys: ["beginIndex","endIndex"])
@@ -248,7 +253,6 @@ class HaalthyService:NSObject{
     }
     
     func addFollowing(username:String)->NSData{
-        let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
         let urlPath: String = addFollowingURL + "/" + username + "?access_token=" + accessToken
@@ -260,9 +264,11 @@ class HaalthyService:NSObject{
         return (NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil))!
     }
     
-    func getUserFavTags()->NSData{
-        let getAccessToken = GetAccessToken()
+    func getUserFavTags()->NSData?{
         getAccessToken.getAccessToken()
+        if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) == nil {
+            return nil
+        }
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
         let urlPath:String = getUserFavTagsURL + "?access_token=" + accessToken
         println(urlPath)
@@ -272,5 +278,27 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         return (NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil))!
+    }
+    
+    func getUserDetail(username:String)->NSData{
+        getAccessToken.getAccessToken()
+        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
+        let urlPath:String = getUserDetailURL + "/" + username + "?access_token=" + accessToken
+        println(urlPath)
+        var url:NSURL = NSURL(string: urlPath)!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        return (NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil))!
+    }
+    
+    func getClinicReportFormat()->NSData{
+        let url:NSURL = NSURL(string: getClinicReportFormatURL)!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)!
     }
 }

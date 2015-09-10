@@ -30,9 +30,11 @@ let getTreatmentsURL = haalthyServiceRestfulURL + "open/patient/treatments/"
 let getTreatmentformatURL = haalthyServiceRestfulURL + "open/patient/treatmentformat"
 let addTreatmentURL = haalthyServiceRestfulURL + "security/patient/treatment/add"
 let getPatientStatusFormatURL = haalthyServiceRestfulURL + "open/patient/patientstatusformat"
+let getClinicReportFormatURL = haalthyServiceRestfulURL + "open/patient/clinicreportformat"
 let addPatientStatusURL = haalthyServiceRestfulURL + "security/patient/patientStatus/add"
 let getMyProfileURL = haalthyServiceRestfulURL + "security/user/"
 let getSuggestUserByProfileURL:String = haalthyServiceRestfulURL + "security/user/suggestedusers"
+let getUserDetailURL:String = haalthyServiceRestfulURL + "security/user/detail"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"

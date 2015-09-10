@@ -35,6 +35,14 @@ class AddNewTreatmentEndDateViewController: UIViewController {
 
     }
 
+    @IBAction func unselectNewTreatmentEndDate(sender: UIButton) {
+        let tenYrIntervalSec:Int = 60*60*24*365*10
+        let tenYrTimeInterval = NSTimeInterval(tenYrIntervalSec)
+        var date = NSDate(timeIntervalSinceNow: tenYrTimeInterval)
+        println(date)
+        profileSet.setObject(date.timeIntervalSince1970, forKey: newTreatmentEnddate)
+    }
+    
     @IBAction func newTreatmentEndDate(sender: UIButton) {
         if profileSet.objectForKey(newTreatmentEnddate) == nil{
             profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentEnddate)

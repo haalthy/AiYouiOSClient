@@ -93,9 +93,10 @@ class TagViewController: UITableViewController {
         self.extendedLayoutIncludesOpaqueBars = true;
         if (selectedTags.count == 0) && (keychain.getPasscode(usernameKeyChain) != nil){
             var getUserFavTagsData = haalthyService.getUserFavTags()
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             self.selectedTags = jsonResult as! NSMutableArray
         }
+        self.tableView.allowsSelection = false
     }
 
     override func viewWillDisappear(animated: Bool) {

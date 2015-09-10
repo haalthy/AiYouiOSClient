@@ -10,14 +10,18 @@ import UIKit
 
 class AddPatientStatusViewController: UITableViewController , UITextFieldDelegate, UITextViewDelegate {
     var patientStatusFormatList = NSArray()
+    var clinicReportFormatList = NSArray()
     let haalthyService = HaalthyService()
     var expendRow = NSMutableArray()
-    var patientStatusDetail = ""
+    var patientStatusDetail = String()
+    var clinicReportDetail = String()
     
     var treatmentList = NSArray()
     var patientStatusList = NSMutableArray()
+    var clinicReportList = NSMutableArray()
     
     func getPatientStatusDesc(){
+        var patientStatusNameSet = NSMutableSet()
         for i in 0..<expendRow.count {
             var indexPath = NSIndexPath(forRow: expendRow[i] as! Int, inSection: 1)
             var cell = self.tableView.cellForRowAtIndexPath(indexPath)
@@ -38,11 +42,24 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
                 }
             }
         }
+        var clinicReportNameList = NSMutableSet()
+        for clinicReportFormat in clinicReportFormatList {
+            clinicReportNameList.addObject(clinicReportFormat.objectForKey("clinicItem") as! String)
+            println(clinicReportFormat.objectForKey("clinicItem") as! String)
+        }
         for patientStatus in patientStatusList {
-            if patientStatus.objectForKey("patientStatusDesc")  == nil {
-                patientStatusDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "**"
+            if clinicReportNameList.containsObject(patientStatus.objectForKey("patientStatusName") as! String) {
+                if patientStatus.objectForKey("patientStatusDesc")  == nil {
+                    clinicReportDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "**"
+                }else{
+                    clinicReportDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "*" + (patientStatus.objectForKey("patientStatusDesc") as! String) + "**"
+                }
             }else{
-                patientStatusDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "*" + (patientStatus.objectForKey("patientStatusDesc") as! String) + "**"
+                if patientStatus.objectForKey("patientStatusDesc")  == nil {
+                    patientStatusDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "**"
+                }else{
+                    patientStatusDetail += (patientStatus.objectForKey("patientStatusName") as! String) + "*" + (patientStatus.objectForKey("patientStatusDesc") as! String) + "**"
+                }
             }
         }
     }
@@ -54,13 +71,15 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
             }
             haalthyService.addTreatment(treatmentList)
         }
-        
         getPatientStatusDesc()
         var patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(1, forKey: "isPosted")
-        patientStatus.setValue(Int(NSDate().timeIntervalSince1970*1000), forKey: "insertedDate")
-        haalthyService.addPatientStatus(patientStatus as NSDictionary)
+//        patientStatus.setValue(Int(NSDate().timeIntervalSince1970*1000), forKey: "insertedDate")
+        var clinicReport = NSMutableDictionary()
+        clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
+        clinicReport.setValue(1, forKey: "isPosted")
+        haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -76,8 +95,11 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
         var patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(0, forKey: "isPosted")
-        patientStatus.setValue(NSDate().timeIntervalSince1970, forKey: "insertedDate")
-        haalthyService.addPatientStatus(patientStatus as NSDictionary)
+//        patientStatus.setValue(NSDate().timeIntervalSince1970, forKey: "insertedDate")
+        var clinicReport = NSMutableDictionary()
+        clinicReport.setValue(clinicReport, forKey: "clinicReport")
+        clinicReport.setValue(1, forKey: "isPosted")
+        haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -103,6 +125,10 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
         var getPatientStatusFormatData = haalthyService.getPatientStatusFormat()
         var jsonResult = NSJSONSerialization.JSONObjectWithData(getPatientStatusFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         patientStatusFormatList = jsonResult as! NSArray
+        var getClinicReportFormatData = haalthyService.getClinicReportFormat()
+        jsonResult = NSJSONSerialization.JSONObjectWithData(getClinicReportFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        clinicReportFormatList = jsonResult as! NSArray
+//        self.tableView.allowsSelection = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -123,7 +149,7 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
         // Return the number of rows in the section.
         var numberOfRows:Int = 0
         switch section{
-        case 1: numberOfRows = patientStatusFormatList.count
+        case 1: numberOfRows = clinicReportFormatList.count + patientStatusFormatList.count
             break
         case 0, 2, 3: numberOfRows = 1
             break
@@ -137,7 +163,11 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
         if indexPath.section == 1{
         let cell = tableView.dequeueReusableCellWithIdentifier("addPatientStatusCellIdentifier", forIndexPath: indexPath) as! AddPatientStatusTableViewCell
 //            let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! AddPatientStatusTableViewCell
-            cell.patientStatusName.text = patientStatusFormatList[indexPath.row]["statusName"] as? String
+            if indexPath.row < clinicReportFormatList.count {
+                cell.patientStatusName.text = clinicReportFormatList[indexPath.row]["clinicItem"] as? String
+            }else{
+                cell.patientStatusName.text = patientStatusFormatList[indexPath.row - clinicReportFormatList.count]["statusName"] as? String
+            }
             if expendRow.containsObject(indexPath.row) {
                 cell.patientStatusDesc.hidden = false
                 cell.cancel.hidden = false
@@ -206,18 +236,6 @@ class AddPatientStatusViewController: UITableViewController , UITextFieldDelegat
             textView.textColor = UIColor.blackColor()
         }
     }
-    
-//    func textFieldDidEndEditing(textField: UITextField) {
-//        var textFieldPosition = textField.convertPoint(CGPointZero, toView: self.tableView)
-//        var indexPath:NSIndexPath = self.tableView.indexPathForRowAtPoint(textFieldPosition)!
-//        println(indexPath.section, indexPath.row)
-//        var cell = self.tableView.cellForRowAtIndexPath(indexPath) as! AddPatientStatusTableViewCell
-//        for patientStatus in patientStatusList{
-//            if (patientStatus.objectForKey("patientStatusName") as! String) == cell.patientStatusName.text {
-//                patientStatus.setObject(textField.text, forKey: "patientStatusDesc")
-//            }
-//        }
-//    }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if(indexPath.section == 1){

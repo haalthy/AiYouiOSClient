@@ -14,6 +14,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var password:String?
     var feedList = NSArray()
     var latestFetchTimestamp = Int()
+    var automatedShowDiscoverView:Bool = true
     
     @IBAction func discover(sender: UIButton) {
         self.performSegueWithIdentifier("discoverSegue", sender: self)
@@ -127,10 +128,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 if( ((feed["image"]) is NSNull) == false ){
                     feedItem.setValue(feed["image"], forKey: "image")
                 }
+                feedItem.setValue(username, forKey: "ownerName")
                 context.save(nil)
             }
             newFeedList.addObjectsFromArray(feedList as [AnyObject])
-            feedList = newFeedList as! NSArray
+            feedList = newFeedList as NSArray
             if feedList.count > 0{
                 latestFetchTimestamp = feedList[0].valueForKey("dateInserted") as! Int
             }
@@ -195,14 +197,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 2
     }
 
@@ -237,7 +236,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             if feedList.count == 0 {
                 refreshFeeds()
             }
-        }else{
+        }else if automatedShowDiscoverView {
+            automatedShowDiscoverView = false
             self.performSegueWithIdentifier("discoverSegue", sender: nil)
         }
     }
@@ -262,18 +262,17 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
 
     
-    override func tableView(_tableView: UITableView,
-        heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-            var rowHeight:CGFloat
-            switch indexPath.section{
-            case 0: rowHeight = 0
-                break
-            case 1: rowHeight = UITableViewAutomaticDimension
-                break
-            default:rowHeight = 0
-                break
-            }
-            return rowHeight
+    override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        var rowHeight:CGFloat
+        switch indexPath.section{
+        case 0: rowHeight = 0
+            break
+        case 1: rowHeight = UITableViewAutomaticDimension
+            break
+        default:rowHeight = 0
+            break
+        }
+        return rowHeight
     }
     
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
