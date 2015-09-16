@@ -96,7 +96,7 @@ class TagViewController: UITableViewController {
             var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             self.selectedTags = jsonResult as! NSMutableArray
         }
-        self.tableView.allowsSelection = false
+//        self.tableView.allowsSelection = false
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -175,18 +175,19 @@ class TagViewController: UITableViewController {
         generalSselectedCell.contentView.backgroundColor = UIColor.whiteColor()
         if(indexPath.section == 1){
             var selectedCell:TagListTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagListTableViewCell
+            selectedCell.selectionStyle = UITableViewCellSelectionStyle.None
             if(selectedTags.containsObject(tags[indexPath.row])==false){
-                selectedCell.tagList.backgroundColor = textColor
+                selectedCell.tagList.backgroundColor = mainColor
                 selectedCell.tagList.textColor = UIColor.whiteColor()
                 selectedTags.addObject(tags[indexPath.row])
             }else{
                 selectedCell.tagList.backgroundColor = UIColor.whiteColor()
-                selectedCell.tagList.textColor = textColor
+                selectedCell.tagList.textColor = mainColor
                 selectedTags.removeObject(tags[indexPath.row])
             }
         }else if(indexPath.section == 2){
             var selectedCell:TagFooterTableViewCell = tableView.cellForRowAtIndexPath(indexPath)! as! TagFooterTableViewCell
-
+            selectedCell.selectionStyle = UITableViewCellSelectionStyle.None
         }
     }
     
@@ -206,4 +207,19 @@ class TagViewController: UITableViewController {
         }
     }
 
+    override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        var rowHeight:CGFloat = 0
+        switch indexPath.section {
+        case 0: rowHeight = 100
+            break
+        case 1: rowHeight = 60
+            break
+        case 2: rowHeight = 80
+            break
+        default: rowHeight = 0
+            break
+        }
+        return rowHeight
+    }
+    
 }

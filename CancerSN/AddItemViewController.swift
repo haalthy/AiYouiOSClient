@@ -30,6 +30,7 @@ class AddItemViewController: UIViewController {
             self.performSegueWithIdentifier("loginSegue", sender: nil)
         }
         self.isBroadcast = 1
+        isDismiss = true
         self.performSegueWithIdentifier("addPostSegue", sender: nil)
     }
     
@@ -38,6 +39,7 @@ class AddItemViewController: UIViewController {
             self.performSegueWithIdentifier("loginSegue", sender: nil)
         }
         self.isBroadcast = 0
+        isDismiss = true
         self.performSegueWithIdentifier("addPostSegue", sender: nil)
     }
     override func viewDidLoad() {

@@ -8,12 +8,13 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, PostTagVCDelegate {
+class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDelegate {
     var isBroadcast : Int = 0
     var tagList: NSArray = NSArray()
     @IBOutlet weak var selectTagsButton: UIButton!
     @IBOutlet weak var tagListDisplay: UILabel!
     @IBOutlet weak var postContent: UITextView!
+    @IBOutlet weak var sendButton: UIButton!
 
     @IBAction func selectTags(sender: UIButton) {
         self.performSegueWithIdentifier("selectTagSegue", sender: self)
@@ -47,9 +48,37 @@ class AddPostViewController: UIViewController, PostTagVCDelegate {
         }
     }
     
+    func disableButtonFormat(sender: UIButton){
+        sender.backgroundColor = UIColor.whiteColor()
+        sender.layer.borderColor = UIColor.lightGrayColor().CGColor
+        sender.layer.borderWidth = 1
+        sender.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Highlighted)
+    }
+    
+    func enableButtonFormat(sender: UIButton){
+        sender.backgroundColor = mainColor
+//        sender.layer.borderColor = UIColor.lightGrayColor().CGColor
+        sender.layer.borderWidth = 0
+        sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        postContent.delegate = self
+        if self.isBroadcast == 1 {
+            postContent.text = "请在此输入广播消息"
+            selectTagsButton.enabled = false
+        }else{
+            postContent.text = "在此分享我的心情"
+        }
+        postContent.textColor = UIColor.grayColor()
+        sendButton.enabled = false
+        sendButton.layer.cornerRadius = 5
+        sendButton.layer.masksToBounds = true
+        selectTagsButton.layer.cornerRadius = 5
+        selectTagsButton.layer.masksToBounds = true
+        disableButtonFormat(selectTagsButton)
+        disableButtonFormat(sendButton)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -76,9 +105,21 @@ class AddPostViewController: UIViewController, PostTagVCDelegate {
             tagViewController.postDelegate = self
         }
     }
+    
     func getPostTagList(data: NSArray) {
         self.tagList = data
         
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor != UIColor.blackColor() {
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+        }
+        selectTagsButton.enabled = true
+        sendButton.enabled = true
+        enableButtonFormat(selectTagsButton)
+        enableButtonFormat(sendButton)
     }
 }
 

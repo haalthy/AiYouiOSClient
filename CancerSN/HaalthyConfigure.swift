@@ -35,6 +35,11 @@ let addPatientStatusURL = haalthyServiceRestfulURL + "security/patient/patientSt
 let getMyProfileURL = haalthyServiceRestfulURL + "security/user/"
 let getSuggestUserByProfileURL:String = haalthyServiceRestfulURL + "security/user/suggestedusers"
 let getUserDetailURL:String = haalthyServiceRestfulURL + "security/user/detail"
+let getPostsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/posts"
+let resetPasswordURL:String = haalthyServiceRestfulURL + "security/user/resetpassword"
+let getFollowingUserURL:String = haalthyServiceRestfulURL + "security/user/followingusers"
+let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/followerusers"
+let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -79,6 +84,7 @@ let highlightColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alp
 let textColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
 let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:0.4)
 let mainColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
+let sectionHeaderColor: UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:0.2)
 
 
 

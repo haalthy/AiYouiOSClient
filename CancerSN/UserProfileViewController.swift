@@ -9,37 +9,63 @@
 import UIKit
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate {
+    @IBOutlet weak var patientProfile: UILabel!
+    @IBOutlet weak var usernameLabel: UILabel!
     
     @IBOutlet weak var profileSegment: UISegmentedControl!
     var username: NSString?
     var password: NSString?
     var haalthyService = HaalthyService()
     var keychainAccess = KeychainAccess()
+    var getAccessToken = GetAccessToken()
     var treatmentList = NSArray()
     var patientStatusList = NSArray()
     var treatmentSections = NSMutableArray()
     var sectionHeaderHeightList = NSMutableArray()
     var clinicReportList = NSArray()
+    var userProfile = NSDictionary()
+    var broadcastList = NSArray()
+    var heightForQuestionRow = NSMutableDictionary()
+    var usedToBeInLoginView = false
+    var publicService = PublicService()
+    var viewContainer = UIView()
+    var accessToken :AnyObject? = nil
+    var userList = NSArray()
     
+    @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
+        if username != nil {
+            if sender.selectedSegmentIndex == 1 {
+                var broadcastData = haalthyService.getPostsByUsername(username as! String)
+                var jsonResult = NSJSONSerialization.JSONObjectWithData(broadcastData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                if jsonResult is NSArray {
+                    broadcastList = jsonResult as! NSArray
+                }
+            }
+            self.tableview.reloadData()
+        }
+    }
     @IBOutlet weak var tableview: UITableView!
     
     func gettTreatmentsData(){
-        username = keychainAccess.getPasscode(usernameKeyChain)
-        password = keychainAccess.getPasscode(passwordKeyChain)
         if (username != nil) && (password != nil){
-            var getUserDetail = haalthyService.getUserDetail(username! as String)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserDetail, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            
-            let str: NSString = NSString(data: getUserDetail, encoding: NSUTF8StringEncoding)!
-            println(str)
+            var jsonResult:AnyObject? = nil
+            if haalthyService.getUserDetail(username! as String) != nil{
+                var getUserDetail = haalthyService.getUserDetail(username! as String)!
+                jsonResult = NSJSONSerialization.JSONObjectWithData(getUserDetail, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                            let str: NSString = NSString(data: getUserDetail, encoding: NSUTF8StringEncoding)!
+                            println(str)
+            }
+
             if jsonResult != nil{
-                profileSegment.insertSegmentWithTitle("我的设置", atIndex: 2, animated: false)
+                if profileSegment.numberOfSegments < 3 {
+                    profileSegment.insertSegmentWithTitle("我", atIndex: 2, animated: false)
+                }
                 var userDetail = jsonResult as! NSDictionary
                 treatmentList = jsonResult!.objectForKey("treatments") as! NSArray
                 patientStatusList = jsonResult!.objectForKey("patientStatus") as! NSArray
                 clinicReportList = jsonResult!.objectForKey("clinicReport") as! NSArray
+                userProfile = jsonResult!.objectForKey("userProfile") as! NSDictionary
                 var timeList = [Int]()
-//                var timeList = NSArray()
                 var timeSet = NSMutableSet()
                 for var i = 0; i < treatmentList.count; i++ {
                     var treatment = treatmentList[i] as! NSMutableDictionary
@@ -48,13 +74,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     }
                     
                     if timeSet.containsObject(treatment.objectForKey("endDate")!) == false {
-                        //                        timeList.addObject(treatment.objectForKey("endDate")!)
-//                        timeList.append((treatment.objectForKey("endDate") as! NSNumber).integerValue)
                         timeSet.addObject((treatment.objectForKey("endDate") as! NSNumber).integerValue)
                     }
                     if timeSet.containsObject(treatment.objectForKey("beginDate")!) == false {
-                        //                        timeList.addObject(treatment.objectForKey("beginDate")!)
-//                        timeList.append((treatment.objectForKey("beginDate") as! NSNumber).integerValue)
                         timeSet.addObject((treatment.objectForKey("beginDate") as! NSNumber).integerValue)
                     }
                 }
@@ -120,18 +142,90 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
-        var viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
-        imageView.image = UIImage(named: "Mario.jpg")
-        viewContainer.addSubview(imageView)
-        viewContainer.backgroundColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.addSubview(viewContainer)
-        tableview.delegate = self
-        tableview.dataSource = self
-        gettTreatmentsData()
-        self.tableview.allowsSelection = false
-        
+//        username = keychainAccess.getPasscode(usernameKeyChain)
+//        password = keychainAccess.getPasscode(passwordKeyChain)
+//        getAccessToken.getAccessToken()
+//        accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+//        if accessToken == nil {
+//            self.performSegueWithIdentifier("loginSegue", sender: self)
+//        }
     }
+    
+    override func viewWillDisappear(animated: Bool) {
+        viewContainer.removeFromSuperview()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        username = keychainAccess.getPasscode(usernameKeyChain)
+        password = keychainAccess.getPasscode(passwordKeyChain)
+        accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        getAccessToken.getAccessToken()
+        if accessToken == nil{
+            if usedToBeInLoginView == false{
+                //            self.view.removeAllSubviews()
+                //            var portraitWith:CGFloat = 128
+                //
+                //            var portraitView = UIImageView(frame: CGRectMake((UIScreen.mainScreen().bounds.width - portraitWith)/2, 100, portraitWith, portraitWith))
+                //            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                //
+                //            var imageFilePath = "\(paths)/" + imageFileName
+                //            portraitView.image = UIImage(contentsOfFile: imageFilePath)
+                //            var buttonWidth: CGFloat = (UIScreen.mainScreen().bounds.width - 50)/2
+                //            var buttonHeight: CGFloat = 30
+                //            var loginButton = UIButton(frame: CGRectMake(30 + buttonWidth, 280, buttonWidth, 30))
+                //            var signupButton = UIButton(frame: CGRectMake(20, 280, buttonWidth, 30))
+                //            loginButton.addTarget(self, action: "login", forControlEvents: UIControlEvents.TouchUpInside)
+                //            loginButton.setTitle("登陆", forState: UIControlState.allZeros)
+                //            formatButton(loginButton)
+                //            signupButton.addTarget(self, action: "signup", forControlEvents: UIControlEvents.TouchUpInside)
+                //            signupButton.setTitle("注册", forState: UIControlState.allZeros)
+                //            formatButton(signupButton)
+                //            self.view.addSubview(loginButton)
+                //            self.view.addSubview(signupButton)
+                self.performSegueWithIdentifier("loginSegue", sender: self)
+                usedToBeInLoginView = true
+            }else{
+                self.tabBarController?.selectedIndex = 0
+                usedToBeInLoginView = false
+            }
+        }else{
+            var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
+            viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
+            imageView.image = UIImage(named: "Mario.jpg")
+            viewContainer.addSubview(imageView)
+            viewContainer.backgroundColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.addSubview(viewContainer)
+            tableview.delegate = self
+            tableview.dataSource = self
+            gettTreatmentsData()
+            //            self.tableview.allowsSelection = false
+            let publicService = PublicService()
+            let profileStr = publicService.getProfileStrByDictionary(userProfile)
+            self.patientProfile.text = profileStr
+            self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
+            self.usernameLabel.text = self.userProfile.objectForKey("username") as! String
+        }
+    }
+    
+//    func formatButton(sender: UIButton){
+//        sender.layer.borderWidth = 1.0
+//        sender.layer.borderColor = mainColor.CGColor
+//        sender.titleLabel?.textAlignment = NSTextAlignment.Center
+//        sender.backgroundColor = UIColor.whiteColor()
+//        sender.setTitleColor(mainColor, forState: UIControlState.allZeros)
+//        sender.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
+//        sender.layer.cornerRadius = 5
+//        sender.layer.masksToBounds = true
+//    }
+    
+//    func login(){
+//        self.performSegueWithIdentifier("loginSegue", sender: self)
+//    }
+//    
+//    func signup(){
+//    
+//    }
     
     func sortFunc(num1: Int, num2: Int) -> Bool {
         return num1 > num2
@@ -144,10 +238,26 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
-        if profileSegment.selectedSegmentIndex == 0 {
-            return treatmentSections.count+1
+        var numberOfSections = 0
+        switch profileSegment.selectedSegmentIndex {
+        case 0:
+            numberOfSections = treatmentSections.count + 1
+            break
+        case 1:
+            numberOfSections = 1
+            break
+        case 2:
+            if username != nil{
+                numberOfSections = 3
+            } else{
+                numberOfSections = 1
+            }
+            break
+        default:
+            numberOfSections = 0
+            break
         }
-        return 0
+        return numberOfSections
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -163,8 +273,23 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     numberOfRows = 0
                 }
             }
-        }else{
-            numberOfRows = 0
+        }else if profileSegment.selectedSegmentIndex == 1{
+            numberOfRows = self.broadcastList.count
+        }else if profileSegment.selectedSegmentIndex == 2{
+            if username != nil{
+                switch section{
+                case 0: numberOfRows = 3
+                    break
+                case 1: numberOfRows = 1
+                    break
+                case 2: numberOfRows = 1
+                    break
+                default: numberOfRows = 0
+                    break
+                }
+            }else{
+                numberOfRows = 1
+            }
         }
         return numberOfRows
     }
@@ -173,6 +298,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 0{
             if indexPath.section == 0{
                 let cell = tableView.dequeueReusableCellWithIdentifier("treatmentSummaryCell", forIndexPath: indexPath) as! TreatmentSummaryTableViewCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
                 if clinicReportList.count > 0{
                     cell.treatmentList = treatmentList
                     cell.clinicReportList = clinicReportList
@@ -180,29 +306,92 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 return cell
             }else{
                 let cell = tableView.dequeueReusableCellWithIdentifier("patientStatusListCell", forIndexPath: indexPath) as! PatientStatusTableViewCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.patientStatus = patientStatusList[indexPath.row] as! NSDictionary
                 return cell
             }
         }else if profileSegment.selectedSegmentIndex == 1{
-            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! QuestionListTableViewCell
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            var broadcast = broadcastList[indexPath.row] as! NSDictionary
+            
+            var dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "MM/dd" // superset of OP's format
+            var dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
+            let dateStr = dateFormatter.stringFromDate(dateInserted)
+            
+            var questionLabel = UILabel(frame: CGRectMake(15, 150, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
+            questionLabel.numberOfLines = 0
+            questionLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            questionLabel.font = UIFont(name: "Helvetica", size: 13.0)
+            questionLabel.text = broadcast.objectForKey("body") as! String
+            questionLabel.textColor = UIColor.blackColor()
+            questionLabel.sizeToFit()
+
+            var dateInsertedLabel = UILabel(frame: CGRectMake(10, questionLabel.frame.height + 5, 60, 20))
+            dateInsertedLabel.textColor = UIColor.darkGrayColor()
+            dateInsertedLabel.text = dateStr
+            dateInsertedLabel.font = UIFont(name: "Helvetica", size: 12.0)
+
+            var reviewsLabel = UILabel(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 15 - 80, questionLabel.frame.height + 5, 80, 20))
+            reviewsLabel.textColor = UIColor.darkGrayColor()
+            reviewsLabel.font = UIFont(name: "Helvetica", size: 12.0)
+            reviewsLabel.text = (broadcast["countComments"] as! NSNumber).stringValue + "评论"
+            reviewsLabel.textAlignment = NSTextAlignment.Right
+            
+            cell.addSubview(questionLabel)
+            cell.addSubview(dateInsertedLabel)
+            cell.addSubview(reviewsLabel)
+            self.heightForQuestionRow.setObject(questionLabel.frame.height, forKey: indexPath)
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("settingListCell", forIndexPath: indexPath) as! UITableViewCell
-            return cell
+            if indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCellWithIdentifier("personalSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                //            if username != nil{
+                switch indexPath.row{
+                case 0: cell.textLabel?.text = "我关注的病友"
+                    break
+                case 1: cell.textLabel?.text = "关注我的病友"
+                    break
+                case 2: cell.textLabel?.text = "我的评论"
+                    break
+                default: break
+                }
+                return cell
+            }else if indexPath.section == 1{
+                let cell = tableView.dequeueReusableCellWithIdentifier("accountSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.textLabel?.text = "更改密码"
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCellWithIdentifier("logoutCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.textLabel?.text = "退出登录"
+                return cell
+            }
         }
     }
     
     func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-        var rowHeight: CGFloat
+        var rowHeight: CGFloat = 0.0
         if profileSegment.selectedSegmentIndex == 0{
             if indexPath.section == 0{
                 rowHeight = clinicReportList.count > 0 ? 150 : 0
             }else{
                 rowHeight = UITableViewAutomaticDimension
             }
-        }else{
-            rowHeight = 80
+        }else if profileSegment.selectedSegmentIndex == 1{
+            var questionLabelHeight = self.heightForQuestionRow.objectForKey(indexPath)
+            if questionLabelHeight != nil{
+                rowHeight = (self.heightForQuestionRow.objectForKey(indexPath) as! CGFloat) + 35
+            }
+//            rowHeight = self.heightForQuestionRow.objectForKey(indexPath) as! CGFloat
+//            rowHeight = 80
+        }else if profileSegment.selectedSegmentIndex == 2{
+            rowHeight = 50
         }
+        
         return rowHeight
     }
     
@@ -212,12 +401,23 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if section == 0 {
                 heightForHeader = 40
             }else{
-                var treatmentStr = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
-                heightForHeader = CGFloat(35 * treatmentStr + 4)
-                if UIScreen.mainScreen().bounds.width < 375 {
-                    heightForHeader += 35
+                var treatmentLineCount:AnyObject? = self.treatmentSections[section-1]["treatmentLineCount"]
+                if treatmentLineCount == nil{
+                    heightForHeader = 0
+                }else{
+                    var treatmentStr = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
+                    heightForHeader = CGFloat(35 * treatmentStr + 4)
+                    if UIScreen.mainScreen().bounds.width < 375 {
+                        heightForHeader += 35
+                    }
                 }
             }
+        }
+        if profileSegment.selectedSegmentIndex == 1 {
+            heightForHeader = 40
+        }
+        if profileSegment.selectedSegmentIndex == 2 {
+            heightForHeader = 10
         }
         return heightForHeader
     }
@@ -313,9 +513,86 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-        return headerView;
-
+        if profileSegment.selectedSegmentIndex == 1{
+            var addBroadcastBtnWidth = 200
+            var coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
+            var addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
+            addBroadcastBtn.backgroundColor = mainColor
+            addBroadcastBtn.layer.cornerRadius = 5
+            addBroadcastBtn.titleLabel?.textAlignment = NSTextAlignment.Center
+            addBroadcastBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            addBroadcastBtn.setTitle("有新问题？点击发送广播", forState: UIControlState.Normal)
+            addBroadcastBtn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 14)
+            addBroadcastBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
+            headerView.addSubview(addBroadcastBtn)
+            
+        }
+        if profileSegment.selectedSegmentIndex == 2 {
+            headerView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 10))
+            headerView.backgroundColor = sectionHeaderColor
+        }
+        return headerView
     }
     
-
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if profileSegment.selectedSegmentIndex == 2 {
+            if indexPath.section == 2 {
+                self.performSegueWithIdentifier("loginSegue", sender: self)
+                publicService.logOutAccount()
+                usedToBeInLoginView = true
+            }
+            if indexPath.section == 1 {
+                self.performSegueWithIdentifier("setPasswordSegue", sender: self)
+            }
+            if indexPath.section == 0 {
+                if indexPath == 2{
+                    self.performSegueWithIdentifier("commentListSegue", sender: self)
+                }else{
+                    var userListData = NSData()
+                    if indexPath.row == 0{
+                        userListData = haalthyService.getFollowingUsers(username! as String)!
+                    }
+                    if indexPath.row == 1{
+                        userListData = haalthyService.getFollowerUsers(username! as String)!
+                    }
+                    var jsonResult = NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                    if jsonResult is NSArray {
+                        userList = jsonResult as! NSArray
+                    }
+                    self.performSegueWithIdentifier("userListSegue", sender: self)
+                }
+            }
+        }
+    }
+    
+    func addPost(){
+        self.performSegueWithIdentifier("addPostSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "addPostSegue" {
+            (segue.destinationViewController as! AddPostViewController).isBroadcast = 1
+        }
+        if segue.identifier == "setPasswordSegue" {
+            (segue.destinationViewController as! SettingPasswordViewController).username = userProfile.objectForKey("username") as! String
+        }
+        if segue.identifier == "userListSegue" {
+            (segue.destinationViewController as! UserListTableViewController).userList = userList
+        }
+        if segue.identifier == "commentListSegue" {
+            var commentList = NSArray()
+            var commentListData = haalthyService.getCommentsByUsername(username as! String)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(commentListData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if jsonResult is NSArray {
+                commentList = jsonResult as! NSArray
+            }
+            (segue.destinationViewController as! CommentListTableViewController).commentList = commentList
+        }
+    }
 }
+
+//extension UserProfileViewController: SettingPasswordDelegate{
+//    func getPassword(password: String){
+//        
+//    }
+//}

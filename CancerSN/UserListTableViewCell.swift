@@ -16,6 +16,8 @@ protocol UserListDelegate {
 class UserListTableViewCell: UITableViewCell {
     
     var delegate : UserListDelegate?
+    
+    var hiddenFollowButton = Bool()
 
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var usernameDisplay: UILabel!
@@ -107,12 +109,14 @@ class UserListTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        addFollowingBtn.layer.cornerRadius = 5
-        addFollowingBtn.layer.borderWidth = 2.0
-        addFollowingBtn.layer.borderColor = mainColor.CGColor
-        addFollowingBtn.layer.masksToBounds = true
-        addFollowingBtn.backgroundColor = UIColor.whiteColor()
-        addFollowingBtn.titleLabel?.textColor = mainColor
+//        if !hiddenFollowButton{
+//            addFollowingBtn.layer.cornerRadius = 5
+//            addFollowingBtn.layer.borderWidth = 2.0
+//            addFollowingBtn.layer.borderColor = mainColor.CGColor
+//            addFollowingBtn.layer.masksToBounds = true
+//            addFollowingBtn.backgroundColor = UIColor.whiteColor()
+//            addFollowingBtn.titleLabel?.textColor = mainColor
+//        }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

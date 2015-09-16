@@ -14,6 +14,9 @@
 		2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */; };
 		2A2733F51BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2733F41BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift */; };
 		2A2733F71BA0FC890076696A /* chartLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A2733F61BA0FC890076696A /* chartLine.png */; };
+		2A2733F91BA244E00076696A /* PublicService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2733F81BA244E00076696A /* PublicService.swift */; };
+		2A2733FB1BA2509E0076696A /* QuestionListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2733FA1BA2509E0076696A /* QuestionListTableViewCell.swift */; };
+		2A2733FD1BA770250076696A /* SettingPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */; };
 		2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */; };
 		2A3228A81B712C64006FB92D /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A71B712C64006FB92D /* AddItemViewController.swift */; };
 		2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A91B7135DB006FB92D /* AddPostViewController.swift */; };
@@ -67,6 +70,8 @@
 		2AC59C3E1B5E07B900C4FE36 /* TagListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */; };
 		2AC59C401B5F2D0500C4FE36 /* UserListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */; };
 		2ACD949F1B9A4B6700378539 /* PatientStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACD949E1B9A4B6700378539 /* PatientStatusTableViewCell.swift */; };
+		2ADD66681BA9EE5C0064A7C1 /* CommentListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD66671BA9EE5C0064A7C1 /* CommentListTableViewController.swift */; };
+		2ADD666A1BA9F0910064A7C1 /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD66691BA9F0910064A7C1 /* CommentTableViewCell.swift */; };
 		2AE59DB41B83F71300BE910D /* myTagButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AE59DB31B83F71300BE910D /* myTagButton.png */; };
 		2AE59DB81B83FBBF00BE910D /* mytagsBtnImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */; };
 		2AF673691B88416F00E220CD /* CVAuxiliaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF6734F1B88416F00E220CD /* CVAuxiliaryView.swift */; };
@@ -115,6 +120,9 @@
 		2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewCell.swift; sourceTree = "<group>"; };
 		2A2733F41BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreatmentSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		2A2733F61BA0FC890076696A /* chartLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chartLine.png; sourceTree = "<group>"; };
+		2A2733F81BA244E00076696A /* PublicService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicService.swift; sourceTree = "<group>"; };
+		2A2733FA1BA2509E0076696A /* QuestionListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionListTableViewCell.swift; sourceTree = "<group>"; };
+		2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingPasswordViewController.swift; sourceTree = "<group>"; };
 		2A3228A51B704F8B006FB92D /* AddCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCommentViewController.swift; sourceTree = "<group>"; };
 		2A3228A71B712C64006FB92D /* AddItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
 		2A3228A91B7135DB006FB92D /* AddPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +180,8 @@
 		2AC59C3D1B5E07B900C4FE36 /* TagListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListTableViewCell.swift; sourceTree = "<group>"; };
 		2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListTableViewController.swift; path = ../UserListTableViewController.swift; sourceTree = "<group>"; };
 		2ACD949E1B9A4B6700378539 /* PatientStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatusTableViewCell.swift; sourceTree = "<group>"; };
+		2ADD66671BA9EE5C0064A7C1 /* CommentListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewController.swift; sourceTree = "<group>"; };
+		2ADD66691BA9F0910064A7C1 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 		2AE59DB31B83F71300BE910D /* myTagButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myTagButton.png; sourceTree = "<group>"; };
 		2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mytagsBtnImg.png; sourceTree = "<group>"; };
 		2AF6734F1B88416F00E220CD /* CVAuxiliaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVAuxiliaryView.swift; path = ../CVAuxiliaryView.swift; sourceTree = "<group>"; };
@@ -283,6 +293,8 @@
 				2A345A371B8A6B6200FF7B39 /* AddNewTreatmentContentTableViewController.swift */,
 				2A345A3B1B8D098900FF7B39 /* AddPatientStatusViewController.swift */,
 				2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */,
+				2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */,
+				2ADD66671BA9EE5C0064A7C1 /* CommentListTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -309,6 +321,8 @@
 				2A345A3F1B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift */,
 				2ACD949E1B9A4B6700378539 /* PatientStatusTableViewCell.swift */,
 				2A2733F41BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift */,
+				2A2733FA1BA2509E0076696A /* QuestionListTableViewCell.swift */,
+				2ADD66691BA9F0910064A7C1 /* CommentTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -320,6 +334,7 @@
 				2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */,
 				2AA265141B694CDB001E52E7 /* GetAccessToken.swift */,
 				2A3228AB1B718307006FB92D /* HaalthyService.swift */,
+				2A2733F81BA244E00076696A /* PublicService.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -522,6 +537,7 @@
 				2AA265171B69A7C7001E52E7 /* BoardcastViewController.swift in Sources */,
 				2AF6736B1B88416F00E220CD /* CVCalendarDayView.swift in Sources */,
 				2AF6736F1B88416F00E220CD /* CVCalendarMenuViewDelegate.swift in Sources */,
+				2ADD666A1BA9F0910064A7C1 /* CommentTableViewCell.swift in Sources */,
 				2AC59C381B5DB14000C4FE36 /* TagViewController.swift in Sources */,
 				2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */,
 				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
@@ -547,6 +563,7 @@
 				2AF6736C1B88416F00E220CD /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				2AF673731B88416F00E220CD /* CVCalendarView.swift in Sources */,
 				2AF673811B88416F00E220CD /* CVSet.swift in Sources */,
+				2A2733F91BA244E00076696A /* PublicService.swift in Sources */,
 				2AF6736D1B88416F00E220CD /* CVCalendarManager.swift in Sources */,
 				2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */,
 				2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */,
@@ -558,8 +575,10 @@
 				2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */,
 				2AF673791B88416F00E220CD /* CVCalendarViewPresentationMode.swift in Sources */,
 				2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */,
+				2A2733FD1BA770250076696A /* SettingPasswordViewController.swift in Sources */,
 				2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */,
 				2A2733F51BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift in Sources */,
+				2ADD66681BA9EE5C0064A7C1 /* CommentListTableViewController.swift in Sources */,
 				2AF673821B88416F00E220CD /* CVShape.swift in Sources */,
 				2AF673801B88416F00E220CD /* CVSelectionType.swift in Sources */,
 				2A345A381B8A6B6200FF7B39 /* AddNewTreatmentContentTableViewController.swift in Sources */,
@@ -568,6 +587,7 @@
 				2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */,
 				2AF6737D1B88416F00E220CD /* CVDate.swift in Sources */,
 				2AC59C361B5D798200C4FE36 /* HomeViewController.swift in Sources */,
+				2A2733FB1BA2509E0076696A /* QuestionListTableViewCell.swift in Sources */,
 				2A345A341B8A622200FF7B39 /* AddNewTreatmentEndDateViewController.swift in Sources */,
 				2AF673691B88416F00E220CD /* CVAuxiliaryView.swift in Sources */,
 				2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */,
