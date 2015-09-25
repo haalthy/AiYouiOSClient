@@ -18,7 +18,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var haalthyService = HaalthyService()
     var keychainAccess = KeychainAccess()
     var getAccessToken = GetAccessToken()
-    var treatmentList = NSArray()
+    var treatmentList = NSMutableArray()
     var patientStatusList = NSArray()
     var treatmentSections = NSMutableArray()
     var sectionHeaderHeightList = NSMutableArray()
@@ -61,14 +61,24 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     profileSegment.insertSegmentWithTitle("我", atIndex: 2, animated: false)
                 }
                 var userDetail = jsonResult as! NSDictionary
-                treatmentList = jsonResult!.objectForKey("treatments") as! NSArray
+                treatmentList = jsonResult!.objectForKey("treatments") as! NSMutableArray
+                
+//                for treatmentTmp in treatmentList{
+//                    trea
+//                }
+                
                 patientStatusList = jsonResult!.objectForKey("patientStatus") as! NSArray
                 clinicReportList = jsonResult!.objectForKey("clinicReport") as! NSArray
                 userProfile = jsonResult!.objectForKey("userProfile") as! NSDictionary
                 var timeList = [Int]()
                 var timeSet = NSMutableSet()
                 for var i = 0; i < treatmentList.count; i++ {
+                    treatmentList[i] = treatmentList[i] as! NSMutableDictionary
+                    treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("beginDate") as! Double), forKey:"beginDate")
+                    treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("endDate") as! Double), forKey:"endDate")
+
                     var treatment = treatmentList[i] as! NSMutableDictionary
+                    
                     if (treatment.objectForKey("endDate") as! Double) > (NSDate().timeIntervalSince1970 * 1000){
                         treatment.setObject(((NSDate().timeIntervalSince1970 as! NSNumber).integerValue * 1000) as AnyObject, forKey:"endDate")
                     }
@@ -137,7 +147,16 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-
+    }
+    
+    func getNSDateMod(date: Double)->Double{
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "YY-MM-dd" // superset of OP's format
+        var dateInserted = NSDate(timeIntervalSince1970: date/1000 as NSTimeInterval)
+        let dateStr = dateFormatter.stringFromDate(dateInserted)
+//        var newDataStr = dateStr + " 00:00:00"
+        let timeInterval = dateFormatter.dateFromString(dateStr)?.timeIntervalSince1970
+        return timeInterval! * 1000
     }
     
     override func viewDidLoad() {
@@ -149,6 +168,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 //        if accessToken == nil {
 //            self.performSegueWithIdentifier("loginSegue", sender: self)
 //        }
+        var dummyViewHeight : CGFloat = 40
+        var dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
+        self.tableview.tableHeaderView = dummyView;
+        self.tableview.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -159,8 +182,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         super.viewWillAppear(animated)
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
-        accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         getAccessToken.getAccessToken()
+        accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
             if usedToBeInLoginView == false{
                 //            self.view.removeAllSubviews()
@@ -312,7 +335,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }
         }else if profileSegment.selectedSegmentIndex == 1{
             let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! QuestionListTableViewCell
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
+//            cell.selectionStyle = UITableViewCellSelectionStyle.None
             var broadcast = broadcastList[indexPath.row] as! NSDictionary
             
             var dateFormatter = NSDateFormatter()
@@ -470,7 +493,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 var treatmentList: NSArray = treatmentStr.componentsSeparatedByString("**")
                 
                 for treatment in treatmentList{
-                    var treatmentNameAndDosage:NSArray = (treatment as! String).componentsSeparatedByString("*")
+                    var treatmentStr = treatment as! String
+                    if (treatmentStr as! NSString).length == 0{
+                        break
+                    }
+                    if treatmentStr.substringWithRange(Range(start: treatmentStr.startIndex, end: advance(treatmentStr.startIndex, 1))) == "*" {
+                        treatmentStr = treatmentStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
+                    }
+                    var treatmentNameAndDosage:NSArray = treatmentStr.componentsSeparatedByString("*")
                     var treatmentName = treatmentNameAndDosage[0] as! String
                     var treatmentDosage = String()
                     var treatmentNameLabel = UILabel()
@@ -497,11 +527,16 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     }else{
                         var treatmentLine = (treatmentName as NSString).length/20 + 1
                         var height = CGFloat(30 * treatmentLine)
-                        treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 265.0, height))
+                        treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 90.0, height))
                         treatmentNameLabel.text = treatmentName
                         treatmentY += height + 5
                         treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                         treatmentNameLabel.textColor = mainColor
+                        treatmentNameLabel.backgroundColor = tabBarColor
+                        treatmentNameLabel.layer.borderColor = mainColor.CGColor
+                        treatmentNameLabel.layer.borderWidth = 1.0
+                        treatmentNameLabel.layer.masksToBounds = true
+                        treatmentNameLabel.layer.cornerRadius = 5
                     }
                     headerView.addSubview(treatmentNameLabel)
                     headerView.addSubview(dosageLable)

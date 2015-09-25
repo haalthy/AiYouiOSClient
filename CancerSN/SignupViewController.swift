@@ -123,7 +123,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
 
     func imageTapHandler(recognizer: UITapGestureRecognizer){
-        imagePicker.allowsEditing = false //2
+        imagePicker.allowsEditing = true //2
         imagePicker.sourceType = .PhotoLibrary //3
         presentViewController(imagePicker, animated: true, completion: nil)//4
     }
@@ -134,7 +134,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     //MARK: Delegates
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2ß
+        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         var selectedImage = UIImage()
         selectedImage = cropToSquare(image: chosenImage)
         

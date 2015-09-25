@@ -91,24 +91,33 @@ class HaalthyService:NSObject{
 //        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: true)!
     }
     
-    func getFeeds(latestFetchTimestamp:Int)->NSData{
+    func getFeeds(latestFetchTimestamp:Int)->NSData?{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
-        println(urlPath)
-        let url : NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        var profileSet = NSUserDefaults.standardUserDefaults()
-        var requestBody = NSMutableDictionary()
-        requestBody.setValue(latestFetchTimestamp, forKey: "begin")
-        println(NSDate().timeIntervalSince1970)
-        println(Int(NSDate().timeIntervalSince1970*100000))
-        requestBody.setValue(Int(NSDate().timeIntervalSince1970*100000), forKey: "end")
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)!
+        if accessToken == nil{
+            let url:NSURL = NSURL(string: getBroadcastsByTagsURL)!
+            let request = NSMutableURLRequest(URL: url)
+            request.HTTPMethod = "GET"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
+        }else{
+            let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
+            println(urlPath)
+            let url : NSURL = NSURL(string: urlPath)!
+            let request = NSMutableURLRequest(URL: url)
+            request.HTTPMethod = "POST"
+            var profileSet = NSUserDefaults.standardUserDefaults()
+            var requestBody = NSMutableDictionary()
+            requestBody.setValue(latestFetchTimestamp, forKey: "begin")
+            println(NSDate().timeIntervalSince1970)
+            println(Int(NSDate().timeIntervalSince1970*100000))
+            requestBody.setValue(Int(NSDate().timeIntervalSince1970*100000), forKey: "end")
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
+        }
     }
     
     func getTreatments(username : String)->NSData{
@@ -377,5 +386,33 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         return NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil)
+    }
+    
+    func addComment(postID:Int, body:String)->NSData?{
+        getAccessToken.getAccessToken()
+        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken == nil {
+            return nil
+        }
+        let urlPath:String = (addCommentsURL as String) + "?access_token=" + (accessToken as! String);
+        println(urlPath)
+        let url : NSURL = NSURL(string: urlPath)!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        var requestBody = NSMutableDictionary()
+        requestBody.setValue(postID, forKey: "postID")
+        requestBody.setValue(body, forKey: "body")
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil)
+    }
+    
+    func getTagList()->NSData{
+        let urlPath: String = getTagListURL
+        var url: NSURL = NSURL(string: urlPath)!
+        var request: NSURLRequest = NSURLRequest(URL: url)
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
     }
 }

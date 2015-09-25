@@ -47,7 +47,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
     }
     
     func setChartDateLabel(dateLabel: UILabel, dateInsertedInt: Int){
-        var dateInserted = NSDate(timeIntervalSince1970: (dateInsertedInt as! Double)/1000 as NSTimeInterval)
+        var dateInserted = NSDate(timeIntervalSince1970: (Double(dateInsertedInt))/1000 as NSTimeInterval)
         var dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MM/dd" // superset of OP's format
         let insertedDayStr = dateFormatter.stringFromDate(dateInserted)
@@ -120,57 +120,59 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
                 ceaMarkLabel.text = String(stringInterpolationSegment:CEAList[0])
             }
         }
-
-        var ceaTreatmentCount = 0
-        for treatment in treatmentList {
-            var treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Int
-            var treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Int
-            var ceaTreatmentBeginDate = 0
-            var ceaTreatmentEndDate = 0
-            if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
-                ceaTreatmentBeginDate = treatmentBeginDate
-                ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
+        if beginDate != endDate {
+            var ceaTreatmentCount = 0
+            for treatment in treatmentList {
+                var treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Int
+                var treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Int
+                var ceaTreatmentBeginDate = 0
+                var ceaTreatmentEndDate = 0
+                if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
+                    ceaTreatmentBeginDate = treatmentBeginDate
+                    ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
+                }
+                
+                if (treatmentEndDate < endDate)&&(treatmentEndDate > beginDate) {
+                    ceaTreatmentBeginDate = (treatmentBeginDate < beginDate) ? beginDate : treatmentBeginDate
+                    ceaTreatmentEndDate = endDate
+                }
+                
+                if (treatmentEndDate >= endDate) && (treatmentBeginDate <= beginDate) {
+                    ceaTreatmentBeginDate = beginDate
+                    ceaTreatmentEndDate = endDate
+                }
+                var coordinateBeginX = (Int(width)-80) * (ceaTreatmentBeginDate - beginDate)/(endDate - beginDate) + 10
+                var coordinateEndX = (Int(width)-80) * (ceaTreatmentEndDate - beginDate)/(endDate - beginDate) + 50
+                
+                var overlapCount = 0
+                
+                var coordinateY = Int(chartVerticalHeight) - 5
+                var treatmentMarkView = UIView(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY), CGFloat(coordinateEndX - coordinateBeginX), 5))
+                var treatmentColor = UIColor()
+                switch ceaTreatmentCount{
+                case 0: treatmentColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+                    break
+                case 1: treatmentColor = UIColor.orangeColor().colorWithAlphaComponent(0.5)
+                    break
+                case 2: treatmentColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
+                    break
+                case 3: treatmentColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+                    break
+                default: treatmentColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
+                    break
+                }
+                treatmentMarkView.backgroundColor = treatmentColor
+                ceaTreatmentCount++
+                self.chartScrollView.addSubview(treatmentMarkView)
+                
+                //add treatmentLabel
+                var treatmentLabel = UILabel(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY - 10), 70, 10))
+                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
+                treatmentLabel.font = UIFont(name: "Helvetica", size: 11.0)
+                treatmentLabel.backgroundColor = UIColor.whiteColor()
+                treatmentLabel.alpha = 1
+                self.chartScrollView.addSubview(treatmentLabel)
             }
-            
-            if (treatmentEndDate < endDate)&&(treatmentEndDate > beginDate) {
-                ceaTreatmentBeginDate = (treatmentBeginDate < beginDate) ? beginDate : treatmentBeginDate
-                ceaTreatmentEndDate = endDate
-            }
-            
-            if (treatmentEndDate >= endDate) && (treatmentBeginDate <= beginDate) {
-                ceaTreatmentBeginDate = beginDate
-                ceaTreatmentEndDate = endDate
-            }
-            var coordinateBeginX = (Int(width)-80) * (ceaTreatmentBeginDate - beginDate)/(endDate - beginDate) + 10
-            var coordinateEndX = (Int(width)-80) * (ceaTreatmentEndDate - beginDate)/(endDate - beginDate) + 50
-            
-            var overlapCount = 0
-            
-            var coordinateY = Int(chartVerticalHeight) - 5
-            var treatmentMarkView = UIView(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY), CGFloat(coordinateEndX - coordinateBeginX), 5))
-            var treatmentColor = UIColor()
-            switch ceaTreatmentCount{
-            case 0: treatmentColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
-                break
-            case 1: treatmentColor = UIColor.orangeColor().colorWithAlphaComponent(0.5)
-                break
-            case 2: treatmentColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
-                break
-            case 3: treatmentColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-                break
-            default: treatmentColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
-                break
-            }
-            treatmentMarkView.backgroundColor = treatmentColor
-            ceaTreatmentCount++
-            self.chartScrollView.addSubview(treatmentMarkView)
-            
-            //add treatmentLabel
-            var treatmentLabel = UILabel(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY - 10), 70, 10))
-            treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
-            treatmentLabel.font = UIFont(name: "Helvetica", size: 11.0)
-            self.chartScrollView.addSubview(treatmentLabel)
-            
         }
     }
     

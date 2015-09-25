@@ -86,7 +86,7 @@ let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.8
 let mainColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
 let sectionHeaderColor: UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:0.2)
 
-
+let fontStr: String = "Helvetica"
 
 
 

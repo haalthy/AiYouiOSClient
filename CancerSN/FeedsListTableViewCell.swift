@@ -13,6 +13,7 @@ class FeedsListTableViewCell: UITableViewCell {
     @IBOutlet weak var userPortrait: UIImageView!
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var feedContent: UILabel!
+//    var feedContent = UILabel()
     @IBOutlet weak var reviews: UILabel!
     @IBOutlet weak var timeInserted: UILabel!
     @IBOutlet weak var profile: UILabel!
@@ -28,8 +29,8 @@ class FeedsListTableViewCell: UITableViewCell {
         //        broadcastContent.text = broadcast["body"] as! String
         //        var tags = broadcast["tags"] as! String
         var rowOfContent = (feed.valueForKey("body") as! NSString).length/25
-        feedContent.frame.size.height = CGFloat(20 * rowOfContent)
-        feedContent.frame.size.height = CGFloat(100)
+//        feedContent.frame.size.height = CGFloat(20 * rowOfContent)
+//        feedContent.frame.size.height = CGFloat(100)
         username.text = feed.valueForKey("insertUsername") as? String
         reviews.text = feed.valueForKey("countComments")!.stringValue + "评论"
         var insertedDate = NSDate(timeIntervalSince1970: (feed.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)

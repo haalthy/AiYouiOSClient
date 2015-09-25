@@ -10,10 +10,24 @@ import UIKit
 import CoreData
 
 class ShowPostDetailTableViewController: UITableViewController {
+    
+    @IBOutlet weak var addCommentToolbar: UIToolbar!
+    
     var post : NSDictionary = NSDictionary()
     var commentList : NSArray = NSArray()
     let entity: String = "Broadcast"
 
+    
+    @IBAction func addCommentView(sender: UIBarButtonItem) {
+        var getAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken == nil{
+            self.performSegueWithIdentifier("loginSegue", sender: self)
+        }else{
+            self.performSegueWithIdentifier("addCommentSegue", sender: self)
+        }
+    }
     func sendSyncGetCommentListRequest()->NSData{
         let url : NSURL = NSURL(string: getCommentListByPostURL+((post.objectForKey("postID") as! NSNumber).stringValue))!
         let request = NSMutableURLRequest(URL: url)
@@ -66,14 +80,23 @@ class ShowPostDetailTableViewController: UITableViewController {
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "addCommentSegue" {
-            (segue.destinationViewController as! AddCommentViewController).post = post
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        //add Toolbar
+//        addCommentToolbar.center = CGPoint(x: 200, y: 300)
+//        var toolBar = UIToolbar(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - 45 - UIApplication.sharedApplication().statusBarFrame.size.height, 300, 50))
+//        toolBar.barStyle = UIBarStyle.Default
+//        toolBar.translucent = true
+//        toolBar.tintColor = UIColor.lightGrayColor()//UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1)
+//        var flexibleItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: "addCommentView")
+//
+//        var addCommentButton = UIBarButtonItem(title: "添加评论", style: UIBarButtonItemStyle.Plain, target: self, action: "addCommentView")
+//        toolBar.setItems([flexibleItem, addCommentButton, flexibleItem], animated: false)
+//        toolBar.userInteractionEnabled = true
+//        toolBar.sizeToFit()
+//        
+//        self.navigationController?.navigationBar.addSubview(toolBar)
+        
         var getPostByIdRespData = self.sendSyncGetPostRequest()
         let postJsonResult = NSJSONSerialization.JSONObjectWithData(getPostByIdRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         if postJsonResult is NSDictionary{
@@ -81,7 +104,6 @@ class ShowPostDetailTableViewController: UITableViewController {
             if ((postDic.objectForKey("postID") as! Int) == (post.objectForKey("postID") as! Int)){
                 post = postDic
             }
-            
         }
         savePostData()
         var getCommentsRespData = self.sendSyncGetCommentListRequest()
@@ -93,7 +115,25 @@ class ShowPostDetailTableViewController: UITableViewController {
         }
         self.tableView.reloadData()
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "addCommentSegue" {
+            var destinationVC = segue.destinationViewController as! AddPostViewController
+            destinationVC.postID = self.post.objectForKey("postID") as! Int
+            destinationVC.isComment = 1
+        }
+    }
 
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.navigationController?.toolbarHidden = false
+    }
+    override func viewWillDisappear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+        self.navigationController?.toolbarHidden = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -141,50 +181,6 @@ class ShowPostDetailTableViewController: UITableViewController {
     }
     
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
     override func tableView(_tableView: UITableView,
         heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
             return UITableViewAutomaticDimension
@@ -193,4 +189,9 @@ class ShowPostDetailTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 5.0
+    }
+    
 }

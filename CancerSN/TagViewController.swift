@@ -27,6 +27,7 @@ class TagViewController: UITableViewController {
     var keychain = KeychainAccess()
     var haalthyService = HaalthyService()
 
+    
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(false, completion: nil)
     }
@@ -40,7 +41,6 @@ class TagViewController: UITableViewController {
     
     func sendSyncGetTagListRequet()->NSData{
         let urlPath: String = getTagListURL
-        println(urlPath)
         var url: NSURL = NSURL(string: urlPath)!
         var request: NSURLRequest = NSURLRequest(URL: url)
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
@@ -90,8 +90,8 @@ class TagViewController: UITableViewController {
         if(jsonResult is NSArray){
             self.tags = jsonResult as! NSArray
         }
-        self.extendedLayoutIncludesOpaqueBars = true;
-        if (selectedTags.count == 0) && (keychain.getPasscode(usernameKeyChain) != nil){
+        self.extendedLayoutIncludesOpaqueBars = true
+        if (selectedTags.count == 0) && (keychain.getPasscode(usernameKeyChain) != nil) && (isBroadcastTagSelection == 0){
             var getUserFavTagsData = haalthyService.getUserFavTags()
             var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             self.selectedTags = jsonResult as! NSMutableArray
@@ -137,10 +137,15 @@ class TagViewController: UITableViewController {
 
         if(indexPath.section == 0){
             let cell = tableView.dequeueReusableCellWithIdentifier("header", forIndexPath: indexPath) as! TagHeaderTableViewCell
-            cell.header.text = "请选择您关注的标签"
+            if isBroadcastTagSelection == 1{
+                cell.header.text = "请选择发布问题的标签"
+                cell.cancelBtn.hidden = true
+            }else{
+                cell.cancelBtn.hidden = false
+                cell.header.text = "请选择您关注的标签"
+            }
             cell.header.textColor = textColor
             return cell
-            
         }
             // Configure the cell...
         else if(indexPath.section == 1){

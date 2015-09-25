@@ -10,6 +10,8 @@ import UIKit
 
 class TagHeaderTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var cancelBtn: UIButton!
+
     @IBOutlet weak var header: UILabel!
     
     override func awakeFromNib() {

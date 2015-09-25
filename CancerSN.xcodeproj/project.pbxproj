@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A11876E1BB4B8620074BB65 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */; };
 		2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */; };
 		2A2435FE1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */; };
 		2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */; };
@@ -32,7 +33,11 @@
 		2A345A3C1B8D098900FF7B39 /* AddPatientStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A345A3B1B8D098900FF7B39 /* AddPatientStatusViewController.swift */; };
 		2A345A3E1B8D23A600FF7B39 /* AddPatientStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A345A3D1B8D23A600FF7B39 /* AddPatientStatusTableViewCell.swift */; };
 		2A345A401B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A345A3F1B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift */; };
+		2A5BDF171BB1C78900732AF8 /* AddStatusTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */; };
 		2A74CCE21B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */; };
+		2A91D4641BAE408300ADC095 /* tagOnPostViewbackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A91D4631BAE408300ADC095 /* tagOnPostViewbackground.png */; };
+		2A91D4661BB0743700ADC095 /* AddTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */; };
+		2A91D4681BB07A2F00ADC095 /* triangle-xxl.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */; };
 		2A97EB341B96D0CE0051BC5C /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */; };
 		2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */; };
 		2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264A51B607402001E52E7 /* Mario-icon.png */; };
@@ -59,6 +64,8 @@
 		2AA265171B69A7C7001E52E7 /* BoardcastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */; };
 		2AA3363F1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3363E1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift */; };
 		2AAA37B91B96416C00576C7C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */; };
+		2AB7BE801BABA8D40069C27B /* ContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB7BE7F1BABA8D40069C27B /* ContactTableViewController.swift */; };
+		2AB7BE821BABF3010069C27B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB7BE811BABF3010069C27B /* ContactViewController.swift */; };
 		2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */; };
 		2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */; };
 		2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */; };
@@ -113,6 +120,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewController.swift; sourceTree = "<group>"; };
 		2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastListTableViewCell.swift; sourceTree = "<group>"; };
 		2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowPostDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -138,7 +146,11 @@
 		2A345A3B1B8D098900FF7B39 /* AddPatientStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusViewController.swift; sourceTree = "<group>"; };
 		2A345A3D1B8D23A600FF7B39 /* AddPatientStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusTableViewCell.swift; sourceTree = "<group>"; };
 		2A345A3F1B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddOtherStatusTableViewCell.swift; sourceTree = "<group>"; };
+		2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatusTableViewController.swift; sourceTree = "<group>"; };
 		2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePreviousTreatmentViewController.swift; sourceTree = "<group>"; };
+		2A91D4631BAE408300ADC095 /* tagOnPostViewbackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tagOnPostViewbackground.png; sourceTree = "<group>"; };
+		2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentViewController.swift; sourceTree = "<group>"; };
+		2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle-xxl.png"; sourceTree = "<group>"; };
 		2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
 		2AA264A51B607402001E52E7 /* Mario-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mario-icon.png"; sourceTree = "<group>"; };
@@ -165,6 +177,8 @@
 		2AA265161B69A7C7001E52E7 /* BoardcastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardcastViewController.swift; sourceTree = "<group>"; };
 		2AA3363E1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewTreatmentDateViewController.swift; sourceTree = "<group>"; };
 		2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
+		2AB7BE7F1BABA8D40069C27B /* ContactTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewController.swift; sourceTree = "<group>"; };
+		2AB7BE811BABF3010069C27B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		2AC59C0E1B5D77C600C4FE36 /* CancerSN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CancerSN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C121B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -295,6 +309,11 @@
 				2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */,
 				2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */,
 				2ADD66671BA9EE5C0064A7C1 /* CommentListTableViewController.swift */,
+				2AB7BE7F1BABA8D40069C27B /* ContactTableViewController.swift */,
+				2AB7BE811BABF3010069C27B /* ContactViewController.swift */,
+				2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */,
+				2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */,
+				2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -376,6 +395,8 @@
 		2AC59C111B5D77C600C4FE36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */,
+				2A91D4631BAE408300ADC095 /* tagOnPostViewbackground.png */,
 				2AE59DB71B83FBBF00BE910D /* mytagsBtnImg.png */,
 				2AE59DB31B83F71300BE910D /* myTagButton.png */,
 				2A3228B51B72ECC3006FB92D /* grayline.png */,
@@ -491,9 +512,11 @@
 				2AE59DB81B83FBBF00BE910D /* mytagsBtnImg.png in Resources */,
 				2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */,
 				2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */,
+				2A91D4681BB07A2F00ADC095 /* triangle-xxl.png in Resources */,
 				2AE59DB41B83F71300BE910D /* myTagButton.png in Resources */,
 				2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */,
 				2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */,
+				2A91D4641BAE408300ADC095 /* tagOnPostViewbackground.png in Resources */,
 				2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -520,6 +543,7 @@
 				2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */,
 				2AF673771B88416F00E220CD /* CVCalendarViewAppearanceDelegate.swift in Sources */,
 				2AF6736E1B88416F00E220CD /* CVCalendarMenuView.swift in Sources */,
+				2A91D4661BB0743700ADC095 /* AddTreatmentViewController.swift in Sources */,
 				2A345A361B8A6AF800FF7B39 /* AddNewTreatmentListTableViewCell.swift in Sources */,
 				2AF673781B88416F00E220CD /* CVCalendarViewDelegate.swift in Sources */,
 				2AF6737B1B88416F00E220CD /* CVCalendarWeekday.swift in Sources */,
@@ -541,10 +565,12 @@
 				2AC59C381B5DB14000C4FE36 /* TagViewController.swift in Sources */,
 				2AC59C3C1B5E064B00C4FE36 /* TagFooterTableViewCell.swift in Sources */,
 				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
+				2AB7BE821BABF3010069C27B /* ContactViewController.swift in Sources */,
 				2AF6736A1B88416F00E220CD /* CVCalendarContentViewController.swift in Sources */,
 				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
 				2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */,
 				2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */,
+				2A5BDF171BB1C78900732AF8 /* AddStatusTableViewController.swift in Sources */,
 				2AA265111B684DA8001E52E7 /* CancerSN.xcdatamodeld in Sources */,
 				2AA264DB1B6836AB001E52E7 /* FeedsTableViewController.swift in Sources */,
 				2AA264D71B67F7A4001E52E7 /* LoginViewController.swift in Sources */,
@@ -563,10 +589,12 @@
 				2AF6736C1B88416F00E220CD /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				2AF673731B88416F00E220CD /* CVCalendarView.swift in Sources */,
 				2AF673811B88416F00E220CD /* CVSet.swift in Sources */,
+				2AB7BE801BABA8D40069C27B /* ContactTableViewController.swift in Sources */,
 				2A2733F91BA244E00076696A /* PublicService.swift in Sources */,
 				2AF6736D1B88416F00E220CD /* CVCalendarManager.swift in Sources */,
 				2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */,
 				2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */,
+				2A11876E1BB4B8620074BB65 /* TagTableViewController.swift in Sources */,
 				2A345A401B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift in Sources */,
 				2A3228A61B704F8B006FB92D /* AddCommentViewController.swift in Sources */,
 				2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */,

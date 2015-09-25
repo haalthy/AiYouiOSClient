@@ -15,13 +15,18 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var feedList = NSArray()
     var latestFetchTimestamp = Int()
     var automatedShowDiscoverView:Bool = true
+    var heightForFeedRow = NSMutableDictionary()
     
     @IBAction func discover(sender: UIButton) {
         self.performSegueWithIdentifier("discoverSegue", sender: self)
     }
     
     @IBAction func addPopover(sender: UIButton) {
-        self.performSegueWithIdentifier("addViewSegue", sender: self)
+        if username != nil{
+            self.performSegueWithIdentifier("addViewSegue", sender: self)
+        }else{
+            self.performSegueWithIdentifier("loginSegue", sender: self)
+        }
     }
     @IBAction func addActionPopover(sender: UIBarButtonItem) {
         self.performSegueWithIdentifier("addViewSegue", sender: self)
@@ -34,6 +39,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             if controller != nil{
                 controller?.delegate = self
             }
+        }
+        if segue.identifier == "postDetailSegue" {
+            (segue.destinationViewController as! ShowPostDetailTableViewController).post = feed
         }
     }
     
@@ -88,16 +96,18 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 profileStr += pathologicalMapping.allKeysForObject(feed.valueForKey("pathological")!)[0] as! String
             }
         }
-        
         feed.setValue(profileStr, forKey: "patientProfile")
     }
     
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
         var haalthyService = HaalthyService()
         var getFeedsByTagsData = haalthyService.getFeeds(latestFetchTimestamp)
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsByTagsData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-        let str: NSString = NSString(data: getFeedsByTagsData, encoding: NSUTF8StringEncoding)!
-        println(str)
+        var jsonResult:AnyObject? = nil
+        if getFeedsByTagsData != nil{
+            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsByTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let str: NSString = NSString(data: getFeedsByTagsData!, encoding: NSUTF8StringEncoding)!
+            println(str)
+        }
         refreshControl?.endRefreshing()
         if(jsonResult is NSArray){
             //save Feed to local DB
@@ -159,8 +169,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        self.tableView.estimatedRowHeight = UITableViewAutomaticDimension
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+//        self.tableView.estimatedRowHeight = UITableViewAutomaticDimension
+//        self.tableView.rowHeight = UITableViewAutomaticDimension
         
         var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         var context:NSManagedObjectContext = appDel.managedObjectContext!
@@ -249,25 +259,127 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             cell.backgroundColor = headerColor
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("feedsList", forIndexPath: indexPath) as! FeedsListTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
+            cell.removeAllSubviews()
+            
+            //separatorLine
+            var separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
+            separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
+            var feed = NSDictionary()
             if(feedList[indexPath.row] is NSManagedObject){
                 var keys = feedList[indexPath.row].entity.attributesByName.keys.array
                 let feedDic = feedList[indexPath.row].dictionaryWithValuesForKeys(keys)
-                cell.feed = feedDic
+                feed = feedDic
+                //                feedBody.text = (feedDic as! NSDictionary).objectForKey("body") as! String
             }else{
-                cell.feed = feedList[indexPath.row] as! NSDictionary
+                feed = feedList[indexPath.row] as! NSDictionary
+                //                feedBody.text = (feedList[indexPath.row] as! NSDictionary).objectForKey("body") as! String
             }
+            //imageView
+            var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
+            if((feed.valueForKey("image") is NSNull) == false){
+                let dataString = feed.valueForKey("image") as! String
+                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                imageView.image = UIImage(data: imageData)
+            }else{
+                imageView.image = UIImage(named: "Mario.jpg")
+            }
+            //username View
+            var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, cell.frame.width - 10 - 32 - 10 - 80, 20))
+            usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
+            usernameLabelView.text = feed.valueForKey("insertUsername") as? String
+            
+            //insert date View
+            var insertDateLabelView = UILabel(frame: CGRectMake(cell.frame.width - 90, 10, 80, 20))
+            insertDateLabelView.font = UIFont(name: "Helvetica", size: 12.0)
+            var dateFormatter = NSDateFormatter()
+            var insertedDate = NSDate(timeIntervalSince1970: (feed.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
+            dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
+            let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
+            let currentDayStr = dateFormatter.stringFromDate(NSDate())
+            if(currentDayStr > insertedDayStr){
+                dateFormatter.dateFormat = "MM-dd"
+                insertDateLabelView.text = dateFormatter.stringFromDate(insertedDate)
+            }else{
+                dateFormatter.dateFormat = "HH:mm"
+                insertDateLabelView.text = dateFormatter.stringFromDate(insertedDate)
+            }
+            insertDateLabelView.textAlignment = NSTextAlignment.Right
+            insertDateLabelView.textColor = UIColor.grayColor()
+            
+            //
+            
+            //profile View
+            var profileLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 30, cell.frame.width - 10 - 32 - 10, 12))
+            profileLabelView.font = UIFont(name: "Helvetica", size: 11.5)
+            profileLabelView.text = feed.valueForKey("patientProfile") as? String
+            profileLabelView.textColor = UIColor.grayColor()
+            
+            //feed body view
+            var feedBody = UILabel(frame: CGRectMake(10, 50, cell.frame.width - 20, 80))
+            feedBody.numberOfLines = 5
+            feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            feedBody.font = UIFont(name: "Helvetica", size: 13.0)
+            feedBody.text = feed.objectForKey("body") as! String
+            feedBody.textColor = UIColor.blackColor()
+            feedBody.sizeToFit()
+            self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
+            
+            //tagBody
+            var tagLabel = UILabel(frame: CGRectMake(10, 50 + feedBody.frame.height + 5, cell.frame.width - 80, 20))
+            if (feed.objectForKey("tags") is NSNull) == false{
+                tagLabel.font = UIFont(name: "Helvetica", size: 11.5)
+                tagLabel.text = "tag:" + (feed.objectForKey("tags") as! NSString).stringByReplacingOccurrencesOfString("*", withString: " ")
+                tagLabel.textColor = UIColor.grayColor()
+                
+            }
+            //review View
+            var reviewLabel = UILabel(frame: CGRectMake(10 + tagLabel.frame.width, tagLabel.frame.origin.y, 60, 20))
+            reviewLabel.font = UIFont(name: "Helvetica", size: 11.5)
+            reviewLabel.textAlignment = NSTextAlignment.Right
+            reviewLabel.text = feed.valueForKey("countComments")!.stringValue + "评论"
+            reviewLabel.textColor = UIColor.grayColor()
+            
+            cell.addSubview(separatorLine)
+            cell.addSubview(imageView)
+            cell.addSubview(usernameLabelView)
+            cell.addSubview(insertDateLabelView)
+            cell.addSubview(profileLabelView)
+            cell.addSubview(feedBody)
+            cell.addSubview(tagLabel)
+            cell.addSubview(reviewLabel)
+
             return cell
         }
     }
-
+    
+    var feed = NSDictionary()
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 1 {
+            if(feedList[indexPath.row] is NSManagedObject){
+                var keys = feedList[indexPath.row].entity.attributesByName.keys.array
+                let feedDic = feedList[indexPath.row].dictionaryWithValuesForKeys(keys)
+                feed = feedDic
+            }else{
+                feed = feedList[indexPath.row] as! NSDictionary
+            }
+            self.performSegueWithIdentifier("postDetailSegue", sender: self)
+        }
+    }
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight:CGFloat
         switch indexPath.section{
         case 0: rowHeight = 0
             break
-        case 1: rowHeight = UITableViewAutomaticDimension
+        case 1:
+            if self.heightForFeedRow.objectForKey(indexPath) != nil{
+            rowHeight = (self.heightForFeedRow.objectForKey(indexPath) as! CGFloat) + 80
+            }else{
+                rowHeight = 40
+            }
+//        case 1: rowHeight = UITableViewAutomaticDimension
             break
         default:rowHeight = 0
             break
@@ -275,7 +387,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         return rowHeight
     }
     
-    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
+//    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        return UITableViewAutomaticDimension
+//    }
 }

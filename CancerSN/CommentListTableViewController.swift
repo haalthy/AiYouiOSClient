@@ -11,6 +11,7 @@ import UIKit
 class CommentListTableViewController: UITableViewController {
 
     var commentList = NSArray()
+    var heightForCommentRow = NSMutableDictionary()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,10 +39,43 @@ class CommentListTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("commentCellIdentifier", forIndexPath: indexPath) as! CommentTableViewCell
-        cell.comment = commentList[indexPath.row] as! NSDictionary
+        let cell = tableView.dequeueReusableCellWithIdentifier("commentCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
+//        cell.comment = commentList[indexPath.row] as! NSDictionary
+
+        var comment = commentList[indexPath.row] as! NSDictionary
+        
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MM/dd" // superset of OP's format
+        var dateInserted = NSDate(timeIntervalSince1970: (comment["dateInserted"] as! Double)/1000 as NSTimeInterval)
+        let dateStr = dateFormatter.stringFromDate(dateInserted)
+        
+        var commentLabel = UILabel(frame: CGRectMake(15, 10, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
+        commentLabel.numberOfLines = 0
+        commentLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
+        commentLabel.font = UIFont(name: "Helvetica", size: 13.0)
+        commentLabel.text = comment.objectForKey("body") as! String
+        commentLabel.textColor = UIColor.blackColor()
+        commentLabel.sizeToFit()
+        
+        var dateInsertedLabel = UILabel(frame: CGRectMake(10, commentLabel.frame.height + 15, 60, 20))
+        dateInsertedLabel.textColor = UIColor.darkGrayColor()
+        dateInsertedLabel.text = dateStr
+        dateInsertedLabel.font = UIFont(name: "Helvetica", size: 12.0)
+        
+        cell.addSubview(commentLabel)
+        cell.addSubview(dateInsertedLabel)
+        self.heightForCommentRow.setObject(commentLabel.frame.height, forKey: indexPath)
 
         return cell
+    }
+    
+    override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        var rowHeight:CGFloat = 0
+        var questionLabelHeight = self.heightForCommentRow.objectForKey(indexPath)
+        if questionLabelHeight != nil{
+            rowHeight = (self.heightForCommentRow.objectForKey(indexPath) as! CGFloat) + 35
+        }
+        return rowHeight
     }
 
     /*
