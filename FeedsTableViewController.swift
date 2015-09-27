@@ -9,13 +9,14 @@
 import UIKit
 import CoreData
 
-class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate {
     var username:String?
     var password:String?
     var feedList = NSArray()
     var latestFetchTimestamp = Int()
     var automatedShowDiscoverView:Bool = true
     var heightForFeedRow = NSMutableDictionary()
+    var selectTags = NSArray()
     
     @IBAction func discover(sender: UIButton) {
         self.performSegueWithIdentifier("discoverSegue", sender: self)
@@ -64,7 +65,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         feedList = context.executeFetchRequest(postsRequest, error: nil)!
         if feedList.count > 0{
             let feed = feedList[0] as! NSManagedObject
-            latestFetchTimestamp = feedList[0].valueForKey("dateInserted") as! Int
+            latestFetchTimestamp = (feedList[0].valueForKey("dateInserted") as! Int) + 1000
         }else{
             latestFetchTimestamp = 0
         }
@@ -144,7 +145,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             newFeedList.addObjectsFromArray(feedList as [AnyObject])
             feedList = newFeedList as NSArray
             if feedList.count > 0{
-                latestFetchTimestamp = feedList[0].valueForKey("dateInserted") as! Int
+                latestFetchTimestamp = (feedList[0].valueForKey("dateInserted") as! Int) + 1000
             }
             self.tableView.reloadData()
 //            if feedList.count == 0{
@@ -235,20 +236,36 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         super.viewDidAppear(animated);
         var keychainAccess = KeychainAccess()
         
-        if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
-            //show feeds
-            //            keychainAccess.deletePasscode(usernameKeyChain)
-            //            keychainAccess.deletePasscode(passwordKeyChain)
-           //             self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
+//        if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
+//            //show feeds
+//            //            keychainAccess.deletePasscode(usernameKeyChain)
+//            //            keychainAccess.deletePasscode(passwordKeyChain)
+//           //             self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
+//            username = keychainAccess.getPasscode(usernameKeyChain) as? String
+//            password = keychainAccess.getPasscode(passwordKeyChain) as? String
+//            self.getexistFeedsFromLocalDB()
+//            if feedList.count == 0 {
+//                refreshFeeds()
+//            }
+//        }else{
+//            var favtagsData = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray
+//            
+//            if automatedShowDiscoverView {
+//                automatedShowDiscoverView = false
+//                self.performSegueWithIdentifier("tagSegue", sender: nil)
+//            }
+//        }
+        if (keychainAccess.getPasscode(usernameKeyChain) == nil) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) {
+            self.performSegueWithIdentifier("tagSegue", sender: nil)
+        }else{
             username = keychainAccess.getPasscode(usernameKeyChain) as? String
             password = keychainAccess.getPasscode(passwordKeyChain) as? String
-            self.getexistFeedsFromLocalDB()
+//            if username != nil{
+                self.getexistFeedsFromLocalDB()
+//            }
             if feedList.count == 0 {
                 refreshFeeds()
             }
-        }else if automatedShowDiscoverView {
-            automatedShowDiscoverView = false
-            self.performSegueWithIdentifier("discoverSegue", sender: nil)
         }
     }
 
@@ -390,4 +407,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        return UITableViewAutomaticDimension
 //    }
+    func updateUserTagList(selectTags: NSArray) {
+        self.selectTags = selectTags
+        let userData = NSUserDefaults.standardUserDefaults()
+        userData.setObject(selectTags, forKey: favTagsNSUserData)
+    }
 }

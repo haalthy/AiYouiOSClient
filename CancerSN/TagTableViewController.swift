@@ -8,17 +8,41 @@
 
 import UIKit
 
+protocol UserTagVCDelegate {
+    func updateUserTagList(data: NSArray)
+}
+
 class TagTableViewController: UITableViewController {
-    
+    var userTagDelegate: UserTagVCDelegate?
     var haalthyService = HaalthyService()
+    var publicService = PublicService()
     var keychain = KeychainAccess()
     var isBroadcastTagSelection = 0
-    var selectedTags = NSArray()
+    var selectedTags = NSMutableArray()
+    var selectedTagsStr = NSMutableSet()
     var tagList = NSArray()
     var tagTypeList = NSArray()
     var groupedTagList = NSMutableArray()
     var rowHightForTagContainer = NSMutableArray()
+    var isFirstTagSelection = false
+    
 
+    @IBAction func cancel(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func submit(sender: UIButton) {
+        for var index = 0; index < tagList.count; ++index{
+            if selectedTagsStr.containsObject((tagList[index] as! NSDictionary).objectForKey("name") as! String){
+                selectedTags.addObject(tagList[index])
+            }
+        }
+        if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil){
+            var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
+        }
+        NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -67,10 +91,17 @@ class TagTableViewController: UITableViewController {
             }
         }
         
-        if (selectedTags.count == 0) && (keychain.getPasscode(usernameKeyChain) != nil) && (isBroadcastTagSelection == 0){
-            var getUserFavTagsData = haalthyService.getUserFavTags()
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            self.selectedTags = jsonResult as! NSMutableArray
+        if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
+            if (keychain.getPasscode(usernameKeyChain) != nil)  {
+                var getUserFavTagsData = haalthyService.getUserFavTags()
+                var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                selectedTags = jsonResult as! NSMutableArray
+            }else{
+                selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
+            }
+            for favTag in selectedTags{
+                selectedTagsStr.addObject(favTag.objectForKey("name") as! String)
+            }
         }
     }
 
@@ -102,14 +133,47 @@ class TagTableViewController: UITableViewController {
             return cell
         } else if (indexPath.section == tagTypeList.count+1){
             let cell = tableView.dequeueReusableCellWithIdentifier("submitCell", forIndexPath: indexPath) as! UITableViewCell
-            
             return cell
         }
         else{
-        let cell = tableView.dequeueReusableCellWithIdentifier("tagContainerCell", forIndexPath: indexPath) as! UITableViewCell
-        var groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup")
-        
+            let cell = tableView.dequeueReusableCellWithIdentifier("tagContainerCell", forIndexPath: indexPath) as! UITableViewCell
+            var groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup") as! NSArray
+            var index: Int = 0
+            var tagButtonHeight: CGFloat = 30
+            var tagButtonWidth: CGFloat = (cell.frame.width - 20)/5 - 5
+            for tag in groupedTagsInType {
+                var tagItem = tag as! NSDictionary
+                var coordinateX = 10 + CGFloat(index%5) * (tagButtonWidth + 5)
+                var coordinateY:CGFloat = 5
+                if index >= 5 {
+                    coordinateY = 40
+                }
+                var tagButton = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagButtonWidth, tagButtonHeight))
+//                tagButton.setTitle(((tag as! NSDictionary).objectForKey("name") as! String), forState: UIControlState.Normal)
+//                tagButton.setTitleColor(mainColor, forState: UIControlState.Normal)
+                cell.addSubview(tagButton)
+                publicService.formatButton(tagButton, title: tagItem.objectForKey("name") as! String)
+                tagButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
+                index++
+                if selectedTagsStr.containsObject(tagItem.objectForKey("name") as! String){
+                    tagButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                    tagButton.backgroundColor = mainColor
+                }
+                tagButton.addTarget(self, action: Selector("addSelectedTags:") , forControlEvents: UIControlEvents.TouchUpInside)
+            }
         return cell
+        }
+    }
+    
+    func addSelectedTags(sender: UIButton){
+        if sender.backgroundColor == UIColor.whiteColor() {
+            sender.backgroundColor = mainColor
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            selectedTagsStr.addObject((sender.titleLabel?.text)!)
+        }else{
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.setTitleColor(mainColor, forState: UIControlState.Normal)
+            selectedTagsStr.removeObject((sender.titleLabel?.text)!)
         }
     }
     
@@ -125,7 +189,7 @@ class TagTableViewController: UITableViewController {
         var headerView = UIView()
         if section > 0 && section < tagTypeList.count + 1{
             headerView =  UIView(frame: CGRectMake(0, 0,self.tableView.bounds.size.width, 40))
-            headerView.backgroundColor = sectionHeaderColor
+//            headerView.backgroundColor = sectionHeaderColor
             var tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
             tagTypeLabel.text = (groupedTagList[section-1] as! NSDictionary).objectForKey("typeName") as! String
             tagTypeLabel.textColor = mainColor
@@ -136,7 +200,10 @@ class TagTableViewController: UITableViewController {
     }
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-        var heightForRow: CGFloat = 40
+        var heightForRow: CGFloat = 80
+//        if indexPath.section == 0{
+//            heightForRow = 80
+//        }
         if indexPath.section > 0 && indexPath.section < tagTypeList.count + 1{
 //            var groupIndex:Int = indexPath.section - 1
 //            if ((groupedTagList[groupIndex] as! NSDictionary).objectForKey("tagsInGroup"))!.count <= 5 {
@@ -148,4 +215,6 @@ class TagTableViewController: UITableViewController {
         }
         return heightForRow
     }
+    
+
 }

@@ -15,6 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var username: UITextField!
     var data:NSMutableData?  = nil
     var haalthyService = HaalthyService()
+    var isRootViewController = false
     
     @IBAction func login(sender: UIButton) {
         let usernameStr = username.text
@@ -36,6 +37,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func forgetPassword(sender: UIButton) {
         
+    }
+    
+    @IBAction func ignore(sender: UIButton) {
+        self.performSegueWithIdentifier("tagSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "tagSegue"{
+            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+        }
     }
     
     @IBAction func cancel(sender: UIButton) {

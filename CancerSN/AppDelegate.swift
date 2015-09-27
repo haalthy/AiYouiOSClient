@@ -22,6 +22,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = headerColor
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UITabBar.appearance().barTintColor = tabBarColor
+        
+        // instantiate your desired ViewController
+        if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil{
+            var keychainAccess = KeychainAccess()
+            if keychainAccess.getPasscode(usernameKeyChain) == nil {
+                
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+                if self.window != nil {
+                    self.window!.rootViewController = rootController
+                    rootController.isRootViewController = true
+                }
+            }
+        }
+        
         return true
     }
 

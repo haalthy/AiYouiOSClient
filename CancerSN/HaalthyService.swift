@@ -95,12 +95,24 @@ class HaalthyService:NSObject{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
-            let url:NSURL = NSURL(string: getBroadcastsByTagsURL)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "GET"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
+            if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil{
+                
+                let url:NSURL = NSURL(string: getBroadcastsByTagsURL)!
+                let request = NSMutableURLRequest(URL: url)
+                request.HTTPMethod = "POST"
+                var requestBody = NSMutableDictionary()
+                requestBody.setValue(latestFetchTimestamp, forKey: "begin")
+                println(latestFetchTimestamp)
+                println(Int(NSDate().timeIntervalSince1970*1000))
+                requestBody.setValue(Int(NSDate().timeIntervalSince1970*1000), forKey: "end")
+                requestBody.setObject(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData)!, forKey: "tags")
+                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue("application/json", forHTTPHeaderField: "Accept")
+                return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
+            }else{
+                return nil
+            }
         }else{
             let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
             println(urlPath)
@@ -412,6 +424,24 @@ class HaalthyService:NSObject{
         let urlPath: String = getTagListURL
         var url: NSURL = NSURL(string: urlPath)!
         var request: NSURLRequest = NSURLRequest(URL: url)
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+    }
+    
+    func updateUserTag(selectedTags: NSArray)->NSData{
+        let getAccessToken: GetAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        var url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        var tagListDic = NSMutableDictionary()
+        tagListDic.setValue(selectedTags, forKey: "tags")
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(tagListDic, options: NSJSONWritingOptions.allZeros, error: nil)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        println(NSString(data: (request.HTTPBody)!, encoding: NSUTF8StringEncoding)!)
+        println(request.HTTPBody)
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
         return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
     }
