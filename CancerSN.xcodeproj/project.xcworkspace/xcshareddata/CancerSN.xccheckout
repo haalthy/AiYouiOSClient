@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>AE9F48E5-8CC0-4258-A031-3D6EFA25E9AD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CancerSN</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C742BD0369DDCCC4D97EDDAAFC0DBA9D01566FE6</key>
+		<string>https://github.com/lilyangel/CancerSNiOSClient.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CancerSN.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C742BD0369DDCCC4D97EDDAAFC0DBA9D01566FE6</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lilyangel/CancerSNiOSClient.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C742BD0369DDCCC4D97EDDAAFC0DBA9D01566FE6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C742BD0369DDCCC4D97EDDAAFC0DBA9D01566FE6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CancerSNiOSClient</string>
+		</dict>
+	</array>
+</dict>
+</plist>
