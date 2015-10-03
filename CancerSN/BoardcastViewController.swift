@@ -212,7 +212,7 @@ class BoardcastViewController: UITableViewController{
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "tagListSegue" {
-            (segue.destinationViewController as! TagViewController).selectedTags = NSMutableArray(array: favTags)
+            (segue.destinationViewController as! TagTableViewController).selectedTags = NSMutableArray(array: favTags)
         }
         if segue.identifier == "postDetailSegue" {
             (segue.destinationViewController as! ShowPostDetailTableViewController).post = didSelectPost

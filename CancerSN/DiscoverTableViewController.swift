@@ -20,6 +20,7 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     var userList : NSArray = []
     var showUserlist:Bool = true
     var loginBtn = UIBarButtonItem()
+    var selectedProfileOwner = String()
     
     @IBAction func indexChanged(sender: UISegmentedControl) {
         if showUserlist {
@@ -55,7 +56,7 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
         }
         
         if((username == nil) && (tagList.count == 0)){
-            self.performSegueWithIdentifier("setTagSegue", sender: nil)
+//            self.performSegueWithIdentifier("setTagSegue", sender: nil)
         }
         var getSuggestUsers:NSData?
         if((username != nil) && (password != nil)){
@@ -136,17 +137,26 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "setTagSegue" {
-            (segue.destinationViewController as! TagViewController).delegate = self
+        if segue.identifier == "showPatientProfileSegue" {
+            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwner
         }
     }
     func performLoginSegue() {
         self.performSegueWithIdentifier("loginSegue", sender: nil)
     }
-}
-extension DiscoverTableViewController: TagVCDelegate {
-    func updateTagList(data: NSArray) {
-        self.tagList = data
-        
+    func imageTap(username:String){
+        if self.username == nil{
+            self.performSegueWithIdentifier("loginSegue", sender: nil)
+        }else{
+            selectedProfileOwner = username
+            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+        }
     }
+    
 }
+//extension DiscoverTableViewController: TagVCDelegate {
+//    func updateTagList(data: NSArray) {
+//        self.tagList = data
+//        
+//    }
+//}

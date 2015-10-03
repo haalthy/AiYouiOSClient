@@ -34,7 +34,8 @@ class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
         selectBtn.layer.masksToBounds = true
         skipBtn.layer.cornerRadius = 5
         skipBtn.layer.masksToBounds = true
-
+        self.navigationController?.navigationBar.hidden = false
+        self.tabBarController?.tabBar.hidden = false
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {

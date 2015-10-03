@@ -24,7 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().barTintColor = tabBarColor
         
         // instantiate your desired ViewController
-        if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil{
+//        println(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData)!)
+        if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
             var keychainAccess = KeychainAccess()
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
                 
@@ -126,5 +127,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        return TencentOAuth.HandleOpenURL(url)
+    }
+    
+    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        return TencentOAuth.HandleOpenURL(url)
+    }
 }
 

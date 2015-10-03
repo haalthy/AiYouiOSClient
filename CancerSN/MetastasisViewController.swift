@@ -10,6 +10,9 @@ import UIKit
 
 class MetastasisViewController: UIViewController, UITextFieldDelegate {
 
+    let profileSet = NSUserDefaults.standardUserDefaults()
+    var haalthyService = HaalthyService()
+    
     var metastasisList : NSMutableArray = []
     
     @IBOutlet weak var selectBtn: UIButton!
@@ -40,6 +43,15 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @IBAction func skipMetastasis(sender: UIButton) {
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else{
+            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
     @IBAction func submitMetastasis(sender: UIButton) {
         metastasisList.addObject(other.text)
         var metastasisListStr : String = ""
@@ -52,6 +64,12 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         let profileSet = NSUserDefaults.standardUserDefaults()
         println(metastasisListStr)
         profileSet.setObject(metastasisListStr, forKey: metastasisNSUserData)
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else{
+            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     func setButtonFormat(sender: UIButton){

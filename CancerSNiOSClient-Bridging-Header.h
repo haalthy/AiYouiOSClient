@@ -11,3 +11,12 @@
 
 
 #endif
+//TencentOpenapi
+#import <TencentOpenAPI/TencentOAuth.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+#import <TencentOpenAPI/QQApiInterfaceObject.h>
+#import <TencentOpenAPI/sdkdef.h>
+#import <TencentOpenAPI/TencentMessageObject.h>
+#import <TencentOpenAPI/TencentOAuthObject.h>
+#import <TencentOpenAPI/WeiBoAPI.h>
+#import <TencentOpenAPI/WeiyunAPI.h>

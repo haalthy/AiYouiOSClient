@@ -11,6 +11,7 @@ import CoreData
 
 protocol UserListDelegate {
     func performLoginSegue()
+    func imageTap(username:String)
 }
 
 class UserListTableViewCell: UITableViewCell {
@@ -35,11 +36,14 @@ class UserListTableViewCell: UITableViewCell {
             var haalthyService = HaalthyService()
             var addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
             var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            var deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
+            println(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
         }else{
             self.delegate?.performLoginSegue()
         }
         addFollowingBtn.enabled = false
-        addFollowingBtn.titleLabel?.text = "已关注"
+        addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
+        addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
         addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
     }
     
@@ -48,7 +52,9 @@ class UserListTableViewCell: UITableViewCell {
             updateUI()
         }
     }
-    
+    func imageTapHandler(sender: UITapGestureRecognizer){
+        self.delegate?.imageTap(user["username"] as! String)
+    }
     func updateUI(){
         if((user["image"] is NSNull) == false){
             let dataString = user["image"] as! String
@@ -56,12 +62,15 @@ class UserListTableViewCell: UITableViewCell {
             
             userImage.image = UIImage(data: imageData)
         }
+        var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+        userImage.userInteractionEnabled = true
+        userImage.addGestureRecognizer(tapImage)
         
         usernameDisplay.text = user["username"] as? String
         
         var userProfileStr : String
         var gender = user["gender"] as! String
-        var displayGender:String = ""
+        var displayGender:String = String()
         if(gender == "M"){
             displayGender = "男"
         }else if(gender == "F"){

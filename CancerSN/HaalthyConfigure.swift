@@ -40,6 +40,8 @@ let resetPasswordURL:String = haalthyServiceRestfulURL + "security/user/resetpas
 let getFollowingUserURL:String = haalthyServiceRestfulURL + "security/user/followingusers"
 let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/followerusers"
 let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"
+let updateUserURL: String = haalthyServiceRestfulURL + "security/user/update"
+let deleteFromSuggestedUserURL: String = haalthyServiceRestfulURL + "security/user/deletesuggesteduser"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -58,9 +60,15 @@ let emailNSUserData = "haalthyUserEmail"
 let accessNSUserData = "haalthyUserAccessToken"
 let refreshNSUserData = "haalthyUserRefreshToken"
 let imageNSUserData = "haalthyUserImageToken"
+let displaynameUserData = "haalthyUserDisplayname"
+let userTypeUserData = "haalthyUserType"
+let qqUserType = "QQ"
+let aiyouUserType = "AY"
+let wechatUserType = "WC"
 
 let newTreatmentBegindate = "haalthyNewTreatmentBeginDate"
 let newTreatmentEnddate = "haalthyNewTreatmentEndDate"
+
 
 //store ImageFilename
 let imageFileName = "portrait.jpg"

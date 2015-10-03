@@ -12,8 +12,14 @@ protocol UserTagVCDelegate {
     func updateUserTagList(data: NSArray)
 }
 
+protocol PostTagVCDelegate{
+    func getPostTagList(data: NSArray)
+}
+
 class TagTableViewController: UITableViewController {
     var userTagDelegate: UserTagVCDelegate?
+    var postDelegate: PostTagVCDelegate?
+
     var haalthyService = HaalthyService()
     var publicService = PublicService()
     var keychain = KeychainAccess()
@@ -25,24 +31,33 @@ class TagTableViewController: UITableViewController {
     var groupedTagList = NSMutableArray()
     var rowHightForTagContainer = NSMutableArray()
     var isFirstTagSelection = false
-    
 
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func submit(sender: UIButton) {
-        for var index = 0; index < tagList.count; ++index{
-            if selectedTagsStr.containsObject((tagList[index] as! NSDictionary).objectForKey("name") as! String){
-                selectedTags.addObject(tagList[index])
+        if isBroadcastTagSelection == 0 {
+            selectedTags.removeAllObjects()
+            for var index = 0; index < tagList.count; ++index{
+                if selectedTagsStr.containsObject((tagList[index] as! NSDictionary).objectForKey("name") as! String){
+                    selectedTags.addObject(tagList[index])
+                }
             }
+            NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
+            if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
+                var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
+            }
+            if isFirstTagSelection {
+                self.performSegueWithIdentifier("homeSegue", sender: self)
+            }else{
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }else{
+            self.postDelegate?.getPostTagList(self.selectedTags)
         }
-        if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil){
-            var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
-        }
-        NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -129,8 +144,18 @@ class TagTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCellWithIdentifier("tagHeaderCell", forIndexPath: indexPath) as! UITableViewCell
+            
+            let cell = tableView.dequeueReusableCellWithIdentifier("tagHeaderCell", forIndexPath: indexPath) as! TagHeaderTableViewCell
+            if isBroadcastTagSelection == 1{
+                cell.header.text = "请选择发布问题的标签"
+                cell.cancelBtn.hidden = true
+            }else{
+                cell.cancelBtn.hidden = false
+                cell.header.text = "请选择您关注的标签"
+            }
+            cell.header.textColor = textColor
             return cell
+            
         } else if (indexPath.section == tagTypeList.count+1){
             let cell = tableView.dequeueReusableCellWithIdentifier("submitCell", forIndexPath: indexPath) as! UITableViewCell
             return cell

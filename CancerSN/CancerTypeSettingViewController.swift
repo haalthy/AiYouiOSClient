@@ -14,16 +14,31 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var cancerTypePickerView: UIPickerView!
     var pickerDataSource = [String]()
+    let profileSet = NSUserDefaults.standardUserDefaults()
+    var haalthyService = HaalthyService()
+
+    @IBAction func cancel(sender: UIButton) {
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else{
+            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
     
     @IBAction func selectCancerType(sender: UIButton) {
-        let profileSet = NSUserDefaults.standardUserDefaults()
         var cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
         var selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
         profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
         if(cancerType == "肺部"){
             self.performSegueWithIdentifier("showMoreForLung", sender: nil)
         }else{
-            self.performSegueWithIdentifier("signup", sender: nil)
+            if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+                self.performSegueWithIdentifier("signupSegue", sender: self)
+            }else{
+                haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
         }
     }
     override func viewDidLoad() {

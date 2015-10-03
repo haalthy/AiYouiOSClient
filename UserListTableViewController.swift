@@ -73,4 +73,8 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     func performLoginSegue() {
         self.performSegueWithIdentifier("loginSegue", sender: nil)
     }
+    
+    func imageTap(username: String) {
+        
+    }
 }

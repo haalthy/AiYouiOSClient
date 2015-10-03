@@ -244,8 +244,8 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            var tagViewController = segue.destinationViewController as! TagViewController
-            tagViewController.postBody = postContent.text
+            var tagViewController = segue.destinationViewController as! TagTableViewController
+//            tagViewController.postBody = postContent.text
             tagViewController.isBroadcastTagSelection = 1
             tagViewController.postDelegate = self
         }

@@ -57,7 +57,6 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     
     var data :NSMutableData? = NSMutableData()
     @IBAction func submit(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
         //save image
         
         var selectedImage: UIImage = portrait.image!
@@ -72,7 +71,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         var imageData: NSData = UIImagePNGRepresentation(selectedImage)
         println(selectedImage.size.width, selectedImage.size.height)
         var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
-        println(imageDataStr)
+//        println(imageDataStr)
         
         fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
         
@@ -85,14 +84,15 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         let keychainAccess = KeychainAccess()
         keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text)
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
-        
+
         //upload UserInfo to Server
         var haalthyService = HaalthyService()
-        var addUserRespData = haalthyService.addUser()
+        var addUserRespData = haalthyService.addUser("AY")
         let str: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
         println(str)
         var getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!){

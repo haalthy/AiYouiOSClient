@@ -16,6 +16,7 @@ class ShowPostDetailTableViewController: UITableViewController {
     var post : NSDictionary = NSDictionary()
     var commentList : NSArray = NSArray()
     let entity: String = "Broadcast"
+    var selectedProfileOwnername = String()
 
     
     @IBAction func addCommentView(sender: UIBarButtonItem) {
@@ -97,6 +98,28 @@ class ShowPostDetailTableViewController: UITableViewController {
 //        
 //        self.navigationController?.navigationBar.addSubview(toolBar)
         
+
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "addCommentSegue" {
+            var destinationVC = segue.destinationViewController as! AddPostViewController
+            destinationVC.postID = self.post.objectForKey("postID") as! Int
+            destinationVC.isComment = 1
+        }
+        if segue.identifier == "showPatientProfileSegue"{
+            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
+        }
+    }
+
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.navigationController?.toolbarHidden = false
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+/*        super.viewDidAppear(animated)
         var getPostByIdRespData = self.sendSyncGetPostRequest()
         let postJsonResult = NSJSONSerialization.JSONObjectWithData(getPostByIdRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         if postJsonResult is NSDictionary{
@@ -105,7 +128,7 @@ class ShowPostDetailTableViewController: UITableViewController {
                 post = postDic
             }
         }
-        savePostData()
+        savePostData()*/
         var getCommentsRespData = self.sendSyncGetCommentListRequest()
         let str: NSString = NSString(data: getCommentsRespData, encoding: NSUTF8StringEncoding)!
         println(str)
@@ -116,19 +139,6 @@ class ShowPostDetailTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "addCommentSegue" {
-            var destinationVC = segue.destinationViewController as! AddPostViewController
-            destinationVC.postID = self.post.objectForKey("postID") as! Int
-            destinationVC.isComment = 1
-        }
-    }
-
-    
-    override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.tabBar.hidden = true
-        self.navigationController?.toolbarHidden = false
-    }
     override func viewWillDisappear(animated: Bool) {
         self.tabBarController?.tabBar.hidden = false
         self.navigationController?.toolbarHidden = true
@@ -180,7 +190,21 @@ class ShowPostDetailTableViewController: UITableViewController {
         }
     }
     
-
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 0{
+            selectedProfileOwnername = post.objectForKey("insertUsername") as! String
+        }else if indexPath.section == 1{
+            selectedProfileOwnername = (commentList[indexPath.row] as! NSDictionary).objectForKey("insertUsername") as! String
+        }
+        var keyChainAcess = KeychainAccess()
+        if keyChainAcess.getPasscode("username") != nil{
+            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+        }else{
+            self.performSegueWithIdentifier("loginSegue", sender: self)
+        }
+    }
+    
+    
     override func tableView(_tableView: UITableView,
         heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
             return UITableViewAutomaticDimension

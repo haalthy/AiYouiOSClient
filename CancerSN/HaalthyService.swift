@@ -30,7 +30,7 @@ class HaalthyService:NSObject{
         return addPostRespData!
     }
     
-    func addUser()->NSData{
+    func addUser(userType:String)->NSData{
         //upload UserInfo to Server
         let keychainAccess = KeychainAccess()
         let profileSet = NSUserDefaults.standardUserDefaults()
@@ -38,6 +38,7 @@ class HaalthyService:NSObject{
         var email    = String()
         var username = String()
         var password = String()
+        var displayname = String()
         var gender   = String()
         var isSmocking = Int()
         var pathological = String()
@@ -54,6 +55,9 @@ class HaalthyService:NSObject{
         }
         if keychainAccess.getPasscode(passwordKeyChain) != nil{
             password = (keychainAccess.getPasscode(passwordKeyChain))! as! String
+        }
+        if profileSet.objectForKey(displaynameUserData) != nil{
+            displayname = (profileSet.objectForKey(displaynameUserData))! as! String
         }
         if profileSet.objectForKey(genderNSUserData) != nil{
             gender = (profileSet.objectForKey(genderNSUserData))! as! String
@@ -80,7 +84,7 @@ class HaalthyService:NSObject{
             image = (profileSet.objectForKey(imageNSUserData))! as! String
         }
 //        var addUserBody = NSDictionary(objects: [(profileSet.objectForKey(emailNSUserData))!, (keychainAccess.getPasscode(usernameKeyChain))!, (keychainAccess.getPasscode(passwordKeyChain))!, (profileSet.objectForKey(genderNSUserData))!, (profileSet.objectForKey(smokingNSUserData))!, (profileSet.objectForKey(pathologicalNSUserData))!, (profileSet.objectForKey(stageNSUserData))!, (profileSet.objectForKey(ageNSUserData))!, (profileSet.objectForKey(cancerTypeNSUserData))!, (profileSet.objectForKey(metastasisNSUserData))!,(profileSet.objectForKey(imageNSUserData))!], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","image"])
-        var addUserBody = NSDictionary(objects: [email, username, password, gender, isSmocking, pathological, stage, age, cancerType, metastasis, image], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","image"])
+        var addUserBody = NSDictionary(objects: [email, username, password, gender, isSmocking, pathological, stage, age, cancerType, metastasis, image, userType, displayname], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","image", "userType", "displayname"])
         let addUserUrl = NSURL(string: addNewUserURL)
         let request: NSMutableURLRequest = NSMutableURLRequest(URL: addUserUrl!)
         request.HTTPMethod = "POST"
@@ -95,24 +99,24 @@ class HaalthyService:NSObject{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
+            let url:NSURL = NSURL(string: getBroadcastsByTagsURL)!
+            let request = NSMutableURLRequest(URL: url)
+            request.HTTPMethod = "POST"
+            var requestBody = NSMutableDictionary()
+            requestBody.setValue(latestFetchTimestamp, forKey: "begin")
+            println(latestFetchTimestamp)
+            println(Int(NSDate().timeIntervalSince1970*1000))
+            requestBody.setValue(Int(NSDate().timeIntervalSince1970*1000), forKey: "end")
             if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil{
-                
-                let url:NSURL = NSURL(string: getBroadcastsByTagsURL)!
-                let request = NSMutableURLRequest(URL: url)
-                request.HTTPMethod = "POST"
-                var requestBody = NSMutableDictionary()
-                requestBody.setValue(latestFetchTimestamp, forKey: "begin")
-                println(latestFetchTimestamp)
-                println(Int(NSDate().timeIntervalSince1970*1000))
-                requestBody.setValue(Int(NSDate().timeIntervalSince1970*1000), forKey: "end")
                 requestBody.setObject(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData)!, forKey: "tags")
-                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
-                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.addValue("application/json", forHTTPHeaderField: "Accept")
-                return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
-            }else{
-                return nil
             }
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
+            //            }else{
+            //                return nil
+            //            }
         }else{
             let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
             println(urlPath)
@@ -444,5 +448,32 @@ class HaalthyService:NSObject{
         println(request.HTTPBody)
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
         return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+    }
+    
+    func updateUser(updateUserInfo: NSDictionary)->NSData{
+        let getAccessToken: GetAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        var url: NSURL = NSURL(string: updateUserURL + "?access_token=" + (accessToken as! String))!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(updateUserInfo, options: NSJSONWritingOptions.allZeros, error: nil)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        println(NSString(data: (request.HTTPBody)!, encoding: NSUTF8StringEncoding)!)
+        println(request.HTTPBody)
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+    }
+    
+    func deleteFromSuggestedUser(username: String)->NSData{
+        let getAccessToken: GetAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        var url: NSURL = NSURL(string: deleteFromSuggestedUserURL + "/" + username + "?access_token=" + (accessToken as! String))!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil)!
     }
 }

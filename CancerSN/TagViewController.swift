@@ -12,13 +12,13 @@ protocol TagVCDelegate {
     func updateTagList(data: NSArray)
 }
 
-protocol PostTagVCDelegate{
-    func getPostTagList(data: NSArray)
-}
+//protocol PostTagVCDelegate{
+//    func getPostTagList(data: NSArray)
+//}
 
 class TagViewController: UITableViewController {
     var delegate: TagVCDelegate?
-    var postDelegate: PostTagVCDelegate?
+//    var postDelegate: PostTagVCDelegate?
     var tags: NSArray = []
     var selectedTags : NSMutableArray = []
     
@@ -75,7 +75,7 @@ class TagViewController: UITableViewController {
                 var updateUserTagsRespData = self.sendUpdateTagsHttpRequest()
             }
         }else{
-            self.postDelegate?.getPostTagList(self.selectedTags)
+//            self.postDelegate?.getPostTagList(self.selectedTags)
         }
         self.dismissViewControllerAnimated(false, completion: nil)
     }

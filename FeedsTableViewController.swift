@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate {
+class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate, UIGestureRecognizerDelegate, ImageTapDelegate {
     var username:String?
     var password:String?
     var feedList = NSArray()
@@ -17,6 +17,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var automatedShowDiscoverView:Bool = true
     var heightForFeedRow = NSMutableDictionary()
     var selectTags = NSArray()
+    var selectedProfileOwnername = String()
     
     @IBAction func discover(sender: UIButton) {
         self.performSegueWithIdentifier("discoverSegue", sender: self)
@@ -44,8 +45,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if segue.identifier == "postDetailSegue" {
             (segue.destinationViewController as! ShowPostDetailTableViewController).post = feed
         }
+        if segue.identifier == "showPatientProfileSegue" {
+            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
+        }
     }
-    
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
@@ -140,6 +143,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                     feedItem.setValue(feed["image"], forKey: "image")
                 }
                 feedItem.setValue(username, forKey: "ownerName")
+                if (feed["type"] is NSNull) == false{
+                    feedItem.setValue(feed["type"], forKey: "type")
+                }
                 context.save(nil)
             }
             newFeedList.addObjectsFromArray(feedList as [AnyObject])
@@ -188,7 +194,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //        let search = UIBarButtonItem(title: "search", style: UIBarButtonItemStyle.Plain , target: self, action: "searchAction")
 //        let add = UIBarButtonItem(title: "add", style: UIBarButtonItemStyle.Plain , target: self, action: "addAction")
 //        let arrBtns = NSArray(array: [search, add])
-//        self.navigationItem.rightBarButtonItems = [search, add]
+        //        self.navigationItem.rightBarButtonItems = [search, add]
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -199,6 +205,15 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //        self.myTags.contentMode = UIViewContentMode.ScaleAspectFill
 //        self.tabBarController?.tabBar.barTintColor = tabBarColor
 //        self.tabBarController?.tabBar.tintColor = UIColor.whiteColor()
+        var keychainAccess = KeychainAccess()
+        username = keychainAccess.getPasscode(usernameKeyChain) as? String
+        password = keychainAccess.getPasscode(passwordKeyChain) as? String
+        if (username != nil) && (password != nil) {
+            self.getexistFeedsFromLocalDB()
+            if feedList.count == 0 {
+                refreshFeeds()
+            }
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -234,7 +249,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
-        var keychainAccess = KeychainAccess()
         
 //        if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
 //            //show feeds
@@ -255,18 +269,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //                self.performSegueWithIdentifier("tagSegue", sender: nil)
 //            }
 //        }
-        if (keychainAccess.getPasscode(usernameKeyChain) == nil) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) {
-            self.performSegueWithIdentifier("tagSegue", sender: nil)
-        }else{
-            username = keychainAccess.getPasscode(usernameKeyChain) as? String
-            password = keychainAccess.getPasscode(passwordKeyChain) as? String
-//            if username != nil{
-                self.getexistFeedsFromLocalDB()
-//            }
-            if feedList.count == 0 {
-                refreshFeeds()
-            }
-        }
+
+//        refreshFeeds()
     }
 
     
@@ -276,9 +280,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             cell.backgroundColor = headerColor
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
+//            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! FeedTableViewCell
             cell.removeAllSubviews()
-            
+
             //separatorLine
             var separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
             separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
@@ -292,8 +297,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 feed = feedList[indexPath.row] as! NSDictionary
                 //                feedBody.text = (feedList[indexPath.row] as! NSDictionary).objectForKey("body") as! String
             }
+            cell.feed = feed
+
+            cell.imageTapDelegate = self
             //imageView
-            var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
+/*            var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
             if((feed.valueForKey("image") is NSNull) == false){
                 let dataString = feed.valueForKey("image") as! String
                 let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
@@ -301,6 +309,12 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             }else{
                 imageView.image = UIImage(named: "Mario.jpg")
             }
+            
+            
+            var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+            imageView.userInteractionEnabled = true
+            imageView.addGestureRecognizer(tapImage)
+*/
             //username View
             var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, cell.frame.width - 10 - 32 - 10 - 80, 20))
             usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
@@ -332,8 +346,30 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             profileLabelView.text = feed.valueForKey("patientProfile") as? String
             profileLabelView.textColor = UIColor.grayColor()
             
+            //feed type view
+            var typeStr = String()
+            if (feed.objectForKey("type") != nil) && (feed.objectForKey("type") is NSNull) == false{
+                if (feed.objectForKey("type") as!Int) == 0{
+                    if (feed.objectForKey("isBroadcast") as! Int) == 1 {
+                        typeStr = "提出新问题"
+                    }else{
+                        typeStr = "分享心情"
+                    }
+                }
+                if (feed.objectForKey("type") as! Int) == 1{
+                    typeStr = "添加治疗方案"
+                }
+                if (feed.objectForKey("type") as! Int) == 2{
+                    typeStr = "更新病友状态"
+                }
+            }
+            var typeLabel = UILabel(frame: CGRectMake(10, 50, 80, 25))
+            typeLabel.text = typeStr
+            typeLabel.backgroundColor = sectionHeaderColor
+            typeLabel.font = UIFont(name: fontStr, size: 12.0)
+            
             //feed body view
-            var feedBody = UILabel(frame: CGRectMake(10, 50, cell.frame.width - 20, 80))
+            var feedBody = UILabel(frame: CGRectMake(10, 80, cell.frame.width - 20, 80))
             feedBody.numberOfLines = 5
             feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
             feedBody.font = UIFont(name: "Helvetica", size: 13.0)
@@ -343,7 +379,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
             
             //tagBody
-            var tagLabel = UILabel(frame: CGRectMake(10, 50 + feedBody.frame.height + 5, cell.frame.width - 80, 20))
+            var tagLabel = UILabel(frame: CGRectMake(10, 80 + feedBody.frame.height + 5, cell.frame.width - 80, 20))
             if (feed.objectForKey("tags") is NSNull) == false{
                 tagLabel.font = UIFont(name: "Helvetica", size: 11.5)
                 tagLabel.text = "tag:" + (feed.objectForKey("tags") as! NSString).stringByReplacingOccurrencesOfString("*", withString: " ")
@@ -358,16 +394,29 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             reviewLabel.textColor = UIColor.grayColor()
             
             cell.addSubview(separatorLine)
-            cell.addSubview(imageView)
+//            cell.addSubview(imageView)
             cell.addSubview(usernameLabelView)
             cell.addSubview(insertDateLabelView)
             cell.addSubview(profileLabelView)
             cell.addSubview(feedBody)
             cell.addSubview(tagLabel)
             cell.addSubview(reviewLabel)
+            cell.addSubview(typeLabel)
 
             return cell
         }
+    }
+    func imageTap(username: String) {
+        println(username)
+        selectedProfileOwnername = username
+        if self.username != nil{
+            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+        }else{
+            self.performSegueWithIdentifier("loginSegue", sender: self)
+        }
+    }
+    func imageTapHandler(sender: UITapGestureRecognizer){
+        println("tap")
     }
     
     var feed = NSDictionary()
@@ -388,11 +437,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight:CGFloat
         switch indexPath.section{
-        case 0: rowHeight = 0
+        case 0: rowHeight = 50
             break
         case 1:
             if self.heightForFeedRow.objectForKey(indexPath) != nil{
-            rowHeight = (self.heightForFeedRow.objectForKey(indexPath) as! CGFloat) + 80
+            rowHeight = (self.heightForFeedRow.objectForKey(indexPath) as! CGFloat) + 110
             }else{
                 rowHeight = 40
             }
@@ -411,5 +460,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         self.selectTags = selectTags
         let userData = NSUserDefaults.standardUserDefaults()
         userData.setObject(selectTags, forKey: favTagsNSUserData)
+    }
+    
+    func gestureRecognizer(UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
+            return true
     }
 }

@@ -13,6 +13,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     @IBOutlet weak var usernameLabel: UILabel!
     
     @IBOutlet weak var profileSegment: UISegmentedControl!
+    var profileOwnername: NSString?
     var username: NSString?
     var password: NSString?
     var haalthyService = HaalthyService()
@@ -35,7 +36,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
         if username != nil {
             if sender.selectedSegmentIndex == 1 {
-                var broadcastData = haalthyService.getPostsByUsername(username as! String)
+                var broadcastData = haalthyService.getPostsByUsername(profileOwnername as! String)
                 var jsonResult = NSJSONSerialization.JSONObjectWithData(broadcastData, options: NSJSONReadingOptions.MutableContainers, error: nil)
                 if jsonResult is NSArray {
                     broadcastList = jsonResult as! NSArray
@@ -46,18 +47,18 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     @IBOutlet weak var tableview: UITableView!
     
-    func gettTreatmentsData(){
+    func getTreatmentsData(){
         if (username != nil) && (password != nil){
             var jsonResult:AnyObject? = nil
-            if haalthyService.getUserDetail(username! as String) != nil{
-                var getUserDetail = haalthyService.getUserDetail(username! as String)!
-                jsonResult = NSJSONSerialization.JSONObjectWithData(getUserDetail, options: NSJSONReadingOptions.MutableContainers, error: nil)
-                            let str: NSString = NSString(data: getUserDetail, encoding: NSUTF8StringEncoding)!
+            var userDetailData = haalthyService.getUserDetail(profileOwnername! as String)
+            if userDetailData != nil{
+                jsonResult = NSJSONSerialization.JSONObjectWithData(userDetailData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                            let str: NSString = NSString(data: userDetailData!, encoding: NSUTF8StringEncoding)!
                             println(str)
             }
 
             if jsonResult != nil{
-                if profileSegment.numberOfSegments < 3 {
+                if profileSegment.numberOfSegments < 3 && profileOwnername == username {
                     profileSegment.insertSegmentWithTitle("我", atIndex: 2, animated: false)
                 }
                 var userDetail = jsonResult as! NSDictionary
@@ -161,13 +162,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        username = keychainAccess.getPasscode(usernameKeyChain)
-//        password = keychainAccess.getPasscode(passwordKeyChain)
-//        getAccessToken.getAccessToken()
-//        accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-//        if accessToken == nil {
-//            self.performSegueWithIdentifier("loginSegue", sender: self)
-//        }
         var dummyViewHeight : CGFloat = 40
         var dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
         self.tableview.tableHeaderView = dummyView;
@@ -186,26 +180,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
             if usedToBeInLoginView == false{
-                //            self.view.removeAllSubviews()
-                //            var portraitWith:CGFloat = 128
-                //
-                //            var portraitView = UIImageView(frame: CGRectMake((UIScreen.mainScreen().bounds.width - portraitWith)/2, 100, portraitWith, portraitWith))
-                //            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-                //
-                //            var imageFilePath = "\(paths)/" + imageFileName
-                //            portraitView.image = UIImage(contentsOfFile: imageFilePath)
-                //            var buttonWidth: CGFloat = (UIScreen.mainScreen().bounds.width - 50)/2
-                //            var buttonHeight: CGFloat = 30
-                //            var loginButton = UIButton(frame: CGRectMake(30 + buttonWidth, 280, buttonWidth, 30))
-                //            var signupButton = UIButton(frame: CGRectMake(20, 280, buttonWidth, 30))
-                //            loginButton.addTarget(self, action: "login", forControlEvents: UIControlEvents.TouchUpInside)
-                //            loginButton.setTitle("登陆", forState: UIControlState.allZeros)
-                //            formatButton(loginButton)
-                //            signupButton.addTarget(self, action: "signup", forControlEvents: UIControlEvents.TouchUpInside)
-                //            signupButton.setTitle("注册", forState: UIControlState.allZeros)
-                //            formatButton(signupButton)
-                //            self.view.addSubview(loginButton)
-                //            self.view.addSubview(signupButton)
                 self.performSegueWithIdentifier("loginSegue", sender: self)
                 usedToBeInLoginView = true
             }else{
@@ -213,6 +187,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 usedToBeInLoginView = false
             }
         }else{
+            if profileOwnername == nil {
+                profileOwnername  = username
+            }
             var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
             viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
             imageView.image = UIImage(named: "Mario.jpg")
@@ -221,7 +198,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.navigationController?.navigationBar.addSubview(viewContainer)
             tableview.delegate = self
             tableview.dataSource = self
-            gettTreatmentsData()
+            self.treatmentSections = NSMutableArray()
+            getTreatmentsData()
             //            self.tableview.allowsSelection = false
             let publicService = PublicService()
             let profileStr = publicService.getProfileStrByDictionary(userProfile)
@@ -270,11 +248,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             numberOfSections = 1
             break
         case 2:
-            if username != nil{
+//            if username != nil{
                 numberOfSections = 3
-            } else{
-                numberOfSections = 1
-            }
+//            } else{
+//                numberOfSections = 1
+//            }
             break
         default:
             numberOfSections = 0
@@ -299,7 +277,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }else if profileSegment.selectedSegmentIndex == 1{
             numberOfRows = self.broadcastList.count
         }else if profileSegment.selectedSegmentIndex == 2{
-            if username != nil{
+//            if username != nil{
                 switch section{
                 case 0: numberOfRows = 3
                     break
@@ -310,9 +288,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 default: numberOfRows = 0
                     break
                 }
-            }else{
-                numberOfRows = 1
-            }
+//            }else{
+//                numberOfRows = 1
+//            }
         }
         return numberOfRows
     }
