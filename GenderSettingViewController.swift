@@ -8,14 +8,28 @@
 
 import UIKit
 
+protocol GenderSettingVCDelegate{
+    func updateGender(gender: String)
+}
+
 class GenderSettingViewController: UIViewController {
-    
-    @IBOutlet weak var skip: UIButton!
+    var isUpdate = false
+    var genderSettingVCDelegate: GenderSettingVCDelegate?
+    @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var maleSelect: UIButton!
     @IBOutlet weak var femaleSelect: UIButton!
     @IBAction func SelectGender(sender: UIButton) {
-        let profileSet = NSUserDefaults.standardUserDefaults()
+        if isUpdate {
+            genderSettingVCDelegate?.updateGender(genderMapping.objectForKey((sender.titleLabel?.text)!) as! String)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.setObject(genderMapping.objectForKey((sender.titleLabel?.text)!), forKey: genderNSUserData)
+            self.performSegueWithIdentifier("selectAgeSegue", sender: self)
+        }
+    }
+    @IBAction func skip(sender: UIButton) {
+        self.performSegueWithIdentifier("selectAgeSegue", sender: self)
     }
     
     override func viewDidLoad() {
@@ -37,10 +51,13 @@ class GenderSettingViewController: UIViewController {
         femaleSelect.backgroundColor = UIColor.whiteColor()
         femaleSelect.titleLabel?.textColor = textColor
         
-            skip.layer.cornerRadius = 5
-        skip.layer.masksToBounds = true
-        skip.backgroundColor = textColor
-        skip.titleLabel?.textColor = UIColor.whiteColor()
+//            skip.layer.cornerRadius = 5
+//        skip.layer.masksToBounds = true
+//        skip.backgroundColor = textColor
+        skipBtn.titleLabel?.textColor = UIColor.whiteColor()
+        if isUpdate{
+            skipBtn.hidden = true
+        }
     }
     
     override func viewWillAppear(animated: Bool) {

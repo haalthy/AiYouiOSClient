@@ -28,12 +28,12 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.titleTextAttributes = titleDict as [NSObject : AnyObject]
         
-        var cancelButton : UIBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
+//        var cancelButton : UIBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
         
         var submitButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Plain, target: self, action: "submit")
         submitButton.tintColor = UIColor(white: 1, alpha: 0.5)
         
-        self.navigationItem.leftBarButtonItem = cancelButton
+//        self.navigationItem.leftBarButtonItem = cancelButton
         self.navigationItem.rightBarButtonItem = submitButton
         password.delegate = self
         confirmPassword.delegate = self
@@ -58,9 +58,9 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func cancel(){
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
+//    func cancel(){
+//        self.dismissViewControllerAnimated(true, completion: nil)
+//    }
     
     func submit(){
         if password.text == confirmPassword.text {

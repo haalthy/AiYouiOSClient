@@ -61,12 +61,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 if profileSegment.numberOfSegments < 3 && profileOwnername == username {
                     profileSegment.insertSegmentWithTitle("我", atIndex: 2, animated: false)
                 }
+                if profileSegment.numberOfSegments > 2 && profileOwnername != username{
+                    profileSegment.removeSegmentAtIndex(2, animated: false)
+                }
                 var userDetail = jsonResult as! NSDictionary
                 treatmentList = jsonResult!.objectForKey("treatments") as! NSMutableArray
-                
-//                for treatmentTmp in treatmentList{
-//                    trea
-//                }
                 
                 patientStatusList = jsonResult!.objectForKey("patientStatus") as! NSArray
                 clinicReportList = jsonResult!.objectForKey("clinicReport") as! NSArray
@@ -107,6 +106,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     var treatmentStr = ""
                     var treatmentCountInSection = 0
                     var treatmentSectionLineCount = 0
+                    var sectionHeight: CGFloat = 0.0
                     for var treatmentIndex = 0; treatmentIndex < treatmentList.count; treatmentIndex++ {
                         var treatment = treatmentList[treatmentIndex] as! NSDictionary
                         if ((treatment.objectForKey("endDate") as? Int) >= (timeList[index] as Int)) && ((treatment.objectForKey("beginDate") as? Int) <= (timeList[index+1] as Int)) {
@@ -120,8 +120,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                             }
                             treatmentStr += "**"
                             treatmentCountInSection++
+                            var dosageLabel = UILabel()
+                            dosageLabel = UILabel(frame: CGRectMake(0, 0, 170.0, CGFloat.max))
+                            dosageLabel.text = treatment["dosage"] as! String
+                            dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
+                            dosageLabel.numberOfLines = 0
+                            dosageLabel.sizeToFit()
+                            var height:CGFloat = dosageLabel.frame.height > 30 ? dosageLabel.frame.height : 30
+                            sectionHeight += height + 5
                         }
                     }
+                    treatmentSection.setObject(sectionHeight, forKey: "sectionHeight")
                     treatmentSection.setObject(treatmentCountInSection, forKey: "treatmentCount")
                     treatmentSection.setObject(treatmentSectionLineCount, forKey: "treatmentLineCount")
                     treatmentSection.setObject(treatmentStr, forKey: "treatmentDetails")
@@ -172,6 +181,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         viewContainer.removeFromSuperview()
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        profileOwnername = nil
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         username = keychainAccess.getPasscode(usernameKeyChain)
@@ -190,16 +204,25 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if profileOwnername == nil {
                 profileOwnername  = username
             }
-            var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
-            viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
-            imageView.image = UIImage(named: "Mario.jpg")
-            viewContainer.addSubview(imageView)
-            viewContainer.backgroundColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.addSubview(viewContainer)
             tableview.delegate = self
             tableview.dataSource = self
             self.treatmentSections = NSMutableArray()
             getTreatmentsData()
+
+            var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
+            viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
+//            imageView.image = UIImage(named: "Mario.jpg")
+            if self.userProfile.valueForKey("image") != nil{
+                let dataString = self.userProfile.valueForKey("image") as! String
+                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                imageView.image = UIImage(data: imageData)
+            }else{
+                imageView.image = UIImage(named: "Mario.jpg")
+            }
+            viewContainer.addSubview(imageView)
+            viewContainer.backgroundColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.addSubview(viewContainer)
+
             //            self.tableview.allowsSelection = false
             let publicService = PublicService()
             let profileStr = publicService.getProfileStrByDictionary(userProfile)
@@ -308,7 +331,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else{
                 let cell = tableView.dequeueReusableCellWithIdentifier("patientStatusListCell", forIndexPath: indexPath) as! PatientStatusTableViewCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
-                cell.patientStatus = patientStatusList[indexPath.row] as! NSDictionary
+                var patientStatusListInSection = (treatmentSections[indexPath.section - 1] as! NSDictionary).objectForKey("patientStatus") as! NSArray
+                cell.patientStatus = patientStatusListInSection[indexPath.row] as! NSDictionary
                 return cell
             }
         }else if profileSegment.selectedSegmentIndex == 1{
@@ -363,7 +387,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else if indexPath.section == 1{
                 let cell = tableView.dequeueReusableCellWithIdentifier("accountSettingCell", forIndexPath: indexPath) as! UITableViewCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
-                cell.textLabel?.text = "更改密码"
+                cell.textLabel?.text = "更改个人信息"
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCellWithIdentifier("logoutCell", forIndexPath: indexPath) as! UITableViewCell
@@ -406,8 +430,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 if treatmentLineCount == nil{
                     heightForHeader = 0
                 }else{
-                    var treatmentStr = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
-                    heightForHeader = CGFloat(35 * treatmentStr + 4)
+//                    var treatmentStr = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
+//                    heightForHeader = CGFloat(35 * treatmentStr + 4)
+                    heightForHeader = (self.treatmentSections[section-1]["sectionHeight"] as! CGFloat) + 5
                     if UIScreen.mainScreen().bounds.width < 375 {
                         heightForHeader += 35
                     }
@@ -468,9 +493,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 
                 var treatmentStr = self.treatmentSections[section-1]["treatmentDetails"] as! String
                 println(treatmentStr)
-                var treatmentList: NSArray = treatmentStr.componentsSeparatedByString("**")
+                var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
+                for treatment in treatmentList {
+                    var treatmentItemStr:String = treatment as! String
+                    
+                    treatmentItemStr = treatmentItemStr.stringByReplacingOccurrencesOfString("*", withString: "", options:  NSStringCompareOptions.LiteralSearch, range: nil)
+                    if (treatmentItemStr as NSString).length == 0{
+                        treatmentList.removeObject(treatment)
+                    }
+                }
                 
-                for treatment in treatmentList{
+                for treatment in treatmentList {
                     var treatmentStr = treatment as! String
                     if (treatmentStr as! NSString).length == 0{
                         break
@@ -482,17 +515,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     var treatmentName = treatmentNameAndDosage[0] as! String
                     var treatmentDosage = String()
                     var treatmentNameLabel = UILabel()
-                    var dosageLable = UILabel()
+                    var dosageLabel = UILabel()
                     if treatmentNameAndDosage.count > 1{
-                        var dosageLableLine = (treatmentDosage as NSString).length/14 + 1
-                        var height = CGFloat(30 * dosageLableLine)
                         treatmentDosage = treatmentNameAndDosage[1] as! String
+//                        var dosageLableLine = (treatmentDosage as NSString).length/14 + 1
+//                        var height = CGFloat(30 * dosageLableLine)
                         treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 90.0, 30.0))
                         treatmentNameLabel.text = treatmentName
-                        dosageLable = UILabel(frame: CGRectMake(110.0, treatmentY, 170.0, height))
-                        dosageLable.text = treatmentDosage
+                        dosageLabel.frame = CGRectMake(110.0, treatmentY, 170.0, 0)
+                        dosageLabel.text = treatmentDosage
+                        dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
+                        dosageLabel.numberOfLines = 0
+//                        dosageLable.backgroundColor = UIColor.lightGrayColor()
+                        dosageLabel.sizeToFit()
+                        var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
                         treatmentY += height + 5
-                        dosageLable.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                         treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 14.0)
                         treatmentNameLabel.layer.cornerRadius = 5
                         treatmentNameLabel.backgroundColor = tabBarColor
@@ -501,7 +538,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         treatmentNameLabel.layer.borderColor = mainColor.CGColor
                         treatmentNameLabel.layer.borderWidth = 1.0
                         treatmentNameLabel.textAlignment = NSTextAlignment.Center
-                        dosageLable.textColor = mainColor
+                        dosageLabel.textColor = mainColor
                     }else{
                         var treatmentLine = (treatmentName as NSString).length/20 + 1
                         var height = CGFloat(30 * treatmentLine)
@@ -515,9 +552,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         treatmentNameLabel.layer.borderWidth = 1.0
                         treatmentNameLabel.layer.masksToBounds = true
                         treatmentNameLabel.layer.cornerRadius = 5
+                        treatmentNameLabel.textAlignment = NSTextAlignment.Center
                     }
                     headerView.addSubview(treatmentNameLabel)
-                    headerView.addSubview(dosageLable)
+                    headerView.addSubview(dosageLabel)
                     
                     var separatorLine:UIImageView = UIImageView(frame: CGRectMake(5, 0, tableView.frame.size.width-10.0, 1.0))
                     separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
@@ -555,7 +593,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 usedToBeInLoginView = true
             }
             if indexPath.section == 1 {
-                self.performSegueWithIdentifier("setPasswordSegue", sender: self)
+                self.performSegueWithIdentifier("setProfileSegue", sender: self)
             }
             if indexPath.section == 0 {
                 if indexPath == 2{
@@ -600,6 +638,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 commentList = jsonResult as! NSArray
             }
             (segue.destinationViewController as! CommentListTableViewController).commentList = commentList
+        }
+        if segue.identifier == "setProfileSegue"{
+            (segue.destinationViewController as! PatientProfileTableViewController).userProfile = userProfile.mutableCopy() as! NSMutableDictionary
         }
     }
 }

@@ -13,11 +13,18 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var username:String?
     var password:String?
     var feedList = NSArray()
-    var latestFetchTimestamp = Int()
     var automatedShowDiscoverView:Bool = true
     var heightForFeedRow = NSMutableDictionary()
     var selectTags = NSArray()
     var selectedProfileOwnername = String()
+    var haalthyService = HaalthyService()
+    var latestFeedFetchTimeStamp: Int = 0
+    var previousFeedFetchTimeStamp: Int = 0
+    var isRefreshData: Bool = false
+    
+    @IBAction func selectTags(sender: UIButton) {
+        self.performSegueWithIdentifier("showTagsSegue", sender: self)
+    }
     
     @IBAction func discover(sender: UIButton) {
         self.performSegueWithIdentifier("discoverSegue", sender: self)
@@ -30,6 +37,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             self.performSegueWithIdentifier("loginSegue", sender: self)
         }
     }
+    
     @IBAction func addActionPopover(sender: UIBarButtonItem) {
         self.performSegueWithIdentifier("addViewSegue", sender: self)
     }
@@ -48,6 +56,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if segue.identifier == "showPatientProfileSegue" {
             (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
         }
+        if segue.identifier == "showTagsSegue" {
+            (segue.destinationViewController as! TagTableViewController).userTagDelegate = self
+        }
     }
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -63,16 +74,31 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         var context:NSManagedObjectContext = appDel.managedObjectContext!
         var postsRequest = NSFetchRequest(entityName: "Feed")
+        if username != nil{
+            postsRequest.predicate = NSPredicate(format: "ownerName = %@", username!)
+        }else{
+            postsRequest.predicate = NSPredicate(format: "ownerName = %@", "")
+        }
         postsRequest.returnsObjectsAsFaults = false
         postsRequest.sortDescriptors = [NSSortDescriptor(key: "dateInserted", ascending: false)]
         feedList = context.executeFetchRequest(postsRequest, error: nil)!
-        if feedList.count > 0{
-            let feed = feedList[0] as! NSManagedObject
-            latestFetchTimestamp = (feedList[0].valueForKey("dateInserted") as! Int) + 1000
+    }
+    
+    func clearFeedLocalTable(){
+        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        var context:NSManagedObjectContext = appDel.managedObjectContext!
+        var deletePostsRequet = NSFetchRequest(entityName: "Feed")
+        if username != nil{
+            deletePostsRequet.predicate = NSPredicate(format: "ownerName = %@", username!)
         }else{
-            latestFetchTimestamp = 0
+            deletePostsRequet.predicate = NSPredicate(format: "ownerName = %@", "")
         }
-        
+        if let results = context.executeFetchRequest(deletePostsRequet, error: nil) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        context.save(nil)
     }
     
     func refreshFeeds(){
@@ -95,7 +121,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             if(feed.valueForKey("cancerType") as! String != "lung"){
                 var cancerTypeKey = feed.valueForKey("cancerType")!
                 profileStr += cancerTypeMapping.allKeysForObject(cancerTypeKey)[0] as! String
-            }else if((feed.valueForKey("pathological") != nil) && ((feed.valueForKey("pathological") is NSNull) == false)){
+            }else if((feed.valueForKey("pathological") != nil) && ((feed.valueForKey("pathological") is NSNull) == false) && (feed.valueForKey("pathological") as! String != "")){
                 
                 profileStr += pathologicalMapping.allKeysForObject(feed.valueForKey("pathological")!)[0] as! String
             }
@@ -103,122 +129,138 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         feed.setValue(profileStr, forKey: "patientProfile")
     }
     
+    func addFeedslist(feedArray: NSArray, isLoadLatestFeeds: Bool){
+        var newFeedList:NSMutableArray = feedArray as! NSMutableArray
+        
+        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        var context:NSManagedObjectContext = appDel.managedObjectContext!
+        for feed in newFeedList{
+            if (((feed as! NSDictionary)["postID"] as! Int) == ((newFeedList[newFeedList.count - 1] as! NSDictionary)["postID"] as! Int)) && (isLoadLatestFeeds == false) {
+                println(feed["dateInserted"])
+                previousFeedFetchTimeStamp = feed["dateInserted"] as! Int - 1000
+                println(previousFeedFetchTimeStamp)
+            }
+            setPatientProfile(feed as! NSDictionary)
+            var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) as! NSManagedObject
+            feedItem.setValue(feed["postID"], forKey: "postID")
+            feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
+            feedItem.setValue(feed["countComments"], forKey: "countComments")
+            feedItem.setValue(feed["body"], forKey: "body")
+            if (feed["tags"]  is NSNull) == false{
+                feedItem.setValue(feed["tags"], forKey: "tags")
+            }
+            feedItem.setValue(feed["countViews"], forKey: "countViews")
+            feedItem.setValue(feed["countBookmarks"], forKey: "countBookmarks")
+            feedItem.setValue(feed["closed"], forKey: "closed")
+            feedItem.setValue(feed["isBroadcast"], forKey: "isBroadcast")
+            feedItem.setValue(feed["dateInserted"], forKey: "dateInserted")
+            if feed["dateUpdated"] is NSNull == false{
+                feedItem.setValue(feed["dateUpdated"], forKey: "dateUpdated")
+            }
+            feedItem.setValue(feed["patientProfile"], forKey: "patientProfile")
+            let imgValue = feed["image"]
+            if( ((feed["image"]) is NSNull) == false ){
+                feedItem.setValue(feed["image"], forKey: "image")
+            }
+            if username != nil{
+                feedItem.setValue(username, forKey: "ownerName")
+            }else{
+                feedItem.setValue("", forKey: "ownerName")
+            }
+            if (feed["type"] is NSNull) == false{
+                feedItem.setValue(feed["type"], forKey: "type")
+            }
+            context.save(nil)
+        }
+        if isLoadLatestFeeds{
+            newFeedList.addObjectsFromArray(feedList as [AnyObject])
+            feedList = newFeedList as NSArray
+        }else{
+            feedList = feedList.arrayByAddingObjectsFromArray(newFeedList as [AnyObject])
+        }
+        self.tableView.reloadData()
+    }
+    
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
-        var haalthyService = HaalthyService()
-        var getFeedsByTagsData = haalthyService.getFeeds(latestFetchTimestamp)
+//        var getFeedsByTagsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
+        println(Int(NSDate().timeIntervalSince1970*100000))
+        var getFeedsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
+        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+//        var getFeedsByTagsData = haalthyService.getPreviousFeeds(latestFeedFetchTimeStamp, count: 10)
+        println(NSDate().timeIntervalSince1970)
         var jsonResult:AnyObject? = nil
-        if getFeedsByTagsData != nil{
-            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsByTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            let str: NSString = NSString(data: getFeedsByTagsData!, encoding: NSUTF8StringEncoding)!
+        if getFeedsData != nil{
+            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
             println(str)
         }
         refreshControl?.endRefreshing()
-        if(jsonResult is NSArray){
+        if((jsonResult is NSArray) && (jsonResult as! NSArray).count > 0){
             //save Feed to local DB
-            var newFeedList:NSMutableArray = jsonResult as! NSMutableArray
+//            let profileSet = NSUserDefaults.standardUserDefaults()
+//            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: latestFeedsUpdateTimestamp)
+            addFeedslist(jsonResult as! NSArray, isLoadLatestFeeds: true)
             
-            var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-            var context:NSManagedObjectContext = appDel.managedObjectContext!
-            for feed in newFeedList{
-                setPatientProfile(feed as! NSDictionary)
-                var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) as! NSManagedObject
-                feedItem.setValue(feed["postID"], forKey: "postID")
-                feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
-                feedItem.setValue(feed["countComments"], forKey: "countComments")
-                feedItem.setValue(feed["body"], forKey: "body")
-                if (feed["tags"]  is NSNull) == false{
-                    feedItem.setValue(feed["tags"], forKey: "tags")
-                }
-                feedItem.setValue(feed["countViews"], forKey: "countViews")
-                feedItem.setValue(feed["countBookmarks"], forKey: "countBookmarks")
-                feedItem.setValue(feed["closed"], forKey: "closed")
-                feedItem.setValue(feed["isBroadcast"], forKey: "isBroadcast")
-                feedItem.setValue(feed["dateInserted"], forKey: "dateInserted")
-                if feed["dateUpdated"] is NSNull == false{
-                    feedItem.setValue(feed["dateUpdated"], forKey: "dateUpdated")
-                }
-                feedItem.setValue(feed["patientProfile"], forKey: "patientProfile")
-                let imgValue = feed["image"]
-                if( ((feed["image"]) is NSNull) == false ){
-                    feedItem.setValue(feed["image"], forKey: "image")
-                }
-                feedItem.setValue(username, forKey: "ownerName")
-                if (feed["type"] is NSNull) == false{
-                    feedItem.setValue(feed["type"], forKey: "type")
-                }
-                context.save(nil)
-            }
-            newFeedList.addObjectsFromArray(feedList as [AnyObject])
-            feedList = newFeedList as NSArray
-            if feedList.count > 0{
-                latestFetchTimestamp = (feedList[0].valueForKey("dateInserted") as! Int) + 1000
-            }
-            self.tableView.reloadData()
-//            if feedList.count == 0{
-//                self.performSegueWithIdentifier("discoverSegue", sender: nil)
-//            }
-            //set timestamp
-            let profileSet = NSUserDefaults.standardUserDefaults()
-            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: latestFeedsUpdateTimestamp)
         }else{
             println("get broadcast error")
         }
         
     }
-    
+    func getMorePreviousFeeds(){
+        var getFeedsData = haalthyService.getPreviousFeeds(previousFeedFetchTimeStamp, count: 20)
+        var jsonResult:AnyObject? = nil
+        if getFeedsData != nil{
+            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
+            println(str)
+        }
+        if(jsonResult is NSArray){
+            addFeedslist(jsonResult as! NSArray, isLoadLatestFeeds: false)
+            
+        }else{
+            println("get feeds error")
+        }
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-//        self.tableView.estimatedRowHeight = UITableViewAutomaticDimension
-//        self.tableView.rowHeight = UITableViewAutomaticDimension
-        
-        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context:NSManagedObjectContext = appDel.managedObjectContext!
-        
-        var postsRequest = NSFetchRequest(entityName: "Feed")
-        postsRequest.returnsObjectsAsFaults = false
-        
-        postsRequest.sortDescriptors = [NSSortDescriptor(key: "dateInserted", ascending: false)]
-        
-        feedList = context.executeFetchRequest(postsRequest, error: nil)!
         
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
-//        let search = UIBarButtonItem(title: "search", style: UIBarButtonItemStyle.Plain , target: self, action: "searchAction")
-//        let add = UIBarButtonItem(title: "add", style: UIBarButtonItemStyle.Plain , target: self, action: "addAction")
-//        let arrBtns = NSArray(array: [search, add])
-        //        self.navigationItem.rightBarButtonItems = [search, add]
+        var keychainAccess = KeychainAccess()
+        username = keychainAccess.getPasscode(usernameKeyChain) as? String
+        password = keychainAccess.getPasscode(passwordKeyChain) as? String
+        var getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
+        var jsonResult:AnyObject? = nil
+        var postCount:Int = 0
+        if getUpdatePostCountData != nil{
+            jsonResult = NSJSONSerialization.JSONObjectWithData(getUpdatePostCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            postCount = (NSString(data: getUpdatePostCountData!, encoding: NSUTF8StringEncoding)! as String).toInt()!
+        }
+        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+        if postCount == 0{
+            self.getexistFeedsFromLocalDB()
+        }else{
+            clearFeedLocalTable()
+            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+            self.getMorePreviousFeeds()
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-//        self.navigationController?.navigationBar.hidden = true
         self.myTags.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        self.myTags.setImage(UIImage (named: "mytagsBtnImg.png"), forState: UIControlState.Normal)
-//        self.myTags.contentMode = UIViewContentMode.ScaleAspectFill
-//        self.tabBarController?.tabBar.barTintColor = tabBarColor
-//        self.tabBarController?.tabBar.tintColor = UIColor.whiteColor()
-        var keychainAccess = KeychainAccess()
-        username = keychainAccess.getPasscode(usernameKeyChain) as? String
-        password = keychainAccess.getPasscode(passwordKeyChain) as? String
-        if (username != nil) && (password != nil) {
-            self.getexistFeedsFromLocalDB()
-            if feedList.count == 0 {
-                refreshFeeds()
-            }
+        if isRefreshData {
+            feedList = NSArray()
+            clearFeedLocalTable()
+            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+            self.getMorePreviousFeeds()
         }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-//        self.navigationController?.navigationBar.hidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -234,9 +276,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numberOfRows:Int = 0
         switch section{
-        case 0:
-            numberOfRows = 1;
-            break
         case 1:
             numberOfRows = feedList.count
             break
@@ -249,35 +288,13 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
-        
-//        if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
-//            //show feeds
-//            //            keychainAccess.deletePasscode(usernameKeyChain)
-//            //            keychainAccess.deletePasscode(passwordKeyChain)
-//           //             self.performSegueWithIdentifier("showSuggestUsersSegue", sender: nil)
-//            username = keychainAccess.getPasscode(usernameKeyChain) as? String
-//            password = keychainAccess.getPasscode(passwordKeyChain) as? String
-//            self.getexistFeedsFromLocalDB()
-//            if feedList.count == 0 {
-//                refreshFeeds()
-//            }
-//        }else{
-//            var favtagsData = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray
-//            
-//            if automatedShowDiscoverView {
-//                automatedShowDiscoverView = false
-//                self.performSegueWithIdentifier("tagSegue", sender: nil)
-//            }
-//        }
-
-//        refreshFeeds()
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! FeedsHeaderTableViewCell
-            cell.backgroundColor = headerColor
+            cell.backgroundColor = UIColor.whiteColor()
             return cell
         }else{
 //            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
@@ -300,21 +317,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             cell.feed = feed
 
             cell.imageTapDelegate = self
-            //imageView
-/*            var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
-            if((feed.valueForKey("image") is NSNull) == false){
-                let dataString = feed.valueForKey("image") as! String
-                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
-                imageView.image = UIImage(data: imageData)
-            }else{
-                imageView.image = UIImage(named: "Mario.jpg")
-            }
             
-            
-            var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
-            imageView.userInteractionEnabled = true
-            imageView.addGestureRecognizer(tapImage)
-*/
             //username View
             var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, cell.frame.width - 10 - 32 - 10 - 80, 20))
             usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
@@ -367,16 +370,73 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             typeLabel.text = typeStr
             typeLabel.backgroundColor = sectionHeaderColor
             typeLabel.font = UIFont(name: fontStr, size: 12.0)
+            typeLabel.textAlignment = NSTextAlignment.Center
             
             //feed body view
-            var feedBody = UILabel(frame: CGRectMake(10, 80, cell.frame.width - 20, 80))
-            feedBody.numberOfLines = 5
-            feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
-            feedBody.font = UIFont(name: "Helvetica", size: 13.0)
-            feedBody.text = feed.objectForKey("body") as! String
-            feedBody.textColor = UIColor.blackColor()
-            feedBody.sizeToFit()
-            self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
+            var feedBody = UILabel(frame: CGRectMake(10, 80, cell.frame.width - 20, 0))
+            if (feed.objectForKey("type") as! Int) != 1{
+                feedBody.numberOfLines = 5
+                feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
+                feedBody.font = UIFont(name: "Helvetica", size: 13.0)
+                feedBody.text = (feed.objectForKey("body") as! String).stringByReplacingOccurrencesOfString("*", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                feedBody.textColor = UIColor.blackColor()
+                feedBody.sizeToFit()
+                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
+            }else if (feed.objectForKey("type") as! Int) == 1{
+                var treatmentStr = feed.objectForKey("body") as! String
+                var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
+                for treatment in treatmentList {
+                    var treatmentItemStr:String = treatment as! String
+                    
+                    treatmentItemStr = treatmentItemStr.stringByReplacingOccurrencesOfString("*", withString: "", options:  NSStringCompareOptions.LiteralSearch, range: nil)
+                    if (treatmentItemStr as NSString).length == 0{
+                        treatmentList.removeObject(treatment)
+                    }
+                }
+                var treatmentY:CGFloat = 0
+                for treatment in treatmentList {
+                    var treatmentItemStr:String = treatment as! String
+
+                    if (treatmentItemStr as! NSString).length == 0{
+                        break
+                    }
+                    if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: advance(treatmentItemStr.startIndex, 1))) == "*" {
+                        treatmentItemStr = treatmentItemStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
+                    }
+                    var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
+                    var treatmentName = treatmentNameAndDosage[0] as! String
+                    var treatmentDosage = String()
+                    var treatmentNameLabel = UILabel()
+                    var dosageLabel = UILabel()
+                    treatmentNameLabel = UILabel(frame: CGRectMake(0.0, treatmentY, 90.0, 28.0))
+                    treatmentNameLabel.text = treatmentName
+                    treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
+                    treatmentNameLabel.layer.cornerRadius = 5
+                    treatmentNameLabel.backgroundColor = tabBarColor
+                    treatmentNameLabel.textColor = mainColor
+                    treatmentNameLabel.layer.masksToBounds = true
+                    treatmentNameLabel.layer.borderColor = mainColor.CGColor
+                    treatmentNameLabel.layer.borderWidth = 1.0
+                    treatmentNameLabel.textAlignment = NSTextAlignment.Center
+                    if treatmentNameAndDosage.count > 1{
+                        treatmentDosage = treatmentNameAndDosage[1] as! String
+                        dosageLabel.frame = CGRectMake(100.0, treatmentY, feedBody.frame.width - 105, 0)
+                        dosageLabel.text = treatmentDosage
+                        dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
+                        dosageLabel.numberOfLines = 0
+                        dosageLabel.sizeToFit()
+                        var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
+                        treatmentY += height + 5
+                        dosageLabel.textColor = mainColor
+                    }else{
+                        treatmentY += 30
+                    }
+                    feedBody.addSubview(treatmentNameLabel)
+                    feedBody.addSubview(dosageLabel)
+                }
+                feedBody.frame = CGRectMake(10, 80, cell.frame.width - 20, treatmentY)
+                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
+            }
             
             //tagBody
             var tagLabel = UILabel(frame: CGRectMake(10, 80 + feedBody.frame.height + 5, cell.frame.width - 80, 20))
@@ -453,6 +513,16 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         return rowHeight
     }
     
+    override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        print(self.tableView.contentSize)
+        println(self.tableView.contentOffset.y + self.tableView.frame.height)
+        if (self.tableView.contentOffset.y + self.tableView.frame.height) >  self.tableView.contentSize.height{
+            println("load more")
+            getMorePreviousFeeds()
+        }
+    }
+    
+    
 //    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        return UITableViewAutomaticDimension
 //    }
@@ -460,10 +530,46 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         self.selectTags = selectTags
         let userData = NSUserDefaults.standardUserDefaults()
         userData.setObject(selectTags, forKey: favTagsNSUserData)
+        isRefreshData = true
     }
     
     func gestureRecognizer(UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
             return true
     }
+    
+    
+//    override func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView {
+//        var viewForHeader = UIView()
+//        if section == 0{
+//            viewForHeader.frame = CGRectMake(0, 0, self.tableView.frame.width, 25)
+//            var titleLabel = UILabel(frame: CGRectMake(5, 2.5, 90, 20))
+//            titleLabel.text = "为您推荐"
+//            titleLabel.font = UIFont(name: fontStr, size: 13.0)
+//            var closeButton = UIButton(frame: CGRectMake(self.tableView.frame.width - 25, 2.5, 20, 20))
+//            closeButton.backgroundColor = mainColor
+//            viewForHeader.addSubview(titleLabel)
+//            viewForHeader.addSubview(closeButton)
+//        }
+//        if section == 1{
+//            viewForHeader.frame = CGRectMake(0, 0, self.tableView.frame.width, 5)
+//        }
+//        viewForHeader.backgroundColor = UIColor.whiteColor()
+//        return viewForHeader
+//    }
+//    
+//    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        var heightForHeader: CGFloat = 0.0
+//        switch section {
+//        case 0:
+//            heightForHeader = 25
+//            break
+//        case 1:
+//            heightForHeader = 5
+//            break
+//        default:
+//            break
+//        }
+//        return heightForHeader
+//    }
 }

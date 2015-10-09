@@ -30,8 +30,8 @@ class PublicService:NSObject{
         }
         //        var pathological = user["pathological"] as! String
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-            var stageStr = user["stage"]! as! String
-            var stages = stageMapping.allKeysForObject(stageStr.toInt()!) as NSArray
+//            var stageStr = user["stage"]! as! Int
+            var stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
             if stages.count > 0 {
                 stage = stages[0] as! String
             }
@@ -59,6 +59,8 @@ class PublicService:NSObject{
         var keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
+        println(keychain.getPasscode(usernameKeyChain))
+        println(keychain.getPasscode(passwordKeyChain))
         var profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)
@@ -117,4 +119,5 @@ class PublicService:NSObject{
         sender.layer.borderColor = mainColor.CGColor
         sender.layer.borderWidth = 1.0
     }
+    
 }

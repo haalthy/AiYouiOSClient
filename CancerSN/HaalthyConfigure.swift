@@ -42,6 +42,8 @@ let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/follow
 let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"
 let updateUserURL: String = haalthyServiceRestfulURL + "security/user/update"
 let deleteFromSuggestedUserURL: String = haalthyServiceRestfulURL + "security/user/deletesuggesteduser"
+let getUpdatedPostCountURL: String = haalthyServiceRestfulURL + "security/post/postcount"
+let getBroadcastsByTagsCountURL = haalthyServiceRestfulURL + "open/post/tags/count"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"

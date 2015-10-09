@@ -9,7 +9,13 @@
 
 import UIKit
 
+protocol AgeSettingVCDelegate{
+    func updateAge(age: Int)
+}
+
 class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate{
+    var isUpdate = false
+    var ageSettingVCDelegate: AgeSettingVCDelegate?
     @IBOutlet weak var selectAgeBtn: UIButton!
     
     @IBOutlet weak var skipAgeBtn: UIButton!
@@ -20,9 +26,19 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
     @IBAction func selectAge(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         var selectedAge :String = pickerDataSource[ageUIPickerView.selectedRowInComponent(0)]
-        profileSet.setObject(selectedAge.toInt(), forKey: ageNSUserData)
+        if isUpdate{
+            ageSettingVCDelegate?.updateAge(selectedAge.toInt()!)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            profileSet.setObject(selectedAge.toInt(), forKey: ageNSUserData)
+            self.performSegueWithIdentifier("selectCancerTypeSegue", sender: self)
+        }
     }
     
+    @IBAction func skip(sender: UIButton) {
+        self.performSegueWithIdentifier("selectCancerTypeSegue", sender: self)
+
+    }
     override func viewDidLoad(){
         super.viewDidLoad()
         
@@ -35,8 +51,11 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
         ageUIPickerView.selectRow(60, inComponent: 0, animated: false)
         selectAgeBtn.layer.cornerRadius = 5
         selectAgeBtn.layer.masksToBounds = true
-        skipAgeBtn.layer.cornerRadius = 5
-        skipAgeBtn.layer.masksToBounds = true
+//        skipAgeBtn.layer.cornerRadius = 5
+//        skipAgeBtn.layer.masksToBounds = true
+        if isUpdate {
+            skipAgeBtn.hidden = true
+        }
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {

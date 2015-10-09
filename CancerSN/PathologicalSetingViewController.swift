@@ -8,7 +8,12 @@
 
 import UIKit
 
+protocol PathologicalSettingVCDelegate{
+    func updatePathological(pathological: String)
+}
 class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate{
+    var isUpdate = false
+    var pathologicalSettingVCDelegate: PathologicalSettingVCDelegate?
     @IBOutlet weak var selectBtn: UIButton!
 
     @IBOutlet weak var skipBtn: UIButton!
@@ -16,11 +21,20 @@ class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource
 
     var pickerDataSource = [String]()
 
+    @IBAction func skip(sender: UIButton) {
+        self.performSegueWithIdentifier("selectStageSegue", sender: self)
+    }
     @IBAction func selectPathological(sender: UIButton) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         var pathological = pickerDataSource[pathologicalPickerView.selectedRowInComponent(0)]
         var selectedPathological:String = pathologicalMapping.objectForKey(pathological) as! String
-        profileSet.setObject(selectedPathological, forKey: pathologicalNSUserData)
+        if isUpdate{
+            pathologicalSettingVCDelegate?.updatePathological(selectedPathological)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            profileSet.setObject(selectedPathological, forKey: pathologicalNSUserData)
+            self.performSegueWithIdentifier("selectStageSegue", sender: self)
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +46,9 @@ class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource
         selectBtn.layer.masksToBounds = true
         skipBtn.layer.cornerRadius = 5
         skipBtn.layer.masksToBounds = true
+        if isUpdate{
+            skipBtn.hidden = true
+        }
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {

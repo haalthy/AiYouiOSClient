@@ -7,17 +7,31 @@
 //
 
 import UIKit
-
+protocol SmokingSettingVCDelegate{
+    func updateSmoking(isSmoking: Int)
+}
 class SmokingSettingViewController: UIViewController{
 
+    var isUpdate = false
+    var smokingSettingVCDelegate: SmokingSettingVCDelegate?
     @IBOutlet weak var isSmoking: UIButton!
     @IBOutlet weak var noSmoking: UIButton!
     @IBOutlet weak var skipBtn: UIButton!
     
+    @IBAction func skip(sender: UIButton) {
+        self.performSegueWithIdentifier("selectMetastasisSegue", sender: self)
+    }
+    
     @IBAction func selectSmoking(sender: UIButton) {
-        let profileSet = NSUserDefaults.standardUserDefaults()
         var selectedSmoking = smokingMapping.objectForKey((sender.titleLabel?.text)!)
-        profileSet.setObject(selectedSmoking, forKey: smokingNSUserData)
+        if isUpdate{
+            smokingSettingVCDelegate?.updateSmoking(selectedSmoking as! Int)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            let profileSet = NSUserDefaults.standardUserDefaults()
+            profileSet.setObject(selectedSmoking, forKey: smokingNSUserData)
+            self.performSegueWithIdentifier("selectMetastasisSegue", sender: self)
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +51,9 @@ class SmokingSettingViewController: UIViewController{
         noSmoking.layer.backgroundColor = UIColor.whiteColor().CGColor
         noSmoking.layer.borderColor = textColor.CGColor
         noSmoking.layer.borderWidth = 2.0
+        if isUpdate{
+            skipBtn.hidden = true
+        }
     }
 
     override func didReceiveMemoryWarning() {

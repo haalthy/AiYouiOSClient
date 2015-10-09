@@ -48,6 +48,8 @@
 		2A91D4681BB07A2F00ADC095 /* triangle-xxl.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */; };
 		2A97EB341B96D0CE0051BC5C /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */; };
 		2A9957F61BBF329800DAB05B /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9957F51BBF329800DAB05B /* FeedTableViewCell.swift */; };
+		2A9957FA1BBFB85900DAB05B /* PatientProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9957F91BBFB85900DAB05B /* PatientProfileTableViewController.swift */; };
+		2A9957FC1BC2F5AB00DAB05B /* SettingUsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9957FB1BC2F5AB00DAB05B /* SettingUsernameViewController.swift */; };
 		2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */; };
 		2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264A51B607402001E52E7 /* Mario-icon.png */; };
 		2AA264A81B60BC07001E52E7 /* UserListHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */; };
@@ -170,6 +172,8 @@
 		2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle-xxl.png"; sourceTree = "<group>"; };
 		2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		2A9957F51BBF329800DAB05B /* FeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
+		2A9957F91BBFB85900DAB05B /* PatientProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientProfileTableViewController.swift; sourceTree = "<group>"; };
+		2A9957FB1BC2F5AB00DAB05B /* SettingUsernameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingUsernameViewController.swift; sourceTree = "<group>"; };
 		2AA264A31B6063E1001E52E7 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
 		2AA264A51B607402001E52E7 /* Mario-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mario-icon.png"; sourceTree = "<group>"; };
 		2AA264A71B60BC07001E52E7 /* UserListHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserListHeaderTableViewCell.swift; path = ../UserListHeaderTableViewCell.swift; sourceTree = "<group>"; };
@@ -352,6 +356,8 @@
 				2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */,
 				2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */,
 				2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */,
+				2A9957F91BBFB85900DAB05B /* PatientProfileTableViewController.swift */,
+				2A9957FB1BC2F5AB00DAB05B /* SettingUsernameViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -583,6 +589,7 @@
 				2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */,
 				2A97EB341B96D0CE0051BC5C /* UserProfileViewController.swift in Sources */,
 				2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */,
+				2A9957FC1BC2F5AB00DAB05B /* SettingUsernameViewController.swift in Sources */,
 				2AF6737E1B88416F00E220CD /* CVRange.swift in Sources */,
 				2AA3363F1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift in Sources */,
 				2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */,
@@ -632,6 +639,7 @@
 				2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */,
 				2AF6736C1B88416F00E220CD /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				2AF673731B88416F00E220CD /* CVCalendarView.swift in Sources */,
+				2A9957FA1BBFB85900DAB05B /* PatientProfileTableViewController.swift in Sources */,
 				2AF673811B88416F00E220CD /* CVSet.swift in Sources */,
 				2AB7BE801BABA8D40069C27B /* ContactTableViewController.swift in Sources */,
 				2A2733F91BA244E00076696A /* PublicService.swift in Sources */,

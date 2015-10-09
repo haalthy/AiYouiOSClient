@@ -8,8 +8,13 @@
 
 import UIKit
 
-class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate{
+protocol CancerTypeSettingVCDelegate{
+    func updateCancerType(cancerType: String)
+}
 
+class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate{
+    var isUpdate = false
+    var cancerTypeSettingVCDelegate: CancerTypeSettingVCDelegate?
     @IBOutlet weak var selectBtn: UIButton!
     @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var cancerTypePickerView: UIPickerView!
@@ -26,18 +31,24 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         }
     }
     
+    
     @IBAction func selectCancerType(sender: UIButton) {
         var cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
         var selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
-        profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
-        if(cancerType == "肺部"){
-            self.performSegueWithIdentifier("showMoreForLung", sender: nil)
+        if isUpdate{
+            cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
+            self.dismissViewControllerAnimated(true, completion: nil)
         }else{
-            if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-                self.performSegueWithIdentifier("signupSegue", sender: self)
+            profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
+            if(cancerType == "肺部"){
+                self.performSegueWithIdentifier("showMoreForLung", sender: nil)
             }else{
-                haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-                self.dismissViewControllerAnimated(true, completion: nil)
+                if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+                    self.performSegueWithIdentifier("signupSegue", sender: self)
+                }else{
+                    haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
             }
         }
     }
@@ -52,6 +63,9 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         selectBtn.layer.masksToBounds = true
         skipBtn.layer.cornerRadius = 5
         skipBtn.layer.masksToBounds = true
+        if isUpdate{
+            skipBtn.hidden = true
+        }
     }
     
     

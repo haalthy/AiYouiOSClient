@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddTreatmentViewController: UIViewController {
+class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     
     var pointer = UIImageView()
     var segmentHeight = CGFloat()
@@ -95,6 +95,8 @@ class AddTreatmentViewController: UIViewController {
         pointer.alpha = 0.2
         suggestTreatmentDetailView.backgroundColor = sectionHeaderColor
 //        suggestTreatmentDetailView.alpha = 0.3
+        treatmentTextInput.delegate = self
+        treatmentTextInput.returnKeyType = UIReturnKeyType.Done
         self.view.addSubview(pointer)
         self.view.addSubview(suggestTreatmentDetailView)
         self.view.addSubview(treatmentTextInput)
@@ -182,13 +184,17 @@ class AddTreatmentViewController: UIViewController {
         var treatmentName = String()
         for treatmentButtonView in suggestTreatmentDetailView.subviews {
             if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == mainColor{
-                 treatmentName += ((treatmentButtonView as! UIButton).titleLabel!).text!
+                 treatmentName += ((treatmentButtonView as! UIButton).titleLabel!).text! + " "
             }
         }
         if (treatmentName as! NSString).length == 0{
             treatmentName = treatmentTypeSegment.titleForSegmentAtIndex(treatmentTypeSegment.selectedSegmentIndex)!
         }
-        var treatment = NSMutableDictionary(objects: [treatmentName, treatmentTextInput.text!], forKeys: ["treatmentName", "dosage"])
+        var treatmentDosage = String()
+        if treatmentTextInput.textColor == UIColor.blackColor(){
+            treatmentDosage = treatmentTextInput.text!
+        }
+        var treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
         treatmentList.addObject(treatment)
     }
     
@@ -224,15 +230,22 @@ class AddTreatmentViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor != UIColor.blackColor() {
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+        }
     }
-    */
-
+    
+//    func textViewShouldEndEditing(textView: UITextView) -> Bool {
+//        textView.resignFirstResponder()
+//        return true
+//    }
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
 }

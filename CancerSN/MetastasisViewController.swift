@@ -7,9 +7,13 @@
 //
 
 import UIKit
-
+protocol MetastasisSettingVCDelegate{
+    func updateMetastasis(metastasis: String)
+}
 class MetastasisViewController: UIViewController, UITextFieldDelegate {
-
+    
+    var metastasisSettingVCDelegate: MetastasisSettingVCDelegate?
+    var isUpdate = false
     let profileSet = NSUserDefaults.standardUserDefaults()
     var haalthyService = HaalthyService()
     
@@ -24,6 +28,14 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var brain: UIButton!
     @IBOutlet weak var other: UITextField!
     
+    @IBAction func skip(sender: UIButton) {
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else{
+            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
     let unselectedLabelColor: UIColor = UIColor.init(red:0.8, green:0.8, blue:1, alpha:0.65)
     
     let selectedLabelColor : UIColor = UIColor.init(red:0.7, green:0.7, blue:1, alpha:1)
@@ -53,7 +65,9 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func submitMetastasis(sender: UIButton) {
-        metastasisList.addObject(other.text)
+        if other.textColor == UIColor.blackColor(){
+            metastasisList.addObject(other.text)
+        }
         var metastasisListStr : String = ""
         for(var metastasisIndex = 0; metastasisIndex<metastasisList.count-1; metastasisIndex++){
             metastasisListStr = metastasisListStr + (metastasisList[metastasisIndex] as! String) + ";"
@@ -61,14 +75,19 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         if(metastasisList.count>0){
             metastasisListStr = metastasisListStr + (metastasisList[metastasisList.count-1] as! String)
         }
-        let profileSet = NSUserDefaults.standardUserDefaults()
-        println(metastasisListStr)
-        profileSet.setObject(metastasisListStr, forKey: metastasisNSUserData)
-        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-            self.performSegueWithIdentifier("signupSegue", sender: self)
-        }else{
-            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+        if isUpdate{
+            metastasisSettingVCDelegate?.updateMetastasis(metastasisListStr)
             self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            let profileSet = NSUserDefaults.standardUserDefaults()
+            println(metastasisListStr)
+            profileSet.setObject(metastasisListStr, forKey: metastasisNSUserData)
+            if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+                self.performSegueWithIdentifier("signupSegue", sender: self)
+            }else{
+                haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
         }
     }
     
@@ -107,6 +126,9 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         setButtonFormat(bone)
         setButtonFormat(adrenal)
         setButtonFormat(brain)
+        if isUpdate{
+            skipBtn.hidden = true
+        }
     }
     
     override func viewWillAppear(animated: Bool) {

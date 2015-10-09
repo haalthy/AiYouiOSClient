@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddStatusTableViewController: UITableViewController {
+class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
     var patientStatusFormatList = NSArray()
     var clinicReportFormatList = NSArray()
     var haalthyService = HaalthyService()
@@ -23,6 +23,7 @@ class AddStatusTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.delegate = self
         var getClinicReportFormatData = haalthyService.getClinicReportFormat()
         var jsonResult = NSJSONSerialization.JSONObjectWithData(getClinicReportFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         clinicReportFormatList = jsonResult as! NSArray
@@ -139,13 +140,14 @@ class AddStatusTableViewController: UITableViewController {
     }
     
     func submitStatus(isPublic: Int){
-        
         for symptonButton in symptonContainerView.subviews {
             if symptonButton is UIButton && symptonButton.backgroundColor == mainColor{
                 patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + "*"
             }
         }
-        patientStatusDetail += "**" + textView.text
+        if textView.textColor == UIColor.blackColor(){
+            patientStatusDetail += "**" + textView.text
+        }
         var patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(isPublic, forKey: "isPosted")
@@ -263,5 +265,19 @@ class AddStatusTableViewController: UITableViewController {
         }
         return rowHeight
     }
-
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor != UIColor.blackColor() {
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
 }

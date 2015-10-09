@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
+protocol StageSettingVCDelegate{
+    func updateStage(stage: Int)
+}
 class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+    var isUpdate = false
+    var stageSettingVCDelegate: StageSettingVCDelegate?
     @IBOutlet weak var stagePickerView: UIPickerView!
     
     @IBOutlet weak var selectBtn: UIButton!
@@ -17,12 +21,21 @@ class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
     var pickerDataSource = [String]()
 
     @IBAction func selectStage(sender: UIButton) {
-        let profileSet = NSUserDefaults.standardUserDefaults()
         var stage = pickerDataSource[stagePickerView.selectedRowInComponent(0)]
         var selectedStage = stageMapping.objectForKey(stage)
-        profileSet.setObject(selectedStage, forKey: stageNSUserData)
+        if isUpdate{
+            stageSettingVCDelegate?.updateStage(selectedStage as! Int)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else{
+            let profileSet = NSUserDefaults.standardUserDefaults()
+            profileSet.setObject(selectedStage, forKey: stageNSUserData)
+            self.performSegueWithIdentifier("selectSmokingSegue", sender: self)
+        }
     }
     
+    @IBAction func skip(sender: UIButton) {
+        self.performSegueWithIdentifier("selectSmokingSegue", sender: self)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 //        pickerDataSource = stageMapping.allKeys as! [String]

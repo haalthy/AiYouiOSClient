@@ -48,6 +48,7 @@ class TagTableViewController: UITableViewController {
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
                 var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
             }
+            userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
                 self.performSegueWithIdentifier("homeSegue", sender: self)
             }else{

@@ -86,8 +86,8 @@ class UserListTableViewCell: UITableViewCell {
         }
 //        var pathological = user["pathological"] as! String
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-            var stageStr = user["stage"]! as! String
-            var stages = stageMapping.allKeysForObject(stageStr.toInt()!) as NSArray
+            var stageStr = user["stage"]! as! Int
+            var stages = stageMapping.allKeysForObject(stageStr) as NSArray
             if stages.count > 0 {
                 stage = stages[0] as! String
             }
