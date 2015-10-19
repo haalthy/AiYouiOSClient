@@ -17,12 +17,40 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
     var symptonContainerView = UIView()
     var patientStatusDetail = String()
     var clinicReportDetail = String()
+    var datePickerContainerView = UIView()
+    var datePicker = UIDatePicker()
+    var dateInserted:NSDate?
+
+    @IBAction func selectDate(sender: UIButton) {
+        let datePickerHeight:CGFloat = 200
+        let confirmButtonWidth:CGFloat = 100
+        let confirmButtonHeight:CGFloat = 30
+        datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
+        datePickerContainerView.backgroundColor = UIColor.whiteColor()
+        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
+        self.datePicker.datePickerMode = UIDatePickerMode.Date
+        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        confirmButton.setTitle("确定", forState: UIControlState.Normal)
+        confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
+        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
+        datePickerContainerView.addSubview(self.datePicker)
+        datePickerContainerView.addSubview(confirmButton)
+        self.view.addSubview(datePickerContainerView)
+    }
+    
+    func dateChanged(){
+        dateInserted = datePicker.date
+        self.tableView.reloadData()
+        self.datePickerContainerView.removeFromSuperview()
+    }
     
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        dateInserted = NSDate()
+
         textView.delegate = self
         var getClinicReportFormatData = haalthyService.getClinicReportFormat()
         var jsonResult = NSJSONSerialization.JSONObjectWithData(getClinicReportFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
@@ -60,12 +88,17 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
         if indexPath.section == 0 {
-            cell = tableView.dequeueReusableCellWithIdentifier("titleCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("titleCell", forIndexPath: indexPath) as! AddPatientStatusHeaderTableViewCell
+            var dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "YYYY/MM/dd" // superset of OP's format
+            let dateStr = dateFormatter.stringFromDate(dateInserted!)
+            cell.selectDateBtn.setTitle(dateStr, forState: UIControlState.Normal)
+            cell.selectDateBtn.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+            return cell
         }
         if indexPath.section == 3 {
-            cell = tableView.dequeueReusableCellWithIdentifier("clinicReportCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("clinicReportCell", forIndexPath: indexPath) as! UITableViewCell
             var reportNameLabel = UILabel(frame: CGRectMake(20, 10, 60, 30))
             var textField = UITextField(frame: CGRectMake(reportNameLabel.bounds.origin.x + reportNameLabel.bounds.width + 15, 10, UIScreen.mainScreen().bounds.width - reportNameLabel.bounds.width - 30, reportNameLabel.bounds.height))
             reportNameLabel.text = (clinicReportFormatList[indexPath.row] as! NSDictionary).objectForKey("clinicItem") as! String
@@ -75,9 +108,10 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             textField.layer.cornerRadius = 5.0
             cell.addSubview(reportNameLabel)
             cell.addSubview(textField)
+            return cell
         }
         if indexPath.section == 1 {
-            cell = tableView.dequeueReusableCellWithIdentifier("symptonCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("symptonCell", forIndexPath: indexPath) as! UITableViewCell
             symptonContainerView = UIView(frame: CGRectMake(10, 30, UIScreen.mainScreen().bounds.width - 20, 70))
             symptonContainerView.backgroundColor = sectionHeaderColor
             var symptonTitleLabel = UILabel(frame: CGRectMake(20, 5, UIScreen.mainScreen().bounds.width - 40, 20))
@@ -103,23 +137,26 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
                 symptonContainerView.addSubview(statusBtn)
             }
             cell.addSubview(symptonContainerView)
+            return cell
         }
         if indexPath.section == 2 {
-            cell = tableView.dequeueReusableCellWithIdentifier("textInputCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("textInputCell", forIndexPath: indexPath) as! UITableViewCell
             textView.frame = CGRectMake(10, 5, cell.frame.width - 20, cell.frame.height - 15)
             textView.layer.borderWidth = 1.0
             textView.layer.borderColor = mainColor.CGColor
             textView.layer.cornerRadius = 5
             cell.addSubview(textView)
+            return cell
         }
         if indexPath.section == 4 {
-            cell = tableView.dequeueReusableCellWithIdentifier("imageCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("imageCell", forIndexPath: indexPath) as! UITableViewCell
             var addImageButton = UIButton(frame: CGRectMake(10, 4, 30, 30))
             publicService.formatButton(addImageButton, title: "img")
             cell.addSubview(addImageButton)
+            return cell
         }
         if indexPath.section == 5 {
-            cell = tableView.dequeueReusableCellWithIdentifier("submitButtonCell", forIndexPath: indexPath) as! UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier("submitButtonCell", forIndexPath: indexPath) as! UITableViewCell
             var submitButtonWidth = (cell.frame.width - 90)/2
             var shareToFriendButton = UIButton(frame: CGRectMake(20, 10, UIScreen.mainScreen().bounds.width/2 - 30, 30))
             var saveToMyselfButton = UIButton(frame: CGRectMake(shareToFriendButton.frame.width + 40, 10, shareToFriendButton.frame.width, 30))
@@ -135,7 +172,9 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             saveToMyselfButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             cell.addSubview(shareToFriendButton)
             cell.addSubview(saveToMyselfButton)
+            return cell
         }
+        var cell = UITableViewCell()
         return cell
     }
     
@@ -151,6 +190,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         var patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(isPublic, forKey: "isPosted")
+        patientStatus.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "insertedDate")
         var clinicItemList = NSMutableArray()
         var index = 0
         for index = 0; index < clinicReportFormatList.count; index++ {
@@ -177,6 +217,8 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         var clinicReport = NSMutableDictionary()
         clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
         clinicReport.setValue(isPublic, forKey: "isPosted")
+        clinicReport.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "dateInserted")
+
         haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
     }
     
@@ -248,7 +290,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight:CGFloat = 0
         switch indexPath.section{
-        case 0: rowHeight = 70
+        case 0: rowHeight = 100
             break
         case 1: rowHeight = 100
             break

@@ -11,6 +11,7 @@ import UIKit
 class LoginViewController: UIViewController, UITextFieldDelegate, TencentSessionDelegate {
     var tencentOAuth:TencentOAuth? = nil
     
+    @IBOutlet weak var cancelBtn: UIButton!
     @IBOutlet weak var portrait: UIImageView!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var username: UITextField!
@@ -141,6 +142,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         portrait.image = UIImage(contentsOfFile: imageFilePath)
         password.delegate = self
         username.delegate = self
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -150,6 +152,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let password = keychainAccess.getPasscode(passwordKeyChain)
         if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
             self.performSegueWithIdentifier("tagSegue", sender: self)
+        }
+        if isRootViewController {
+            cancelBtn.hidden = true
+        }else{
+            cancelBtn.hidden = false
         }
     }
     

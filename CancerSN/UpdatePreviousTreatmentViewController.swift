@@ -10,6 +10,7 @@ import UIKit
 
 class UpdatePreviousTreatmentViewController: UIViewController {
     
+    var haalthyService = HaalthyService()
     var treatment = NSDictionary()
     @IBOutlet weak var dosage: UITextField!
     @IBOutlet weak var treatmentName: UILabel!
@@ -18,12 +19,15 @@ class UpdatePreviousTreatmentViewController: UIViewController {
     }
     
     @IBAction func stopPreviousTreatment(sender: UIButton) {
+        var updatedTreatment: NSMutableDictionary = treatment.mutableCopy() as! NSMutableDictionary
+        updatedTreatment.setObject(Int(NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
+        haalthyService.updateTreatment(updatedTreatment)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        treatmentName.text = treatment.objectForKey("name") as! String
+        treatmentName.text = treatment.objectForKey("treatmentName") as! String
         dosage.text = treatment.objectForKey("dosage") as! String
         self.preferredContentSize = CGSizeMake(360, 350)
 

@@ -11,6 +11,9 @@ import CoreData
 
 class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentationControllerDelegate {
 
+    var haalthyService = HaalthyService()
+    var keychainAccess = KeychainAccess()
+    var username:String?
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var menuView: CVCalendarMenuView!
     @IBOutlet weak var calendarView: CVCalendarView!
@@ -36,28 +39,23 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     }
     
     @IBAction func submitNewTreatmentBeginDate(sender: UIButton) {
-//        let haalthyService = HaalthyService()
-//        let keychainAccess = KeychainAccess()
-//        var username:String = ""
-//        if(keychainAccess.getPasscode(usernameKeyChain) != nil){
-//            username = keychainAccess.getPasscode(usernameKeyChain) as! String
-//        }
-//        var getTreatmentsByTagsData = haalthyService.getTreatments(username)
-//        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTreatmentsByTagsData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-//        let str: NSString = NSString(data: getTreatmentsByTagsData, encoding: NSUTF8StringEncoding)!
-//        println(str)
-//        if(jsonResult is NSArray){
-//            
-//        }
         if profileSet.objectForKey(newTreatmentBegindate) == nil{
             profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentBegindate)
+        }
+    }
+    
+    func getProcessingTreatments(){
+        var getTreatmentListData = haalthyService.getTreatments(username!)
+        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        if(jsonResult is NSArray){
+            self.treatmentList = jsonResult as! NSArray
         }
     }
     
     var animationFinished = true
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        username = keychainAccess.getPasscode(usernameKeyChain) as! String
         profileSet.removeObjectForKey(newTreatmentBegindate)
         
         // Do any additional setup after loading the view.
@@ -73,10 +71,15 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         self.menuView.menuViewDelegate = self
         monthLabel.text = CVDate(date: NSDate()).globalDescription
         
-        getProcessingTreatmentsFromLocalDB()
+//        getProcessingTreatmentsFromLocalDB()
+        getProcessingTreatments()
         if treatmentList.count > 0 {
             previousTreatment = treatmentList[0] as! NSDictionary
-            self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
+            println(previousTreatment.objectForKey("endDate"))
+            println(NSDate().timeIntervalSince1970)
+            if (previousTreatment.objectForKey("endDate") as! Double) > ((NSDate().timeIntervalSince1970) as! Double){
+                self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
+            }
         }
     }
     

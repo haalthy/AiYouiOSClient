@@ -44,6 +44,15 @@ let updateUserURL: String = haalthyServiceRestfulURL + "security/user/update"
 let deleteFromSuggestedUserURL: String = haalthyServiceRestfulURL + "security/user/deletesuggesteduser"
 let getUpdatedPostCountURL: String = haalthyServiceRestfulURL + "security/post/postcount"
 let getBroadcastsByTagsCountURL = haalthyServiceRestfulURL + "open/post/tags/count"
+let updateTreatmentURL = haalthyServiceRestfulURL + "security/patient/treatment/update"
+let deleteTreatmentURL = haalthyServiceRestfulURL + "security/patient/treatment/delete"
+let increaseNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/increase"
+let selectNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/count"
+let refreshNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/refresh"
+let isFollowingUserURL = haalthyServiceRestfulURL + "security/user/follow/isfollowing"
+let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
+let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
+let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -98,6 +107,7 @@ let sectionHeaderColor: UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, a
 
 let fontStr: String = "Helvetica"
 
+let defaultTreatmentEndDate: NSTimeInterval = 1451606400
 
 
 

@@ -60,7 +60,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         case 0: numberOfRows = 5
             break
         case 1:
-            if (userProfile.objectForKey("cancerType") != nil) && (userProfile.objectForKey("cancerType") as! String) == "lung"{
+            if (userProfile.objectForKey("cancerType") != nil) && (userProfile.objectForKey("cancerType") is NSNull) == false && (userProfile.objectForKey("cancerType") as! String) == "lung"{
                 numberOfRows = 7
             }else{
                 numberOfRows = 3
@@ -167,7 +167,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             default:
                 break
             }
-            if (userProfile.objectForKey("cancerType") != nil ) && (userProfile.objectForKey("cancerType") as! String) == "lung"{
+            if (userProfile.objectForKey("cancerType") != nil ) && (userProfile.objectForKey("cancerType") is NSNull) == false && (userProfile.objectForKey("cancerType") as! String) == "lung"{
                 switch indexPath.row{
                 case 3:
                     if (userProfile.objectForKey("pathological") != nil) && (userProfile.objectForKey("pathological") is NSNull) == false{

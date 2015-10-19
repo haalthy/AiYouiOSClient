@@ -32,6 +32,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var viewContainer = UIView()
     var accessToken :AnyObject? = nil
     var userList = NSArray()
+    var addFollowingBtn = UIButton()
+    var newFollowerCount: Int = 0
+    var unreadMentionedPostCount: Int = 0
+    var unreadMentionedPostLabel = UILabel()
     
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
         if username != nil {
@@ -76,10 +80,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     treatmentList[i] = treatmentList[i] as! NSMutableDictionary
                     treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("beginDate") as! Double), forKey:"beginDate")
                     treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("endDate") as! Double), forKey:"endDate")
+                    var defaultEndDateMod: Double = getNSDateMod(defaultTreatmentEndDate * 1000)
 
                     var treatment = treatmentList[i] as! NSMutableDictionary
                     
-                    if (treatment.objectForKey("endDate") as! Double) > (NSDate().timeIntervalSince1970 * 1000){
+//                    if (treatment.objectForKey("endDate") as! Double) > (NSDate().timeIntervalSince1970 * 1000){
+                    println(treatment.objectForKey("treatmentName"))
+                    println(treatment.objectForKey("endDate") as! Double)
+                    println(defaultTreatmentEndDate * 1000)
+                    if (treatment.objectForKey("endDate") as! Double) == (defaultEndDateMod){
                         treatment.setObject(((NSDate().timeIntervalSince1970 as! NSNumber).integerValue * 1000) as AnyObject, forKey:"endDate")
                     }
                     
@@ -142,7 +151,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
                     }
                     index++
-                    treatmentSections.addObject(treatmentSection)
+//                    if (treatmentSection.objectForKey("treatmentDetails") != nil) && ((treatmentSection.objectForKey("treatmentDetails") is NSNull) == false) && ((treatmentSection.objectForKey("treatmentDetails") as! NSString).length > 0){
+                        treatmentSections.addObject(treatmentSection)
+//                    }
                 }
                 if patientStatusIndex < patientStatusList.count{
                     var treatmentSection = NSMutableDictionary()
@@ -174,11 +185,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         var dummyViewHeight : CGFloat = 40
         var dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
         self.tableview.tableHeaderView = dummyView;
-        self.tableview.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
+        self.tableview.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0)
+        ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我"
     }
     
     override func viewWillDisappear(animated: Bool) {
         viewContainer.removeFromSuperview()
+        if profileOwnername != username{
+            self.tabBarController?.tabBar.hidden = false
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -230,26 +245,55 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
             self.usernameLabel.text = self.userProfile.objectForKey("username") as! String
         }
+        if profileOwnername != username{
+            var isFollowingUserData: NSData = haalthyService.isFollowingUser(profileOwnername as! String)!
+            var isFollowingUserStr = NSString(data: isFollowingUserData, encoding: NSUTF8StringEncoding)
+            if isFollowingUserStr == "0"{
+                self.tabBarController?.tabBar.hidden = true
+                var addFollowingBtnWidth: CGFloat = 60
+                var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
+                addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
+                addFollowingBtn.layer.cornerRadius = 5
+                addFollowingBtn.layer.masksToBounds = true
+                addFollowingBtn.setTitle("加关注", forState: UIControlState.Normal)
+                addFollowingBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                addFollowingBtn.backgroundColor = mainColor
+                self.view.addSubview(addFollowingBtn)
+                addFollowingBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+            }
+        }else{
+            var newFollowerCountData: NSData = haalthyService.selectNewFollowCount()!
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if jsonResult is NSDictionary {
+                newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
+                if newFollowerCount != 0{
+                    self.profileSegment.selectedSegmentIndex = 2
+                }else{
+                    var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                    unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                    if unreadMentionedPostCount != 0 {
+                        self.profileSegment.selectedSegmentIndex = 2
+                    }
+                }
+            }
+            
+        }
     }
     
-//    func formatButton(sender: UIButton){
-//        sender.layer.borderWidth = 1.0
-//        sender.layer.borderColor = mainColor.CGColor
-//        sender.titleLabel?.textAlignment = NSTextAlignment.Center
-//        sender.backgroundColor = UIColor.whiteColor()
-//        sender.setTitleColor(mainColor, forState: UIControlState.allZeros)
-//        sender.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
-//        sender.layer.cornerRadius = 5
-//        sender.layer.masksToBounds = true
-//    }
-    
-//    func login(){
-//        self.performSegueWithIdentifier("loginSegue", sender: self)
-//    }
-//    
-//    func signup(){
-//    
-//    }
+    func addFollowing(sender: AnyObject) {
+        let profileSet = NSUserDefaults.standardUserDefaults()
+        if profileSet.objectForKey(accessNSUserData) != nil{
+            var addFollowingData = haalthyService.addFollowing(profileOwnername as! String)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            var deleteResult = haalthyService.deleteFromSuggestedUser(profileOwnername as! String)
+            println(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+        }
+        addFollowingBtn.enabled = false
+        addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
+        addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
+        addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
+        haalthyService.increaseNewFollowCount(profileOwnername as! String)
+    }
     
     func sortFunc(num1: Int, num2: Int) -> Bool {
         return num1 > num2
@@ -271,11 +315,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             numberOfSections = 1
             break
         case 2:
-//            if username != nil{
-                numberOfSections = 3
-//            } else{
-//                numberOfSections = 1
-//            }
+            numberOfSections = 3
             break
         default:
             numberOfSections = 0
@@ -288,7 +328,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         var numberOfRows = 0
         if profileSegment.selectedSegmentIndex == 0 {
             if section == 0{
-                numberOfRows = 1
+                numberOfRows = 2
             }else{
                 var patientStatus = treatmentSections[section-1]["patientStatus"]
                 if (patientStatus!) != nil {
@@ -300,20 +340,16 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }else if profileSegment.selectedSegmentIndex == 1{
             numberOfRows = self.broadcastList.count
         }else if profileSegment.selectedSegmentIndex == 2{
-//            if username != nil{
-                switch section{
-                case 0: numberOfRows = 3
-                    break
-                case 1: numberOfRows = 1
-                    break
-                case 2: numberOfRows = 1
-                    break
-                default: numberOfRows = 0
-                    break
-                }
-//            }else{
-//                numberOfRows = 1
-//            }
+            switch section{
+            case 0: numberOfRows = 4
+                break
+            case 1: numberOfRows = 1
+                break
+            case 2: numberOfRows = 1
+                break
+            default: numberOfRows = 0
+                break
+            }
         }
         return numberOfRows
     }
@@ -321,13 +357,32 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if profileSegment.selectedSegmentIndex == 0{
             if indexPath.section == 0{
-                let cell = tableView.dequeueReusableCellWithIdentifier("treatmentSummaryCell", forIndexPath: indexPath) as! TreatmentSummaryTableViewCell
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
-                if clinicReportList.count > 0{
-                    cell.treatmentList = treatmentList
-                    cell.clinicReportList = clinicReportList
+                if indexPath.row == 0{
+                    let cell = tableView.dequeueReusableCellWithIdentifier("treatmentSummaryCell", forIndexPath: indexPath) as! TreatmentSummaryTableViewCell
+                    cell.selectionStyle = UITableViewCellSelectionStyle.None
+                    if clinicReportList.count > 0{
+                        cell.treatmentList = treatmentList
+                        cell.clinicReportList = clinicReportList
+                    }
+                    return cell
+                }else{
+                    let cell = tableView.dequeueReusableCellWithIdentifier("editTreatmentIndentifier", forIndexPath:indexPath) as! UITableViewCell
+                    if profileOwnername == username{
+                        let editButtonWidth: CGFloat = 60.0
+                        let editButtonHeight: CGFloat = 30.0
+                        let marginWidth: CGFloat = 10.0
+                        var editButton = UIButton(frame: CGRectMake(cell.frame.width - editButtonWidth - marginWidth, marginWidth, editButtonWidth, editButtonHeight))
+                        editButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
+                        editButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+                        editButton.titleLabel?.textAlignment = NSTextAlignment.Center
+                        let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
+                        let underlineAttributedString = NSAttributedString(string: "编辑", attributes: underlineAttribute)
+                        editButton.setAttributedTitle(underlineAttributedString, forState: UIControlState.Normal)
+                        cell.addSubview(editButton)
+                        editButton.addTarget(self, action: "updateTreatment", forControlEvents: UIControlEvents.TouchUpInside)
+                    }
+                    return cell
                 }
-                return cell
             }else{
                 let cell = tableView.dequeueReusableCellWithIdentifier("patientStatusListCell", forIndexPath: indexPath) as! PatientStatusTableViewCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -372,25 +427,48 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }else{
             if indexPath.section == 0 {
                 let cell = tableView.dequeueReusableCellWithIdentifier("personalSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 //            if username != nil{
                 switch indexPath.row{
                 case 0: cell.textLabel?.text = "我关注的病友"
                     break
                 case 1: cell.textLabel?.text = "关注我的病友"
+                    var textLabelWidth:CGFloat = (cell.textLabel?.frame)!.width
+                    var newFollowerCountLabel = UILabel(frame: CGRectMake(110, 5, 20, 20))
+                    if newFollowerCount != 0{
+                        newFollowerCountLabel.text = (newFollowerCount as! NSNumber).stringValue
+                        newFollowerCountLabel.textColor = UIColor.redColor()
+                        cell.addSubview(newFollowerCountLabel)
+                    }
                     break
                 case 2: cell.textLabel?.text = "我的评论"
+                    break
+                case 3: cell.removeAllSubviews()
+                    var titleLabel = UILabel(frame: CGRectMake(10, 5, 100, 40))
+                    titleLabel.text = "@提到我的"
+                    titleLabel.textColor = UIColor.blackColor()
+                    cell.addSubview(titleLabel)
+                    var textLabelWidth:CGFloat = (cell.textLabel?.frame)!.width
+                    unreadMentionedPostLabel = UILabel(frame: CGRectMake(110, 5, 20, 20))
+                    if unreadMentionedPostCount != 0{
+                        unreadMentionedPostLabel.text = (unreadMentionedPostCount as! NSNumber).stringValue
+                        unreadMentionedPostLabel.textColor = UIColor.redColor()
+                        cell.addSubview(unreadMentionedPostLabel)
+                    }
                     break
                 default: break
                 }
                 return cell
             }else if indexPath.section == 1{
                 let cell = tableView.dequeueReusableCellWithIdentifier("accountSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.textLabel?.text = "更改个人信息"
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCellWithIdentifier("logoutCell", forIndexPath: indexPath) as! UITableViewCell
+                cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.textLabel?.text = "退出登录"
                 return cell
@@ -398,11 +476,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
     }
     
+    func updateTreatment(){
+        self.performSegueWithIdentifier("updateTreatment", sender: self)
+    }
+    
     func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight: CGFloat = 0.0
         if profileSegment.selectedSegmentIndex == 0{
             if indexPath.section == 0{
-                rowHeight = clinicReportList.count > 0 ? 150 : 0
+                if indexPath.row == 0{
+                    rowHeight = clinicReportList.count > 0 ? 150 : 0
+                }else{
+                    rowHeight = 44
+                }
             }else{
                 rowHeight = UITableViewAutomaticDimension
             }
@@ -411,8 +497,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if questionLabelHeight != nil{
                 rowHeight = (self.heightForQuestionRow.objectForKey(indexPath) as! CGFloat) + 35
             }
-//            rowHeight = self.heightForQuestionRow.objectForKey(indexPath) as! CGFloat
-//            rowHeight = 80
         }else if profileSegment.selectedSegmentIndex == 2{
             rowHeight = 50
         }
@@ -424,17 +508,22 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         var heightForHeader:CGFloat = 0
         if profileSegment.selectedSegmentIndex == 0{
             if section == 0 {
-                heightForHeader = 40
+                if (self.clinicReportList.count > 0){
+                    heightForHeader = 40
+                }
             }else{
                 var treatmentLineCount:AnyObject? = self.treatmentSections[section-1]["treatmentLineCount"]
                 if treatmentLineCount == nil{
                     heightForHeader = 0
                 }else{
-//                    var treatmentStr = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
-//                    heightForHeader = CGFloat(35 * treatmentStr + 4)
+                    if (self.treatmentSections[section-1].objectForKey("treatmentDetails") != nil) && ((self.treatmentSections[section-1].objectForKey("treatmentDetails") is NSNull) == false) && ((self.treatmentSections[section-1].objectForKey("treatmentDetails") as! NSString).length > 0){
+
                     heightForHeader = (self.treatmentSections[section-1]["sectionHeight"] as! CGFloat) + 5
                     if UIScreen.mainScreen().bounds.width < 375 {
                         heightForHeader += 35
+                    }
+                    }else{
+                        heightForHeader = 0
                     }
                 }
             }
@@ -522,7 +611,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 //                        var height = CGFloat(30 * dosageLableLine)
                         treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 90.0, 30.0))
                         treatmentNameLabel.text = treatmentName
-                        dosageLabel.frame = CGRectMake(110.0, treatmentY, 170.0, 0)
+                        dosageLabel.frame = CGRectMake(110.0, treatmentY + 5, 170.0, 0)
                         dosageLabel.text = treatmentDosage
                         dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                         dosageLabel.numberOfLines = 0
@@ -596,15 +685,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.performSegueWithIdentifier("setProfileSegue", sender: self)
             }
             if indexPath.section == 0 {
-                if indexPath == 2{
+                if indexPath.row == 2 {
                     self.performSegueWithIdentifier("commentListSegue", sender: self)
+                }else if indexPath.row == 3 {
+                    unreadMentionedPostCount = 0
+                    haalthyService.markMentionedPostAsRead()
+                    self.performSegueWithIdentifier("mentionedPostSegue", sender: self)
                 }else{
                     var userListData = NSData()
                     if indexPath.row == 0{
                         userListData = haalthyService.getFollowingUsers(username! as String)!
                     }
                     if indexPath.row == 1{
+                        newFollowerCount = 0
                         userListData = haalthyService.getFollowerUsers(username! as String)!
+                        haalthyService.refreshNewFollowCount()
                     }
                     var jsonResult = NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
                     if jsonResult is NSArray {
@@ -639,14 +734,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }
             (segue.destinationViewController as! CommentListTableViewController).commentList = commentList
         }
-        if segue.identifier == "setProfileSegue"{
+        if segue.identifier == "setProfileSegue" {
             (segue.destinationViewController as! PatientProfileTableViewController).userProfile = userProfile.mutableCopy() as! NSMutableDictionary
+        }
+        if segue.identifier == "updateTreatment" {
+            (segue.destinationViewController as! UpdateTreatmentTableViewController).treatmentList = self.treatmentList
         }
     }
 }
-
-//extension UserProfileViewController: SettingPasswordDelegate{
-//    func getPassword(password: String){
-//        
-//    }
-//}

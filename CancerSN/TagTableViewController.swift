@@ -37,13 +37,13 @@ class TagTableViewController: UITableViewController {
     }
     
     @IBAction func submit(sender: UIButton) {
-        if isBroadcastTagSelection == 0 {
-            selectedTags.removeAllObjects()
-            for var index = 0; index < tagList.count; ++index{
-                if selectedTagsStr.containsObject((tagList[index] as! NSDictionary).objectForKey("name") as! String){
-                    selectedTags.addObject(tagList[index])
-                }
+        selectedTags.removeAllObjects()
+        for var index = 0; index < tagList.count; ++index{
+            if selectedTagsStr.containsObject((tagList[index] as! NSDictionary).objectForKey("name") as! String){
+                selectedTags.addObject(tagList[index])
             }
+        }
+        if isBroadcastTagSelection == 0 {
             NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
                 var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
@@ -56,6 +56,7 @@ class TagTableViewController: UITableViewController {
             }
         }else{
             self.postDelegate?.getPostTagList(self.selectedTags)
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     

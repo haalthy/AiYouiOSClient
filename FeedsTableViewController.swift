@@ -21,6 +21,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var latestFeedFetchTimeStamp: Int = 0
     var previousFeedFetchTimeStamp: Int = 0
     var isRefreshData: Bool = false
+    let profileSet = NSUserDefaults.standardUserDefaults()
     
     @IBAction func selectTags(sender: UIButton) {
         self.performSegueWithIdentifier("showTagsSegue", sender: self)
@@ -185,7 +186,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //        var getFeedsByTagsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
         println(Int(NSDate().timeIntervalSince1970*100000))
         var getFeedsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
-        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
 //        var getFeedsByTagsData = haalthyService.getPreviousFeeds(latestFeedFetchTimeStamp, count: 10)
         println(NSDate().timeIntervalSince1970)
         var jsonResult:AnyObject? = nil
@@ -220,7 +221,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }else{
             println("get feeds error")
         }
-        
     }
     
     override func viewDidLoad() {
@@ -238,13 +238,29 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             jsonResult = NSJSONSerialization.JSONObjectWithData(getUpdatePostCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             postCount = (NSString(data: getUpdatePostCountData!, encoding: NSUTF8StringEncoding)! as String).toInt()!
         }
-        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+        latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
         if postCount == 0{
             self.getexistFeedsFromLocalDB()
         }else{
             clearFeedLocalTable()
-            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
             self.getMorePreviousFeeds()
+        }
+        if username != nil{
+            var newFollowerCountData: NSData = haalthyService.selectNewFollowCount()!
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if jsonResult is NSDictionary {
+                var newFollowerCountStr = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).stringValue
+                if newFollowerCountStr != "0" {
+                    ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
+                }else{
+                    var newMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                    var newMentionedPostCount =  (NSString(data: newMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                    if newMentionedPostCount != 0 {
+                        ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
+                    }
+                }
+            }
         }
     }
 
@@ -254,7 +270,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if isRefreshData {
             feedList = NSArray()
             clearFeedLocalTable()
-            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*100000)
+            previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
             self.getMorePreviousFeeds()
         }
     }
@@ -276,6 +292,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numberOfRows:Int = 0
         switch section{
+        case 0:
+            numberOfRows = 1
+            break
         case 1:
             numberOfRows = feedList.count
             break
@@ -295,6 +314,16 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! FeedsHeaderTableViewCell
             cell.backgroundColor = UIColor.whiteColor()
+            var clinicTrailButton = UIButton(frame: CGRectMake(0, 0, cell.frame.width, cell.frame.height))
+//            clinicTrailButton.setTitle("想找到最适合自己的临床信息？请点击这里", forState: UIControlState.Normal)
+            clinicTrailButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
+            clinicTrailButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+            clinicTrailButton.titleLabel?.textAlignment = NSTextAlignment.Center
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
+            let underlineAttributedString = NSAttributedString(string: "想找到最适合自己的临床信息？请点击这里", attributes: underlineAttribute)
+//            clinicTrailButton.titleLabel?.attributedText = underlineAttributedString
+            clinicTrailButton.setAttributedTitle(underlineAttributedString, forState: UIControlState.Normal)
+            cell.addSubview(clinicTrailButton)
             return cell
         }else{
 //            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
@@ -420,7 +449,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                     treatmentNameLabel.textAlignment = NSTextAlignment.Center
                     if treatmentNameAndDosage.count > 1{
                         treatmentDosage = treatmentNameAndDosage[1] as! String
-                        dosageLabel.frame = CGRectMake(100.0, treatmentY, feedBody.frame.width - 105, 0)
+                        dosageLabel.frame = CGRectMake(100.0, treatmentY+5, feedBody.frame.width - 105, 0)
                         dosageLabel.text = treatmentDosage
                         dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
                         dosageLabel.numberOfLines = 0
@@ -475,9 +504,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             self.performSegueWithIdentifier("loginSegue", sender: self)
         }
     }
-    func imageTapHandler(sender: UITapGestureRecognizer){
-        println("tap")
-    }
     
     var feed = NSDictionary()
     
@@ -497,7 +523,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight:CGFloat
         switch indexPath.section{
-        case 0: rowHeight = 50
+        case 0: rowHeight = 28
             break
         case 1:
             if self.heightForFeedRow.objectForKey(indexPath) != nil{

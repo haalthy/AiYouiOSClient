@@ -158,7 +158,6 @@ class ShowPostDetailTableViewController: UITableViewController {
         
         return numberOfRowsInSection
     }
-
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if(indexPath.section == 0){
@@ -174,9 +173,9 @@ class ShowPostDetailTableViewController: UITableViewController {
             }else{
                 imageView.image = UIImage(named: "Mario.jpg")
             }
-            var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
-            imageView.userInteractionEnabled = true
-            imageView.addGestureRecognizer(tapImage)
+//            var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+//            imageView.userInteractionEnabled = true
+//            imageView.addGestureRecognizer(tapImage)
             //username View
             var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, cell.frame.width - 10 - 32 - 10 - 80, 20))
             usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
@@ -279,7 +278,7 @@ class ShowPostDetailTableViewController: UITableViewController {
                     treatmentNameLabel.textAlignment = NSTextAlignment.Center
                     if treatmentNameAndDosage.count > 1{
                         treatmentDosage = treatmentNameAndDosage[1] as! String
-                        dosageLabel.frame = CGRectMake(100.0, treatmentY, feedBody.frame.width - 105, 0)
+                        dosageLabel.frame = CGRectMake(100.0, treatmentY+5, feedBody.frame.width - 105, 0)
                         dosageLabel.text = treatmentDosage
                         dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
                         dosageLabel.numberOfLines = 0

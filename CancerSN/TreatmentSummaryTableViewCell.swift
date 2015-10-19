@@ -64,6 +64,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
     }
     
     func updateUI(){
+        self.chartScrollView.removeAllSubviews()
         var beginDate = clinicReportList[clinicReportList.count-1].objectForKey("dateInserted") as! Int
         var endDate = clinicReportList[0].objectForKey("dateInserted") as! Int
         var width = UIScreen.mainScreen().bounds.width-10.0

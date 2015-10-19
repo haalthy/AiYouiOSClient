@@ -69,7 +69,7 @@ class PostContentTableViewCell: UITableViewCell {
                 treatmentNameLabel.textAlignment = NSTextAlignment.Center
                 if treatmentNameAndDosage.count > 1{
                     treatmentDosage = treatmentNameAndDosage[1] as! String
-                    dosageLabel.frame = CGRectMake(100.0, treatmentY, postContent.frame.width - 105, 0)
+                    dosageLabel.frame = CGRectMake(100.0, treatmentY+5, postContent.frame.width - 105, 0)
                     dosageLabel.text = treatmentDosage
                     dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
                     dosageLabel.numberOfLines = 0

@@ -19,6 +19,7 @@ class UserListTableViewCell: UITableViewCell {
     var delegate : UserListDelegate?
     
     var hiddenFollowButton = Bool()
+    var haalthyService = HaalthyService()
 
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var usernameDisplay: UILabel!
@@ -33,7 +34,6 @@ class UserListTableViewCell: UITableViewCell {
     @IBAction func addFollowing(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         if profileSet.objectForKey(accessNSUserData) != nil{
-            var haalthyService = HaalthyService()
             var addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
             var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
             var deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
@@ -45,6 +45,7 @@ class UserListTableViewCell: UITableViewCell {
         addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
         addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
         addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
+        haalthyService.increaseNewFollowCount(usernameDisplay.text!)
     }
     
     var user=NSDictionary(){

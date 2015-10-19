@@ -59,6 +59,18 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 respData = haalthyService.addPost(post as NSDictionary)
             }else{
                 post.setObject(self.tagList, forKey: "tags")
+                var postContentStr = postContent.text
+                var firstRange = postContentStr.rangeOfString("@")
+                var postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
+                for subStr in postContentArr{
+                    if (subStr as! NSString).length > 0{
+                        var subStrArr = (subStr as! String).componentsSeparatedByString(" ")
+                        if (subStrArr.count > 0) && (subStrArr[0] as! NSString).length > 0{
+                            mentionUsernameList.addObject(subStrArr[0])
+                        }
+                    }
+                }
+                
                 if mentionUsernameList.count > 0 {
                     post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
                 }
@@ -91,11 +103,14 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
         super.viewDidLoad()
         imagePicker.delegate = self
         postContent.delegate = self
-        if self.isBroadcast == 1 {
-            postContent.text = "请在此输入广播消息"
-//            selectTagsButton.enabled = false
+        if isComment == 1{
+            postContent.text = "添加评论"
         }else{
-            postContent.text = "在此分享我的心情"
+            if self.isBroadcast == 1 {
+                postContent.text = "请在此输入广播消息"
+            }else{
+                postContent.text = "在此分享心情"
+            }
         }
         imageHeight = (UIScreen.mainScreen().bounds.width - 35)/4
         postContent.textColor = UIColor.grayColor()
@@ -315,7 +330,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     }
     
     func updateMentionList(username: String){
-        mentionUsernameList.addObject(username)
+//        mentionUsernameList.addObject(username)
         if postContent.textColor != UIColor.blackColor() {
             postContent.text = nil
             postContent.textColor = UIColor.blackColor()
