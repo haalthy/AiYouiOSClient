@@ -61,18 +61,20 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 post.setObject(self.tagList, forKey: "tags")
                 var postContentStr = postContent.text
                 var firstRange = postContentStr.rangeOfString("@")
-                var postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
-                for subStr in postContentArr{
-                    if (subStr as! NSString).length > 0{
-                        var subStrArr = (subStr as! String).componentsSeparatedByString(" ")
-                        if (subStrArr.count > 0) && (subStrArr[0] as! NSString).length > 0{
-                            mentionUsernameList.addObject(subStrArr[0])
+                if firstRange != nil {
+                    var postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
+                    for subStr in postContentArr{
+                        if (subStr as! NSString).length > 0{
+                            var subStrArr = (subStr as! String).componentsSeparatedByString(" ")
+                            if (subStrArr.count > 0) && (subStrArr[0] as! NSString).length > 0{
+                                mentionUsernameList.addObject(subStrArr[0])
+                            }
                         }
                     }
-                }
-                
-                if mentionUsernameList.count > 0 {
-                    post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
+                    
+                    if mentionUsernameList.count > 0 {
+                        post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
+                    }
                 }
                 post.setObject(self.insertImageList, forKey: "images")
                 respData = haalthyService.addPost(post as NSDictionary)
@@ -94,7 +96,6 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     
     func enableButtonFormat(sender: UIButton){
         sender.backgroundColor = mainColor
-//        sender.layer.borderColor = UIColor.lightGrayColor().CGColor
         sender.layer.borderWidth = 0
         sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     }
@@ -142,11 +143,11 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 suggestTagLabel.font = UIFont(name: "Helvetica", size: 12.0)
                 suggestTagView.addSubview(suggestTagLabel)
                 
-                var maxDisplayCount = allTagList.count > 10 ? 9: allTagList.count
+                var maxDisplayCount = allTagList.count > 10 ? 10: allTagList.count
                 var tagHeight:CGFloat = 35
                 var tagWith = ((self.suggestTagView.frame.width - 3)/5 - 3)
                 var i: Int = 0
-                while i < allTagList.count{
+                while i < maxDisplayCount{
                     var coordinateX: CGFloat?
                     var coordinateY: CGFloat?
                     if i < 5 {
@@ -158,7 +159,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                     var displayTagButton = UIButton(frame: CGRectMake(coordinateX!, coordinateY!, tagWith - 3, tagHeight-3))
 //                    tagLable.text = (allTagList[i] as! NSDictionary).objectForKey("name") as! String
                     if (i == 9) && (allTagList.count>10){
-                        displayTagButton.setTitle("查看更多", forState: UIControlState.Normal)
+                        displayTagButton.setTitle("更多...", forState: UIControlState.Normal)
                     }else{
                         displayTagButton.setTitle((allTagList[i] as! NSDictionary).objectForKey("name") as! String, forState: UIControlState.Normal)
                     }
@@ -180,8 +181,10 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 }
             }
         }
-        initButtonItem(addImageBtn, labelTitle: "Image", targetAction: "selectImages")
-        initButtonItem(addMentionBtn, labelTitle: "@", targetAction: "selectContacts")
+        if isComment == 0{
+            initButtonItem(addImageBtn, labelTitle: "Image", targetAction: "selectImages")
+            initButtonItem(addMentionBtn, labelTitle: "@", targetAction: "selectContacts")
+        }
     }
     
     func selectImages(){

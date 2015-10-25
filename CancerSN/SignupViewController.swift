@@ -52,47 +52,97 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     @IBOutlet weak var emailInput: UITextField!
     @IBOutlet weak var usernameInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
+    @IBOutlet weak var passwordReInput: UITextField!
+    @IBOutlet weak var displayname: UITextField!
     
     var imagePicker = UIImagePickerController()
     
     var data :NSMutableData? = NSMutableData()
     @IBAction func submit(sender: UIButton) {
-        //save image
-        
-        var selectedImage: UIImage = portrait.image!
-        
-        
-        let fileManager = NSFileManager.defaultManager()
-        
-        var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        
-        var filePathToWrite = "\(paths)/" + imageFileName
-        
-        var imageData: NSData = UIImagePNGRepresentation(selectedImage)
-        println(selectedImage.size.width, selectedImage.size.height)
-        var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
-//        println(imageDataStr)
-        
-        fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
-        
-        var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
-        
         //store username, password, email in NSUserData
-        let profileSet = NSUserDefaults.standardUserDefaults()
-        profileSet.setObject(emailInput.text, forKey: emailNSUserData)
-        profileSet.setObject(imageDataStr, forKey: imageNSUserData)
-        let keychainAccess = KeychainAccess()
-        keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text)
-        keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
-
-        //upload UserInfo to Server
-        var haalthyService = HaalthyService()
-        var addUserRespData = haalthyService.addUser("AY")
-        let str: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
-        println(str)
-        var getAccessToken = GetAccessToken()
-        getAccessToken.getAccessToken()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        println(passwordInput.text)
+        println(passwordReInput.text)
+        if passwordInput.text != passwordReInput.text {
+            var alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }else if emailInput.text == ""{
+            var alert = UIAlertController(title: "提示", message: "请输入邮箱／手机", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }else if usernameInput.text == ""{
+            var alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }else if passwordInput.text == ""{
+            var alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }else{
+            
+            //save image
+            var selectedImage: UIImage = portrait.image!
+            
+            let fileManager = NSFileManager.defaultManager()
+            
+            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+            
+            var filePathToWrite = "\(paths)/" + imageFileName
+            
+            var imageData: NSData = UIImagePNGRepresentation(selectedImage)
+            println(selectedImage.size.width, selectedImage.size.height)
+            var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
+            //        println(imageDataStr)
+            
+            fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
+            
+            var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
+            let profileSet = NSUserDefaults.standardUserDefaults()
+            profileSet.setObject(emailInput.text, forKey: emailNSUserData)
+            profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+            if displayname.text == ""{
+                profileSet.setObject(usernameInput.text, forKey: displaynameUserData)
+            }else{
+                profileSet.setObject(displayname.text, forKey: displaynameUserData)
+            }
+            let keychainAccess = KeychainAccess()
+            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text)
+            keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
+            
+            //upload UserInfo to Server
+            var haalthyService = HaalthyService()
+            var addUserRespData = haalthyService.addUser("AY")
+//            var returnStr: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
+            var returnStr = String()
+            var getAccessToken = GetAccessToken()
+            getAccessToken.getAccessToken()
+//            self.dismissViewControllerAnimated(true, completion: nil)
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if jsonResult is NSDictionary {
+                returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
+            }
+            println(returnStr)
+            if returnStr != "create successful!"{
+                keychainAccess.deletePasscode(usernameKeyChain)
+                keychainAccess.deletePasscode(passwordKeyChain)
+            }
+            if returnStr == "this name has been registed, please login" {
+                var alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+            if returnStr == "this email has been registed, please login" {
+                var alert = UIAlertController(title: "提示", message: "此邮箱/手机已被注册，请登录", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+            if returnStr == "create successful!" {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
@@ -102,7 +152,6 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     func connectionDidFinishLoading(connection: NSURLConnection!)
     {
         var error: NSErrorPointer=nil
-//        var jsonResult: NSArray = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: error) as! NSArray
         let str: NSString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
         println(str)
     }
@@ -155,7 +204,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             return true
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }

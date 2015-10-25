@@ -55,6 +55,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     var animationFinished = true
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         username = keychainAccess.getPasscode(usernameKeyChain) as! String
         profileSet.removeObjectForKey(newTreatmentBegindate)
         
@@ -71,7 +72,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         self.menuView.menuViewDelegate = self
         monthLabel.text = CVDate(date: NSDate()).globalDescription
         
-//        getProcessingTreatmentsFromLocalDB()
+        //        getProcessingTreatmentsFromLocalDB()
         getProcessingTreatments()
         if treatmentList.count > 0 {
             previousTreatment = treatmentList[0] as! NSDictionary

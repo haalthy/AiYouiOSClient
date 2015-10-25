@@ -58,6 +58,8 @@ class HaalthyService:NSObject{
         }
         if profileSet.objectForKey(displaynameUserData) != nil{
             displayname = (profileSet.objectForKey(displaynameUserData))! as! String
+        }else{
+            displayname = username
         }
         if profileSet.objectForKey(genderNSUserData) != nil{
             gender = (profileSet.objectForKey(genderNSUserData))! as! String
@@ -113,9 +115,6 @@ class HaalthyService:NSObject{
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             return NSURLConnection.sendSynchronousRequest(request,returningResponse: nil,error: nil)
-            //            }else{
-            //                return nil
-            //            }
         }else{
             let urlPath:String = (getFeedsURL as String) + "?access_token=" + (accessToken as! String);
             println(urlPath)
@@ -678,14 +677,19 @@ class HaalthyService:NSObject{
         }
     }
     
-    func getMentionedPostList()->NSData?{
+    func getMentionedPostList(endTimestamp: Int, count: Int)->NSData?{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil{
             let urlPath:String = (getMentionedPostListURL as String) + "?access_token=" + (accessToken as! String);
             let url : NSURL = NSURL(string: urlPath)!
             let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "GET"
+            request.HTTPMethod = "POST"
+            var requestBody = NSMutableDictionary()
+            requestBody.setValue(endTimestamp, forKey: "end")
+            requestBody.setValue(0, forKey: "begin")
+            requestBody.setValue(count, forKey: "count")
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions.allZeros, error: nil)
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
@@ -710,5 +714,27 @@ class HaalthyService:NSObject{
         }else{
             return nil
         }
+    }
+    
+    func sendSyncGetCommentListRequest(postID: Int)->NSData{
+        let url : NSURL = NSURL(string: getCommentListByPostURL+((postID as! NSNumber).stringValue))!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "GET"
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        var getCommentsRespData = NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)
+        return getCommentsRespData!
+    }
+    
+    func getPostById(postID: Int)->NSData{
+        let url : NSURL = NSURL(string: getPostByIdURL+((postID as! NSNumber).stringValue))!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "GET"
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        var getPostByIdRespData = NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)
+        return getPostByIdRespData!
     }
 }

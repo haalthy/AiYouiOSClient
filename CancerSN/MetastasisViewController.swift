@@ -28,6 +28,7 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var brain: UIButton!
     @IBOutlet weak var other: UITextField!
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBAction func skip(sender: UIButton) {
         if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
             self.performSegueWithIdentifier("signupSegue", sender: self)
@@ -102,7 +103,10 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if isUpdate{
+            titleLabel.hidden = true
+        }
+        
         other.delegate = self
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);

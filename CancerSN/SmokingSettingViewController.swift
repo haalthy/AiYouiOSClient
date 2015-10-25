@@ -17,6 +17,7 @@ class SmokingSettingViewController: UIViewController{
     @IBOutlet weak var isSmoking: UIButton!
     @IBOutlet weak var noSmoking: UIButton!
     @IBOutlet weak var skipBtn: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
     
     @IBAction func skip(sender: UIButton) {
         self.performSegueWithIdentifier("selectMetastasisSegue", sender: self)
@@ -35,6 +36,9 @@ class SmokingSettingViewController: UIViewController{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        if isUpdate{
+            titleLabel.hidden = true
+        }
         isSmoking.setTitle("是", forState: .Normal)
         noSmoking.setTitle("否", forState: .Normal)
         skipBtn.layer.cornerRadius = 5

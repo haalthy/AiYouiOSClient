@@ -44,6 +44,7 @@
 		2A5BDF171BB1C78900732AF8 /* AddStatusTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */; };
 		2A74CCE21B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */; };
 		2A81C8F81BD574B200EE5FB1 /* MentionedPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */; };
+		2A81C8FA1BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */; };
 		2A91D4641BAE408300ADC095 /* tagOnPostViewbackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A91D4631BAE408300ADC095 /* tagOnPostViewbackground.png */; };
 		2A91D4661BB0743700ADC095 /* AddTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */; };
 		2A91D4681BB07A2F00ADC095 /* triangle-xxl.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */; };
@@ -172,6 +173,7 @@
 		2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatusTableViewController.swift; sourceTree = "<group>"; };
 		2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePreviousTreatmentViewController.swift; sourceTree = "<group>"; };
 		2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentionedPostTableViewController.swift; sourceTree = "<group>"; };
+		2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicTrailTableViewController.swift; sourceTree = "<group>"; };
 		2A91D4631BAE408300ADC095 /* tagOnPostViewbackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tagOnPostViewbackground.png; sourceTree = "<group>"; };
 		2A91D4651BB0743700ADC095 /* AddTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentViewController.swift; sourceTree = "<group>"; };
 		2A91D4671BB07A2F00ADC095 /* triangle-xxl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle-xxl.png"; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 				2A9957FF1BCAF37700DAB05B /* UpdateTreatmentTableViewController.swift */,
 				2A9958011BCD8C2200DAB05B /* SelectDateViewController.swift */,
 				2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */,
+				2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -633,6 +636,7 @@
 				2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */,
 				2AB7BE821BABF3010069C27B /* ContactViewController.swift in Sources */,
 				2AF6736A1B88416F00E220CD /* CVCalendarContentViewController.swift in Sources */,
+				2A81C8FA1BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift in Sources */,
 				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
 				2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */,
 				2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */,

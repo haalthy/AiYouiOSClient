@@ -17,6 +17,7 @@ class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
     
     @IBOutlet weak var selectBtn: UIButton!
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var skipBtn: UIButton!
     var pickerDataSource = [String]()
 
@@ -38,6 +39,9 @@ class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        if isUpdate{
+            titleLabel.hidden = true
+        }
 //        pickerDataSource = stageMapping.allKeys as! [String]
         pickerDataSource = ["I","II","IV","V"]
         stagePickerView.delegate = self

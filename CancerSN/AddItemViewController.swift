@@ -28,10 +28,11 @@ class AddItemViewController: UIViewController {
     @IBAction func addBroadcast(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
             self.performSegueWithIdentifier("loginSegue", sender: nil)
+        }else{
+            self.isBroadcast = 1
+            isDismiss = true
+            self.performSegueWithIdentifier("addPostSegue", sender: nil)
         }
-        self.isBroadcast = 1
-        isDismiss = true
-        self.performSegueWithIdentifier("addPostSegue", sender: nil)
     }
     
     @IBAction func addPrivatePost(sender: UIButton) {

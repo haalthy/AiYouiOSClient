@@ -110,9 +110,11 @@ class TagTableViewController: UITableViewController {
         
         if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
             if (keychain.getPasscode(usernameKeyChain) != nil)  {
-                var getUserFavTagsData = haalthyService.getUserFavTags()
-                var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-                selectedTags = jsonResult as! NSMutableArray
+                var getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
+                if getUserFavTagsData != nil{
+                    var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                    selectedTags = jsonResult as! NSMutableArray
+                }
             }else{
                 selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
             }

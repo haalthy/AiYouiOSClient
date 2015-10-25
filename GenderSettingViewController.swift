@@ -18,6 +18,7 @@ class GenderSettingViewController: UIViewController {
     @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var maleSelect: UIButton!
     @IBOutlet weak var femaleSelect: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBAction func SelectGender(sender: UIButton) {
         if isUpdate {
             genderSettingVCDelegate?.updateGender(genderMapping.objectForKey((sender.titleLabel?.text)!) as! String)
@@ -33,6 +34,9 @@ class GenderSettingViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        if isUpdate {
+            titleLabel.hidden = true
+        }
         super.viewDidLoad()
         maleSelect.titleLabel?.text = "男"
         femaleSelect.titleLabel?.text = "女"

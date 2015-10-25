@@ -20,6 +20,7 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
     
     @IBOutlet weak var skipAgeBtn: UIButton!
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var ageUIPickerView: UIPickerView!
     var pickerDataSource = [String]()
 
@@ -40,6 +41,10 @@ class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPic
 
     }
     override func viewDidLoad(){
+        if isUpdate{
+            titleLabel.hidden = true
+        }
+        
         super.viewDidLoad()
         
         var index : Int

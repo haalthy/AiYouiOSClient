@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate, UIGestureRecognizerDelegate, ImageTapDelegate {
+class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate, UIGestureRecognizerDelegate, ImageTapDelegate, FeedBodyDelegate {
     var username:String?
     var password:String?
     var feedList = NSArray()
@@ -171,6 +171,36 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             if (feed["type"] is NSNull) == false{
                 feedItem.setValue(feed["type"], forKey: "type")
             }
+            if (feed["hasImage"] is NSNull) == false{
+                feedItem.setValue(feed["hasImage"], forKey: "hasImage")
+                var index: Int = 1
+                if ((feed["hasImage"] as! Int) > 0) && ((feed["postImageList"] is NSNull) == false){
+                    dispatch_async(dispatch_get_main_queue()) {
+                        for image in (feed["postImageList"] as! NSArray){
+                            let dataString = image as! String
+                            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                            let fileManager = NSFileManager.defaultManager()
+                            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                            var indexStr: String = (index as! NSNumber).stringValue
+                            var fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
+                            var filePathToWrite = "\(paths)/" + fileNameStr
+                            fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
+                            var getImagePath = paths.stringByAppendingPathComponent(fileNameStr)
+                            println(getImagePath)
+                            if (fileManager.fileExistsAtPath(getImagePath))
+                            {
+                                println("FILE AVAILABLE");
+                            }
+                            else
+                            {
+                                println("FILE NOT AVAILABLE");
+                                
+                            }
+                            index++
+                        }
+                    }
+                }
+            }
             context.save(nil)
         }
         if isLoadLatestFeeds{
@@ -205,8 +235,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }else{
             println("get broadcast error")
         }
-        
     }
+    
     func getMorePreviousFeeds(){
         var getFeedsData = haalthyService.getPreviousFeeds(previousFeedFetchTimeStamp, count: 20)
         var jsonResult:AnyObject? = nil
@@ -229,9 +259,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
         var keychainAccess = KeychainAccess()
+        
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
         var getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
+//        var getUpdatePostCountData:NSData? = nil
         var jsonResult:AnyObject? = nil
         var postCount:Int = 0
         if getUpdatePostCountData != nil{
@@ -247,17 +279,19 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             self.getMorePreviousFeeds()
         }
         if username != nil{
-            var newFollowerCountData: NSData = haalthyService.selectNewFollowCount()!
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            if jsonResult is NSDictionary {
-                var newFollowerCountStr = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).stringValue
-                if newFollowerCountStr != "0" {
-                    ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
-                }else{
-                    var newMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
-                    var newMentionedPostCount =  (NSString(data: newMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
-                    if newMentionedPostCount != 0 {
+            var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
+            if newFollowerCountData != nil {
+                var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                if jsonResult is NSDictionary {
+                    var newFollowerCountStr = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).stringValue
+                    if newFollowerCountStr != "0" {
                         ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
+                    }else{
+                        var newMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                        var newMentionedPostCount =  (NSString(data: newMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                        if newMentionedPostCount != 0 {
+                            ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
+                        }
                     }
                 }
             }
@@ -323,10 +357,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             let underlineAttributedString = NSAttributedString(string: "想找到最适合自己的临床信息？请点击这里", attributes: underlineAttribute)
 //            clinicTrailButton.titleLabel?.attributedText = underlineAttributedString
             clinicTrailButton.setAttributedTitle(underlineAttributedString, forState: UIControlState.Normal)
+            clinicTrailButton.addTarget(self, action: "selectClinicTrail", forControlEvents: UIControlEvents.TouchUpInside)
             cell.addSubview(clinicTrailButton)
             return cell
         }else{
-//            let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! UITableViewCell
             let cell = tableView.dequeueReusableCellWithIdentifier("feedCell", forIndexPath: indexPath) as! FeedTableViewCell
             cell.removeAllSubviews()
 
@@ -338,163 +372,43 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 var keys = feedList[indexPath.row].entity.attributesByName.keys.array
                 let feedDic = feedList[indexPath.row].dictionaryWithValuesForKeys(keys)
                 feed = feedDic
-                //                feedBody.text = (feedDic as! NSDictionary).objectForKey("body") as! String
+                var mutableFeed: NSMutableDictionary = feed.mutableCopy() as! NSMutableDictionary
+                if (feed["hasImage"] != nil) && ((feed["hasImage"] is NSNull) == false) && ((feed["hasImage"] as! Int) > 0){
+                    var postImageList = NSMutableArray()
+                    for var index = 1; index <= (feed["hasImage"] as! Int); ++index{
+                        var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                        var indexStr: String = (index as! NSNumber).stringValue
+                        var fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
+                        let fileManager = NSFileManager.defaultManager()
+                        println(paths.stringByAppendingPathComponent(fileNameStr))
+                        var fileData = fileManager.contentsAtPath(paths.stringByAppendingPathComponent(fileNameStr))
+//                        var fileDataStr = NSString(data: fileData!, encoding: NSUTF8StringEncoding)
+                        if fileData != nil{
+                            postImageList.addObject(fileData!)
+                        }
+                    }
+                    mutableFeed.setObject(postImageList, forKey: "postImageList")
+                    feed = mutableFeed
+                }
             }else{
                 feed = feedList[indexPath.row] as! NSDictionary
-                //                feedBody.text = (feedList[indexPath.row] as! NSDictionary).objectForKey("body") as! String
             }
-            cell.feed = feed
-
+            
             cell.imageTapDelegate = self
-            
-            //username View
-            var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, cell.frame.width - 10 - 32 - 10 - 80, 20))
-            usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
-            usernameLabelView.text = feed.valueForKey("insertUsername") as? String
-            
-            //insert date View
-            var insertDateLabelView = UILabel(frame: CGRectMake(cell.frame.width - 90, 10, 80, 20))
-            insertDateLabelView.font = UIFont(name: "Helvetica", size: 12.0)
-            var dateFormatter = NSDateFormatter()
-            var insertedDate = NSDate(timeIntervalSince1970: (feed.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
-            dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
-            let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
-            let currentDayStr = dateFormatter.stringFromDate(NSDate())
-            if(currentDayStr > insertedDayStr){
-                dateFormatter.dateFormat = "MM-dd"
-                insertDateLabelView.text = dateFormatter.stringFromDate(insertedDate)
-            }else{
-                dateFormatter.dateFormat = "HH:mm"
-                insertDateLabelView.text = dateFormatter.stringFromDate(insertedDate)
-            }
-            insertDateLabelView.textAlignment = NSTextAlignment.Right
-            insertDateLabelView.textColor = UIColor.grayColor()
-            
-            //
-            
-            //profile View
-            var profileLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 30, cell.frame.width - 10 - 32 - 10, 12))
-            profileLabelView.font = UIFont(name: "Helvetica", size: 11.5)
-            profileLabelView.text = feed.valueForKey("patientProfile") as? String
-            profileLabelView.textColor = UIColor.grayColor()
-            
-            //feed type view
-            var typeStr = String()
-            if (feed.objectForKey("type") != nil) && (feed.objectForKey("type") is NSNull) == false{
-                if (feed.objectForKey("type") as!Int) == 0{
-                    if (feed.objectForKey("isBroadcast") as! Int) == 1 {
-                        typeStr = "提出新问题"
-                    }else{
-                        typeStr = "分享心情"
-                    }
-                }
-                if (feed.objectForKey("type") as! Int) == 1{
-                    typeStr = "添加治疗方案"
-                }
-                if (feed.objectForKey("type") as! Int) == 2{
-                    typeStr = "更新病友状态"
-                }
-            }
-            var typeLabel = UILabel(frame: CGRectMake(10, 50, 80, 25))
-            typeLabel.text = typeStr
-            typeLabel.backgroundColor = sectionHeaderColor
-            typeLabel.font = UIFont(name: fontStr, size: 12.0)
-            typeLabel.textAlignment = NSTextAlignment.Center
-            
-            //feed body view
-            var feedBody = UILabel(frame: CGRectMake(10, 80, cell.frame.width - 20, 0))
-            if (feed.objectForKey("type") as! Int) != 1{
-                feedBody.numberOfLines = 5
-                feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
-                feedBody.font = UIFont(name: "Helvetica", size: 13.0)
-                feedBody.text = (feed.objectForKey("body") as! String).stringByReplacingOccurrencesOfString("*", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                feedBody.textColor = UIColor.blackColor()
-                feedBody.sizeToFit()
-                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
-            }else if (feed.objectForKey("type") as! Int) == 1{
-                var treatmentStr = feed.objectForKey("body") as! String
-                var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
-                for treatment in treatmentList {
-                    var treatmentItemStr:String = treatment as! String
-                    
-                    treatmentItemStr = treatmentItemStr.stringByReplacingOccurrencesOfString("*", withString: "", options:  NSStringCompareOptions.LiteralSearch, range: nil)
-                    if (treatmentItemStr as NSString).length == 0{
-                        treatmentList.removeObject(treatment)
-                    }
-                }
-                var treatmentY:CGFloat = 0
-                for treatment in treatmentList {
-                    var treatmentItemStr:String = treatment as! String
-
-                    if (treatmentItemStr as! NSString).length == 0{
-                        break
-                    }
-                    if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: advance(treatmentItemStr.startIndex, 1))) == "*" {
-                        treatmentItemStr = treatmentItemStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
-                    }
-                    var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
-                    var treatmentName = treatmentNameAndDosage[0] as! String
-                    var treatmentDosage = String()
-                    var treatmentNameLabel = UILabel()
-                    var dosageLabel = UILabel()
-                    treatmentNameLabel = UILabel(frame: CGRectMake(0.0, treatmentY, 90.0, 28.0))
-                    treatmentNameLabel.text = treatmentName
-                    treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
-                    treatmentNameLabel.layer.cornerRadius = 5
-                    treatmentNameLabel.backgroundColor = tabBarColor
-                    treatmentNameLabel.textColor = mainColor
-                    treatmentNameLabel.layer.masksToBounds = true
-                    treatmentNameLabel.layer.borderColor = mainColor.CGColor
-                    treatmentNameLabel.layer.borderWidth = 1.0
-                    treatmentNameLabel.textAlignment = NSTextAlignment.Center
-                    if treatmentNameAndDosage.count > 1{
-                        treatmentDosage = treatmentNameAndDosage[1] as! String
-                        dosageLabel.frame = CGRectMake(100.0, treatmentY+5, feedBody.frame.width - 105, 0)
-                        dosageLabel.text = treatmentDosage
-                        dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
-                        dosageLabel.numberOfLines = 0
-                        dosageLabel.sizeToFit()
-                        var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
-                        treatmentY += height + 5
-                        dosageLabel.textColor = mainColor
-                    }else{
-                        treatmentY += 30
-                    }
-                    feedBody.addSubview(treatmentNameLabel)
-                    feedBody.addSubview(dosageLabel)
-                }
-                feedBody.frame = CGRectMake(10, 80, cell.frame.width - 20, treatmentY)
-                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
-            }
-            
-            //tagBody
-            var tagLabel = UILabel(frame: CGRectMake(10, 80 + feedBody.frame.height + 5, cell.frame.width - 80, 20))
-            if (feed.objectForKey("tags") is NSNull) == false{
-                tagLabel.font = UIFont(name: "Helvetica", size: 11.5)
-                tagLabel.text = "tag:" + (feed.objectForKey("tags") as! NSString).stringByReplacingOccurrencesOfString("*", withString: " ")
-                tagLabel.textColor = UIColor.grayColor()
-                
-            }
-            //review View
-            var reviewLabel = UILabel(frame: CGRectMake(10 + tagLabel.frame.width, tagLabel.frame.origin.y, 60, 20))
-            reviewLabel.font = UIFont(name: "Helvetica", size: 11.5)
-            reviewLabel.textAlignment = NSTextAlignment.Right
-            reviewLabel.text = feed.valueForKey("countComments")!.stringValue + "评论"
-            reviewLabel.textColor = UIColor.grayColor()
-            
+            cell.feedBodyDelegate = self
+            cell.width = cell.frame.width
+            cell.indexPath = indexPath
+            cell.feed = feed
             cell.addSubview(separatorLine)
-//            cell.addSubview(imageView)
-            cell.addSubview(usernameLabelView)
-            cell.addSubview(insertDateLabelView)
-            cell.addSubview(profileLabelView)
-            cell.addSubview(feedBody)
-            cell.addSubview(tagLabel)
-            cell.addSubview(reviewLabel)
-            cell.addSubview(typeLabel)
 
             return cell
         }
     }
+    
+    func selectClinicTrail(){
+        self.performSegueWithIdentifier("showClinicTrailSegue", sender: self)
+    }
+    
     func imageTap(username: String) {
         println(username)
         selectedProfileOwnername = username
@@ -503,6 +417,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }else{
             self.performSegueWithIdentifier("loginSegue", sender: self)
         }
+    }
+    
+    func setFeedBodyHeight(height: CGFloat, indexpath: NSIndexPath) {
+        self.heightForFeedRow.setObject(height, forKey: indexpath)
     }
     
     var feed = NSDictionary()
@@ -518,6 +436,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             }
             self.performSegueWithIdentifier("postDetailSegue", sender: self)
         }
+
     }
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{

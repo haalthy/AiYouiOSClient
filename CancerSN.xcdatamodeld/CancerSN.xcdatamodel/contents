@@ -24,6 +24,7 @@
         <attribute name="countViews" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="dateInserted" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="dateUpdated" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="hasImage" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="insertUsername" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="insertUserProfile" optional="YES" attributeType="String" syncable="YES"/>
@@ -58,7 +59,7 @@
     </entity>
     <elements>
         <element name="Broadcast" positionX="-54" positionY="72" width="128" height="255"/>
-        <element name="Feed" positionX="-63" positionY="-18" width="128" height="285"/>
+        <element name="Feed" positionX="-63" positionY="-18" width="128" height="300"/>
         <element name="Following" positionX="-54" positionY="81" width="128" height="120"/>
         <element name="PatientStatus" positionX="-54" positionY="126" width="128" height="120"/>
         <element name="Treatment" positionX="-54" positionY="126" width="128" height="135"/>

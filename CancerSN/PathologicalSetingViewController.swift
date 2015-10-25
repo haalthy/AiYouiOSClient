@@ -19,6 +19,7 @@ class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource
     @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var pathologicalPickerView: UIPickerView!
 
+    @IBOutlet weak var titleLabel: UILabel!
     var pickerDataSource = [String]()
 
     @IBAction func skip(sender: UIButton) {
@@ -38,6 +39,10 @@ class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        if isUpdate{
+            titleLabel.hidden = true
+        }
+        
         pickerDataSource = pathologicalMapping.allKeys as! [String]
         pathologicalPickerView.dataSource = self
         pathologicalPickerView.delegate = self

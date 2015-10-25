@@ -36,6 +36,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var newFollowerCount: Int = 0
     var unreadMentionedPostCount: Int = 0
     var unreadMentionedPostLabel = UILabel()
+    var selectedPostId = Int()
     
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
         if username != nil {
@@ -243,40 +244,43 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             let profileStr = publicService.getProfileStrByDictionary(userProfile)
             self.patientProfile.text = profileStr
             self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
-            self.usernameLabel.text = self.userProfile.objectForKey("username") as! String
+            self.usernameLabel.text = self.userProfile.objectForKey("displayname") as! String
         }
         if profileOwnername != username{
-            var isFollowingUserData: NSData = haalthyService.isFollowingUser(profileOwnername as! String)!
-            var isFollowingUserStr = NSString(data: isFollowingUserData, encoding: NSUTF8StringEncoding)
-            if isFollowingUserStr == "0"{
-                self.tabBarController?.tabBar.hidden = true
-                var addFollowingBtnWidth: CGFloat = 60
-                var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
-                addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
-                addFollowingBtn.layer.cornerRadius = 5
-                addFollowingBtn.layer.masksToBounds = true
-                addFollowingBtn.setTitle("加关注", forState: UIControlState.Normal)
-                addFollowingBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-                addFollowingBtn.backgroundColor = mainColor
-                self.view.addSubview(addFollowingBtn)
-                addFollowingBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+            var isFollowingUserData: NSData? = haalthyService.isFollowingUser(profileOwnername as! String)
+            if isFollowingUserData != nil {
+                var isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
+                if isFollowingUserStr == "0"{
+                    self.tabBarController?.tabBar.hidden = true
+                    var addFollowingBtnWidth: CGFloat = 60
+                    var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
+                    addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
+                    addFollowingBtn.layer.cornerRadius = 5
+                    addFollowingBtn.layer.masksToBounds = true
+                    addFollowingBtn.setTitle("加关注", forState: UIControlState.Normal)
+                    addFollowingBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                    addFollowingBtn.backgroundColor = mainColor
+                    self.view.addSubview(addFollowingBtn)
+                    addFollowingBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+                }
             }
         }else{
-            var newFollowerCountData: NSData = haalthyService.selectNewFollowCount()!
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            if jsonResult is NSDictionary {
-                newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
-                if newFollowerCount != 0{
-                    self.profileSegment.selectedSegmentIndex = 2
-                }else{
-                    var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
-                    unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
-                    if unreadMentionedPostCount != 0 {
+            var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
+            if newFollowerCountData != nil{
+                var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                if jsonResult is NSDictionary {
+                    newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
+                    if newFollowerCount != 0{
                         self.profileSegment.selectedSegmentIndex = 2
+                    }else{
+                        var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                        unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                        if unreadMentionedPostCount != 0 {
+                            self.profileSegment.selectedSegmentIndex = 2
+                        }
                     }
                 }
             }
-            
         }
     }
     
@@ -391,16 +395,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 return cell
             }
         }else if profileSegment.selectedSegmentIndex == 1{
-            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! QuestionListTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! UITableViewCell
 //            cell.selectionStyle = UITableViewCellSelectionStyle.None
             var broadcast = broadcastList[indexPath.row] as! NSDictionary
             
+//            cell.feedBodyDelegate = self
+//            cell.width = cell.frame.width
+//            cell.indexPath = indexPath
+//            cell.feed = broadcast
             var dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "MM/dd" // superset of OP's format
             var dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
             let dateStr = dateFormatter.stringFromDate(dateInserted)
             
-            var questionLabel = UILabel(frame: CGRectMake(15, 150, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
+            var questionLabel = UILabel(frame: CGRectMake(15, 0, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
             questionLabel.numberOfLines = 0
             questionLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
             questionLabel.font = UIFont(name: "Helvetica", size: 13.0)
@@ -677,8 +685,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if profileSegment.selectedSegmentIndex == 2 {
             if indexPath.section == 2 {
-                self.performSegueWithIdentifier("loginSegue", sender: self)
                 publicService.logOutAccount()
+                println("logout")
+                self.performSegueWithIdentifier("loginSegue", sender: self)
                 usedToBeInLoginView = true
             }
             if indexPath.section == 1 {
@@ -708,6 +717,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     self.performSegueWithIdentifier("userListSegue", sender: self)
                 }
             }
+        }
+        if profileSegment.selectedSegmentIndex == 1 {
+            selectedPostId = (broadcastList[indexPath.row] as! NSDictionary).objectForKey("postID") as! Int
+            self.performSegueWithIdentifier("postDetailSegue", sender: self)
         }
     }
     
@@ -739,6 +752,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         if segue.identifier == "updateTreatment" {
             (segue.destinationViewController as! UpdateTreatmentTableViewController).treatmentList = self.treatmentList
+        }
+        if segue.identifier == "postDetailSegue" {
+            (segue.destinationViewController as! ShowPostDetailTableViewController).postId = selectedPostId
         }
     }
 }

@@ -22,6 +22,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     let profileSet = NSUserDefaults.standardUserDefaults()
     var haalthyService = HaalthyService()
 
+    @IBOutlet weak var titleLabel: UILabel!
     @IBAction func cancel(sender: UIButton) {
         if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
             self.performSegueWithIdentifier("signupSegue", sender: self)
@@ -53,6 +54,9 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         }
     }
     override func viewDidLoad() {
+        if isUpdate{
+            titleLabel.hidden = true
+        }
         super.viewDidLoad()
         pickerDataSource = cancerTypeMapping.allKeys as! [String]
         cancerTypePickerView.delegate = self

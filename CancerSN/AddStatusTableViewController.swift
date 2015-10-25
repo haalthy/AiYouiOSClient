@@ -148,13 +148,13 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             cell.addSubview(textView)
             return cell
         }
-        if indexPath.section == 4 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("imageCell", forIndexPath: indexPath) as! UITableViewCell
-            var addImageButton = UIButton(frame: CGRectMake(10, 4, 30, 30))
-            publicService.formatButton(addImageButton, title: "img")
-            cell.addSubview(addImageButton)
-            return cell
-        }
+//        if indexPath.section == 4 {
+//            var cell = tableView.dequeueReusableCellWithIdentifier("imageCell", forIndexPath: indexPath) as! UITableViewCell
+//            var addImageButton = UIButton(frame: CGRectMake(10, 4, 30, 30))
+//            publicService.formatButton(addImageButton, title: "img")
+//            cell.addSubview(addImageButton)
+//            return cell
+//        }
         if indexPath.section == 5 {
             var cell = tableView.dequeueReusableCellWithIdentifier("submitButtonCell", forIndexPath: indexPath) as! UITableViewCell
             var submitButtonWidth = (cell.frame.width - 90)/2
