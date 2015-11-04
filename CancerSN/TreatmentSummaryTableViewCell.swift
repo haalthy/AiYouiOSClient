@@ -76,7 +76,6 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
             chartHorizonLine.image = UIImage(named: "chartLine.png")?.stretchableImageWithLeftCapWidth(10, topCapHeight: 0)
             self.chartScrollView.addSubview(chartVerticalLine)
             self.chartScrollView.addSubview(chartHorizonLine)
-//            var width = self.chartScrollView.frame.width
             self.chartScrollView.contentSize = CGSize(width: width, height: self.chartScrollView.frame.height)
             println(self.chartScrollView.frame.height)
             if clinicReportList.count >= 2 {
@@ -132,12 +131,10 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
                     ceaTreatmentBeginDate = treatmentBeginDate
                     ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
                 }
-                
                 if (treatmentEndDate < endDate)&&(treatmentEndDate > beginDate) {
                     ceaTreatmentBeginDate = (treatmentBeginDate < beginDate) ? beginDate : treatmentBeginDate
-                    ceaTreatmentEndDate = endDate
+                    ceaTreatmentEndDate = treatmentEndDate
                 }
-                
                 if (treatmentEndDate >= endDate) && (treatmentBeginDate <= beginDate) {
                     ceaTreatmentBeginDate = beginDate
                     ceaTreatmentEndDate = endDate

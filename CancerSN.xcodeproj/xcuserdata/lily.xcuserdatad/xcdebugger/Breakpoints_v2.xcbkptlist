@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CancerSN/LoginViewController.swift"
-            timestampString = "466553112.008839"
+            timestampString = "467487074.871751"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "login(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -182,16 +182,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/LoginViewController.swift"
-            timestampString = "466553112.008839"
+            filePath = "CancerSN/AddStatusTableViewController.swift"
+            timestampString = "468144057.071926"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "userLogin(_:passwordStr:)"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
+            landmarkName = "submitStatus(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,29 +201,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/TreatmentSummaryTableViewCell.swift"
-            timestampString = "466106750.323279"
+            filePath = "CancerSN/UserProfileViewController.swift"
+            timestampString = "468147639.254389"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "updateUI()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CancerSN/TreatmentSummaryTableViewCell.swift"
-            timestampString = "466106750.323279"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "updateUI()"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "getTreatmentsData()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

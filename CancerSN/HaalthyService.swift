@@ -241,9 +241,10 @@ class HaalthyService:NSObject{
         var requestBody = NSMutableDictionary()
         requestBody.setValue(patientStatus, forKey: "patientStatus")
         requestBody.setValue(clinicReport, forKey: "clinicReport")
-//        let inputStr: NSString = NSString(data: requestBody, encoding: NSUTF8StringEncoding)!
-//        println(inputStr)
+
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions.allZeros, error: nil)
+        let inputStr: NSString = NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding)!
+        println(inputStr)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var addPatientStatusRespData = NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)

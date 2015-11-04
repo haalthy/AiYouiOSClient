@@ -47,11 +47,14 @@ class MetastasisViewController: UIViewController, UITextFieldDelegate {
         let metastasisDBStr:String = metastasisMapping.objectForKey((sender.titleLabel?.text)!) as! String
         if(metastasisList.containsObject(metastasisDBStr)){
             sender.backgroundColor = UIColor.whiteColor()
-            sender.titleLabel?.textColor = textColor
+//            sender.titleLabel?.textColor = textColor
+            sender.setTitleColor(textColor, forState: UIControlState.Normal)
+
             metastasisList.removeObject(metastasisDBStr)
         }else{
             sender.backgroundColor = textColor
-            sender.titleLabel?.textColor = UIColor.whiteColor()
+//            sender.titleLabel?.textColor = UIColor.whiteColor()
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             metastasisList.addObject(metastasisDBStr)
         }
     }

@@ -18,7 +18,15 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     @IBOutlet weak var menuView: CVCalendarMenuView!
     @IBOutlet weak var calendarView: CVCalendarView!
     let profileSet = NSUserDefaults.standardUserDefaults()
-
+    
+    @IBAction func loadPrevious(sender: AnyObject) {
+        calendarView.loadPreviousView()
+    }
+    
+    
+    @IBAction func loadNext(sender: AnyObject) {
+        calendarView.loadNextView()
+    }
     
     @IBAction func cancelNewTreatment(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -78,7 +86,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
             previousTreatment = treatmentList[0] as! NSDictionary
             println(previousTreatment.objectForKey("endDate"))
             println(NSDate().timeIntervalSince1970)
-            if (previousTreatment.objectForKey("endDate") as! Double) > ((NSDate().timeIntervalSince1970) as! Double){
+            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) as! Double){
                 self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
             }
         }

@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = headerColor
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UITabBar.appearance().barTintColor = tabBarColor
-        
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        UINavigationBar.appearance().barStyle = .Black
+
         // instantiate your desired ViewController
 //        println(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData)!)
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
@@ -129,6 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         return TencentOAuth.HandleOpenURL(url)
+        
     }
     
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {

@@ -29,7 +29,7 @@ class FeedTableViewCell: UITableViewCell {
 
             //imageView
             var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
-            if((feed.valueForKey("image") is NSNull) == false){
+            if((feed.valueForKey("image") != nil) && (feed.valueForKey("image") is NSNull) == false){
                 let dataString = feed.valueForKey("image") as! String
                 let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
                 imageView.image = UIImage(data: imageData)

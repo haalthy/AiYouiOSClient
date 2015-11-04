@@ -16,7 +16,16 @@ class AddNewTreatmentEndDateViewController: UIViewController {
 
     @IBOutlet weak var calendarView: CVCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
-
+    
+    @IBAction func loadPrevious(sender: AnyObject) {
+        calendarView.loadPreviousView()
+    }
+    
+    
+    @IBAction func loadNext(sender: AnyObject) {
+        calendarView.loadNextView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         profileSet.removeObjectForKey(newTreatmentEnddate)

@@ -223,7 +223,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if getFeedsData != nil{
             jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
-            println(str)
         }
         refreshControl?.endRefreshing()
         if((jsonResult is NSArray) && (jsonResult as! NSArray).count > 0){
@@ -255,7 +254,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
         var keychainAccess = KeychainAccess()
@@ -467,10 +467,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
     }
     
-    
-//    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        return UITableViewAutomaticDimension
-//    }
     func updateUserTagList(selectTags: NSArray) {
         self.selectTags = selectTags
         let userData = NSUserDefaults.standardUserDefaults()
@@ -482,39 +478,4 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
             return true
     }
-    
-    
-//    override func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView {
-//        var viewForHeader = UIView()
-//        if section == 0{
-//            viewForHeader.frame = CGRectMake(0, 0, self.tableView.frame.width, 25)
-//            var titleLabel = UILabel(frame: CGRectMake(5, 2.5, 90, 20))
-//            titleLabel.text = "为您推荐"
-//            titleLabel.font = UIFont(name: fontStr, size: 13.0)
-//            var closeButton = UIButton(frame: CGRectMake(self.tableView.frame.width - 25, 2.5, 20, 20))
-//            closeButton.backgroundColor = mainColor
-//            viewForHeader.addSubview(titleLabel)
-//            viewForHeader.addSubview(closeButton)
-//        }
-//        if section == 1{
-//            viewForHeader.frame = CGRectMake(0, 0, self.tableView.frame.width, 5)
-//        }
-//        viewForHeader.backgroundColor = UIColor.whiteColor()
-//        return viewForHeader
-//    }
-//    
-//    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        var heightForHeader: CGFloat = 0.0
-//        switch section {
-//        case 0:
-//            heightForHeader = 25
-//            break
-//        case 1:
-//            heightForHeader = 5
-//            break
-//        default:
-//            break
-//        }
-//        return heightForHeader
-//    }
 }

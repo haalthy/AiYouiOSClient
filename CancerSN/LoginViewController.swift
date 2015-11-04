@@ -77,6 +77,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func userLogin(usernameStr: String, passwordStr: String)->Bool{
         let respData = haalthyService.getAccessToken(usernameStr, password: passwordStr)
+        var respDataStr = NSString(data: respData, encoding: NSUTF8StringEncoding)
+        println(respDataStr)
         var jsonResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(respData, options: NSJSONReadingOptions.MutableContainers, error: nil)
         var accessToken: AnyObject?  = jsonResult?.objectForKey("access_token")
         var refreshToken: AnyObject? = jsonResult?.objectForKey("refresh_token")
@@ -89,6 +91,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
             return true
         }else{
+            var alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
             return false
         }
     }

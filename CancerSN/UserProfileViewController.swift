@@ -104,15 +104,38 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 for timeSt in timeSet {
                     timeList.append(timeSt as! Int)
                 }
-
                 timeList.sort(>)
+                
+                var dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
+                for time in timeList{
+                    var dateInserted = NSDate(timeIntervalSince1970: Double(time)/1000 as NSTimeInterval)
+                    let dateStr = dateFormatter.stringFromDate(dateInserted)
+                    println(dateStr)
+                }
+                
                 var index = 0
                 var patientStatusIndex = 0
+                if patientStatusIndex < patientStatusList.count{
+                    var treatmentSection = NSMutableDictionary()
+                    var patientStatusInTreatmentSection = NSMutableArray()
+                    treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
+                    treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
+                    treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+                    while ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index] as Int)) {
+                        patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
+                        patientStatusIndex++
+                    }
+                    if patientStatusInTreatmentSection.count > 0{
+                        treatmentSections.addObject(treatmentSection)
+                    }
+                }
+                
                 while index < timeList.count-1 {
                     var treatmentSection = NSMutableDictionary()
                     var patientStatusInTreatmentSection = NSMutableArray()
-                    treatmentSection.setObject((timeList[index] as AnyObject), forKey: "endDate")
                     treatmentSection.setObject(timeList[index+1] as AnyObject, forKey: "beginDate")
+                    treatmentSection.setObject(timeList[index] as AnyObject, forKey: "endDate")
                     var treatmentStr = ""
                     var treatmentCountInSection = 0
                     var treatmentSectionLineCount = 0
@@ -145,7 +168,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     treatmentSection.setObject(treatmentSectionLineCount, forKey: "treatmentLineCount")
                     treatmentSection.setObject(treatmentStr, forKey: "treatmentDetails")
                     if patientStatusIndex < patientStatusList.count{
-                        while ((patientStatusIndex < patientStatusList.count) && (patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index+1] as Int)) {
+                        println(patientStatusList[patientStatusIndex]["insertedDate"])
+                        println(timeList[index+1])
+                        println(timeList[index])
+                        while ((patientStatusIndex < patientStatusList.count) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index+1] as Int)) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) < (timeList[index] as Int))) {
                             patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
                             patientStatusIndex++
                         }
@@ -404,7 +430,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 //            cell.indexPath = indexPath
 //            cell.feed = broadcast
             var dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "MM/dd" // superset of OP's format
+            dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
             var dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
             let dateStr = dateFormatter.stringFromDate(dateInserted)
             
@@ -568,21 +594,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 
                 var dateLabel = UILabel()
                 if UIScreen.mainScreen().bounds.width >= 375 {
-                    dateLabel = UILabel(frame: CGRectMake(285, treatmentY, 80, 30))
+                    dateLabel = UILabel(frame: CGRectMake(265, treatmentY, 100, 30))
                 }else{
-                    dateLabel = UILabel(frame: CGRectMake(285, treatmentY, 80, 30))
+                    dateLabel = UILabel(frame: CGRectMake(265, treatmentY, 100, 30))
                     treatmentY += 35
                     heightForHeader += 35
                 }
                 
                 var dateFormatter = NSDateFormatter()
-                dateFormatter.dateFormat = "MM/dd" // superset of OP's format
+                dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
                 
                 var beginDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["beginDate"] as! Double)/1000 as NSTimeInterval)
                 var endDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["endDate"] as! Double)/1000 as NSTimeInterval)
                 let beginDateStr = dateFormatter.stringFromDate(beginDate)
                 let endDateStr = dateFormatter.stringFromDate(endDate)
-                dateLabel.text = beginDateStr + " - " + endDateStr
+                dateLabel.text = beginDateStr + "-" + endDateStr
                 dateLabel.textColor = UIColor.grayColor()
                 dateLabel.font = UIFont(name: "Helvetica", size: 12.0)
                 dateLabel.textAlignment = NSTextAlignment.Right

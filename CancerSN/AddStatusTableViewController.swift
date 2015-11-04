@@ -187,10 +187,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         if textView.textColor == UIColor.blackColor(){
             patientStatusDetail += "**" + textView.text
         }
-        var patientStatus = NSMutableDictionary()
-        patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
-        patientStatus.setValue(isPublic, forKey: "isPosted")
-        patientStatus.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "insertedDate")
+
         var clinicItemList = NSMutableArray()
         var index = 0
         for index = 0; index < clinicReportFormatList.count; index++ {
@@ -218,7 +215,11 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
         clinicReport.setValue(isPublic, forKey: "isPosted")
         clinicReport.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "dateInserted")
-
+        var patientStatus = NSMutableDictionary()
+        patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
+        patientStatus.setValue(isPublic, forKey: "isPosted")
+        patientStatus.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "insertedDate")
+        
         haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
     }
     
