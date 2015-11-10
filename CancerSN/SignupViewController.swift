@@ -126,7 +126,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 keychainAccess.deletePasscode(usernameKeyChain)
                 keychainAccess.deletePasscode(passwordKeyChain)
             }
-            if returnStr == "this name has been registed, please login" {
+            if returnStr == "this email has been registed, please use another name" {
                 var alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
                 alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)

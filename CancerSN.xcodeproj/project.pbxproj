@@ -21,7 +21,6 @@
 		2A3228A81B712C64006FB92D /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A71B712C64006FB92D /* AddItemViewController.swift */; };
 		2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228A91B7135DB006FB92D /* AddPostViewController.swift */; };
 		2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228AB1B718307006FB92D /* HaalthyService.swift */; };
-		2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228AF1B72D885006FB92D /* MeTableViewController.swift */; };
 		2A3228B61B72ECC3006FB92D /* grayline.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A3228B51B72ECC3006FB92D /* grayline.png */; };
 		2A3228B81B758BE8006FB92D /* FeedsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228B71B758BE8006FB92D /* FeedsHeaderTableViewCell.swift */; };
 		2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3228B91B7654FB006FB92D /* FeedsListTableViewCell.swift */; };
@@ -149,7 +148,6 @@
 		2A3228A71B712C64006FB92D /* AddItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
 		2A3228A91B7135DB006FB92D /* AddPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		2A3228AB1B718307006FB92D /* HaalthyService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HaalthyService.swift; sourceTree = "<group>"; };
-		2A3228AF1B72D885006FB92D /* MeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeTableViewController.swift; sourceTree = "<group>"; };
 		2A3228B51B72ECC3006FB92D /* grayline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayline.png; sourceTree = "<group>"; };
 		2A3228B71B758BE8006FB92D /* FeedsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedsHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		2A3228B91B7654FB006FB92D /* FeedsListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedsListTableViewCell.swift; sourceTree = "<group>"; };
@@ -354,7 +352,6 @@
 				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
 				2A3228A71B712C64006FB92D /* AddItemViewController.swift */,
 				2A3228A91B7135DB006FB92D /* AddPostViewController.swift */,
-				2A3228AF1B72D885006FB92D /* MeTableViewController.swift */,
 				2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */,
 				2AA3363E1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift */,
 				2A345A331B8A622200FF7B39 /* AddNewTreatmentEndDateViewController.swift */,
@@ -663,7 +660,6 @@
 				2AB7BE801BABA8D40069C27B /* ContactTableViewController.swift in Sources */,
 				2A2733F91BA244E00076696A /* PublicService.swift in Sources */,
 				2AF6736D1B88416F00E220CD /* CVCalendarManager.swift in Sources */,
-				2A3228B01B72D885006FB92D /* MeTableViewController.swift in Sources */,
 				2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */,
 				2A11876E1BB4B8620074BB65 /* TagTableViewController.swift in Sources */,
 				2A345A401B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift in Sources */,

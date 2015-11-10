@@ -62,66 +62,68 @@ class TagTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        var getTagListRespData:NSData = haalthyService.getTagList()
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-        if(jsonResult is NSArray){
-            tagList = jsonResult as! NSArray
-            var tagTypeSet = NSMutableSet()
-
-            for tagItem in tagList{
-                var tag = tagItem as! NSDictionary
-//                var groupedTagListItem = NSMutableArray()
-//                var tagTypeItem = NSMutableDictionary()
-//                tagTypeItem.setObject(tag.objectForKey("TypeRank")!, forKey: "TypeRank")
-//                tagTypeItem.setObject(tag.objectForKey("TypeName")!, forKey: "TypeName")
-                var groupedTagsItem = NSMutableDictionary()
-                if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
-                    for groupedTag in groupedTagList{
-                        var groupedTagItem = groupedTag as! NSMutableDictionary
-                        if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
-                            var tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
-                            tagListsInGroup.addObject(tag)
-                            groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
-                            break
+        var getTagListRespData:NSData? = haalthyService.getTagList()
+        if getTagListRespData != nil{
+            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if(jsonResult is NSArray){
+                tagList = jsonResult as! NSArray
+                var tagTypeSet = NSMutableSet()
+                
+                for tagItem in tagList{
+                    var tag = tagItem as! NSDictionary
+                    //                var groupedTagListItem = NSMutableArray()
+                    //                var tagTypeItem = NSMutableDictionary()
+                    //                tagTypeItem.setObject(tag.objectForKey("TypeRank")!, forKey: "TypeRank")
+                    //                tagTypeItem.setObject(tag.objectForKey("TypeName")!, forKey: "TypeName")
+                    var groupedTagsItem = NSMutableDictionary()
+                    if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
+                        for groupedTag in groupedTagList{
+                            var groupedTagItem = groupedTag as! NSMutableDictionary
+                            if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
+                                var tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
+                                tagListsInGroup.addObject(tag)
+                                groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
+                                break
+                            }
                         }
+                    }else {
+                        tagTypeSet.addObject(tag.objectForKey("typeName")!)
+                        var groupedTagItem = NSMutableDictionary()
+                        groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
+                        groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
+                        groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
+                        groupedTagList.addObject(groupedTagItem)
                     }
-                }else {
-                    tagTypeSet.addObject(tag.objectForKey("typeName")!)
-                    var groupedTagItem = NSMutableDictionary()
-                    groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
-                    groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
-                    groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
-                    groupedTagList.addObject(groupedTagItem)
+                }
+                tagTypeList = NSArray(array: tagTypeSet.allObjects)
+                var descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
+                groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
+            }
+            
+            for groupedTag in groupedTagList {
+                if groupedTag.objectForKey("tagsInGroup")!.count <= 5{
+                    rowHightForTagContainer.addObject(40)
+                }else{
+                    rowHightForTagContainer.addObject(80)
                 }
             }
-            tagTypeList = NSArray(array: tagTypeSet.allObjects)
-            var descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
-            groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
-        }
-        
-        for groupedTag in groupedTagList {
-            if groupedTag.objectForKey("tagsInGroup")!.count <= 5{
-                rowHightForTagContainer.addObject(40)
-            }else{
-                rowHightForTagContainer.addObject(80)
-            }
-        }
-        
-        if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
-            if (keychain.getPasscode(usernameKeyChain) != nil)  {
-                var getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
-                if getUserFavTagsData != nil{
-                    var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-                    selectedTags = jsonResult as! NSMutableArray
+            
+            if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
+                if (keychain.getPasscode(usernameKeyChain) != nil)  {
+                    var getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
+                    if getUserFavTagsData != nil{
+                        var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                        selectedTags = jsonResult as! NSMutableArray
+                    }
+                }else{
+                    selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
                 }
-            }else{
-                selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
-            }
-            for favTag in selectedTags{
-                selectedTagsStr.addObject(favTag.objectForKey("name") as! String)
+                for favTag in selectedTags{
+                    selectedTagsStr.addObject(favTag.objectForKey("name") as! String)
+                }
             }
         }
+        
     }
 
     override func didReceiveMemoryWarning() {

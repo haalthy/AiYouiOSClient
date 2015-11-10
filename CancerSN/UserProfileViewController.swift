@@ -228,6 +228,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         profileOwnername = nil
     }
     
+    override func viewDidAppear(animated: Bool) {
+        if self.userProfile.count == 0 {
+            var alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+            self.tabBarController?.selectedIndex = 0
+            
+            println(self.tabBarController?.selectedIndex)
+        }
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         username = keychainAccess.getPasscode(usernameKeyChain)
@@ -249,60 +260,62 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             tableview.delegate = self
             tableview.dataSource = self
             self.treatmentSections = NSMutableArray()
+            
             getTreatmentsData()
-
-            var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
-            viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
-//            imageView.image = UIImage(named: "Mario.jpg")
-            if self.userProfile.valueForKey("image") != nil{
-                let dataString = self.userProfile.valueForKey("image") as! String
-                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
-                imageView.image = UIImage(data: imageData)
-            }else{
-                imageView.image = UIImage(named: "Mario.jpg")
-            }
-            viewContainer.addSubview(imageView)
-            viewContainer.backgroundColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.addSubview(viewContainer)
-
-            //            self.tableview.allowsSelection = false
-            let publicService = PublicService()
-            let profileStr = publicService.getProfileStrByDictionary(userProfile)
-            self.patientProfile.text = profileStr
-            self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
-            self.usernameLabel.text = self.userProfile.objectForKey("displayname") as! String
-        }
-        if profileOwnername != username{
-            var isFollowingUserData: NSData? = haalthyService.isFollowingUser(profileOwnername as! String)
-            if isFollowingUserData != nil {
-                var isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
-                if isFollowingUserStr == "0"{
-                    self.tabBarController?.tabBar.hidden = true
-                    var addFollowingBtnWidth: CGFloat = 60
-                    var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
-                    addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
-                    addFollowingBtn.layer.cornerRadius = 5
-                    addFollowingBtn.layer.masksToBounds = true
-                    addFollowingBtn.setTitle("加关注", forState: UIControlState.Normal)
-                    addFollowingBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-                    addFollowingBtn.backgroundColor = mainColor
-                    self.view.addSubview(addFollowingBtn)
-                    addFollowingBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+            if self.userProfile.count > 0 {
+                var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
+                viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
+                //            imageView.image = UIImage(named: "Mario.jpg")
+                if self.userProfile.valueForKey("image") != nil{
+                    let dataString = self.userProfile.valueForKey("image") as! String
+                    let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                    imageView.image = UIImage(data: imageData)
+                }else{
+                    imageView.image = UIImage(named: "Mario.jpg")
                 }
-            }
-        }else{
-            var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
-            if newFollowerCountData != nil{
-                var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-                if jsonResult is NSDictionary {
-                    newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
-                    if newFollowerCount != 0{
-                        self.profileSegment.selectedSegmentIndex = 2
-                    }else{
-                        var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
-                        unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
-                        if unreadMentionedPostCount != 0 {
-                            self.profileSegment.selectedSegmentIndex = 2
+                viewContainer.addSubview(imageView)
+                viewContainer.backgroundColor = UIColor.whiteColor()
+                self.navigationController?.navigationBar.addSubview(viewContainer)
+                
+                //            self.tableview.allowsSelection = false
+                let publicService = PublicService()
+                let profileStr = publicService.getProfileStrByDictionary(userProfile)
+                self.patientProfile.text = profileStr
+                self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
+                self.usernameLabel.text = self.userProfile.objectForKey("displayname") as! String
+                if profileOwnername != username{
+                    var isFollowingUserData: NSData? = haalthyService.isFollowingUser(profileOwnername as! String)
+                    if isFollowingUserData != nil {
+                        var isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
+                        if isFollowingUserStr == "0"{
+                            self.tabBarController?.tabBar.hidden = true
+                            var addFollowingBtnWidth: CGFloat = 60
+                            var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
+                            addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
+                            addFollowingBtn.layer.cornerRadius = 5
+                            addFollowingBtn.layer.masksToBounds = true
+                            addFollowingBtn.setTitle("加关注", forState: UIControlState.Normal)
+                            addFollowingBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                            addFollowingBtn.backgroundColor = mainColor
+                            self.view.addSubview(addFollowingBtn)
+                            addFollowingBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+                        }
+                    }
+                }else{
+                    var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
+                    if newFollowerCountData != nil{
+                        var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                        if jsonResult is NSDictionary {
+                            newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
+                            if newFollowerCount != 0{
+                                self.profileSegment.selectedSegmentIndex = 2
+                            }else{
+                                var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                                unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                                if unreadMentionedPostCount != 0 {
+                                    self.profileSegment.selectedSegmentIndex = 2
+                                }
+                            }
                         }
                     }
                 }
@@ -767,6 +780,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if segue.identifier == "commentListSegue" {
             var commentList = NSArray()
             var commentListData = haalthyService.getCommentsByUsername(username as! String)
+            let str: NSString = NSString(data: commentListData!, encoding: NSUTF8StringEncoding)!
+            println(str)
             var jsonResult = NSJSONSerialization.JSONObjectWithData(commentListData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             if jsonResult is NSArray {
                 commentList = jsonResult as! NSArray

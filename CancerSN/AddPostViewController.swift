@@ -64,7 +64,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 if firstRange != nil {
                     var postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
                     for subStr in postContentArr{
-                        if (subStr as! NSString).length > 0{
+                        if (subStr as NSString).length > 0{
                             var subStrArr = (subStr as! String).componentsSeparatedByString(" ")
                             if (subStrArr.count > 0) && (subStrArr[0] as! NSString).length > 0{
                                 mentionUsernameList.addObject(subStrArr[0])
@@ -128,7 +128,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             //            self.addTagBtn = UIButton(frame: CGRectMake(10 + 55 * 2, addNextImageLinePositionY, 50, 40))
             //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: "selectTags")
             //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: nil)
-            var getTagListRespData:NSData = haalthyService.getTagList()
+            var getTagListRespData:NSData = haalthyService.getTagList()!
             var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
             if(jsonResult is NSArray){
                 self.allTagList = jsonResult as! NSArray

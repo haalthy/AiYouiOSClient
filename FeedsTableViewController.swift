@@ -269,6 +269,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if getUpdatePostCountData != nil{
             jsonResult = NSJSONSerialization.JSONObjectWithData(getUpdatePostCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
             postCount = (NSString(data: getUpdatePostCountData!, encoding: NSUTF8StringEncoding)! as String).toInt()!
+        }else{
+            var alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
         }
         latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
         if postCount == 0{
