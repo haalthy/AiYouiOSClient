@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol PathologicalSettingVCDelegate{
-    func updatePathological(pathological: String)
-}
+//protocol PathologicalSettingVCDelegate{
+//    func updatePathological(pathological: String)
+//}
 class PathologicalSetingViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate{
     var isUpdate = false
     var pathologicalSettingVCDelegate: PathologicalSettingVCDelegate?

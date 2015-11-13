@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A11876E1BB4B8620074BB65 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */; };
+		2A1E87591BF43C2E0059090D /* GeneticMutationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E87581BF43C2E0059090D /* GeneticMutationViewController.swift */; };
 		2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */; };
 		2A2435FE1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */; };
 		2A2436001B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */; };
@@ -59,10 +60,8 @@
 		2AA264AC1B615B2B001E52E7 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */; };
 		2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264AD1B615D2A001E52E7 /* Main.storyboard */; };
 		2AA264B51B61BFC9001E52E7 /* GenderSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */; };
-		2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */; };
 		2AA264BD1B631525001E52E7 /* CancerTypeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */; };
 		2AA264BF1B63F79B001E52E7 /* HaalthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */; };
-		2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */; };
 		2AA264C31B6557F4001E52E7 /* StageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C21B6557F4001E52E7 /* StageViewController.swift */; };
 		2AA264C51B657BD0001E52E7 /* SmokingSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */; };
 		2AA264C71B659665001E52E7 /* MetastasisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA264C61B659665001E52E7 /* MetastasisViewController.swift */; };
@@ -135,6 +134,7 @@
 
 /* Begin PBXFileReference section */
 		2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewController.swift; sourceTree = "<group>"; };
+		2A1E87581BF43C2E0059090D /* GeneticMutationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneticMutationViewController.swift; sourceTree = "<group>"; };
 		2A2435FB1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		2A2435FD1B6AE42C009F7F71 /* BroadcastListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastListTableViewCell.swift; sourceTree = "<group>"; };
 		2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowPostDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -187,10 +187,8 @@
 		2AA264AB1B615B2B001E52E7 /* KeychainAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainAccess.swift; path = ../KeychainAccess.swift; sourceTree = "<group>"; };
 		2AA264AE1B615D2A001E52E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = CancerSN/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GenderSettingViewController.swift; path = ../GenderSettingViewController.swift; sourceTree = "<group>"; };
-		2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgeSettingViewController.swift; sourceTree = "<group>"; };
 		2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancerTypeSettingViewController.swift; sourceTree = "<group>"; };
 		2AA264BE1B63F79B001E52E7 /* HaalthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HaalthyConfigure.swift; sourceTree = "<group>"; };
-		2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathologicalSetingViewController.swift; sourceTree = "<group>"; };
 		2AA264C21B6557F4001E52E7 /* StageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StageViewController.swift; sourceTree = "<group>"; };
 		2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmokingSettingViewController.swift; sourceTree = "<group>"; };
 		2AA264C61B659665001E52E7 /* MetastasisViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetastasisViewController.swift; sourceTree = "<group>"; };
@@ -340,9 +338,7 @@
 				2AA264B41B61BFC9001E52E7 /* GenderSettingViewController.swift */,
 				2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */,
 				2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */,
-				2AA264BA1B62A5B4001E52E7 /* AgeSettingViewController.swift */,
 				2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */,
-				2AA264C01B654C3C001E52E7 /* PathologicalSetingViewController.swift */,
 				2AA264C21B6557F4001E52E7 /* StageViewController.swift */,
 				2AA264C41B657BD0001E52E7 /* SmokingSettingViewController.swift */,
 				2AA264C61B659665001E52E7 /* MetastasisViewController.swift */,
@@ -369,6 +365,7 @@
 				2A9958011BCD8C2200DAB05B /* SelectDateViewController.swift */,
 				2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */,
 				2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */,
+				2A1E87581BF43C2E0059090D /* GeneticMutationViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -634,6 +631,7 @@
 				2AB7BE821BABF3010069C27B /* ContactViewController.swift in Sources */,
 				2AF6736A1B88416F00E220CD /* CVCalendarContentViewController.swift in Sources */,
 				2A81C8FA1BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift in Sources */,
+				2A1E87591BF43C2E0059090D /* GeneticMutationViewController.swift in Sources */,
 				2AA264C91B65B962001E52E7 /* SignupViewController.swift in Sources */,
 				2A2436061B6FE7B5009F7F71 /* CommentListTableViewCell.swift in Sources */,
 				2A3228AC1B718307006FB92D /* HaalthyService.swift in Sources */,
@@ -663,14 +661,12 @@
 				2A3228BA1B7654FB006FB92D /* FeedsListTableViewCell.swift in Sources */,
 				2A11876E1BB4B8620074BB65 /* TagTableViewController.swift in Sources */,
 				2A345A401B8D2DC300FF7B39 /* AddOtherStatusTableViewCell.swift in Sources */,
-				2AA264BB1B62A5B4001E52E7 /* AgeSettingViewController.swift in Sources */,
 				2AF6737A1B88416F00E220CD /* CVCalendarWeekContentViewController.swift in Sources */,
 				2AA265151B694CDB001E52E7 /* GetAccessToken.swift in Sources */,
 				2A2435FC1B6A8EF8009F7F71 /* BroadcastHeaderTableViewCell.swift in Sources */,
 				2AF673791B88416F00E220CD /* CVCalendarViewPresentationMode.swift in Sources */,
 				2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */,
 				2A2733FD1BA770250076696A /* SettingPasswordViewController.swift in Sources */,
-				2AA264C11B654C3C001E52E7 /* PathologicalSetingViewController.swift in Sources */,
 				2A2733F51BA0F02F0076696A /* TreatmentSummaryTableViewCell.swift in Sources */,
 				2ADD66681BA9EE5C0064A7C1 /* CommentListTableViewController.swift in Sources */,
 				2AF673821B88416F00E220CD /* CVShape.swift in Sources */,

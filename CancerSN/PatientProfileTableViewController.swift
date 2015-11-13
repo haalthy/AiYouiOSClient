@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PatientProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate,UIGestureRecognizerDelegate, UINavigationControllerDelegate, SettingUsernameVCDelegate, GenderSettingVCDelegate, AgeSettingVCDelegate, CancerTypeSettingVCDelegate, PathologicalSettingVCDelegate, StageSettingVCDelegate, SmokingSettingVCDelegate, MetastasisSettingVCDelegate {
+class PatientProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate,UIGestureRecognizerDelegate, UINavigationControllerDelegate, SettingUsernameVCDelegate, GenderSettingVCDelegate, AgeSettingVCDelegate, CancerTypeSettingVCDelegate, PathologicalSettingVCDelegate, StageSettingVCDelegate, SmokingSettingVCDelegate, MetastasisSettingVCDelegate, GeneticMutationVCDelegate {
     var imagePicker = UIImagePickerController()
 
     var userProfile = NSMutableDictionary()
@@ -61,9 +61,9 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             break
         case 1:
             if (userProfile.objectForKey("cancerType") != nil) && (userProfile.objectForKey("cancerType") is NSNull) == false && (userProfile.objectForKey("cancerType") as! String) == "lung"{
-                numberOfRows = 7
+                numberOfRows = 4
             }else{
-                numberOfRows = 3
+                numberOfRows = 2
             }
             break
         default:
@@ -141,74 +141,65 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         if indexPath.section == 1 {
             switch indexPath.row{
             case 0:
+                var genderAndAge = String()
                 if (userProfile.objectForKey("gender") != nil) && (userProfile.objectForKey("gender") is NSNull) == false{
-                    cell.detailTextLabel?.text = userProfile.objectForKey("gender") as! String
-                }else{
-                    cell.detailTextLabel?.text = nullItemStr
+                    genderAndAge = userProfile.objectForKey("gender") as! String
                 }
-                cell.textLabel?.text = "性别"
-                break
-            case 1:
                 if (userProfile.objectForKey("age") != nil) && (userProfile.objectForKey("age") is NSNull) == false{
-                    cell.detailTextLabel?.text = (userProfile.objectForKey("age") as! NSNumber).stringValue
-                }else{
-                    cell.detailTextLabel?.text = nullItemStr
+                    genderAndAge += " " + (userProfile.objectForKey("age") as! NSNumber).stringValue
                 }
-                cell.textLabel?.text = "年龄"
+                cell.detailTextLabel?.text = genderAndAge
+                cell.textLabel?.text = "性别和年龄"
                 break
-            case 2:
+//            case 1:
+//                if (userProfile.objectForKey("age") != nil) && (userProfile.objectForKey("age") is NSNull) == false{
+//                    cell.detailTextLabel?.text = (userProfile.objectForKey("age") as! NSNumber).stringValue
+//                }else{
+//                    cell.detailTextLabel?.text = nullItemStr
+//                }
+//                cell.textLabel?.text = "年龄"
+//                break
+            case 1:
+                var cancerType = String()
                 if (userProfile.objectForKey("cancerType") != nil) && (userProfile.objectForKey("cancerType") is NSNull) == false {
-                    cell.detailTextLabel?.text = userProfile.objectForKey("cancerType") as! String
+                    cancerType = userProfile.objectForKey("cancerType") as! String
                 }else{
-                    cell.detailTextLabel?.text = nullItemStr
+                    cancerType = nullItemStr
+                }
+                if (userProfile.objectForKey("pathological") != nil) && (userProfile.objectForKey("pathological") is NSNull) == false {
+                    cancerType += " " + (userProfile.objectForKey("pathological") as! String)
                 }
                 cell.textLabel?.text = "癌症类型"
+                cell.detailTextLabel?.text = cancerType
                 break
             default:
                 break
             }
             if (userProfile.objectForKey("cancerType") != nil ) && (userProfile.objectForKey("cancerType") is NSNull) == false && (userProfile.objectForKey("cancerType") as! String) == "lung"{
                 switch indexPath.row{
-                case 3:
-                    if (userProfile.objectForKey("pathological") != nil) && (userProfile.objectForKey("pathological") is NSNull) == false{
-                        cell.detailTextLabel?.text = userProfile.objectForKey("pathological") as! String
+                case 2:
+                    var geneticMutation = String()
+                    if (userProfile.objectForKey("geneticMutation") != nil) && (userProfile.objectForKey("geneticMutation") is NSNull) == false{
+                        geneticMutation = userProfile.objectForKey("geneticMutation") as! String
                     }else{
-                        cell.detailTextLabel?.text = nullItemStr
+                        geneticMutation = nullItemStr
                     }
+                    cell.detailTextLabel?.text = geneticMutation
+                    cell.textLabel?.text = "基因突变"
                     break
-                case 4:
+                case 3:
+                    var stageAndMetastasisStr = String()
                     if (userProfile.objectForKey("stage") != nil) && (userProfile.objectForKey("stage") is NSNull) == false{
                         var stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as! NSArray
-                        cell.detailTextLabel?.text = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as! NSArray)[0] as! String
+                        stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as! NSArray)[0] as! String
                     }else{
-                        cell.detailTextLabel?.text = nullItemStr
+                        stageAndMetastasisStr = nullItemStr
                     }
-                    cell.textLabel?.text = "初诊分期"
-                    break
-                case 5:
-                    if (userProfile.objectForKey("isSmoking") != nil) && (userProfile.objectForKey("isSmoking") is NSNull)==false{
-                        cell.detailTextLabel?.text = (smokingMapping.allKeysForObject(userProfile.objectForKey("isSmoking")!) as! NSArray)[0] as! String
-                    }else{
-                        cell.detailTextLabel?.text = nullItemStr
+                    if (userProfile.objectForKey("metastasis") != nil) && (userProfile.objectForKey("metastasis") is NSNull) == false{
+                        stageAndMetastasisStr += " " + (userProfile.objectForKey("metastasis") as! String)
                     }
-                    cell.textLabel?.text = "吸烟史"
-                    break
-                case 6:
-                    if (userProfile.objectForKey("metastasis") != nil) && (userProfile.objectForKey("metastasis") is NSNull) == false {
-                        var metastasis = (userProfile.objectForKey("metastasis")! as! String).componentsSeparatedByString(";")
-                        var metastasisStr = String()
-                        for metastasisItem in metastasis{
-                            if ((metastasisMapping.allKeysForObject(metastasisItem) as! NSArray).count > 0){
-                                metastasisStr += ((metastasisMapping.allKeysForObject(metastasisItem) as! NSArray)[0] as! String) + " "
-                            }else{
-                                metastasisStr += metastasisItem
-                            }
-                        }
-                        cell.detailTextLabel?.text = metastasisStr
-                    }else{
-                        cell.detailTextLabel?.text = nullItemStr
-                    }
-                    cell.textLabel?.text = "转移情况"
+                    cell.textLabel?.text = "初诊分期及转移"
+                    cell.detailTextLabel?.text = stageAndMetastasisStr
                     break
                 default:
                     break
@@ -251,20 +242,20 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 self.performSegueWithIdentifier("setGenderSegue", sender: self)
                 break
             case 1:
-                self.performSegueWithIdentifier("setAgeSegue", sender: self)
-                break
-            case 2:
                 self.performSegueWithIdentifier("setCancerTypeSegue", sender: self)
                 break
-            case 3:
-                self.performSegueWithIdentifier("setPathologicalSegue", sender: self)
+//            case 2:
+//                self.performSegueWithIdentifier("setCancerTypeSegue", sender: self)
+//                break
+            case 2:
+                self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
                 break
-            case 4:
+            case 3:
                 self.performSegueWithIdentifier("setStageSegue", sender: self)
-            case 5:
-                self.performSegueWithIdentifier("setSmokingSegue", sender: self)
-            case 6:
-                self.performSegueWithIdentifier("setMetastasisSegue", sender: self)
+//            case 4:
+//                self.performSegueWithIdentifier("setSmokingSegue", sender: self)
+//            case 5:
+//                self.performSegueWithIdentifier("setMetastasisSegue", sender: self)
             default:
                 break
             }
@@ -326,36 +317,44 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             let destinationVC = segue.destinationViewController as! GenderSettingViewController
             destinationVC.isUpdate = true
             destinationVC.genderSettingVCDelegate = self
-        }
-        if segue.identifier == "setAgeSegue" {
-            let destinationVC = segue.destinationViewController as! AgeSettingViewController
-            destinationVC.isUpdate = true
             destinationVC.ageSettingVCDelegate = self
         }
+//        if segue.identifier == "setAgeSegue" {
+//            let destinationVC = segue.destinationViewController as! AgeSettingViewController
+//            destinationVC.isUpdate = true
+//            destinationVC.ageSettingVCDelegate = self
+//        }
         if segue.identifier == "setCancerTypeSegue" {
             let destinationVC = segue.destinationViewController as! CancerTypeSettingViewController
             destinationVC.isUpdate = true
             destinationVC.cancerTypeSettingVCDelegate = self
-        }
-        if segue.identifier == "setPathologicalSegue" {
-            let destinationVC = segue.destinationViewController as! PathologicalSetingViewController
-            destinationVC.isUpdate = true
             destinationVC.pathologicalSettingVCDelegate = self
         }
+//        if segue.identifier == "setPathologicalSegue" {
+//            let destinationVC = segue.destinationViewController as! PathologicalSetingViewController
+//            destinationVC.isUpdate = true
+//            destinationVC.pathologicalSettingVCDelegate = self
+//        }
         if segue.identifier == "setStageSegue" {
             let destinationVC = segue.destinationViewController  as! StageViewController
             destinationVC.isUpdate = true
             destinationVC.stageSettingVCDelegate = self
-        }
-        if segue.identifier == "setSmokingSegue" {
-            let destinationVC = segue.destinationViewController  as! SmokingSettingViewController
-            destinationVC.isUpdate = true
-            destinationVC.smokingSettingVCDelegate = self
-        }
-        if segue.identifier == "setMetastasisSegue" {
-            let destinationVC = segue.destinationViewController as! MetastasisViewController
-            destinationVC.isUpdate = true
             destinationVC.metastasisSettingVCDelegate = self
+        }
+//        if segue.identifier == "setSmokingSegue" {
+//            let destinationVC = segue.destinationViewController  as! SmokingSettingViewController
+//            destinationVC.isUpdate = true
+//            destinationVC.smokingSettingVCDelegate = self
+//        }
+//        if segue.identifier == "setMetastasisSegue" {
+//            let destinationVC = segue.destinationViewController as! MetastasisViewController
+//            destinationVC.isUpdate = true
+//            destinationVC.metastasisSettingVCDelegate = self
+//        }
+        if segue.identifier == "geneticMutationSegue" {
+            let destinationVC = segue.destinationViewController as! GeneticMutationViewController
+            destinationVC.isUpdate = true
+            destinationVC.geneticMutationVCDelegate = self
         }
     }
 
@@ -389,5 +388,9 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
     
     func updateMetastasis(metastasis: String) {
         userProfile.setObject(metastasis, forKey: "metastasis")
+    }
+    
+    func updateGeneticMutation(geneticMutation: String) {
+        userProfile.setObject(geneticMutation, forKey: "geneticMutation")
     }
 }

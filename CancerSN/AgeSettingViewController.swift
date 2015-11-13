@@ -9,9 +9,9 @@
 
 import UIKit
 
-protocol AgeSettingVCDelegate{
-    func updateAge(age: Int)
-}
+//protocol AgeSettingVCDelegate{
+//    func updateAge(age: Int)
+//}
 
 class AgeSettingViewController: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate{
     var isUpdate = false

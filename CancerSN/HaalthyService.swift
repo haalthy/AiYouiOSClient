@@ -49,6 +49,7 @@ class HaalthyService:NSObject{
         var cancerType  = String()
         var metastasis  = String()
         var image       = String()
+        var geneticMutation = String()
         if profileSet.objectForKey(emailNSUserData) != nil{
             email = (profileSet.objectForKey(emailNSUserData))! as! String
         }
@@ -87,7 +88,10 @@ class HaalthyService:NSObject{
         if profileSet.objectForKey(imageNSUserData) != nil{
             image = (profileSet.objectForKey(imageNSUserData))! as! String
         }
-        var addUserBody = NSDictionary(objects: [email, username, password, gender, isSmocking, pathological, stage, age, cancerType, metastasis, image, userType, displayname], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","image", "userType", "displayname"])
+        if profileSet.objectForKey(geneticMutationNSUserData) != nil{
+            geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String
+        }
+        var addUserBody = NSDictionary(objects: [email, username, password, gender, isSmocking, pathological, stage, age, cancerType, metastasis, image, userType, displayname, geneticMutation], forKeys: ["email", "username","password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","image", "userType", "displayname", "geneticMutation"])
         let addUserUrl = NSURL(string: addNewUserURL)
         let request: NSMutableURLRequest = NSMutableURLRequest(URL: addUserUrl!)
         request.HTTPMethod = "POST"

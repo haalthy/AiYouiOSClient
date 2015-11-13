@@ -120,4 +120,18 @@ class PublicService:NSObject{
         sender.layer.borderWidth = 1.0
     }
     
+    func unselectBtnFormat(sender: UIButton){
+        sender.setTitleColor(mainColor, forState: UIControlState.Normal)
+        sender.backgroundColor = UIColor.whiteColor()
+        sender.layer.borderColor = mainColor.CGColor
+        sender.layer.borderWidth = 1.0
+        sender.layer.cornerRadius = 5
+        sender.layer.masksToBounds = true
+    }
+    
+    func selectedBtnFormat(sender: UIButton){
+        sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        sender.backgroundColor = mainColor
+    }
+    
 }

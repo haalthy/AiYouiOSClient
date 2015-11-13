@@ -7,9 +7,9 @@
 //
 
 import UIKit
-protocol MetastasisSettingVCDelegate{
-    func updateMetastasis(metastasis: String)
-}
+//protocol MetastasisSettingVCDelegate{
+//    func updateMetastasis(metastasis: String)
+//}
 class MetastasisViewController: UIViewController, UITextFieldDelegate {
     
     var metastasisSettingVCDelegate: MetastasisSettingVCDelegate?
