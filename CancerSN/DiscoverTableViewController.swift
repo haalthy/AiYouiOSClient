@@ -71,13 +71,16 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
             getSuggestUsers = haalthyService.getSuggestUserByTags(tagIdList, rangeBegin: 0, rangeEnd: 10)
             self.navigationItem.rightBarButtonItem = loginBtn
         }
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getSuggestUsers!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-        let str: NSString = NSString(data: getSuggestUsers!, encoding: NSUTF8StringEncoding)!
-        println(str)
-        if(jsonResult is NSArray){
-            userList = jsonResult as! NSArray
+        if getSuggestUsers != nil{
+            var jsonResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(getSuggestUsers!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            if(jsonResult is NSArray){
+                userList = jsonResult as! NSArray
+            }
+            self.tableView.reloadData()
+        }else{
+            var publicService = PublicService()
+            publicService.presentAlertController("网络不给力", sender: self)
         }
-        self.tableView.reloadData()
     }
     
     func login(){
@@ -154,9 +157,3 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
 }
-//extension DiscoverTableViewController: TagVCDelegate {
-//    func updateTagList(data: NSArray) {
-//        self.tagList = data
-//        
-//    }
-//}

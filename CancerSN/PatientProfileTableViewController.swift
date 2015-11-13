@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PatientProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate,UIGestureRecognizerDelegate, UINavigationControllerDelegate, SettingUsernameVCDelegate, GenderSettingVCDelegate, AgeSettingVCDelegate, CancerTypeSettingVCDelegate, PathologicalSettingVCDelegate, StageSettingVCDelegate, SmokingSettingVCDelegate, MetastasisSettingVCDelegate, GeneticMutationVCDelegate {
+class PatientProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate,UIGestureRecognizerDelegate, UINavigationControllerDelegate, SettingUsernameVCDelegate, GenderSettingVCDelegate, AgeSettingVCDelegate, CancerTypeSettingVCDelegate, PathologicalSettingVCDelegate, StageSettingVCDelegate, MetastasisSettingVCDelegate, GeneticMutationVCDelegate {
     var imagePicker = UIImagePickerController()
 
     var userProfile = NSMutableDictionary()
@@ -19,18 +19,6 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         super.viewDidLoad()
         imagePicker.delegate = self
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-//        if (self.userProfile.objectForKey("image") != nil) && (self.userProfile.objectForKey("image") is NSNull) == false{
-//            let dataString = self.userProfile.objectForKey("image") as! String
-//            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
-//            portraitImage = UIImage(data: imageData)!
-//        }else{
-//            portraitImage = UIImage(named: "Mario.jpg")!
-//        }
         var backButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Done, target: self, action: "submit")
         self.navigationItem.rightBarButtonItem = backButton
     }
@@ -78,12 +66,6 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         self.tableView.reloadData()
 
     }
-
-//    override func viewDidDisappear(animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        var haalthyService = HaalthyService()
-//        haalthyService.updateUser(userProfile)
-//    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("profileListIdentifier", forIndexPath: indexPath) as! UITableViewCell
@@ -151,14 +133,6 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 cell.detailTextLabel?.text = genderAndAge
                 cell.textLabel?.text = "性别和年龄"
                 break
-//            case 1:
-//                if (userProfile.objectForKey("age") != nil) && (userProfile.objectForKey("age") is NSNull) == false{
-//                    cell.detailTextLabel?.text = (userProfile.objectForKey("age") as! NSNumber).stringValue
-//                }else{
-//                    cell.detailTextLabel?.text = nullItemStr
-//                }
-//                cell.textLabel?.text = "年龄"
-//                break
             case 1:
                 var cancerType = String()
                 if (userProfile.objectForKey("cancerType") != nil) && (userProfile.objectForKey("cancerType") is NSNull) == false {
@@ -244,18 +218,11 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             case 1:
                 self.performSegueWithIdentifier("setCancerTypeSegue", sender: self)
                 break
-//            case 2:
-//                self.performSegueWithIdentifier("setCancerTypeSegue", sender: self)
-//                break
             case 2:
                 self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
                 break
             case 3:
                 self.performSegueWithIdentifier("setStageSegue", sender: self)
-//            case 4:
-//                self.performSegueWithIdentifier("setSmokingSegue", sender: self)
-//            case 5:
-//                self.performSegueWithIdentifier("setMetastasisSegue", sender: self)
             default:
                 break
             }
@@ -319,38 +286,18 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             destinationVC.genderSettingVCDelegate = self
             destinationVC.ageSettingVCDelegate = self
         }
-//        if segue.identifier == "setAgeSegue" {
-//            let destinationVC = segue.destinationViewController as! AgeSettingViewController
-//            destinationVC.isUpdate = true
-//            destinationVC.ageSettingVCDelegate = self
-//        }
         if segue.identifier == "setCancerTypeSegue" {
             let destinationVC = segue.destinationViewController as! CancerTypeSettingViewController
             destinationVC.isUpdate = true
             destinationVC.cancerTypeSettingVCDelegate = self
             destinationVC.pathologicalSettingVCDelegate = self
         }
-//        if segue.identifier == "setPathologicalSegue" {
-//            let destinationVC = segue.destinationViewController as! PathologicalSetingViewController
-//            destinationVC.isUpdate = true
-//            destinationVC.pathologicalSettingVCDelegate = self
-//        }
         if segue.identifier == "setStageSegue" {
             let destinationVC = segue.destinationViewController  as! StageViewController
             destinationVC.isUpdate = true
             destinationVC.stageSettingVCDelegate = self
             destinationVC.metastasisSettingVCDelegate = self
         }
-//        if segue.identifier == "setSmokingSegue" {
-//            let destinationVC = segue.destinationViewController  as! SmokingSettingViewController
-//            destinationVC.isUpdate = true
-//            destinationVC.smokingSettingVCDelegate = self
-//        }
-//        if segue.identifier == "setMetastasisSegue" {
-//            let destinationVC = segue.destinationViewController as! MetastasisViewController
-//            destinationVC.isUpdate = true
-//            destinationVC.metastasisSettingVCDelegate = self
-//        }
         if segue.identifier == "geneticMutationSegue" {
             let destinationVC = segue.destinationViewController as! GeneticMutationViewController
             destinationVC.isUpdate = true

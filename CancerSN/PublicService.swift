@@ -134,4 +134,10 @@ class PublicService:NSObject{
         sender.backgroundColor = mainColor
     }
     
+    func presentAlertController(message: String, sender: UIViewController){
+        var alert = UIAlertController(title: "提示", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+        sender.presentViewController(alert, animated: true, completion: nil)
+    }
+    
 }

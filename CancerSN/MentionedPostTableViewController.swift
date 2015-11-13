@@ -19,11 +19,6 @@ class MentionedPostTableViewController: UITableViewController, FeedBodyDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         previousFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
-//        var mentionedPostsData = haalthyService.getMentionedPostList(previousFeedFetchTimeStamp, count: 20)
-//        var jsonResult = NSJSONSerialization.JSONObjectWithData(mentionedPostsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-//        if jsonResult is NSArray {
-//            postList = jsonResult as! NSMutableArray
-//        }
         getMorePreviousFeeds()
     }
 

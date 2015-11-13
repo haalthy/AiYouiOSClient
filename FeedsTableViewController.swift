@@ -68,9 +68,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBOutlet weak var myTags: UIButton!
     
-    @IBAction func tags(sender: UIButton) {
-        println("click tag button")
-    }
     func getexistFeedsFromLocalDB(){
         var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         var context:NSManagedObjectContext = appDel.managedObjectContext!
@@ -213,11 +210,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
-//        var getFeedsByTagsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
         println(Int(NSDate().timeIntervalSince1970*100000))
         var getFeedsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
         latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
-//        var getFeedsByTagsData = haalthyService.getPreviousFeeds(latestFeedFetchTimeStamp, count: 10)
         println(NSDate().timeIntervalSince1970)
         var jsonResult:AnyObject? = nil
         if getFeedsData != nil{
@@ -226,9 +221,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
         refreshControl?.endRefreshing()
         if((jsonResult is NSArray) && (jsonResult as! NSArray).count > 0){
-            //save Feed to local DB
-//            let profileSet = NSUserDefaults.standardUserDefaults()
-//            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: latestFeedsUpdateTimestamp)
             addFeedslist(jsonResult as! NSArray, isLoadLatestFeeds: true)
             
         }else{
@@ -263,7 +255,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
         var getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
-//        var getUpdatePostCountData:NSData? = nil
         var jsonResult:AnyObject? = nil
         var postCount:Int = 0
         if getUpdatePostCountData != nil{
@@ -350,16 +341,14 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! FeedsHeaderTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! UITableViewCell
             cell.backgroundColor = UIColor.whiteColor()
             var clinicTrailButton = UIButton(frame: CGRectMake(0, 0, cell.frame.width, cell.frame.height))
-//            clinicTrailButton.setTitle("想找到最适合自己的临床信息？请点击这里", forState: UIControlState.Normal)
             clinicTrailButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
             clinicTrailButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
             clinicTrailButton.titleLabel?.textAlignment = NSTextAlignment.Center
             let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
             let underlineAttributedString = NSAttributedString(string: "想找到最适合自己的临床信息？请点击这里", attributes: underlineAttribute)
-//            clinicTrailButton.titleLabel?.attributedText = underlineAttributedString
             clinicTrailButton.setAttributedTitle(underlineAttributedString, forState: UIControlState.Normal)
             clinicTrailButton.addTarget(self, action: "selectClinicTrail", forControlEvents: UIControlEvents.TouchUpInside)
             cell.addSubview(clinicTrailButton)
@@ -386,7 +375,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                         let fileManager = NSFileManager.defaultManager()
                         println(paths.stringByAppendingPathComponent(fileNameStr))
                         var fileData = fileManager.contentsAtPath(paths.stringByAppendingPathComponent(fileNameStr))
-//                        var fileDataStr = NSString(data: fileData!, encoding: NSUTF8StringEncoding)
                         if fileData != nil{
                             postImageList.addObject(fileData!)
                         }
@@ -454,7 +442,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             }else{
                 rowHeight = 40
             }
-//        case 1: rowHeight = UITableViewAutomaticDimension
             break
         default:rowHeight = 0
             break

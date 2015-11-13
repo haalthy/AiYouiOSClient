@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class UserListTableViewController: UITableViewController, UserListDelegate {
-    @IBOutlet weak var loginBtn: UIBarButtonItem!
+//    @IBOutlet weak var loginBtn: UIBarButtonItem!
 
     var userList : NSArray = []
     var username : NSString = ""
@@ -28,7 +28,7 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
         var username = keychainAccess.getPasscode(usernameKeyChain)
         var password = keychainAccess.getPasscode(passwordKeyChain)
 
-        var getSuggestUsers = NSData()
+        var getSuggestUsers: NSData?
         if((username != nil) && (password != nil)){
             self.username = keychainAccess.getPasscode(usernameKeyChain)!
             self.password = keychainAccess.getPasscode(passwordKeyChain)!

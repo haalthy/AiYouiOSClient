@@ -28,15 +28,6 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var agePickerView: UIPickerView!
     @IBAction func SelectGender(sender: UIButton) {
-//        if isUpdate {
-//            genderSettingVCDelegate?.updateGender(genderMapping.objectForKey((sender.titleLabel?.text)!) as! String)
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }else{
-//            let profileSet = NSUserDefaults.standardUserDefaults()
-//        profileSet.setObject(genderMapping.objectForKey((sender.titleLabel?.text)!), forKey: genderNSUserData)
-//            self.performSegueWithIdentifier("selectAgeSegue", sender: self)
-//        }
-//        gender = genderMapping.objectForKey((sender.titleLabel?.text)!) as! String
         if sender.backgroundColor == UIColor.whiteColor(){
             gender = genderMapping.objectForKey((sender.titleLabel?.text)!) as! String
         }else{
