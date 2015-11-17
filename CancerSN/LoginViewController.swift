@@ -113,7 +113,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
 //            keychainAccess.setPasscode(usernameKeyChain, passcode: username.text)
 //            keychainAccess.setPasscode(passwordKeyChain, passcode: password.text)
 //        }
-        userLogin(usernameStr, passwordStr: passwordStr)
+        var loginSucessful = userLogin(usernameStr, passwordStr: passwordStr)
         if isRootViewController{
             self.performSegueWithIdentifier("homeSegue", sender: self)
         }else{

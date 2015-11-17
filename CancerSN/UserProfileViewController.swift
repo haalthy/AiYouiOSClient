@@ -154,7 +154,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                             treatmentStr += "**"
                             treatmentCountInSection++
                             var dosageLabel = UILabel()
-                            dosageLabel = UILabel(frame: CGRectMake(0, 0, 170.0, CGFloat.max))
+                            dosageLabel = UILabel(frame: CGRectMake(0, 0, 150.0, CGFloat.max))
                             dosageLabel.text = treatment["dosage"] as! String
                             dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                             dosageLabel.numberOfLines = 0
@@ -532,7 +532,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 0{
             if indexPath.section == 0{
                 if indexPath.row == 0{
-                    rowHeight = clinicReportList.count > 0 ? 150 : 0
+                    var containCEAValue: Bool = false
+                    for clinicItem in clinicReportList {
+                        if (clinicItem.objectForKey("clinicReport") as! NSString).containsString("CEA*") {
+                            containCEAValue = true
+                        }
+                    }
+                    rowHeight = containCEAValue == true ? 150 : 0
                 }else{
                     rowHeight = 44
                 }
@@ -658,12 +664,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 //                        var height = CGFloat(30 * dosageLableLine)
                         treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 90.0, 30.0))
                         treatmentNameLabel.text = treatmentName
-                        dosageLabel.frame = CGRectMake(110.0, treatmentY + 5, 170.0, 0)
+                        dosageLabel.frame = CGRectMake(110.0, treatmentY + 5, 150.0, 0)
                         dosageLabel.text = treatmentDosage
                         dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                         dosageLabel.numberOfLines = 0
 //                        dosageLable.backgroundColor = UIColor.lightGrayColor()
                         dosageLabel.sizeToFit()
+                        println(dosageLabel.frame.height)
                         var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
                         treatmentY += height + 5
                         treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 14.0)

@@ -109,7 +109,7 @@ let sectionHeaderColor: UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, a
 
 let fontStr: String = "Helvetica"
 
-let defaultTreatmentEndDate: NSTimeInterval = 1451606400
+let defaultTreatmentEndDate: NSTimeInterval = 1767225600
 
 
 

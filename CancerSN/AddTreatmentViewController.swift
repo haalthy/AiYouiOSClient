@@ -28,27 +28,29 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
 
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
         
-        let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
-        
-        let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
-            self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
-        }
-        
-        alertController.addAction(OKAction)
-        let cancelAction = UIAlertAction(title: "不要", style: .Cancel) { (action) in
-            self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
-        }
-        alertController.addAction(cancelAction)
-        
-        let ContinueAction = UIAlertAction(title: "继续编辑", style: .Default){ (action)in
-            //...
+        if (treatmentList.count > 0) || (treatmentTextInput.textColor == UIColor.grayColor()){
             
-            self.treatmentTypeSegment.selectedSegmentIndex = Int(self.pointer.center.x / self.segmentSectionWidth)
-        }
-        alertController.addAction(ContinueAction)
-
-        self.presentViewController(alertController, animated: true) {
-            // ...
+            let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
+            
+            let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
+                self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
+            }
+            
+            alertController.addAction(OKAction)
+            let cancelAction = UIAlertAction(title: "不要", style: .Cancel) { (action) in
+                self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
+            }
+            alertController.addAction(cancelAction)
+            
+            let ContinueAction = UIAlertAction(title: "继续编辑", style: .Default){ (action)in
+                //...
+                self.treatmentTypeSegment.selectedSegmentIndex = Int(self.pointer.center.x / self.segmentSectionWidth)
+            }
+            alertController.addAction(ContinueAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
     }
     

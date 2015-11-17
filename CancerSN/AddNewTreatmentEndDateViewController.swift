@@ -15,7 +15,35 @@ class AddNewTreatmentEndDateViewController: UIViewController {
     @IBOutlet weak var menuView: CVCalendarMenuView!
 
     @IBOutlet weak var calendarView: CVCalendarView!
-    @IBOutlet weak var monthLabel: UILabel!
+    @IBOutlet weak var monthLabel: UIButton!
+    var datePickerContainerView = UIView()
+    var datePicker = UIDatePicker()
+    var dateInserted:NSDate?
+    
+    @IBAction func selectDate(sender: UIButton) {
+        let datePickerHeight:CGFloat = 200
+        let confirmButtonWidth:CGFloat = 100
+        let confirmButtonHeight:CGFloat = 30
+        datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
+        datePickerContainerView.backgroundColor = UIColor.whiteColor()
+        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
+        self.datePicker.datePickerMode = UIDatePickerMode.Date
+        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        confirmButton.setTitle("确定", forState: UIControlState.Normal)
+        confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
+        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
+        datePickerContainerView.addSubview(self.datePicker)
+        datePickerContainerView.addSubview(confirmButton)
+        self.view.addSubview(datePickerContainerView)
+    }
+    
+    func dateChanged(){
+        dateInserted = datePicker.date
+        profileSet.setObject(dateInserted?.timeIntervalSince1970, forKey: newTreatmentEnddate)
+        monthLabel.setTitle(CVDate(date: dateInserted!).globalDescription, forState: UIControlState.Normal)
+        self.datePickerContainerView.removeFromSuperview()
+    }
+    
     
     @IBAction func loadPrevious(sender: AnyObject) {
         calendarView.loadPreviousView()
@@ -40,7 +68,8 @@ class AddNewTreatmentEndDateViewController: UIViewController {
         
         // Menu delegate [Required]
         self.menuView.menuViewDelegate = self
-        monthLabel.text = CVDate(date: NSDate()).globalDescription
+//        monthLabel.text = CVDate(date: NSDate()).globalDescription
+        monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
 
     }
 
@@ -76,10 +105,10 @@ class AddNewTreatmentEndDateViewController: UIViewController {
 extension AddNewTreatmentEndDateViewController: CVCalendarViewDelegate
 {
     func presentedDateUpdated(date: CVDate) {
-        if monthLabel.text != date.globalDescription && self.animationFinished {
+        if monthLabel.titleLabel!.text != date.globalDescription && self.animationFinished {
             let updatedMonthLabel = UILabel()
-            updatedMonthLabel.textColor = monthLabel.textColor
-            updatedMonthLabel.font = monthLabel.font
+            updatedMonthLabel.textColor = monthLabel.titleLabel!.textColor
+            updatedMonthLabel.font = monthLabel.titleLabel!.font
             updatedMonthLabel.textAlignment = .Center
             updatedMonthLabel.text = date.globalDescription
             updatedMonthLabel.sizeToFit()
@@ -103,7 +132,8 @@ extension AddNewTreatmentEndDateViewController: CVCalendarViewDelegate
                     
                     self.animationFinished = true
                     self.monthLabel.frame = updatedMonthLabel.frame
-                    self.monthLabel.text = updatedMonthLabel.text
+//                    self.monthLabel.text = updatedMonthLabel.text
+                    self.monthLabel.setTitle(updatedMonthLabel.text, forState: UIControlState.Normal)
                     self.monthLabel.transform = CGAffineTransformIdentity
                     self.monthLabel.alpha = 1
                     updatedMonthLabel.removeFromSuperview()

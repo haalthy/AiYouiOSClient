@@ -198,11 +198,13 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
                 if clinicItemView is UILabel{
                     clinicItem.setObject((clinicItemView as! UILabel).text!, forKey: "clinicItemName")
                 }
-                if clinicItemView is UITextField {
+                if (clinicItemView is UITextField) && ((clinicItemView as! UITextField).text != nil) && ((clinicItemView as! UITextField).text != ""){
                     clinicItem.setObject((clinicItemView as! UITextField).text, forKey: "clinicItemDesc")
                 }
             }
-            clinicItemList.addObject(clinicItem)
+            if (clinicItem.objectForKey("clinicItemDesc") != nil) && ((clinicItem.objectForKey("clinicItemDesc") as! String) != ""){
+                clinicItemList.addObject(clinicItem)
+            }
         }
         
         for clinicItem in clinicItemList{

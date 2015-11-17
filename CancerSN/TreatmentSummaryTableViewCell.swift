@@ -25,22 +25,24 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
     func getCEAList(){
         var initialCEA:Bool = true
         for clinicReport in clinicReportList{
-            var clinicReport = clinicReport.objectForKey("clinicReport") as! String
-            var clinicReportComponents = clinicReport.componentsSeparatedByString("CEA*")
-            println(clinicReportComponents[clinicReportComponents.count-1])
-            var CEADetailComponents = clinicReportComponents[clinicReportComponents.count-1].componentsSeparatedByString("**")
-            var ceaValue = (CEADetailComponents[0] as NSString).floatValue
-            CEAList.append(ceaValue)
-            if initialCEA {
-                ceaMax = ceaValue
-                ceaMin = ceaValue
-                initialCEA = false
-            }else{
-                if ceaMax < ceaValue {
+            if (clinicReport.objectForKey("clinicReport") as! NSString).containsString("CEA*") {
+                var clinicReport = clinicReport.objectForKey("clinicReport") as! String
+                var clinicReportComponents = clinicReport.componentsSeparatedByString("CEA*")
+                println(clinicReportComponents[clinicReportComponents.count-1])
+                var CEADetailComponents = clinicReportComponents[clinicReportComponents.count-1].componentsSeparatedByString("**")
+                var ceaValue = (CEADetailComponents[0] as NSString).floatValue
+                CEAList.append(ceaValue)
+                if initialCEA {
                     ceaMax = ceaValue
-                }
-                if ceaMin > ceaValue {
                     ceaMin = ceaValue
+                    initialCEA = false
+                }else{
+                    if ceaMax < ceaValue {
+                        ceaMax = ceaValue
+                    }
+                    if ceaMin > ceaValue {
+                        ceaMin = ceaValue
+                    }
                 }
             }
         }
@@ -69,6 +71,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
         var endDate = clinicReportList[0].objectForKey("dateInserted") as! Int
         var width = UIScreen.mainScreen().bounds.width-10.0
         getCEAList()
+        if CEAList.count>0{
         if clinicReportList.count <= 5 {
             var chartHorizonLine:UIImageView = UIImageView(frame: CGRectMake(0, chartVerticalHeight, UIScreen.mainScreen().bounds.width-10.0, 1.5))
             var chartVerticalLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, 1.5, chartVerticalHeight))
@@ -78,7 +81,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
             self.chartScrollView.addSubview(chartHorizonLine)
             self.chartScrollView.contentSize = CGSize(width: width, height: self.chartScrollView.frame.height)
             println(self.chartScrollView.frame.height)
-            if clinicReportList.count >= 2 {
+            if CEAList.count >= 2 {
                 var index = 0
                 for clinicReport in clinicReportList {
                     var insertedDate = NSDate(timeIntervalSince1970: (clinicReport.objectForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
@@ -107,7 +110,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
                     self.chartScrollView.addSubview(ceaMarkLabel)
                     self.chartScrollView.addSubview(ceaMarkView)
                 }
-            }else{
+            }else if( CEAList.count == 1){
                 var coordinateX = 10
                 var ceaMarkCoordinateY = 50
                 var dateCoordinateY = 100
@@ -171,6 +174,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
                 treatmentLabel.alpha = 1
                 self.chartScrollView.addSubview(treatmentLabel)
             }
+        }
         }
     }
     
