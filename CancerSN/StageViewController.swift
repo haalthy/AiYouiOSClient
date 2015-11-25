@@ -60,7 +60,7 @@ class StageViewController: UIViewController, UITextFieldDelegate {
         for metastasisItem in selectedMetastasis{
             selectedMetastasisStr += " " + (metastasisItem as! String)
         }
-        selectedMetastasisStr += otherMetastasisBtn.text
+        selectedMetastasisStr += otherMetastasisBtn.text!
         if isUpdate{
             stageSettingVCDelegate?.updateStage(selectedStage!)
             metastasisSettingVCDelegate?.updateMetastasis(selectedMetastasisStr)
@@ -107,7 +107,7 @@ class StageViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func selectStage(sender: UIButton) {
-        println((sender.titleLabel?.text)!)
+        print((sender.titleLabel?.text)!)
         selectedStage = stageMapping.objectForKey((sender.titleLabel?.text)!) as! Int
         switch sender{
         case stage1Btn:

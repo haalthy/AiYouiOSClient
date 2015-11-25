@@ -47,9 +47,9 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     }
     
     @IBAction func confirm(sender: UIButton) {
-        var selectedAge: Int = pickerDataSource[agePickerView.selectedRowInComponent(0)].toInt()!
+        let selectedAge: Int = Int(pickerDataSource[agePickerView.selectedRowInComponent(0)])!
         if gender == nil{
-            var alert = UIAlertController(title: "提示", message: "请您选择病人性别。", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "请您选择病人性别。", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else{
@@ -108,7 +108,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     }
     
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
             pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))

@@ -29,7 +29,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         datePickerContainerView.backgroundColor = UIColor.whiteColor()
         self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
         self.datePicker.datePickerMode = UIDatePickerMode.Date
-        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
         confirmButton.setTitle("确定", forState: UIControlState.Normal)
         confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
         confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
@@ -52,11 +52,11 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         dateInserted = NSDate()
 
         textView.delegate = self
-        var getClinicReportFormatData = haalthyService.getClinicReportFormat()
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getClinicReportFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let getClinicReportFormatData = haalthyService.getClinicReportFormat()
+        var jsonResult = try? NSJSONSerialization.JSONObjectWithData(getClinicReportFormatData, options: NSJSONReadingOptions.MutableContainers)
         clinicReportFormatList = jsonResult as! NSArray
-        var getPatientStatusFormatData = haalthyService.getPatientStatusFormat()
-        jsonResult = NSJSONSerialization.JSONObjectWithData(getPatientStatusFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let getPatientStatusFormatData = haalthyService.getPatientStatusFormat()
+        jsonResult = try? NSJSONSerialization.JSONObjectWithData(getPatientStatusFormatData, options: NSJSONReadingOptions.MutableContainers)
         patientStatusFormatList = jsonResult as! NSArray
         textView.text = "请在这里输入其他信息，如对副作用的处理方法"
         textView.textColor = UIColor.lightGrayColor()
@@ -89,8 +89,8 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("titleCell", forIndexPath: indexPath) as! AddPatientStatusHeaderTableViewCell
-            var dateFormatter = NSDateFormatter()
+            let cell = tableView.dequeueReusableCellWithIdentifier("titleCell", forIndexPath: indexPath) as! AddPatientStatusHeaderTableViewCell
+            let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "YYYY/MM/dd" // superset of OP's format
             let dateStr = dateFormatter.stringFromDate(dateInserted!)
             cell.selectDateBtn.setTitle(dateStr, forState: UIControlState.Normal)
@@ -98,9 +98,9 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             return cell
         }
         if indexPath.section == 3 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("clinicReportCell", forIndexPath: indexPath) as! UITableViewCell
-            var reportNameLabel = UILabel(frame: CGRectMake(20, 10, 60, 30))
-            var textField = UITextField(frame: CGRectMake(reportNameLabel.bounds.origin.x + reportNameLabel.bounds.width + 15, 10, UIScreen.mainScreen().bounds.width - reportNameLabel.bounds.width - 30, reportNameLabel.bounds.height))
+            let cell = tableView.dequeueReusableCellWithIdentifier("clinicReportCell", forIndexPath: indexPath) 
+            let reportNameLabel = UILabel(frame: CGRectMake(20, 10, 60, 30))
+            let textField = UITextField(frame: CGRectMake(reportNameLabel.bounds.origin.x + reportNameLabel.bounds.width + 15, 10, UIScreen.mainScreen().bounds.width - reportNameLabel.bounds.width - 30, reportNameLabel.bounds.height))
             reportNameLabel.text = (clinicReportFormatList[indexPath.row] as! NSDictionary).objectForKey("clinicItem") as! String
             reportNameLabel.textColor = mainColor
             textField.layer.borderColor = mainColor.CGColor
@@ -111,26 +111,26 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             return cell
         }
         if indexPath.section == 1 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("symptonCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("symptonCell", forIndexPath: indexPath) 
             symptonContainerView = UIView(frame: CGRectMake(10, 30, UIScreen.mainScreen().bounds.width - 20, 70))
             symptonContainerView.backgroundColor = sectionHeaderColor
-            var symptonTitleLabel = UILabel(frame: CGRectMake(20, 5, UIScreen.mainScreen().bounds.width - 40, 20))
+            let symptonTitleLabel = UILabel(frame: CGRectMake(20, 5, UIScreen.mainScreen().bounds.width - 40, 20))
             symptonTitleLabel.text = "请选择出现的副作用"
             symptonTitleLabel.font = UIFont(name: fontStr, size: 12.0)
             symptonTitleLabel.textColor = UIColor.grayColor()
             cell.addSubview(symptonTitleLabel)
             var index = 0
             for index = 0; index < patientStatusFormatList.count; index++ {
-                var labelWidth: CGFloat = CGFloat(symptonContainerView.frame.width - 5)/5 - 5
-                var labelHeight: CGFloat = 30
-                var coordinateX:CGFloat = 5.0 + (labelWidth+4)*CGFloat(index%5)
+                let labelWidth: CGFloat = CGFloat(symptonContainerView.frame.width - 5)/5 - 5
+                let labelHeight: CGFloat = 30
+                let coordinateX:CGFloat = 5.0 + (labelWidth+4)*CGFloat(index%5)
                 var coordinateY = CGFloat()
                 if index<5{
                     coordinateY = 5
                 }else{
                     coordinateY = 38
                 }
-                var statusBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, labelWidth, labelHeight))
+                let statusBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, labelWidth, labelHeight))
                 statusBtn.titleLabel!.font = UIFont(name: fontStr, size: 13.0)
                 statusBtn.addTarget(self, action: "selectSymptom:", forControlEvents: UIControlEvents.TouchUpInside)
                 publicService.formatButton(statusBtn, title: (patientStatusFormatList[index] as! NSDictionary).objectForKey("statusName") as! String)
@@ -140,7 +140,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             return cell
         }
         if indexPath.section == 2 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("textInputCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("textInputCell", forIndexPath: indexPath) 
             textView.frame = CGRectMake(10, 5, cell.frame.width - 20, cell.frame.height - 15)
             textView.layer.borderWidth = 1.0
             textView.layer.borderColor = mainColor.CGColor
@@ -156,10 +156,10 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
 //            return cell
 //        }
         if indexPath.section == 5 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("submitButtonCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("submitButtonCell", forIndexPath: indexPath) 
             var submitButtonWidth = (cell.frame.width - 90)/2
-            var shareToFriendButton = UIButton(frame: CGRectMake(20, 10, UIScreen.mainScreen().bounds.width/2 - 30, 30))
-            var saveToMyselfButton = UIButton(frame: CGRectMake(shareToFriendButton.frame.width + 40, 10, shareToFriendButton.frame.width, 30))
+            let shareToFriendButton = UIButton(frame: CGRectMake(20, 10, UIScreen.mainScreen().bounds.width/2 - 30, 30))
+            let saveToMyselfButton = UIButton(frame: CGRectMake(shareToFriendButton.frame.width + 40, 10, shareToFriendButton.frame.width, 30))
             publicService.formatButton(shareToFriendButton, title: "听听病友们的意见？")
             publicService.formatButton(saveToMyselfButton, title: "仅自己可见")
             shareToFriendButton.addTarget(self, action: "shareToFriend", forControlEvents: UIControlEvents.TouchUpInside)
@@ -174,7 +174,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             cell.addSubview(saveToMyselfButton)
             return cell
         }
-        var cell = UITableViewCell()
+        let cell = UITableViewCell()
         return cell
     }
     
@@ -199,7 +199,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
                     clinicItem.setObject((clinicItemView as! UILabel).text!, forKey: "clinicItemName")
                 }
                 if (clinicItemView is UITextField) && ((clinicItemView as! UITextField).text != nil) && ((clinicItemView as! UITextField).text != ""){
-                    clinicItem.setObject((clinicItemView as! UITextField).text, forKey: "clinicItemDesc")
+                    clinicItem.setObject((clinicItemView as! UITextField).text!, forKey: "clinicItemDesc")
                 }
             }
             if (clinicItem.objectForKey("clinicItemDesc") != nil) && ((clinicItem.objectForKey("clinicItemDesc") as! String) != ""){
@@ -216,11 +216,11 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         var clinicReport = NSMutableDictionary()
         clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
         clinicReport.setValue(isPublic, forKey: "isPosted")
-        clinicReport.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "dateInserted")
+        clinicReport.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "dateInserted")
         var patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(isPublic, forKey: "isPosted")
-        patientStatus.setValue(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "insertedDate")
+        patientStatus.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "insertedDate")
         
         haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
     }

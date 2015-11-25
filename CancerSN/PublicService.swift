@@ -13,7 +13,7 @@ class PublicService:NSObject{
     func getProfileStrByDictionary(user:NSDictionary)->String{
         
         var userProfileStr : String
-        var gender = user["gender"] as! String
+        let gender = user["gender"] as! String
         var displayGender:String = ""
         if(gender == "M"){
             displayGender = "男"
@@ -31,7 +31,7 @@ class PublicService:NSObject{
         //        var pathological = user["pathological"] as! String
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
 //            var stageStr = user["stage"]! as! Int
-            var stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
+            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
             if stages.count > 0 {
                 stage = stages[0] as! String
             }
@@ -56,12 +56,12 @@ class PublicService:NSObject{
     }
     
     func logOutAccount(){
-        var keychain = KeychainAccess()
+        let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
-        println(keychain.getPasscode(usernameKeyChain))
-        println(keychain.getPasscode(passwordKeyChain))
-        var profileSet = NSUserDefaults.standardUserDefaults()
+        print(keychain.getPasscode(usernameKeyChain))
+        print(keychain.getPasscode(passwordKeyChain))
+        let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)
         profileSet.removeObjectForKey(ageNSUserData)
@@ -77,7 +77,7 @@ class PublicService:NSObject{
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {
         // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
-        let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage)!
+        let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage!)
         
         // Get the size of the contextImage
         let contextSize: CGSize = contextImage.size
@@ -103,10 +103,10 @@ class PublicService:NSObject{
         let rect: CGRect = CGRectMake(posX, posY, width, height)
         
         // Create bitmap image from context using the rect
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)!
         
         // Create a new image based on the imageRef and rotate back to the original orientation
-        let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)!
+        let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)
         
         return image
     }
@@ -135,7 +135,7 @@ class PublicService:NSObject{
     }
     
     func presentAlertController(message: String, sender: UIViewController){
-        var alert = UIAlertController(title: "提示", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "提示", message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
         sender.presentViewController(alert, animated: true, completion: nil)
     }

@@ -49,7 +49,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             haalthyService.addComment(postID!, body: self.postContent.text!)
             self.dismissViewControllerAnimated(false, completion: nil)
         }else if((self.isBroadcast == 0) || ((self.isBroadcast == 1)&&(self.tagList.count>0))){
-            var post = NSMutableDictionary()
+            let post = NSMutableDictionary()
             post.setObject(postContent.text, forKey: "body")
             post.setObject(0, forKey: "closed")
             post.setObject(self.isBroadcast, forKey: "isBroadcast")
@@ -59,14 +59,14 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 respData = haalthyService.addPost(post as NSDictionary)
             }else{
                 post.setObject(self.tagList, forKey: "tags")
-                var postContentStr = postContent.text
-                var firstRange = postContentStr.rangeOfString("@")
+                let postContentStr = postContent.text
+                let firstRange = postContentStr.rangeOfString("@")
                 if firstRange != nil {
-                    var postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
+                    let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
                     for subStr in postContentArr{
                         if (subStr as NSString).length > 0{
-                            var subStrArr = (subStr as! String).componentsSeparatedByString(" ")
-                            if (subStrArr.count > 0) && (subStrArr[0] as! NSString).length > 0{
+                            var subStrArr = (subStr ).componentsSeparatedByString(" ")
+                            if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
                                 mentionUsernameList.addObject(subStrArr[0])
                             }
                         }
@@ -80,7 +80,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 respData = haalthyService.addPost(post as NSDictionary)
             }
             let str: NSString = NSString(data: respData, encoding: NSUTF8StringEncoding)!
-            println(str)
+            print(str)
             self.dismissViewControllerAnimated(false, completion: nil)
         }else{
             self.performSegueWithIdentifier("selectTagSegue", sender: self)
@@ -128,8 +128,8 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             //            self.addTagBtn = UIButton(frame: CGRectMake(10 + 55 * 2, addNextImageLinePositionY, 50, 40))
             //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: "selectTags")
             //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: nil)
-            var getTagListRespData:NSData = haalthyService.getTagList()!
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let getTagListRespData:NSData = haalthyService.getTagList()!
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
                 self.allTagList = jsonResult as! NSArray
             }
@@ -138,14 +138,14 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                 self.suggestTagView = UIView(frame: CGRectMake(10, addNextImageLinePositionY + 50, UIScreen.mainScreen().bounds.width - 20, 100))
                 self.suggestTagView.backgroundColor = sectionHeaderColor
                 self.view.addSubview(suggestTagView)
-                var suggestTagLabel = UILabel(frame: CGRectMake(10, 10, 250, 20))
+                let suggestTagLabel = UILabel(frame: CGRectMake(10, 10, 250, 20))
                 suggestTagLabel.text = "请选择您的标签，更多人能看到您的问题"
                 suggestTagLabel.font = UIFont(name: "Helvetica", size: 12.0)
                 suggestTagView.addSubview(suggestTagLabel)
                 
-                var maxDisplayCount = allTagList.count > 10 ? 10: allTagList.count
-                var tagHeight:CGFloat = 35
-                var tagWith = ((self.suggestTagView.frame.width - 3)/5 - 3)
+                let maxDisplayCount = allTagList.count > 10 ? 10: allTagList.count
+                let tagHeight:CGFloat = 35
+                let tagWith = ((self.suggestTagView.frame.width - 3)/5 - 3)
                 var i: Int = 0
                 while i < maxDisplayCount{
                     var coordinateX: CGFloat?
@@ -156,7 +156,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                         coordinateY = 63
                     }
                     coordinateX = CGFloat(i%5) * tagWith + 10
-                    var displayTagButton = UIButton(frame: CGRectMake(coordinateX!, coordinateY!, tagWith - 3, tagHeight-3))
+                    let displayTagButton = UIButton(frame: CGRectMake(coordinateX!, coordinateY!, tagWith - 3, tagHeight-3))
 //                    tagLable.text = (allTagList[i] as! NSDictionary).objectForKey("name") as! String
                     if (i == 9) && (allTagList.count>10){
                         displayTagButton.setTitle("更多...", forState: UIControlState.Normal)
@@ -203,7 +203,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     
     func selectTag(sender:UIButton){
         var index: Int = 0
-        var maxDisplayCount = allTagList.count > 10 ? 9: allTagList.count
+        let maxDisplayCount = allTagList.count > 10 ? 9: allTagList.count
         while index < maxDisplayCount{
             if (allTagList[index].objectForKey("name") as! String) == (sender.titleLabel!).text!{
                 break
@@ -239,7 +239,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
         var tagListStr:String = ""
         if tagList.count > 0 {
             for tagItem in tagList{
-                var tag = tagItem as! NSDictionary
+                let tag = tagItem as! NSDictionary
                 tagListStr += tag.objectForKey("name") as! String + ","
             }
             var tagListCoordinateY:CGFloat = 0
@@ -262,14 +262,14 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            var tagViewController = segue.destinationViewController as! TagTableViewController
+            let tagViewController = segue.destinationViewController as! TagTableViewController
 //            tagViewController.postBody = postContent.text
             tagViewController.isBroadcastTagSelection = 1
             tagViewController.postDelegate = self
         }
         
         if segue.identifier == "contactSegue" {
-            var contactController = segue.destinationViewController as! ContactViewController
+            let contactController = segue.destinationViewController as! ContactViewController
             contactController.mentionDelegate = self
         }
     }
@@ -290,27 +290,27 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
         enableButtonFormat(sendButton)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
 //        insertImageList.addObject(chosenImage)
         
-        var imageData: NSData = UIImagePNGRepresentation(chosenImage)
+        let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
 //        println(selectedImage.size.width, selectedImage.size.height)
-        var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
+        let imageDataStr = imageData.base64EncodedStringWithOptions([])
         insertImageList.addObject(imageDataStr)
         
         if (insertImageList.count%4 == 1) && insertImageList.count != 1 {
             self.addNextImageLinePositionY += self.imageHeight + 10
         }
         
-        var coordinateX = CGFloat(imageHeight+5)*CGFloat((insertImageList.count - 1)%4)+5
-        var imageView = UIImageView(frame: CGRectMake(coordinateX, addNextImageLinePositionY, imageHeight, imageHeight))
-        var publicService = PublicService()
+        let coordinateX = CGFloat(imageHeight+5)*CGFloat((insertImageList.count - 1)%4)+5
+        let imageView = UIImageView(frame: CGRectMake(coordinateX, addNextImageLinePositionY, imageHeight, imageHeight))
+        let publicService = PublicService()
         
         var selectedImage = UIImage()
         selectedImage = publicService.cropToSquare(image: chosenImage)
         
-        var newSize = CGSizeMake(imageHeight, imageHeight)
+        let newSize = CGSizeMake(imageHeight, imageHeight)
         UIGraphicsBeginImageContext(newSize)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()

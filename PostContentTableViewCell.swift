@@ -46,11 +46,11 @@ class PostContentTableViewCell: UITableViewCell {
             for treatment in treatmentList {
                 var treatmentItemStr:String = treatment as! String
                 
-                if (treatmentItemStr as! NSString).length == 0{
+                if (treatmentItemStr as NSString).length == 0{
                     break
                 }
-                if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: advance(treatmentItemStr.startIndex, 1))) == "*" {
-                    treatmentItemStr = treatmentItemStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
+                if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: treatmentItemStr.startIndex.advancedBy(1))) == "*" {
+                    treatmentItemStr = treatmentItemStr.substringFromIndex(treatmentStr.startIndex.advancedBy(1))
                 }
                 var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
                 var treatmentName = treatmentNameAndDosage[0] as! String
@@ -89,7 +89,7 @@ class PostContentTableViewCell: UITableViewCell {
         countComments.text = (post.objectForKey("countComments") as! NSNumber).stringValue + " reviews"
         if ((post.objectForKey("image") is NSNull) == false && (post.objectForKey("image") != nil)){
             let dataString = post.valueForKey("image") as! String
-            userPortrait.image = UIImage(data: NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!)
+            userPortrait.image = UIImage(data: NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!)
         }
         userProfile.text = post.valueForKey("patientProfile") as? String
         //feed type view

@@ -115,8 +115,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         shareToFriendButton.addTarget(self, action: "addTreatmentPublic", forControlEvents: UIControlEvents.TouchUpInside)
         saveToMyselfButton.addTarget(self, action: "addTreatmentPrivate", forControlEvents: UIControlEvents.TouchUpInside)
 
-        var getTreatmentFormatData = haalthyService.getTreatmentFormat()
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTreatmentFormatData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let getTreatmentFormatData = haalthyService.getTreatmentFormat()
+        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentFormatData, options: NSJSONReadingOptions.MutableContainers)
         treatmentFormatList = jsonResult as! NSArray
         for treatment in treatmentFormatList {
             if ((treatment as! NSDictionary).objectForKey("type") as! String) == "TKI" {
@@ -153,19 +153,19 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     }
     
     func addTreatmentInView(treatmentFormatList : NSArray, containerView: UIView){
-        var tagBtnHeight:CGFloat = 40
-        var tagBtnWidth:CGFloat = (containerView.frame.width - 10)/5
+        let tagBtnHeight:CGFloat = 40
+        let tagBtnWidth:CGFloat = (containerView.frame.width - 10)/5
         var index:Int = 0
-        var maxTagCount = treatmentFormatList.count > 10 ? 10 : treatmentFormatList.count
+        let maxTagCount = treatmentFormatList.count > 10 ? 10 : treatmentFormatList.count
         for index = 0; index < maxTagCount; index++ {
-            var coordinateX:CGFloat = 5 + CGFloat(index%5) * tagBtnWidth
+            let coordinateX:CGFloat = 5 + CGFloat(index%5) * tagBtnWidth
             var coordinateY:CGFloat = 0
             if index < 5{
                 coordinateY = 5
             }else{
                 coordinateY = 55
             }
-            var tagBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagBtnWidth - 5, tagBtnHeight))
+            let tagBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagBtnWidth - 5, tagBtnHeight))
             tagBtn.setTitle(treatmentFormatList[index].objectForKey("treatmentName") as! String, forState: UIControlState.Normal)
             tagBtn.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
             tagBtn.setTitleColor(mainColor, forState: UIControlState.Normal)
@@ -189,14 +189,14 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                  treatmentName += ((treatmentButtonView as! UIButton).titleLabel!).text! + " "
             }
         }
-        if (treatmentName as! NSString).length == 0{
+        if (treatmentName as NSString).length == 0{
             treatmentName = treatmentTypeSegment.titleForSegmentAtIndex(treatmentTypeSegment.selectedSegmentIndex)!
         }
         var treatmentDosage = String()
         if treatmentTextInput.textColor == UIColor.blackColor(){
             treatmentDosage = treatmentTextInput.text!
         }
-        var treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
+        let treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
         treatmentList.addObject(treatment)
     }
     

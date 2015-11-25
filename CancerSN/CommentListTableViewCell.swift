@@ -25,7 +25,7 @@ class CommentListTableViewCell: UITableViewCell {
         commentContent.text = comment.objectForKey("body") as! String
         if comment.objectForKey("image") != nil{
             let dataString = comment.valueForKey("image") as! String
-            userPortrait.image = UIImage(data: NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!)
+            userPortrait.image = UIImage(data: NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!)
         }
         //insert date View
         var dateFormatter = NSDateFormatter()

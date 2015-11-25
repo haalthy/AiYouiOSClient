@@ -24,6 +24,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var treatmentSections = NSMutableArray()
     var sectionHeaderHeightList = NSMutableArray()
     var clinicReportList = NSArray()
+    var ceaList = NSArray()
     var userProfile = NSDictionary()
     var broadcastList = NSArray()
     var heightForQuestionRow = NSMutableDictionary()
@@ -41,8 +42,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
         if username != nil {
             if sender.selectedSegmentIndex == 1 {
-                var broadcastData = haalthyService.getPostsByUsername(profileOwnername as! String)
-                var jsonResult = NSJSONSerialization.JSONObjectWithData(broadcastData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                let broadcastData = haalthyService.getPostsByUsername(profileOwnername as! String)
+                let jsonResult = try? NSJSONSerialization.JSONObjectWithData(broadcastData, options: NSJSONReadingOptions.MutableContainers)
                 if jsonResult is NSArray {
                     broadcastList = jsonResult as! NSArray
                 }
@@ -55,11 +56,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func getTreatmentsData(){
         if (username != nil) && (password != nil){
             var jsonResult:AnyObject? = nil
-            var userDetailData = haalthyService.getUserDetail(profileOwnername! as String)
+            let userDetailData = haalthyService.getUserDetail(profileOwnername! as String)
             if userDetailData != nil{
-                jsonResult = NSJSONSerialization.JSONObjectWithData(userDetailData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                jsonResult = try? NSJSONSerialization.JSONObjectWithData(userDetailData!, options: NSJSONReadingOptions.MutableContainers)
                             let str: NSString = NSString(data: userDetailData!, encoding: NSUTF8StringEncoding)!
-                            println(str)
+                            print(str)
             }
 
             if jsonResult != nil{
@@ -76,21 +77,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 clinicReportList = jsonResult!.objectForKey("clinicReport") as! NSArray
                 userProfile = jsonResult!.objectForKey("userProfile") as! NSDictionary
                 var timeList = [Int]()
-                var timeSet = NSMutableSet()
+                let timeSet = NSMutableSet()
                 for var i = 0; i < treatmentList.count; i++ {
                     treatmentList[i] = treatmentList[i] as! NSMutableDictionary
                     treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("beginDate") as! Double), forKey:"beginDate")
                     treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("endDate") as! Double), forKey:"endDate")
-                    var defaultEndDateMod: Double = getNSDateMod(defaultTreatmentEndDate * 1000)
+                    let defaultEndDateMod: Double = getNSDateMod(defaultTreatmentEndDate * 1000)
 
-                    var treatment = treatmentList[i] as! NSMutableDictionary
+                    let treatment = treatmentList[i] as! NSMutableDictionary
                     
 //                    if (treatment.objectForKey("endDate") as! Double) > (NSDate().timeIntervalSince1970 * 1000){
-                    println(treatment.objectForKey("treatmentName"))
-                    println(treatment.objectForKey("endDate") as! Double)
-                    println(defaultTreatmentEndDate * 1000)
+                    print(treatment.objectForKey("treatmentName"))
+                    print(treatment.objectForKey("endDate") as! Double)
+                    print(defaultTreatmentEndDate * 1000)
                     if (treatment.objectForKey("endDate") as! Double) == (defaultEndDateMod){
-                        treatment.setObject(((NSDate().timeIntervalSince1970 as! NSNumber).integerValue * 1000) as AnyObject, forKey:"endDate")
+                        treatment.setObject(((NSDate().timeIntervalSince1970 as NSNumber).integerValue * 1000) as AnyObject, forKey:"endDate")
                     }
                     
                     if timeSet.containsObject(treatment.objectForKey("endDate")!) == false {
@@ -104,21 +105,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 for timeSt in timeSet {
                     timeList.append(timeSt as! Int)
                 }
-                timeList.sort(>)
+                timeList.sortInPlace(>)
                 
-                var dateFormatter = NSDateFormatter()
+                let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
                 for time in timeList{
-                    var dateInserted = NSDate(timeIntervalSince1970: Double(time)/1000 as NSTimeInterval)
+                    let dateInserted = NSDate(timeIntervalSince1970: Double(time)/1000 as NSTimeInterval)
                     let dateStr = dateFormatter.stringFromDate(dateInserted)
-                    println(dateStr)
+                    print(dateStr)
                 }
                 
                 var index = 0
                 var patientStatusIndex = 0
-                if patientStatusIndex < patientStatusList.count{
-                    var treatmentSection = NSMutableDictionary()
-                    var patientStatusInTreatmentSection = NSMutableArray()
+                if (patientStatusIndex < patientStatusList.count) && (timeList.count>0){
+                    let treatmentSection = NSMutableDictionary()
+                    let patientStatusInTreatmentSection = NSMutableArray()
                     treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
                     treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
                     treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
@@ -132,8 +133,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
                 
                 while index < timeList.count-1 {
-                    var treatmentSection = NSMutableDictionary()
-                    var patientStatusInTreatmentSection = NSMutableArray()
+                    let treatmentSection = NSMutableDictionary()
+                    let patientStatusInTreatmentSection = NSMutableArray()
                     treatmentSection.setObject(timeList[index+1] as AnyObject, forKey: "beginDate")
                     treatmentSection.setObject(timeList[index] as AnyObject, forKey: "endDate")
                     var treatmentStr = ""
@@ -141,12 +142,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     var treatmentSectionLineCount = 0
                     var sectionHeight: CGFloat = 0.0
                     for var treatmentIndex = 0; treatmentIndex < treatmentList.count; treatmentIndex++ {
-                        var treatment = treatmentList[treatmentIndex] as! NSDictionary
+                        let treatment = treatmentList[treatmentIndex] as! NSDictionary
                         if ((treatment.objectForKey("endDate") as? Int) >= (timeList[index] as Int)) && ((treatment.objectForKey("beginDate") as? Int) <= (timeList[index+1] as Int)) {
                             treatmentStr += (treatment["treatmentName"] as! String) + "*"
                             if treatment["dosage"] != nil{
                                 treatmentStr += treatment["dosage"] as! String
-                                var dosageStr = treatment["dosage"] as! String
+                                let dosageStr = treatment["dosage"] as! String
                                 treatmentSectionLineCount += (dosageStr as NSString).length/14 + 1
                             }else{
                                 treatmentSectionLineCount += (treatmentStr as NSString).length/20 + 1
@@ -159,7 +160,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                             dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                             dosageLabel.numberOfLines = 0
                             dosageLabel.sizeToFit()
-                            var height:CGFloat = dosageLabel.frame.height > 30 ? dosageLabel.frame.height : 30
+                            let height:CGFloat = dosageLabel.frame.height > 30 ? dosageLabel.frame.height : 30
                             sectionHeight += height + 5
                         }
                     }
@@ -168,9 +169,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     treatmentSection.setObject(treatmentSectionLineCount, forKey: "treatmentLineCount")
                     treatmentSection.setObject(treatmentStr, forKey: "treatmentDetails")
                     if patientStatusIndex < patientStatusList.count{
-                        println(patientStatusList[patientStatusIndex]["insertedDate"])
-                        println(timeList[index+1])
-                        println(timeList[index])
+                        print(patientStatusList[patientStatusIndex]["insertedDate"])
+                        print(timeList[index+1])
+                        print(timeList[index])
                         while ((patientStatusIndex < patientStatusList.count) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index+1] as Int)) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) < (timeList[index] as Int))) {
                             patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
                             patientStatusIndex++
@@ -183,8 +184,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 //                    }
                 }
                 if patientStatusIndex < patientStatusList.count{
-                    var treatmentSection = NSMutableDictionary()
-                    var patientStatusInTreatmentSection = NSMutableArray()
+                    let treatmentSection = NSMutableDictionary()
+                    let patientStatusInTreatmentSection = NSMutableArray()
                     treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Int), forKey: "endDate")
                     treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Int), forKey: "beginDate")
                     for var i = patientStatusIndex; i < patientStatusList.count; i++ {
@@ -198,9 +199,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     
     func getNSDateMod(date: Double)->Double{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "YY-MM-dd" // superset of OP's format
-        var dateInserted = NSDate(timeIntervalSince1970: date/1000 as NSTimeInterval)
+        let dateInserted = NSDate(timeIntervalSince1970: date/1000 as NSTimeInterval)
         let dateStr = dateFormatter.stringFromDate(dateInserted)
 //        var newDataStr = dateStr + " 00:00:00"
         let timeInterval = dateFormatter.dateFromString(dateStr)?.timeIntervalSince1970
@@ -209,8 +210,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var dummyViewHeight : CGFloat = 40
-        var dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
+        let dummyViewHeight : CGFloat = 40
+        let dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
         self.tableview.tableHeaderView = dummyView;
         self.tableview.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0)
         ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我"
@@ -230,12 +231,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewDidAppear(animated: Bool) {
         if self.userProfile.count == 0 {
-            var alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
             self.tabBarController?.selectedIndex = 0
             
-            println(self.tabBarController?.selectedIndex)
+            print(self.tabBarController?.selectedIndex)
         }
     }
     
@@ -268,7 +269,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 //            imageView.image = UIImage(named: "Mario.jpg")
                 if self.userProfile.valueForKey("image") != nil{
                     let dataString = self.userProfile.valueForKey("image") as! String
-                    let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                    let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                     imageView.image = UIImage(data: imageData)
                 }else{
                     imageView.image = UIImage(named: "Mario.jpg")
@@ -304,14 +305,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }else{
                     var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
                     if newFollowerCountData != nil{
-                        var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                        var jsonResult = try? NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers)
                         if jsonResult is NSDictionary {
                             newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
                             if newFollowerCount != 0{
                                 self.profileSegment.selectedSegmentIndex = 2
                             }else{
                                 var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
-                                unreadMentionedPostCount =  (NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                                unreadMentionedPostCount =  Int((NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String))!
                                 if unreadMentionedPostCount != 0 {
                                     self.profileSegment.selectedSegmentIndex = 2
                                 }
@@ -326,10 +327,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func addFollowing(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         if profileSet.objectForKey(accessNSUserData) != nil{
-            var addFollowingData = haalthyService.addFollowing(profileOwnername as! String)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            var deleteResult = haalthyService.deleteFromSuggestedUser(profileOwnername as! String)
-            println(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+            let addFollowingData = haalthyService.addFollowing(profileOwnername as! String)
+            var jsonResult = try? NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers)
+            let deleteResult = haalthyService.deleteFromSuggestedUser(profileOwnername as! String)
+            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
         }
         addFollowingBtn.enabled = false
         addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
@@ -373,7 +374,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if section == 0{
                 numberOfRows = 2
             }else{
-                var patientStatus = treatmentSections[section-1]["patientStatus"]
+                let patientStatus = treatmentSections[section-1]["patientStatus"]
                 if (patientStatus!) != nil {
                     numberOfRows = (patientStatus as! NSArray).count
                 }else{
@@ -402,19 +403,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if indexPath.section == 0{
                 if indexPath.row == 0{
                     let cell = tableView.dequeueReusableCellWithIdentifier("treatmentSummaryCell", forIndexPath: indexPath) as! TreatmentSummaryTableViewCell
-                    cell.selectionStyle = UITableViewCellSelectionStyle.None
+//                    cell.selectionStyle = UITableViewCellSelectionStyle.None
                     if clinicReportList.count > 0{
                         cell.treatmentList = treatmentList
                         cell.clinicReportList = clinicReportList
                     }
                     return cell
                 }else{
-                    let cell = tableView.dequeueReusableCellWithIdentifier("editTreatmentIndentifier", forIndexPath:indexPath) as! UITableViewCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("editTreatmentIndentifier", forIndexPath:indexPath) 
                     if profileOwnername == username{
                         let editButtonWidth: CGFloat = 60.0
                         let editButtonHeight: CGFloat = 30.0
                         let marginWidth: CGFloat = 10.0
-                        var editButton = UIButton(frame: CGRectMake(cell.frame.width - editButtonWidth - marginWidth, marginWidth, editButtonWidth, editButtonHeight))
+                        let editButton = UIButton(frame: CGRectMake(cell.frame.width - editButtonWidth - marginWidth, marginWidth, editButtonWidth, editButtonHeight))
                         editButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
                         editButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
                         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
@@ -429,25 +430,25 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else{
                 let cell = tableView.dequeueReusableCellWithIdentifier("patientStatusListCell", forIndexPath: indexPath) as! PatientStatusTableViewCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
-                var patientStatusListInSection = (treatmentSections[indexPath.section - 1] as! NSDictionary).objectForKey("patientStatus") as! NSArray
+                let patientStatusListInSection = (treatmentSections[indexPath.section - 1] as! NSDictionary).objectForKey("patientStatus") as! NSArray
                 cell.patientStatus = patientStatusListInSection[indexPath.row] as! NSDictionary
                 return cell
             }
         }else if profileSegment.selectedSegmentIndex == 1{
-            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) 
 //            cell.selectionStyle = UITableViewCellSelectionStyle.None
-            var broadcast = broadcastList[indexPath.row] as! NSDictionary
+            let broadcast = broadcastList[indexPath.row] as! NSDictionary
             
 //            cell.feedBodyDelegate = self
 //            cell.width = cell.frame.width
 //            cell.indexPath = indexPath
 //            cell.feed = broadcast
-            var dateFormatter = NSDateFormatter()
+            let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
-            var dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
+            let dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
             let dateStr = dateFormatter.stringFromDate(dateInserted)
             
-            var questionLabel = UILabel(frame: CGRectMake(15, 0, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
+            let questionLabel = UILabel(frame: CGRectMake(15, 0, UIScreen.mainScreen().bounds.width - 30, CGFloat.max))
             questionLabel.numberOfLines = 0
             questionLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
             questionLabel.font = UIFont(name: "Helvetica", size: 13.0)
@@ -455,12 +456,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             questionLabel.textColor = UIColor.blackColor()
             questionLabel.sizeToFit()
 
-            var dateInsertedLabel = UILabel(frame: CGRectMake(10, questionLabel.frame.height + 5, 60, 20))
+            let dateInsertedLabel = UILabel(frame: CGRectMake(10, questionLabel.frame.height + 5, 60, 20))
             dateInsertedLabel.textColor = UIColor.darkGrayColor()
             dateInsertedLabel.text = dateStr
             dateInsertedLabel.font = UIFont(name: "Helvetica", size: 12.0)
 
-            var reviewsLabel = UILabel(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 15 - 80, questionLabel.frame.height + 5, 80, 20))
+            let reviewsLabel = UILabel(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 15 - 80, questionLabel.frame.height + 5, 80, 20))
             reviewsLabel.textColor = UIColor.darkGrayColor()
             reviewsLabel.font = UIFont(name: "Helvetica", size: 12.0)
             reviewsLabel.text = (broadcast["countComments"] as! NSNumber).stringValue + "评论"
@@ -473,7 +474,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             return cell
         }else{
             if indexPath.section == 0 {
-                let cell = tableView.dequeueReusableCellWithIdentifier("personalSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("personalSettingCell", forIndexPath: indexPath) 
                 cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 //            if username != nil{
@@ -482,9 +483,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     break
                 case 1: cell.textLabel?.text = "关注我的病友"
                     var textLabelWidth:CGFloat = (cell.textLabel?.frame)!.width
-                    var newFollowerCountLabel = UILabel(frame: CGRectMake(110, 5, 20, 20))
+                    let newFollowerCountLabel = UILabel(frame: CGRectMake(110, 5, 20, 20))
                     if newFollowerCount != 0{
-                        newFollowerCountLabel.text = (newFollowerCount as! NSNumber).stringValue
+                        newFollowerCountLabel.text = (newFollowerCount as NSNumber).stringValue
                         newFollowerCountLabel.textColor = UIColor.redColor()
                         cell.addSubview(newFollowerCountLabel)
                     }
@@ -492,14 +493,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 case 2: cell.textLabel?.text = "我的评论"
                     break
                 case 3: cell.removeAllSubviews()
-                    var titleLabel = UILabel(frame: CGRectMake(10, 5, 100, 40))
+                    let titleLabel = UILabel(frame: CGRectMake(10, 5, 100, 40))
                     titleLabel.text = "@提到我的"
                     titleLabel.textColor = UIColor.blackColor()
                     cell.addSubview(titleLabel)
                     var textLabelWidth:CGFloat = (cell.textLabel?.frame)!.width
                     unreadMentionedPostLabel = UILabel(frame: CGRectMake(110, 5, 20, 20))
                     if unreadMentionedPostCount != 0{
-                        unreadMentionedPostLabel.text = (unreadMentionedPostCount as! NSNumber).stringValue
+                        unreadMentionedPostLabel.text = (unreadMentionedPostCount as NSNumber).stringValue
                         unreadMentionedPostLabel.textColor = UIColor.redColor()
                         cell.addSubview(unreadMentionedPostLabel)
                     }
@@ -508,13 +509,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
                 return cell
             }else if indexPath.section == 1{
-                let cell = tableView.dequeueReusableCellWithIdentifier("accountSettingCell", forIndexPath: indexPath) as! UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("accountSettingCell", forIndexPath: indexPath) 
                 cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.textLabel?.text = "更改个人信息"
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("logoutCell", forIndexPath: indexPath) as! UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("logoutCell", forIndexPath: indexPath) 
                 cell.textLabel?.font = UIFont(name: fontStr, size: 14.0)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.textLabel?.text = "退出登录"
@@ -534,7 +535,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 if indexPath.row == 0{
                     var containCEAValue: Bool = false
                     for clinicItem in clinicReportList {
-                        if (clinicItem.objectForKey("clinicReport") as! NSString).containsString("CEA*") {
+                        if (clinicItem.objectForKey("cea") != nil) && ((clinicItem.objectForKey("cea") as! Float) != 0.0) {
                             containCEAValue = true
                         }
                     }
@@ -546,7 +547,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 rowHeight = UITableViewAutomaticDimension
             }
         }else if profileSegment.selectedSegmentIndex == 1{
-            var questionLabelHeight = self.heightForQuestionRow.objectForKey(indexPath)
+            let questionLabelHeight = self.heightForQuestionRow.objectForKey(indexPath)
             if questionLabelHeight != nil{
                 rowHeight = (self.heightForQuestionRow.objectForKey(indexPath) as! CGFloat) + 35
             }
@@ -565,7 +566,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     heightForHeader = 40
                 }
             }else{
-                var treatmentLineCount:AnyObject? = self.treatmentSections[section-1]["treatmentLineCount"]
+                let treatmentLineCount:AnyObject? = self.treatmentSections[section-1]["treatmentLineCount"]
                 if treatmentLineCount == nil{
                     heightForHeader = 0
                 }else{
@@ -595,7 +596,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 0{
             if section == 0 {
                 headerView =  UIView(frame: CGRectMake(0, 0,tableView.bounds.size.width, 40))
-                var summaryLabel = UILabel(frame: CGRectMake(15,5,tableView.bounds.size.width - 40, 30))
+                let summaryLabel = UILabel(frame: CGRectMake(15,5,tableView.bounds.size.width - 40, 30))
                 summaryLabel.text = "CEA指标变化"
                 summaryLabel.textColor = mainColor
                 summaryLabel.font = UIFont(name: "Helvetica-Bold", size: 15)
@@ -604,7 +605,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 var heightForHeader:CGFloat = 0
                 var treatmentY:CGFloat = 5.0
                 
-                var treatmentLineCount = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
+                let treatmentLineCount = self.treatmentSections[section-1]["treatmentLineCount"] as! Int
                 heightForHeader += CGFloat(35 * treatmentLineCount + 4)
                 if UIScreen.mainScreen().bounds.width < 375 {
                     heightForHeader += 35
@@ -620,11 +621,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     heightForHeader += 35
                 }
                 
-                var dateFormatter = NSDateFormatter()
+                let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
                 
-                var beginDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["beginDate"] as! Double)/1000 as NSTimeInterval)
-                var endDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["endDate"] as! Double)/1000 as NSTimeInterval)
+                let beginDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["beginDate"] as! Double)/1000 as NSTimeInterval)
+                let endDate = NSDate(timeIntervalSince1970: (treatmentSections[section-1]["endDate"] as! Double)/1000 as NSTimeInterval)
                 let beginDateStr = dateFormatter.stringFromDate(beginDate)
                 let endDateStr = dateFormatter.stringFromDate(endDate)
                 dateLabel.text = beginDateStr + "-" + endDateStr
@@ -633,9 +634,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 dateLabel.textAlignment = NSTextAlignment.Right
                 headerView.addSubview(dateLabel)
 
-                var treatmentStr = self.treatmentSections[section-1]["treatmentDetails"] as! String
-                println(treatmentStr)
-                var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
+                let treatmentStr = self.treatmentSections[section-1]["treatmentDetails"] as! String
+                print(treatmentStr)
+                let treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
                 for treatment in treatmentList {
                     var treatmentItemStr:String = treatment as! String
                     
@@ -647,17 +648,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 
                 for treatment in treatmentList {
                     var treatmentStr = treatment as! String
-                    if (treatmentStr as! NSString).length == 0{
+                    if (treatmentStr as NSString).length == 0{
                         break
                     }
-                    if treatmentStr.substringWithRange(Range(start: treatmentStr.startIndex, end: advance(treatmentStr.startIndex, 1))) == "*" {
-                        treatmentStr = treatmentStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
+                    if treatmentStr.substringWithRange(Range(start: treatmentStr.startIndex, end: treatmentStr.startIndex.advancedBy(1))) == "*" {
+                        treatmentStr = treatmentStr.substringFromIndex(treatmentStr.startIndex.advancedBy(1))
                     }
-                    var treatmentNameAndDosage:NSArray = treatmentStr.componentsSeparatedByString("*")
-                    var treatmentName = treatmentNameAndDosage[0] as! String
+                    let treatmentNameAndDosage:NSArray = treatmentStr.componentsSeparatedByString("*")
+                    let treatmentName = treatmentNameAndDosage[0] as! String
                     var treatmentDosage = String()
                     var treatmentNameLabel = UILabel()
-                    var dosageLabel = UILabel()
+                    let dosageLabel = UILabel()
                     if treatmentNameAndDosage.count > 1{
                         treatmentDosage = treatmentNameAndDosage[1] as! String
 //                        var dosageLableLine = (treatmentDosage as NSString).length/14 + 1
@@ -670,8 +671,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         dosageLabel.numberOfLines = 0
 //                        dosageLable.backgroundColor = UIColor.lightGrayColor()
                         dosageLabel.sizeToFit()
-                        println(dosageLabel.frame.height)
-                        var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
+                        print(dosageLabel.frame.height)
+                        let height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
                         treatmentY += height + 5
                         treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 14.0)
                         treatmentNameLabel.layer.cornerRadius = 5
@@ -683,8 +684,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         treatmentNameLabel.textAlignment = NSTextAlignment.Center
                         dosageLabel.textColor = mainColor
                     }else{
-                        var treatmentLine = (treatmentName as NSString).length/20 + 1
-                        var height = CGFloat(30 * treatmentLine)
+                        let treatmentLine = (treatmentName as NSString).length/20 + 1
+                        let height = CGFloat(30 * treatmentLine)
                         treatmentNameLabel = UILabel(frame: CGRectMake(10.0, treatmentY, 90.0, height))
                         treatmentNameLabel.text = treatmentName
                         treatmentY += height + 5
@@ -700,7 +701,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     headerView.addSubview(treatmentNameLabel)
                     headerView.addSubview(dosageLabel)
                     
-                    var separatorLine:UIImageView = UIImageView(frame: CGRectMake(5, 0, tableView.frame.size.width-10.0, 1.0))
+                    let separatorLine:UIImageView = UIImageView(frame: CGRectMake(5, 0, tableView.frame.size.width-10.0, 1.0))
                     separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
                     
                     headerView.addSubview(separatorLine)
@@ -708,9 +709,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }
         }
         if profileSegment.selectedSegmentIndex == 1{
-            var addBroadcastBtnWidth = 200
-            var coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
-            var addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
+            let addBroadcastBtnWidth = 200
+            let coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
+            let addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
             addBroadcastBtn.backgroundColor = mainColor
             addBroadcastBtn.layer.cornerRadius = 5
             addBroadcastBtn.titleLabel?.textAlignment = NSTextAlignment.Center
@@ -732,7 +733,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 2 {
             if indexPath.section == 2 {
                 publicService.logOutAccount()
-                println("logout")
+                print("logout")
                 self.performSegueWithIdentifier("loginSegue", sender: self)
                 usedToBeInLoginView = true
             }
@@ -756,7 +757,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         userListData = haalthyService.getFollowerUsers(username! as String)!
                         haalthyService.refreshNewFollowCount()
                     }
-                    var jsonResult = NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                    let jsonResult = try? NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers)
                     if jsonResult is NSArray {
                         userList = jsonResult as! NSArray
                     }
@@ -786,10 +787,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         if segue.identifier == "commentListSegue" {
             var commentList = NSArray()
-            var commentListData = haalthyService.getCommentsByUsername(username as! String)
+            let commentListData = haalthyService.getCommentsByUsername(username as! String)
             let str: NSString = NSString(data: commentListData!, encoding: NSUTF8StringEncoding)!
-            println(str)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(commentListData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            print(str)
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(commentListData!, options: NSJSONReadingOptions.MutableContainers)
             if jsonResult is NSArray {
                 commentList = jsonResult as! NSArray
             }

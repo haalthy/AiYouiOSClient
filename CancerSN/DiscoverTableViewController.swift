@@ -47,8 +47,8 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
             tagList = userData.objectForKey(favTagsNSUserData) as! NSArray
         }
         if tagList.count == 0 && username != nil{
-            var getUserFavTags = haalthyService.getUserFavTags()
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTags!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let getUserFavTags = haalthyService.getUserFavTags()
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTags!, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
                 tagList = jsonResult as! NSArray
                 userData.setObject(tagList, forKey: favTagsNSUserData)
@@ -65,20 +65,20 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
         }else{
             var tagIdList = [Int]()
             for tagItem in tagList {
-                var tag = tagItem as! NSDictionary
+                let tag = tagItem as! NSDictionary
                 tagIdList.append(tag.objectForKey("tagId") as! Int)
             }
             getSuggestUsers = haalthyService.getSuggestUserByTags(tagIdList, rangeBegin: 0, rangeEnd: 10)
             self.navigationItem.rightBarButtonItem = loginBtn
         }
         if getSuggestUsers != nil{
-            var jsonResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(getSuggestUsers!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let jsonResult: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(getSuggestUsers!, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
                 userList = jsonResult as! NSArray
             }
             self.tableView.reloadData()
         }else{
-            var publicService = PublicService()
+            let publicService = PublicService()
             publicService.presentAlertController("网络不给力", sender: self)
         }
     }
@@ -125,7 +125,7 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
             cell.delegate = self
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("contentListCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("contentListCell", forIndexPath: indexPath) 
             return cell
         }
     }

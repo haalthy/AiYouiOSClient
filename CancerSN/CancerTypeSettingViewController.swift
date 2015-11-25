@@ -40,8 +40,8 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     }
     
     @IBAction func confirm(sender: UIButton) {
-        var cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
-        var selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
+        let cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
+        let selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
         if(cancerType == "肺部") && (pathologicalPickerView.hidden == true){
             pathologicalPickerView.hidden = false
         }else if(cancerType != "肺部"){
@@ -57,8 +57,8 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 }
             }
         }else{
-            var pathological = pathologicaPickerDataSource[pathologicalPickerView.selectedRowInComponent(0)]
-            var selectedPathological:String = pathologicalMapping.objectForKey(pathological) as! String
+            let pathological = pathologicaPickerDataSource[pathologicalPickerView.selectedRowInComponent(0)]
+            let selectedPathological:String = pathologicalMapping.objectForKey(pathological) as! String
             if isUpdate {
                 cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
                 pathologicalSettingVCDelegate?.updatePathological(selectedPathological)
@@ -121,7 +121,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     }
     
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
             pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))

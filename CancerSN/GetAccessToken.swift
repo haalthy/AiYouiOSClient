@@ -12,7 +12,7 @@ class GetAccessToken: NSObject {
     
     func getAccessToken(){
         let profileSet = NSUserDefaults.standardUserDefaults()
-        var error: NSErrorPointer=nil
+        let error: NSErrorPointer=nil
         let keychainAccess = KeychainAccess()
         if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
             let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
@@ -21,12 +21,18 @@ class GetAccessToken: NSObject {
             urlPath = urlPath.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             let url: NSURL = NSURL(string: urlPath)!
             let request: NSURLRequest = NSURLRequest(URL: url)
-            var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-            let getTokenResponseData = NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)
+            let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+            let getTokenResponseData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
             if getTokenResponseData != nil {
-                var jsonResult = NSJSONSerialization.JSONObjectWithData(getTokenResponseData!, options: NSJSONReadingOptions.MutableContainers, error: error)
-                var accessToken  = jsonResult?.objectForKey("access_token")
-                var refreshToken = jsonResult?.objectForKey("refresh_token")
+                var jsonResult: AnyObject?
+                do {
+                    jsonResult = try NSJSONSerialization.JSONObjectWithData(getTokenResponseData!, options: NSJSONReadingOptions.MutableContainers)
+                } catch let error1 as NSError {
+                    error.memory = error1
+                    jsonResult = nil
+                }
+                let accessToken  = jsonResult?.objectForKey("access_token")
+                let refreshToken = jsonResult?.objectForKey("refresh_token")
                 profileSet.setObject(accessToken, forKey: accessNSUserData)
                 profileSet.setObject(refreshToken, forKey: refreshNSUserData)
             }

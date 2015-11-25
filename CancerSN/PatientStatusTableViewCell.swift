@@ -21,12 +21,14 @@ class PatientStatusTableViewCell: UITableViewCell {
     }
     
     func updateUI(){
-        var insertedDate = NSDate(timeIntervalSince1970: (patientStatus.objectForKey("insertedDate") as! Double)/1000 as NSTimeInterval)
-        var dateFormatter = NSDateFormatter()
+        let insertedDate = NSDate(timeIntervalSince1970: (patientStatus.objectForKey("insertedDate") as! Double)/1000 as NSTimeInterval)
+        let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
         let insertedDateStr = dateFormatter.stringFromDate(insertedDate)
         patientStatusDate.text = insertedDateStr
-        var patientsDetailStr = patientStatus.objectForKey("statusDesc") as! NSString
+        let patientStatusStr = (patientStatus.objectForKey("statusDesc") as! String)
+        let clinicReportStr = (patientStatus.objectForKey("clinicReport") as! String)
+        var patientsDetailStr = patientStatusStr + clinicReportStr
         patientsDetailStr = patientsDetailStr.stringByReplacingOccurrencesOfString("*", withString: " ")
         patientStatusDetail.text = patientsDetailStr as String
     }

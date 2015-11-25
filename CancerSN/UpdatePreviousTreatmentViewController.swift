@@ -19,7 +19,7 @@ class UpdatePreviousTreatmentViewController: UIViewController {
     }
     
     @IBAction func stopPreviousTreatment(sender: UIButton) {
-        var updatedTreatment: NSMutableDictionary = treatment.mutableCopy() as! NSMutableDictionary
+        let updatedTreatment: NSMutableDictionary = treatment.mutableCopy() as! NSMutableDictionary
         updatedTreatment.setObject(Int(NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
         haalthyService.updateTreatment(updatedTreatment)
         self.dismissViewControllerAnimated(true, completion: nil)

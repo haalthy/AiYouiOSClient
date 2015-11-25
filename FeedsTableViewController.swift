@@ -45,8 +45,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "addViewSegue"{
-            var vc = segue.destinationViewController as! UIViewController
-            var controller = vc.popoverPresentationController
+            let vc = segue.destinationViewController 
+            let controller = vc.popoverPresentationController
             if controller != nil{
                 controller?.delegate = self
             }
@@ -69,9 +69,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     @IBOutlet weak var myTags: UIButton!
     
     func getexistFeedsFromLocalDB(){
-        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context:NSManagedObjectContext = appDel.managedObjectContext!
-        var postsRequest = NSFetchRequest(entityName: "Feed")
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let postsRequest = NSFetchRequest(entityName: "Feed")
         if username != nil{
             postsRequest.predicate = NSPredicate(format: "ownerName = %@", username!)
         }else{
@@ -79,24 +79,27 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
         postsRequest.returnsObjectsAsFaults = false
         postsRequest.sortDescriptors = [NSSortDescriptor(key: "dateInserted", ascending: false)]
-        feedList = context.executeFetchRequest(postsRequest, error: nil)!
+        feedList = try! context.executeFetchRequest(postsRequest)
     }
     
     func clearFeedLocalTable(){
-        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context:NSManagedObjectContext = appDel.managedObjectContext!
-        var deletePostsRequet = NSFetchRequest(entityName: "Feed")
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deletePostsRequet = NSFetchRequest(entityName: "Feed")
         if username != nil{
             deletePostsRequet.predicate = NSPredicate(format: "ownerName = %@", username!)
         }else{
             deletePostsRequet.predicate = NSPredicate(format: "ownerName = %@", "")
         }
-        if let results = context.executeFetchRequest(deletePostsRequet, error: nil) {
+        if let results = try? context.executeFetchRequest(deletePostsRequet) {
             for param in results {
                 context.deleteObject(param as! NSManagedObject);
             }
         }
-        context.save(nil)
+        do {
+            try context.save()
+        } catch _ {
+        }
     }
     
     func refreshFeeds(){
@@ -109,7 +112,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     func setPatientProfile(feed: NSDictionary){
         var profileStr:String = ""
         if((feed.valueForKey("gender") != nil) && ((feed.valueForKey("gender") is NSNull) == false)){
-            var genderKey = (feed.valueForKey("gender")!) as! String
+            let genderKey = (feed.valueForKey("gender")!) as! String
             profileStr += (genderMapping.allKeysForObject(genderKey)[0] as! String) + ","
         }
         if((feed.valueForKey("age") != nil) && ((feed.valueForKey("age") is NSNull) == false)){
@@ -117,7 +120,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
         if((feed.valueForKey("cancerType") != nil) && ((feed.valueForKey("cancerType") is NSNull) == false)){
             if(feed.valueForKey("cancerType") as! String != "lung"){
-                var cancerTypeKey = feed.valueForKey("cancerType")!
+                let cancerTypeKey = feed.valueForKey("cancerType")!
                 profileStr += cancerTypeMapping.allKeysForObject(cancerTypeKey)[0] as! String
             }else if((feed.valueForKey("pathological") != nil) && ((feed.valueForKey("pathological") is NSNull) == false) && (feed.valueForKey("pathological") as! String != "")){
                 
@@ -134,12 +137,12 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         var context:NSManagedObjectContext = appDel.managedObjectContext!
         for feed in newFeedList{
             if (((feed as! NSDictionary)["postID"] as! Int) == ((newFeedList[newFeedList.count - 1] as! NSDictionary)["postID"] as! Int)) && (isLoadLatestFeeds == false) {
-                println(feed["dateInserted"])
+                print(feed["dateInserted"])
                 previousFeedFetchTimeStamp = feed["dateInserted"] as! Int - 1000
-                println(previousFeedFetchTimeStamp)
+                print(previousFeedFetchTimeStamp)
             }
             setPatientProfile(feed as! NSDictionary)
-            var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) as! NSManagedObject
+            var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) 
             feedItem.setValue(feed["postID"], forKey: "postID")
             feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
             feedItem.setValue(feed["countComments"], forKey: "countComments")
@@ -175,22 +178,23 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                     dispatch_async(dispatch_get_main_queue()) {
                         for image in (feed["postImageList"] as! NSArray){
                             let dataString = image as! String
-                            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                             let fileManager = NSFileManager.defaultManager()
-                            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-                            var indexStr: String = (index as! NSNumber).stringValue
+                            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+                            var indexStr: String = (index as NSNumber).stringValue
                             var fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
                             var filePathToWrite = "\(paths)/" + fileNameStr
                             fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
-                            var getImagePath = paths.stringByAppendingPathComponent(fileNameStr)
-                            println(getImagePath)
+//                            var getImagePath = paths.stringByAppendingPathComponent(fileNameStr)
+                            var getImagePath = paths + fileNameStr
+                            print(getImagePath)
                             if (fileManager.fileExistsAtPath(getImagePath))
                             {
-                                println("FILE AVAILABLE");
+                                print("FILE AVAILABLE");
                             }
                             else
                             {
-                                println("FILE NOT AVAILABLE");
+                                print("FILE NOT AVAILABLE");
                                 
                             }
                             index++
@@ -198,7 +202,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                     }
                 }
             }
-            context.save(nil)
+            do {
+                try context.save()
+            } catch _ {
+            }
         }
         if isLoadLatestFeeds{
             newFeedList.addObjectsFromArray(feedList as [AnyObject])
@@ -210,13 +217,13 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     @IBAction func refreshFeeds(sender: UIRefreshControl) {
-        println(Int(NSDate().timeIntervalSince1970*100000))
-        var getFeedsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
+        print(Int(NSDate().timeIntervalSince1970*100000))
+        let getFeedsData = haalthyService.getFeeds(latestFeedFetchTimeStamp)
         latestFeedFetchTimeStamp = Int(NSDate().timeIntervalSince1970*1000)
-        println(NSDate().timeIntervalSince1970)
+        print(NSDate().timeIntervalSince1970)
         var jsonResult:AnyObject? = nil
         if getFeedsData != nil{
-            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            jsonResult = try? NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers)
             let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
         }
         refreshControl?.endRefreshing()
@@ -224,23 +231,22 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             addFeedslist(jsonResult as! NSArray, isLoadLatestFeeds: true)
             
         }else{
-            println("get broadcast error")
+            print("get broadcast error")
         }
     }
     
     func getMorePreviousFeeds(){
-        var getFeedsData = haalthyService.getPreviousFeeds(previousFeedFetchTimeStamp, count: 20)
+        let getFeedsData = haalthyService.getPreviousFeeds(previousFeedFetchTimeStamp, count: 20)
         var jsonResult:AnyObject? = nil
         if getFeedsData != nil{
-            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            jsonResult = try? NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers)
             let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
-            println(str)
         }
         if(jsonResult is NSArray){
             addFeedslist(jsonResult as! NSArray, isLoadLatestFeeds: false)
             
         }else{
-            println("get feeds error")
+            print("get feeds error")
         }
     }
     
@@ -250,18 +256,18 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
-        var keychainAccess = KeychainAccess()
+        let keychainAccess = KeychainAccess()
         
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
-        var getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
+        let getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
         var jsonResult:AnyObject? = nil
         var postCount:Int = 0
         if getUpdatePostCountData != nil{
-            jsonResult = NSJSONSerialization.JSONObjectWithData(getUpdatePostCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            postCount = (NSString(data: getUpdatePostCountData!, encoding: NSUTF8StringEncoding)! as String).toInt()!
+            jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUpdatePostCountData!, options: NSJSONReadingOptions.MutableContainers)
+            postCount = Int((NSString(data: getUpdatePostCountData!, encoding: NSUTF8StringEncoding)! as String))!
         }else{
-            var alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }
@@ -274,16 +280,16 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             self.getMorePreviousFeeds()
         }
         if username != nil{
-            var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
+            let newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
             if newFollowerCountData != nil {
-                var jsonResult = NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                let jsonResult = try? NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers)
                 if jsonResult is NSDictionary {
-                    var newFollowerCountStr = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).stringValue
+                    let newFollowerCountStr = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).stringValue
                     if newFollowerCountStr != "0" {
                         ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
                     }else{
-                        var newMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
-                        var newMentionedPostCount =  (NSString(data: newMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String).toInt()!
+                        let newMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                        let newMentionedPostCount =  Int((NSString(data: newMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String))!
                         if newMentionedPostCount != 0 {
                             ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我 New"
                         }
@@ -341,9 +347,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("feedsHeader", forIndexPath: indexPath) 
             cell.backgroundColor = UIColor.whiteColor()
-            var clinicTrailButton = UIButton(frame: CGRectMake(0, 0, cell.frame.width, cell.frame.height))
+            let clinicTrailButton = UIButton(frame: CGRectMake(0, 0, cell.frame.width, cell.frame.height))
             clinicTrailButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
             clinicTrailButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
             clinicTrailButton.titleLabel?.textAlignment = NSTextAlignment.Center
@@ -358,23 +364,23 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             cell.removeAllSubviews()
 
             //separatorLine
-            var separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
+            let separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
             separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
             var feed = NSDictionary()
             if(feedList[indexPath.row] is NSManagedObject){
-                var keys = feedList[indexPath.row].entity.attributesByName.keys.array
-                let feedDic = feedList[indexPath.row].dictionaryWithValuesForKeys(keys)
+                let keys = Array(feedList[indexPath.row].entity.attributesByName.keys)
+                let feedDic = (feedList[indexPath.row] as! NSManagedObject).dictionaryWithValuesForKeys(keys)
                 feed = feedDic
-                var mutableFeed: NSMutableDictionary = feed.mutableCopy() as! NSMutableDictionary
+                let mutableFeed: NSMutableDictionary = feed.mutableCopy() as! NSMutableDictionary
                 if (feed["hasImage"] != nil) && ((feed["hasImage"] is NSNull) == false) && ((feed["hasImage"] as! Int) > 0){
-                    var postImageList = NSMutableArray()
+                    let postImageList = NSMutableArray()
                     for var index = 1; index <= (feed["hasImage"] as! Int); ++index{
-                        var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-                        var indexStr: String = (index as! NSNumber).stringValue
-                        var fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
+                        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+                        let indexStr: String = (index as NSNumber).stringValue
+                        let fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
                         let fileManager = NSFileManager.defaultManager()
-                        println(paths.stringByAppendingPathComponent(fileNameStr))
-                        var fileData = fileManager.contentsAtPath(paths.stringByAppendingPathComponent(fileNameStr))
+                        let fileData = fileManager.contentsAtPath(paths + fileNameStr)
+//                        let fileData = fileManager.contentsAtPath(paths.stringByAppendingPathComponent(fileNameStr))
                         if fileData != nil{
                             postImageList.addObject(fileData!)
                         }
@@ -402,7 +408,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     func imageTap(username: String) {
-        println(username)
+        print(username)
         selectedProfileOwnername = username
         if self.username != nil{
             self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
@@ -420,7 +426,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if indexPath.section == 1 {
             if(feedList[indexPath.row] is NSManagedObject){
-                var keys = feedList[indexPath.row].entity.attributesByName.keys.array
+                let keys = Array(feedList[indexPath.row].entity.attributesByName.keys)
                 let feedDic = feedList[indexPath.row].dictionaryWithValuesForKeys(keys)
                 feed = feedDic
             }else{
@@ -450,10 +456,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print(self.tableView.contentSize)
-        println(self.tableView.contentOffset.y + self.tableView.frame.height)
+        print(self.tableView.contentSize, terminator: "")
+        print(self.tableView.contentOffset.y + self.tableView.frame.height)
         if (self.tableView.contentOffset.y + self.tableView.frame.height) >  self.tableView.contentSize.height{
-            println("load more")
+            print("load more")
             getMorePreviousFeeds()
         }
     }
@@ -465,7 +471,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         isRefreshData = true
     }
     
-    func gestureRecognizer(UIGestureRecognizer,
+    func gestureRecognizer(_: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
             return true
     }

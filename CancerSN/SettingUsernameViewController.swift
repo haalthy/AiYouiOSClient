@@ -23,7 +23,7 @@ class SettingUsernameViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        settingUsernameVCDelegate?.updateDisplayname(displayname.text)
+        settingUsernameVCDelegate?.updateDisplayname(displayname.text!)
     }
 
     override func didReceiveMemoryWarning() {

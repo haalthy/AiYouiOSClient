@@ -30,7 +30,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         datePickerContainerView.backgroundColor = UIColor.whiteColor()
         self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
         self.datePicker.datePickerMode = UIDatePickerMode.Date
-        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
         confirmButton.setTitle("确定", forState: UIControlState.Normal)
         confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
         confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
@@ -63,14 +63,14 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     var previousTreatment = NSDictionary()
     
     func getProcessingTreatmentsFromLocalDB(){
-        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context:NSManagedObjectContext = appDel.managedObjectContext!
-        var request = NSFetchRequest(entityName: "Treatment")
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let request = NSFetchRequest(entityName: "Treatment")
         let resultPredicate = NSPredicate(format: "endDate = nil")
         request.predicate = resultPredicate
         request.returnsObjectsAsFaults = false
         request.sortDescriptors = [NSSortDescriptor(key: "beginDate", ascending: false)]
-        treatmentList = context.executeFetchRequest(request, error: nil)!
+        treatmentList = try! context.executeFetchRequest(request)
     }
     
     @IBAction func submitNewTreatmentBeginDate(sender: UIButton) {
@@ -80,8 +80,8 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     }
     
     func getProcessingTreatments(){
-        var getTreatmentListData = haalthyService.getTreatments(username!)
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let getTreatmentListData = haalthyService.getTreatments(username!)
+        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers)
         if(jsonResult is NSArray){
             self.treatmentList = jsonResult as! NSArray
         }
@@ -111,9 +111,9 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         getProcessingTreatments()
         if treatmentList.count > 0 {
             previousTreatment = treatmentList[0] as! NSDictionary
-            println(previousTreatment.objectForKey("endDate"))
-            println(NSDate().timeIntervalSince1970)
-            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) as! Double){
+            print(previousTreatment.objectForKey("endDate"))
+            print(NSDate().timeIntervalSince1970)
+            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) ){
                 self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
             }
         }
@@ -125,7 +125,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
             var controller = vc.popoverPresentationController
             if controller != nil{
                 controller?.delegate = self
-                controller?.permittedArrowDirections = nil
+//                controller?.permittedArrowDirections = UIPopoverArrowDirection.
             }
             vc.treatment = previousTreatment
         }
@@ -215,8 +215,9 @@ extension AddNewTreatmentDateViewController: CVCalendarViewDelegate
     }
 }
 
+// MARK: - CVCalendarViewAppearanceDelegate
 
-extension AddNewTreatmentDateViewController: CVCalendarViewDelegate {
+extension AddNewTreatmentDateViewController: CVCalendarViewAppearanceDelegate {
     func presentationMode() -> CalendarMode {
         return .MonthView
     }
@@ -232,7 +233,7 @@ extension AddNewTreatmentDateViewController: CVCalendarViewDelegate {
     
     func didSelectDayView(dayView: CVCalendarDayView) {
         let date = dayView.date
-        println("\(calendarView.presentedDate.commonDescription) is selected!")
+        print("\(calendarView.presentedDate.commonDescription) is selected!")
         profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
     }
     
@@ -241,11 +242,6 @@ extension AddNewTreatmentDateViewController: CVCalendarViewDelegate {
         return true
     }
     
-}
-
-// MARK: - CVCalendarViewAppearanceDelegate
-
-extension AddNewTreatmentDateViewController: CVCalendarViewAppearanceDelegate {
     func dayLabelPresentWeekdayInitallyBold() -> Bool {
         return false
     }

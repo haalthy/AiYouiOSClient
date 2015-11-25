@@ -62,15 +62,15 @@ class TagTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var getTagListRespData:NSData? = haalthyService.getTagList()
+        let getTagListRespData:NSData? = haalthyService.getTagList()
         if getTagListRespData != nil{
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getTagListRespData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData!, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
                 tagList = jsonResult as! NSArray
-                var tagTypeSet = NSMutableSet()
+                let tagTypeSet = NSMutableSet()
                 
                 for tagItem in tagList{
-                    var tag = tagItem as! NSDictionary
+                    let tag = tagItem as! NSDictionary
                     //                var groupedTagListItem = NSMutableArray()
                     //                var tagTypeItem = NSMutableDictionary()
                     //                tagTypeItem.setObject(tag.objectForKey("TypeRank")!, forKey: "TypeRank")
@@ -78,9 +78,9 @@ class TagTableViewController: UITableViewController {
                     var groupedTagsItem = NSMutableDictionary()
                     if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
                         for groupedTag in groupedTagList{
-                            var groupedTagItem = groupedTag as! NSMutableDictionary
+                            let groupedTagItem = groupedTag as! NSMutableDictionary
                             if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
-                                var tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
+                                let tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
                                 tagListsInGroup.addObject(tag)
                                 groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
                                 break
@@ -88,7 +88,7 @@ class TagTableViewController: UITableViewController {
                         }
                     }else {
                         tagTypeSet.addObject(tag.objectForKey("typeName")!)
-                        var groupedTagItem = NSMutableDictionary()
+                        let groupedTagItem = NSMutableDictionary()
                         groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
                         groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
                         groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
@@ -96,7 +96,7 @@ class TagTableViewController: UITableViewController {
                     }
                 }
                 tagTypeList = NSArray(array: tagTypeSet.allObjects)
-                var descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
+                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
                 groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
             }
             
@@ -110,9 +110,9 @@ class TagTableViewController: UITableViewController {
             
             if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
                 if (keychain.getPasscode(usernameKeyChain) != nil)  {
-                    var getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
+                    let getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
                     if getUserFavTagsData != nil{
-                        var jsonResult = NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers)
                         selectedTags = jsonResult as! NSMutableArray
                     }
                 }else{
@@ -140,7 +140,7 @@ class TagTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var numberOfRows = 1
+        let numberOfRows = 1
 //        if section > 0 && section < tagTypeList.count + 1{
 //            var groupIndex:Int = section - 1
 //            numberOfRows = ((groupedTagList[groupIndex] as! NSDictionary).objectForKey("tagsInGroup"))!.count
@@ -163,23 +163,23 @@ class TagTableViewController: UITableViewController {
             return cell
             
         } else if (indexPath.section == tagTypeList.count+1){
-            let cell = tableView.dequeueReusableCellWithIdentifier("submitCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("submitCell", forIndexPath: indexPath) 
             return cell
         }
         else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("tagContainerCell", forIndexPath: indexPath) as! UITableViewCell
-            var groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup") as! NSArray
+            let cell = tableView.dequeueReusableCellWithIdentifier("tagContainerCell", forIndexPath: indexPath) 
+            let groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup") as! NSArray
             var index: Int = 0
-            var tagButtonHeight: CGFloat = 30
-            var tagButtonWidth: CGFloat = (cell.frame.width - 20)/5 - 5
+            let tagButtonHeight: CGFloat = 30
+            let tagButtonWidth: CGFloat = (cell.frame.width - 20)/5 - 5
             for tag in groupedTagsInType {
-                var tagItem = tag as! NSDictionary
-                var coordinateX = 10 + CGFloat(index%5) * (tagButtonWidth + 5)
+                let tagItem = tag as! NSDictionary
+                let coordinateX = 10 + CGFloat(index%5) * (tagButtonWidth + 5)
                 var coordinateY:CGFloat = 5
                 if index >= 5 {
                     coordinateY = 40
                 }
-                var tagButton = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagButtonWidth, tagButtonHeight))
+                let tagButton = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagButtonWidth, tagButtonHeight))
 //                tagButton.setTitle(((tag as! NSDictionary).objectForKey("name") as! String), forState: UIControlState.Normal)
 //                tagButton.setTitleColor(mainColor, forState: UIControlState.Normal)
                 cell.addSubview(tagButton)
@@ -221,7 +221,7 @@ class TagTableViewController: UITableViewController {
         if section > 0 && section < tagTypeList.count + 1{
             headerView =  UIView(frame: CGRectMake(0, 0,self.tableView.bounds.size.width, 40))
 //            headerView.backgroundColor = sectionHeaderColor
-            var tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
+            let tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
             tagTypeLabel.text = (groupedTagList[section-1] as! NSDictionary).objectForKey("typeName") as! String
             tagTypeLabel.textColor = mainColor
             tagTypeLabel.font = UIFont(name: fontStr, size: 15.0)

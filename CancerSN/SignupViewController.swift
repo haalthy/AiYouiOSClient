@@ -13,7 +13,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     @IBOutlet weak var submitBtn: UIButton!
     func cropToSquare(image originalImage: UIImage) -> UIImage {
         // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
-        let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage)!
+        let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage!)
         
         // Get the size of the contextImage
         let contextSize: CGSize = contextImage.size
@@ -39,10 +39,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         let rect: CGRect = CGRectMake(posX, posY, width, height)
         
         // Create bitmap image from context using the rect
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)!
         
         // Create a new image based on the imageRef and rotate back to the original orientation
-        let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)!
+        let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)
         
         return image
     }
@@ -60,43 +60,43 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     var data :NSMutableData? = NSMutableData()
     @IBAction func submit(sender: UIButton) {
         //store username, password, email in NSUserData
-        println(passwordInput.text)
-        println(passwordReInput.text)
+        print(passwordInput.text)
+        print(passwordReInput.text)
         if passwordInput.text != passwordReInput.text {
-            var alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else if emailInput.text == ""{
-            var alert = UIAlertController(title: "提示", message: "请输入邮箱／手机", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "请输入邮箱／手机", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else if usernameInput.text == ""{
-            var alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else if passwordInput.text == ""{
-            var alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else{
             
             //save image
-            var selectedImage: UIImage = portrait.image!
+            let selectedImage: UIImage = portrait.image!
             
             let fileManager = NSFileManager.defaultManager()
             
-            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
             
-            var filePathToWrite = "\(paths)/" + imageFileName
+            let filePathToWrite = "\(paths)/" + imageFileName
             
-            var imageData: NSData = UIImagePNGRepresentation(selectedImage)
-            println(selectedImage.size.width, selectedImage.size.height)
-            var imageDataStr = imageData.base64EncodedStringWithOptions(.allZeros)
+            let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
+            print(selectedImage.size.width, selectedImage.size.height)
+            let imageDataStr = imageData.base64EncodedStringWithOptions([])
             //        println(imageDataStr)
             
             fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
             
-            var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
+//            var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(emailInput.text, forKey: emailNSUserData)
             profileSet.setObject(imageDataStr, forKey: imageNSUserData)
@@ -106,35 +106,35 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 profileSet.setObject(displayname.text, forKey: displaynameUserData)
             }
             let keychainAccess = KeychainAccess()
-            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text)
-            keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text)
+            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text!)
+            keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text!)
             
             //upload UserInfo to Server
-            var haalthyService = HaalthyService()
-            var addUserRespData = haalthyService.addUser("AY")
+            let haalthyService = HaalthyService()
+            let addUserRespData = haalthyService.addUser("AY")
 //            var returnStr: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
             var returnStr = String()
-            var getAccessToken = GetAccessToken()
+            let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
 //            self.dismissViewControllerAnimated(true, completion: nil)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers)
             if jsonResult is NSDictionary {
                 returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
             }
-            println(returnStr)
+            print(returnStr)
             if returnStr != "create successful!"{
                 keychainAccess.deletePasscode(usernameKeyChain)
                 keychainAccess.deletePasscode(passwordKeyChain)
             }
             if returnStr == "this email has been registed, please use another name" {
-                var alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
+                let alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
                 alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
             if returnStr == "this email has been registed, please login" {
-                var alert = UIAlertController(title: "提示", message: "此邮箱/手机已被注册，请登录", preferredStyle: UIAlertControllerStyle.Alert)
+                let alert = UIAlertController(title: "提示", message: "此邮箱/手机已被注册，请登录", preferredStyle: UIAlertControllerStyle.Alert)
                 
-                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
                     self.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)
@@ -153,14 +153,14 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     {
         var error: NSErrorPointer=nil
         let str: NSString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-        println(str)
+        print(str)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         portrait.image = UIImage(named: "Mario.jpg")
         imagePicker.delegate = self
-        var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+        let tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
         portrait.userInteractionEnabled = true
         portrait.addGestureRecognizer(tapImage)
         
@@ -182,12 +182,12 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         // Dispose of any resources that can be recreated.
     }
     //MARK: Delegates
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         var selectedImage = UIImage()
         selectedImage = cropToSquare(image: chosenImage)
         
-        var newSize = CGSizeMake(128.0, 128.0)
+        let newSize = CGSizeMake(128.0, 128.0)
         UIGraphicsBeginImageContext(newSize)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         portrait.image = UIGraphicsGetImageFromCurrentImageContext()
@@ -199,7 +199,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func gestureRecognizer(UIGestureRecognizer,
+    func gestureRecognizer(_: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
             return true
     }

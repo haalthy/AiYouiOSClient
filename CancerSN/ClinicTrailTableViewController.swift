@@ -25,13 +25,13 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        println(UIApplication.sharedApplication().statusBarFrame.size.height)
+        print(UIApplication.sharedApplication().statusBarFrame.size.height)
         selectionPickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - (self.navigationController?.navigationBar.frame)!.height - UIApplication.sharedApplication().statusBarFrame.size.height, UIScreen.mainScreen().bounds.width, selectionPickerContainerViewHeight))
         selectionPickerContainerView.backgroundColor = UIColor.whiteColor()
-        var btnInPickerWidth: CGFloat = 50
-        var btnInPickerHeight: CGFloat = 25
-        var cancelBtnInPicker = UIButton(frame: CGRectMake(20, 10, btnInPickerWidth, btnInPickerHeight))
-        var submitBtnInPicker = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 20 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
+        let btnInPickerWidth: CGFloat = 50
+        let btnInPickerHeight: CGFloat = 25
+        let cancelBtnInPicker = UIButton(frame: CGRectMake(20, 10, btnInPickerWidth, btnInPickerHeight))
+        let submitBtnInPicker = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 20 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
         cancelBtnInPicker.setTitle("取消", forState: UIControlState.Normal)
         submitBtnInPicker.setTitle("确定", forState: UIControlState.Normal)
         cancelBtnInPicker.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
@@ -53,7 +53,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     func cancelSelectionPicker(){
-        var durationTime: NSTimeInterval = 0.5
+        let durationTime: NSTimeInterval = 0.5
         UIView.animateWithDuration(durationTime, animations: {
             self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
         })
@@ -61,12 +61,12 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     func submitSelectionPicker(){
-        var durationTime: NSTimeInterval = 0.5
+        let durationTime: NSTimeInterval = 0.5
         UIView.animateWithDuration(durationTime, animations: {
             self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
         })
-        var selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
-        println(selectStr)
+        let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
+        print(selectStr)
         selectionPickerContainerAppear = false
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
@@ -112,9 +112,9 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailHeader", forIndexPath: indexPath) as! UITableViewCell
-            var selectBtnWidth: CGFloat = (cell.frame.width - 60)/2
-            var selectBtnHeight: CGFloat = 30
+            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailHeader", forIndexPath: indexPath) 
+            let selectBtnWidth: CGFloat = (cell.frame.width - 60)/2
+            let selectBtnHeight: CGFloat = 30
             treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
             typeBtn = UIButton(frame: CGRectMake(30 + selectBtnWidth, 7, selectBtnWidth, selectBtnHeight))
 //            stageBtn = UIButton(frame: CGRectMake(40 + selectBtnWidth * 2, 7, selectBtnWidth, selectBtnHeight))
@@ -129,7 +129,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
 //            cell.addSubview(stageBtn)
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailList", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailList", forIndexPath: indexPath) 
             
             return cell
         }
@@ -140,7 +140,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             pickerDataSource = treatmentSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
-            var durationTime: NSTimeInterval = 0.5
+            let durationTime: NSTimeInterval = 0.5
             UIView.animateWithDuration(durationTime, animations: {
                 self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
             })
@@ -152,7 +152,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             pickerDataSource = cancerTypeSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
-            var durationTime: NSTimeInterval = 0.5
+            let durationTime: NSTimeInterval = 0.5
             UIView.animateWithDuration(durationTime, animations: {
                 self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
             })
@@ -164,7 +164,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             pickerDataSource = stageSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
-            var durationTime: NSTimeInterval = 0.5
+            let durationTime: NSTimeInterval = 0.5
             UIView.animateWithDuration(durationTime, animations: {
                 self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
             })
@@ -185,7 +185,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     //MARK: - Delegates and data sources
     //MARK: Data Sources
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView!) -> UIView {
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
             pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))

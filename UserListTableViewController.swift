@@ -25,8 +25,8 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        var username = keychainAccess.getPasscode(usernameKeyChain)
-        var password = keychainAccess.getPasscode(passwordKeyChain)
+        let username = keychainAccess.getPasscode(usernameKeyChain)
+        let password = keychainAccess.getPasscode(passwordKeyChain)
 
         var getSuggestUsers: NSData?
         if((username != nil) && (password != nil)){
@@ -51,7 +51,7 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var numberOfRowsInSection:Int = userList.count
+        let numberOfRowsInSection:Int = userList.count
         return numberOfRowsInSection
     }
 
@@ -67,7 +67,7 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
     
     override func tableView(_tableView: UITableView,
         heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-            var rowHeight:CGFloat = 80
+            let rowHeight:CGFloat = 80
             return rowHeight
     }
     func performLoginSegue() {

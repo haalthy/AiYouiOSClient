@@ -29,11 +29,11 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     override func viewDidLoad() {
         super.viewDidLoad()
         for treatment in treatmentList{
-            var treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
+            let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
             treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
             treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
             treatmentLabel.sizeToFit()
-            var dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
+            let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
             dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as! String
             dosageLabel.font = UIFont(name: fontStr, size: 12.0)
             dosageLabel.sizeToFit()
@@ -75,16 +75,16 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCellWithIdentifier("headerIdentifier", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("headerIdentifier", forIndexPath: indexPath) 
             return cell
 
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("treatmentIdentifier", forIndexPath: indexPath) as! UITableViewCell
-            var beginDateLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth, dateLabelWidth, dateLabelHeight))
-            var beginDateButton = UIButton(frame: CGRectMake(marginWidth*2+dateLabelWidth, marginWidth, dateButtonWidth, dateLabelHeight))
+            let cell = tableView.dequeueReusableCellWithIdentifier("treatmentIdentifier", forIndexPath: indexPath) 
+            let beginDateLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth, dateLabelWidth, dateLabelHeight))
+            let beginDateButton = UIButton(frame: CGRectMake(marginWidth*2+dateLabelWidth, marginWidth, dateButtonWidth, dateLabelHeight))
             beginDateButton.addTarget(self, action: "selectDate:", forControlEvents: UIControlEvents.TouchUpInside)
-            var endDateLabel = UILabel(frame: CGRectMake(cell.frame.width - marginWidth*2 - dateLabelWidth - dateButtonWidth, marginWidth, dateLabelWidth, dateLabelHeight))
-            var endDateButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - dateButtonWidth, marginWidth, dateButtonWidth, dateLabelHeight))
+            let endDateLabel = UILabel(frame: CGRectMake(cell.frame.width - marginWidth*2 - dateLabelWidth - dateButtonWidth, marginWidth, dateLabelWidth, dateLabelHeight))
+            let endDateButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - dateButtonWidth, marginWidth, dateButtonWidth, dateLabelHeight))
             endDateButton.addTarget(self, action: "selectDate:", forControlEvents: UIControlEvents.TouchUpInside)
             beginDateLabel.text = "开始时间"
             beginDateLabel.textColor = UIColor.grayColor()
@@ -93,18 +93,18 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             endDateLabel.textColor = UIColor.grayColor()
             endDateLabel.font = UIFont(name: fontStr, size: 12.0)
             
-            var dateFormatter = NSDateFormatter()
-            var beginDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("beginDate") as! Double)/1000 as NSTimeInterval)
-            var endDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("endDate") as! Double)/1000 as NSTimeInterval)
+            let dateFormatter = NSDateFormatter()
+            let beginDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("beginDate") as! Double)/1000 as NSTimeInterval)
+            let endDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("endDate") as! Double)/1000 as NSTimeInterval)
             dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
-            var beginDateStr = dateFormatter.stringFromDate(beginDate)
+            let beginDateStr = dateFormatter.stringFromDate(beginDate)
             var endDateStr = String()
             endDateStr = dateFormatter.stringFromDate(endDate)
             formatUpdateDateButton(beginDateButton, title: beginDateStr)
             formatUpdateDateButton(endDateButton, title: endDateStr)
-            var treatmentNameTextField = UITextField(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, treatmentNameTextFieldHeight))
+            let treatmentNameTextField = UITextField(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, treatmentNameTextFieldHeight))
             treatmentNameTextField.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as! String
-            var dosageTextView = UITextView(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth + treatmentNameTextFieldHeight + marginWidth, cell.frame.width - marginWidth * 2, dosageTextViewHeight))
+            let dosageTextView = UITextView(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth + treatmentNameTextFieldHeight + marginWidth, cell.frame.width - marginWidth * 2, dosageTextViewHeight))
             dosageTextView.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as! String
             treatmentNameTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
             treatmentNameTextField.layer.borderWidth = 1.5
@@ -115,19 +115,19 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             dosageTextView.layer.borderWidth = 1.5
             dosageTextView.layer.cornerRadius = 5
             
-            var treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, 60))
+            let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, 60))
             treatmentLabel.textColor = mainColor
             treatmentLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as! String
             treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
             treatmentLabel.sizeToFit()
-            var dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, cell.frame.width - marginWidth * 2, 100))
+            let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, cell.frame.width - marginWidth * 2, 100))
             dosageLabel.textColor = mainColor
             dosageLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as! String
             dosageLabel.font = UIFont(name: fontStr, size: 12.0)
             dosageLabel.sizeToFit()
             
-            var editButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
-            var deleteButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth*2 - editButtonWidth*2, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
+            let editButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
+            let deleteButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth*2 - editButtonWidth*2, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
 
 //            editButton.layer.borderColor = mainColor.CGColor
 //            editButton.layer.borderWidth = 1.0
@@ -141,7 +141,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             editButton.addTarget(self, action: "editItem:", forControlEvents: UIControlEvents.TouchUpInside)
             deleteButton.addTarget(self, action: "deleteItem:", forControlEvents: UIControlEvents.TouchUpInside)
 
-            var saveButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 4 + treatmentNameTextFieldHeight + dosageTextViewHeight + dateLabelHeight, editButtonWidth, 25))
+            let saveButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 4 + treatmentNameTextFieldHeight + dosageTextViewHeight + dateLabelHeight, editButtonWidth, 25))
             saveButton.layer.borderColor = mainColor.CGColor
             saveButton.layer.borderWidth = 1.0
             saveButton.layer.cornerRadius = 5
@@ -186,15 +186,15 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     func editItem(sender:UIButton){
 //        CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
 //        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
-        var buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
-        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
+        let buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         isEditForRow[indexPath.row] = 1
         self.tableView.reloadData()
     }
     
     func deleteItem(sender: UIButton){
-        var buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
-        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
+        let buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         haalthyService.deleteTreatment(treatmentList[indexPath.row] as! NSDictionary)
         treatmentList.removeObjectAtIndex(indexPath.row)
         self.tableView.reloadData()
@@ -210,11 +210,11 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         for view in views{
             if view is UITextField{
                 
-                println("疗程名称"+(view as! UITextField).text)
-                updateTreatment.setObject((view as! UITextField).text, forKey: "treatmentName")
+                print("疗程名称"+(view as! UITextField).text!)
+                updateTreatment.setObject((view as! UITextField).text!, forKey: "treatmentName")
             }
             if view is UITextView{
-                println("剂量"+(view as! UITextView).text)
+                print("剂量"+(view as! UITextView).text)
                 updateTreatment.setObject((view as! UITextView).text, forKey: "dosage")
             }
 //            if (view is UIButton) && (view.frame.origin.x < 100) && (view.frame.origin.y < 10){
@@ -243,7 +243,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
         self.datePicker.datePickerMode = UIDatePickerMode.Date
 //        self.datePicker.addTarget(self, action: "dateChanged:", forControlEvents: UIControlEvents.ValueChanged)
-        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
         confirmButton.setTitle("确定", forState: UIControlState.Normal)
         confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
         confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
@@ -269,11 +269,11 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         return .None
     }
     func dateChanged(){
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
         let selectDateStr = dateFormatter.stringFromDate(self.datePicker.date)
-        var buttonPositon = editDateButton!.convertPoint(CGPointZero, toView: self.tableView)
-        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
+        let buttonPositon = editDateButton!.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         if buttonPositon.x < 100 {
             (treatmentList[indexPath.row] as! NSMutableDictionary).setObject(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "beginDate")
         }else{

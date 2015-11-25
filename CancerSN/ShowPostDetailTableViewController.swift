@@ -22,7 +22,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     var postId:Int?
     
     @IBAction func addCommentView(sender: UIBarButtonItem) {
-        var getAccessToken = GetAccessToken()
+        let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
@@ -34,15 +34,15 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
 
     
     func savePostData() {
-        var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context: NSManagedObjectContext = appDel.managedObjectContext!
+        let appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context: NSManagedObjectContext = appDel.managedObjectContext!
         
-        var fetchRequest = NSFetchRequest(entityName: entity)
+        let fetchRequest = NSFetchRequest(entityName: entity)
         fetchRequest.predicate = NSPredicate(format: "postID = %d", post.objectForKey("postID") as! Int)
-        if let fetchResults = appDel.managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [NSManagedObject] {
-            println(fetchResults.count)
+        if let fetchResults = (try? appDel.managedObjectContext!.executeFetchRequest(fetchRequest)) as? [NSManagedObject] {
+            print(fetchResults.count)
             for (var index = 0; index<fetchResults.count; index++){
-                var managedObject = fetchResults[index]
+                let managedObject = fetchResults[index]
                 managedObject.setValue(post.objectForKey("body"), forKey: "body")
                 managedObject.setValue(post.objectForKey("tags"), forKey: "tags")
                 managedObject.setValue(post.objectForKey("countComments"), forKey: "countComments")
@@ -53,7 +53,10 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
                 if( ((post.objectForKey("image")) is NSNull) == false ){
                     managedObject.setValue(post.objectForKey("image"), forKey: "image")
                 }
-                context.save(nil)
+                do {
+                    try context.save()
+                } catch _ {
+                }
             }
         }
     }
@@ -66,8 +69,8 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         if postId != nil{
-            var getPostByIdData = haalthyService.getPostById(postId!)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(getPostByIdData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            let getPostByIdData = haalthyService.getPostById(postId!)
+            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getPostByIdData, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSDictionary){
                 self.post = jsonResult as! NSDictionary
             }
@@ -76,7 +79,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "addCommentSegue" {
-            var destinationVC = segue.destinationViewController as! AddPostViewController
+            let destinationVC = segue.destinationViewController as! AddPostViewController
             destinationVC.postID = self.post.objectForKey("postID") as! Int
             destinationVC.isComment = 1
         }
@@ -92,10 +95,10 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     }
     
     override func viewDidAppear(animated: Bool) {
-        var getCommentsRespData = haalthyService.sendSyncGetCommentListRequest(post.objectForKey("postID") as! Int)
+        let getCommentsRespData = haalthyService.sendSyncGetCommentListRequest(post.objectForKey("postID") as! Int)
         let str: NSString = NSString(data: getCommentsRespData, encoding: NSUTF8StringEncoding)!
-        println(str)
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(getCommentsRespData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        print(str)
+        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getCommentsRespData, options: NSJSONReadingOptions.MutableContainers)
         if(jsonResult is NSArray){
             commentList = jsonResult as! NSArray
         }
@@ -142,7 +145,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         let cell = tableView.dequeueReusableCellWithIdentifier("postIdentifier", forIndexPath: indexPath) as! FeedTableViewCell
 //            cell.post = self.post
             cell.removeAllSubviews()
-            
+            cell.isDetail = true
 //            cell.imageTapDelegate = self
             cell.feedBodyDelegate = self
             cell.width = cell.frame.width
@@ -167,7 +170,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         }else if indexPath.section == 1{
             selectedProfileOwnername = (commentList[indexPath.row] as! NSDictionary).objectForKey("insertUsername") as! String
         }
-        var keyChainAcess = KeychainAccess()
+        let keyChainAcess = KeychainAccess()
         if keyChainAcess.getPasscode(usernameKeyChain) != nil{
             self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
         }else{

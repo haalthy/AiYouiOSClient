@@ -26,7 +26,7 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
         self.title = "设置密码"
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        self.navigationController?.navigationBar.titleTextAttributes = titleDict as [NSObject : AnyObject]
+        self.navigationController?.navigationBar.titleTextAttributes = titleDict as! [String : AnyObject]
         
 //        var cancelButton : UIBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
         
@@ -65,14 +65,14 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
     func submit(){
         if password.text == confirmPassword.text {
             var jsonResult:AnyObject? = nil
-            var resetPwd = haalthyService.resetPassword(password.text)
+            var resetPwd = haalthyService.resetPassword(password.text!)
             if resetPwd != nil{
-                jsonResult = NSJSONSerialization.JSONObjectWithData(resetPwd!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+                jsonResult = try? NSJSONSerialization.JSONObjectWithData(resetPwd!, options: NSJSONReadingOptions.MutableContainers)
                 let str: NSString = NSString(data: resetPwd!, encoding: NSUTF8StringEncoding)!
                 if str == "1"{
-                    println(str)
+                    print(str)
                     var keychainAccess = KeychainAccess()
-                    keychainAccess.setPasscode(passwordKeyChain, passcode: password.text)
+                    keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                     self.navigationController?.popToRootViewControllerAnimated(true)
                 }
             }

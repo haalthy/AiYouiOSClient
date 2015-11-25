@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gNw-hR-BVy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gNw-hR-BVy">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -16,14 +17,18 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="clinicTrailHeader" id="0xX-Dv-m16">
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0xX-Dv-m16" id="bnq-nO-o1m">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="clinicTrailList" id="Ijv-Fr-yVE">
+                                <rect key="frame" x="0.0" y="130" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ijv-Fr-yVE" id="PWJ-40-Fxc">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -48,19 +53,19 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedsHeader" id="Pum-KO-yMN">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pum-KO-yMN" id="ImM-qJ-5Bq">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedsList" rowHeight="152" id="m96-AD-YnT" customClass="FeedTableViewCell" customModule="CancerSN" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="130" width="600" height="152"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="m96-AD-YnT" id="XaX-2w-eDM">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="151.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RxK-Ji-bkc">
@@ -368,10 +373,10 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedCell" rowHeight="152" id="8fx-gY-she" customClass="FeedTableViewCell" customModule="CancerSN" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="282" width="600" height="152"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8fx-gY-she" id="L2E-JL-VXF">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="151.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </tableViewCellContentView>
@@ -460,8 +465,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="tagHeaderCell" rowHeight="82" id="KGG-LA-TWD" customClass="TagHeaderTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="22" width="600" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGG-LA-TWD" id="TDe-eG-Lb3">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="82"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lKz-4o-egh">
@@ -549,14 +556,18 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="tagContainerCell" id="oD8-3z-NrO">
+                                <rect key="frame" x="0.0" y="104" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oD8-3z-NrO" id="cAD-tN-qXf">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="submitCell" id="lr2-Y0-XoI">
+                                <rect key="frame" x="0.0" y="148" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lr2-Y0-XoI" id="aNz-ZL-TKo">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kay-fc-WD5">
@@ -651,6 +662,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="userListCell" rowHeight="83" id="3Ry-zc-wp9" customClass="UserListTableViewCell" customModule="CancerSN" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Ry-zc-wp9" id="ABV-NL-EQJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="82.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K9w-kn-lAn">
@@ -825,6 +837,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contentListCell" rowHeight="78" id="qvq-2P-Heu">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qvq-2P-Heu" id="Gym-sm-O9r">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="77.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bcx-xr-nCs">
@@ -1712,7 +1725,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e1c-No-re3">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e1c-No-re3">
                                 <rect key="frame" x="131" y="82" width="128" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="96" id="KFW-cr-PPH"/>
@@ -2250,11 +2263,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="profileListIdentifier" textLabel="Ebe-34-cwV" detailTextLabel="trd-0c-hOh" style="IBUITableViewCellStyleValue1" id="ZCL-Qz-NH7">
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZCL-Qz-NH7" id="Vjz-R2-NTP">
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="用户名" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ebe-34-cwV">
+                                            <rect key="frame" x="15" y="12" width="51" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -2264,6 +2280,7 @@
                                             </variation>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="trd-0c-hOh">
+                                            <rect key="frame" x="521" y="12" width="44" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
@@ -2320,6 +2337,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="treatmentSummaryCell" rowHeight="281" id="a3p-Pb-cfK" customClass="TreatmentSummaryTableViewCell" customModule="CancerSN" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="a3p-Pb-cfK" id="2SS-38-OPs">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="280.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z03-v3-nyZ">
@@ -2373,6 +2391,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="editTreatmentIndentifier" rowHeight="43" id="CY5-Gd-F9T">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CY5-Gd-F9T" id="0XJ-XF-tMt">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="42.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="治疗方案" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TwU-Kn-GXR">
@@ -2425,6 +2444,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="patientStatusListCell" rowHeight="86" id="bTM-6d-Gaf" customClass="PatientStatusTableViewCell" customModule="CancerSN" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bTM-6d-Gaf" id="77o-YV-0oy">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="85.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="treatmentlist" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8C4-NX-He0">
@@ -2513,15 +2533,18 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="questionListCell" rowHeight="81" id="6Ag-BK-Je1">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ag-BK-Je1" id="Bbw-4P-dMG">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="80.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="personalSettingCell" textLabel="iaV-hb-JiP" rowHeight="61" style="IBUITableViewCellStyleDefault" id="at7-gK-f15">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="at7-gK-f15" id="IbA-CY-33x">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="60.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iaV-hb-JiP">
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="60.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -2536,9 +2559,11 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="accountSettingCell" textLabel="nOU-z9-v68" rowHeight="61" style="IBUITableViewCellStyleDefault" id="JEe-h7-Nqe">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JEe-h7-Nqe" id="a9b-7t-Ltk">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="60.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nOU-z9-v68">
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="60.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -2553,9 +2578,11 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="logoutCell" textLabel="rwa-uK-rwp" rowHeight="133" style="IBUITableViewCellStyleDefault" id="W1P-2l-Vxc">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="W1P-2l-Vxc" id="4Oy-iK-w10">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="132.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rwa-uK-rwp">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="132.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -2694,8 +2721,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="headerIdentifier" rowHeight="49" id="UX3-Zs-2G7">
+                                <rect key="frame" x="0.0" y="86" width="600" height="49"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UX3-Zs-2G7" id="K16-y8-VwB">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="48.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="治疗方案" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WnW-rw-foK">
@@ -2744,8 +2773,10 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="treatmentIdentifier" rowHeight="49" id="ghC-Bp-7Qj">
+                                <rect key="frame" x="0.0" y="135" width="600" height="49"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ghC-Bp-7Qj" id="3ch-eK-iZB">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="48.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2945,8 +2976,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userListCell" rowHeight="75" id="sHW-gw-Vhu" customClass="UserListTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="86" width="600" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sHW-gw-Vhu" id="tj9-5D-lh0">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="74.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6wj-hv-Vag">
@@ -3446,9 +3479,11 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactListCell" textLabel="60r-x1-95U" style="IBUITableViewCellStyleDefault" id="AoM-p9-Fpn">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AoM-p9-Fpn" id="ErT-Hr-yvT">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="60r-x1-95U">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -3556,8 +3591,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postConentIdentifier" rowHeight="142" id="4PH-O1-XsU" customClass="PostContentTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="86" width="600" height="142"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4PH-O1-XsU" id="IyP-kn-5fw">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="141.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="postBody" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Zl-VN-Dg1">
@@ -3773,8 +3810,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentListIdentifier" rowHeight="96" id="rUW-6h-KMo" customClass="CommentListTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="228" width="600" height="96"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rUW-6h-KMo" id="Qzw-pO-dXq">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="95.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tl2-P5-OpX">
@@ -3897,8 +3936,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postIdentifier" rowHeight="96" id="7dJ-JE-NOH" customClass="FeedTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="324" width="600" height="96"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7dJ-JE-NOH" id="ytB-Gd-gSk">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="95.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -3940,8 +3981,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCellIdentifier" rowHeight="91" id="7ql-5O-j43">
+                                <rect key="frame" x="0.0" y="86" width="600" height="91"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7ql-5O-j43" id="LF3-uu-FZX">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="90.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -3966,8 +4009,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" id="5PZ-UL-UcC" customClass="FeedTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5PZ-UL-UcC" id="NTS-bP-3q5">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -4590,6 +4635,13 @@
                                 <exclude reference="bXJ-Z0-7aT"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="aEI-4o-6oW"/>
+                                <exclude reference="F0f-o8-t6T"/>
+                                <exclude reference="ULb-S2-VFk"/>
+                                <exclude reference="i5P-Z2-XJy"/>
+                                <exclude reference="rLG-6z-DwX"/>
+                                <exclude reference="xQr-Rc-u30"/>
+                                <exclude reference="nv0-Jf-5X3"/>
                                 <exclude reference="8Sg-FB-eiw"/>
                                 <exclude reference="RbA-iW-OCt"/>
                                 <exclude reference="TGr-rf-cSx"/>
@@ -4598,30 +4650,23 @@
                                 <exclude reference="PIH-En-RFx"/>
                                 <exclude reference="TJq-ku-E27"/>
                                 <exclude reference="dzQ-Wk-k2F"/>
-                                <exclude reference="nv0-Jf-5X3"/>
+                                <exclude reference="1aP-gB-ZEX"/>
+                                <exclude reference="2bR-ZK-D0E"/>
+                                <exclude reference="If4-em-xGR"/>
+                                <exclude reference="VOb-vG-0XK"/>
+                                <exclude reference="40n-0c-20o"/>
+                                <exclude reference="QJT-jm-JfZ"/>
+                                <exclude reference="wNR-yD-bCR"/>
                                 <exclude reference="0s2-pk-ZEm"/>
                                 <exclude reference="6ze-bN-a55"/>
                                 <exclude reference="DfK-62-zVX"/>
                                 <exclude reference="bOk-S3-2kP"/>
                                 <exclude reference="gVB-fZ-itg"/>
                                 <exclude reference="gqU-BW-zZt"/>
-                                <exclude reference="aEI-4o-6oW"/>
-                                <exclude reference="F0f-o8-t6T"/>
-                                <exclude reference="ULb-S2-VFk"/>
-                                <exclude reference="i5P-Z2-XJy"/>
                                 <exclude reference="6Gf-3y-4jX"/>
                                 <exclude reference="Yb5-aw-AsI"/>
                                 <exclude reference="nqi-Gh-tp7"/>
                                 <exclude reference="wtc-P0-hUj"/>
-                                <exclude reference="40n-0c-20o"/>
-                                <exclude reference="QJT-jm-JfZ"/>
-                                <exclude reference="wNR-yD-bCR"/>
-                                <exclude reference="1aP-gB-ZEX"/>
-                                <exclude reference="2bR-ZK-D0E"/>
-                                <exclude reference="If4-em-xGR"/>
-                                <exclude reference="VOb-vG-0XK"/>
-                                <exclude reference="rLG-6z-DwX"/>
-                                <exclude reference="xQr-Rc-u30"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -4636,6 +4681,13 @@
                                 <include reference="bXJ-Z0-7aT"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="aEI-4o-6oW"/>
+                                <include reference="F0f-o8-t6T"/>
+                                <exclude reference="ULb-S2-VFk"/>
+                                <include reference="i5P-Z2-XJy"/>
+                                <include reference="rLG-6z-DwX"/>
+                                <exclude reference="xQr-Rc-u30"/>
+                                <include reference="nv0-Jf-5X3"/>
                                 <exclude reference="8Sg-FB-eiw"/>
                                 <include reference="RbA-iW-OCt"/>
                                 <include reference="TGr-rf-cSx"/>
@@ -4644,30 +4696,23 @@
                                 <include reference="PIH-En-RFx"/>
                                 <include reference="TJq-ku-E27"/>
                                 <include reference="dzQ-Wk-k2F"/>
-                                <include reference="nv0-Jf-5X3"/>
+                                <include reference="1aP-gB-ZEX"/>
+                                <exclude reference="2bR-ZK-D0E"/>
+                                <exclude reference="If4-em-xGR"/>
+                                <include reference="VOb-vG-0XK"/>
+                                <include reference="40n-0c-20o"/>
+                                <exclude reference="QJT-jm-JfZ"/>
+                                <include reference="wNR-yD-bCR"/>
                                 <include reference="0s2-pk-ZEm"/>
                                 <include reference="6ze-bN-a55"/>
                                 <exclude reference="DfK-62-zVX"/>
                                 <include reference="bOk-S3-2kP"/>
                                 <include reference="gVB-fZ-itg"/>
                                 <include reference="gqU-BW-zZt"/>
-                                <exclude reference="aEI-4o-6oW"/>
-                                <include reference="F0f-o8-t6T"/>
-                                <exclude reference="ULb-S2-VFk"/>
-                                <include reference="i5P-Z2-XJy"/>
                                 <include reference="6Gf-3y-4jX"/>
                                 <include reference="Yb5-aw-AsI"/>
                                 <include reference="nqi-Gh-tp7"/>
                                 <include reference="wtc-P0-hUj"/>
-                                <include reference="40n-0c-20o"/>
-                                <exclude reference="QJT-jm-JfZ"/>
-                                <include reference="wNR-yD-bCR"/>
-                                <include reference="1aP-gB-ZEX"/>
-                                <exclude reference="2bR-ZK-D0E"/>
-                                <exclude reference="If4-em-xGR"/>
-                                <include reference="VOb-vG-0XK"/>
-                                <include reference="rLG-6z-DwX"/>
-                                <exclude reference="xQr-Rc-u30"/>
                             </mask>
                         </variation>
                     </view>
@@ -4960,34 +5005,34 @@
                                 <exclude reference="Khj-Zr-wWc"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="5Ro-nN-ffl"/>
+                                <exclude reference="cwc-ss-0Lh"/>
+                                <exclude reference="mzu-Mp-Wvl"/>
+                                <exclude reference="3EP-pa-GzM"/>
+                                <exclude reference="BwK-kg-ij8"/>
+                                <exclude reference="ybw-mF-hZ5"/>
+                                <exclude reference="pOw-lL-EjP"/>
+                                <exclude reference="3Il-MR-mYY"/>
+                                <exclude reference="W82-Su-W9T"/>
+                                <exclude reference="ntM-qO-FEC"/>
+                                <exclude reference="wez-kR-AAj"/>
+                                <exclude reference="sbF-fV-rDN"/>
                                 <exclude reference="9MT-pT-GpG"/>
                                 <exclude reference="Liy-uz-XAL"/>
                                 <exclude reference="Mod-x3-3Qi"/>
                                 <exclude reference="ZdE-gF-tld"/>
-                                <exclude reference="W82-Su-W9T"/>
-                                <exclude reference="ntM-qO-FEC"/>
-                                <exclude reference="wez-kR-AAj"/>
-                                <exclude reference="pOw-lL-EjP"/>
+                                <exclude reference="3hH-tV-gpf"/>
+                                <exclude reference="D23-7A-hpQ"/>
+                                <exclude reference="GZ7-XM-5TQ"/>
                                 <exclude reference="ONm-cG-yxG"/>
                                 <exclude reference="VyD-oc-bKt"/>
                                 <exclude reference="XW2-8n-2Zs"/>
                                 <exclude reference="gWO-EO-k6b"/>
                                 <exclude reference="jHO-LG-L09"/>
-                                <exclude reference="3EP-pa-GzM"/>
-                                <exclude reference="5Ro-nN-ffl"/>
-                                <exclude reference="cwc-ss-0Lh"/>
-                                <exclude reference="mzu-Mp-Wvl"/>
                                 <exclude reference="5MN-Im-djQ"/>
                                 <exclude reference="Eyo-a5-Ov8"/>
                                 <exclude reference="Koq-CT-haX"/>
                                 <exclude reference="oYz-MO-oRg"/>
-                                <exclude reference="3hH-tV-gpf"/>
-                                <exclude reference="D23-7A-hpQ"/>
-                                <exclude reference="GZ7-XM-5TQ"/>
-                                <exclude reference="3Il-MR-mYY"/>
-                                <exclude reference="sbF-fV-rDN"/>
-                                <exclude reference="BwK-kg-ij8"/>
-                                <exclude reference="ybw-mF-hZ5"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -5003,34 +5048,34 @@
                                 <include reference="Khj-Zr-wWc"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="5Ro-nN-ffl"/>
+                                <include reference="cwc-ss-0Lh"/>
+                                <include reference="mzu-Mp-Wvl"/>
+                                <exclude reference="3EP-pa-GzM"/>
+                                <include reference="BwK-kg-ij8"/>
+                                <include reference="ybw-mF-hZ5"/>
+                                <include reference="pOw-lL-EjP"/>
+                                <include reference="3Il-MR-mYY"/>
+                                <include reference="W82-Su-W9T"/>
+                                <include reference="ntM-qO-FEC"/>
+                                <include reference="wez-kR-AAj"/>
+                                <include reference="sbF-fV-rDN"/>
                                 <include reference="9MT-pT-GpG"/>
                                 <include reference="Liy-uz-XAL"/>
                                 <include reference="Mod-x3-3Qi"/>
                                 <include reference="ZdE-gF-tld"/>
-                                <include reference="W82-Su-W9T"/>
-                                <include reference="ntM-qO-FEC"/>
-                                <include reference="wez-kR-AAj"/>
-                                <include reference="pOw-lL-EjP"/>
+                                <include reference="3hH-tV-gpf"/>
+                                <include reference="D23-7A-hpQ"/>
+                                <include reference="GZ7-XM-5TQ"/>
                                 <include reference="ONm-cG-yxG"/>
                                 <include reference="VyD-oc-bKt"/>
                                 <include reference="XW2-8n-2Zs"/>
                                 <include reference="gWO-EO-k6b"/>
                                 <include reference="jHO-LG-L09"/>
-                                <exclude reference="3EP-pa-GzM"/>
-                                <include reference="5Ro-nN-ffl"/>
-                                <include reference="cwc-ss-0Lh"/>
-                                <include reference="mzu-Mp-Wvl"/>
                                 <include reference="5MN-Im-djQ"/>
                                 <exclude reference="Eyo-a5-Ov8"/>
                                 <include reference="Koq-CT-haX"/>
                                 <include reference="oYz-MO-oRg"/>
-                                <include reference="3hH-tV-gpf"/>
-                                <include reference="D23-7A-hpQ"/>
-                                <include reference="GZ7-XM-5TQ"/>
-                                <include reference="3Il-MR-mYY"/>
-                                <include reference="sbF-fV-rDN"/>
-                                <include reference="BwK-kg-ij8"/>
-                                <include reference="ybw-mF-hZ5"/>
                             </mask>
                         </variation>
                     </view>
@@ -5285,13 +5330,15 @@
             <objects>
                 <tableViewController id="mzn-He-8lK" customClass="AddStatusTableViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="m5K-Og-yPU">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="titleCell" rowHeight="102" id="RqP-yC-dLw" customClass="AddPatientStatusHeaderTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="86" width="400" height="102"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RqP-yC-dLw" id="BFK-uI-K3n">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请输入病人状态" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="71A-0F-KQ9">
@@ -5441,32 +5488,42 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="clinicReportCell" rowHeight="53" id="xMt-n4-rau">
+                                <rect key="frame" x="0.0" y="188" width="400" height="53"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xMt-n4-rau" id="dCd-uz-zIo">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="53"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="symptonCell" id="uXC-9F-7OU">
+                                <rect key="frame" x="0.0" y="241" width="400" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uXC-9F-7OU" id="nZQ-YA-CI1">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="textInputCell" id="IWi-zx-lYb">
+                                <rect key="frame" x="0.0" y="285" width="400" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IWi-zx-lYb" id="3U0-9c-3oo">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="imageCell" id="rZK-Mh-7Ur">
+                                <rect key="frame" x="0.0" y="329" width="400" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rZK-Mh-7Ur" id="Bph-60-dGM">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="submitButtonCell" id="QRu-fP-Udb">
+                                <rect key="frame" x="0.0" y="373" width="400" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QRu-fP-Udb" id="9i2-iZ-cYG">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -5522,18 +5579,18 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="RRD-S8-Ddl"/>
-        <segue reference="MSq-7f-fYW"/>
-        <segue reference="ffQ-oh-eaQ"/>
         <segue reference="JOb-ja-OWF"/>
         <segue reference="YSX-l4-ZAm"/>
-        <segue reference="Qz6-Kr-xWf"/>
         <segue reference="ga7-CB-MZD"/>
+        <segue reference="sHb-FR-3Sz"/>
+        <segue reference="ffQ-oh-eaQ"/>
+        <segue reference="dbv-hE-skm"/>
+        <segue reference="4Ks-tV-vkJ"/>
+        <segue reference="MSq-7f-fYW"/>
+        <segue reference="OY8-IJ-Vml"/>
+        <segue reference="RRD-S8-Ddl"/>
+        <segue reference="1CO-dj-YDr"/>
         <segue reference="ZJq-lG-PQp"/>
         <segue reference="RpX-ky-q6V"/>
-        <segue reference="lZu-xP-CLO"/>
-        <segue reference="4Ks-tV-vkJ"/>
-        <segue reference="xHS-pa-bC2"/>
-        <segue reference="OY8-IJ-Vml"/>
     </inferredMetricsTieBreakers>
 </document>

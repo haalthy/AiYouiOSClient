@@ -19,12 +19,12 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         super.viewDidLoad()
         imagePicker.delegate = self
 
-        var backButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Done, target: self, action: "submit")
+        let backButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Done, target: self, action: "submit")
         self.navigationItem.rightBarButtonItem = backButton
     }
     
     func submit(){
-        var haalthyService = HaalthyService()
+        let haalthyService = HaalthyService()
         haalthyService.updateUser(userProfile)
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -68,7 +68,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("profileListIdentifier", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("profileListIdentifier", forIndexPath: indexPath) 
 ////        cell.accessoryType = UITableViewCellAccessoryType.DetailDisclosureButton
         if indexPath.section == 0{
             switch indexPath.row{
@@ -77,7 +77,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
 //                cell.detailTextLabel?.frame = CGRectMake(cell.detailTextLabel?.frame.origin.x, cell.detailTextLabel?.frame.origin.y, 64, 64)
                 if (self.userProfile.objectForKey("image") != nil) && (self.userProfile.objectForKey("image") is NSNull) == false{
                     let dataString = self.userProfile.objectForKey("image") as! String
-                    let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                    let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                     imageView.image = UIImage(data: imageData)
                 }else{
                     imageView.image = UIImage(named: "Mario.jpg")
@@ -164,8 +164,8 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 case 3:
                     var stageAndMetastasisStr = String()
                     if (userProfile.objectForKey("stage") != nil) && (userProfile.objectForKey("stage") is NSNull) == false{
-                        var stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as! NSArray
-                        stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as! NSArray)[0] as! String
+                        var stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray
+                        stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray)[0] as! String
                     }else{
                         stageAndMetastasisStr = nullItemStr
                     }
@@ -229,19 +229,19 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         }
     }
     //MARK: Delegates
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         var selectedImage = UIImage()
-        var publicService = PublicService()
+        let publicService = PublicService()
         selectedImage = publicService.cropToSquare(image: chosenImage)
         
-        var newSize = CGSizeMake(128.0, 128.0)
+        let newSize = CGSizeMake(128.0, 128.0)
         UIGraphicsBeginImageContext(newSize)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         portraitImage = UIGraphicsGetImageFromCurrentImageContext()
         
-        var imageData: NSData = UIImagePNGRepresentation(selectedImage)
-        var imageDataStr:String = imageData.base64EncodedStringWithOptions(.allZeros)
+        let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
+        let imageDataStr:String = imageData.base64EncodedStringWithOptions([])
         
         userProfile.setObject(imageDataStr, forKey: "image")
         
@@ -252,7 +252,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-    func gestureRecognizer(UIGestureRecognizer,
+    func gestureRecognizer(_: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
             return true
     }

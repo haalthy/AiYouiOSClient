@@ -36,11 +36,11 @@ class MentionedPostTableViewController: UITableViewController, FeedBodyDelegate 
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell", forIndexPath: indexPath) as! FeedTableViewCell
-        var post = postList[indexPath.row]
+        let post = postList[indexPath.row]
         cell.removeAllSubviews()
         
         //separatorLine
-        var separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
+        let separatorLine:UIImageView = UIImageView(frame: CGRectMake(0, 0, tableView.frame.size.width-1.0, 3.0))
         separatorLine.image = UIImage(named: "grayline.png")?.stretchableImageWithLeftCapWidth(1, topCapHeight: 0)
         
 //        cell.imageTapDelegate = self
@@ -67,28 +67,28 @@ class MentionedPostTableViewController: UITableViewController, FeedBodyDelegate 
     }
     
     override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print(self.tableView.contentSize)
-        println(self.tableView.contentOffset.y + self.tableView.frame.height)
+        print(self.tableView.contentSize, terminator: "")
+        print(self.tableView.contentOffset.y + self.tableView.frame.height)
         if (self.tableView.contentOffset.y + self.tableView.frame.height) >  self.tableView.contentSize.height{
-            println("load more")
+            print("load more")
             getMorePreviousFeeds()
         }
     }
     
     func getMorePreviousFeeds(){
-        var getFeedsData = haalthyService.getMentionedPostList(previousFeedFetchTimeStamp, count: 20)
+        let getFeedsData = haalthyService.getMentionedPostList(previousFeedFetchTimeStamp, count: 20)
         var jsonResult:AnyObject? = nil
         if getFeedsData != nil{
-            jsonResult = NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            jsonResult = try? NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers)
             let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
-            println(str)
+            print(str)
         }
         if(jsonResult is NSArray) && (jsonResult as! NSArray).count > 0 {
             self.postList.addObjectsFromArray(jsonResult as! [AnyObject])
             previousFeedFetchTimeStamp = (postList.objectAtIndex(postList.count - 1) as! NSDictionary).objectForKey("dateInserted") as! Int - 1000
             self.tableView.reloadData()
         }else{
-            println("get feeds error")
+            print("get feeds error")
         }
     }
     

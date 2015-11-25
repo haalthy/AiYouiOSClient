@@ -23,6 +23,7 @@ class FeedTableViewCell: UITableViewCell {
     var width: CGFloat = 0
     var indexPath: NSIndexPath?
     var imageCountPerLine:Int = 3
+    var isDetail:Bool = false
     
     var feed = NSDictionary(){
         didSet{
@@ -31,7 +32,7 @@ class FeedTableViewCell: UITableViewCell {
             var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
             if((feed.valueForKey("image") != nil) && (feed.valueForKey("image") is NSNull) == false){
                 let dataString = feed.valueForKey("image") as! String
-                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                 imageView.image = UIImage(data: imageData)
             }else{
                 imageView.image = UIImage(named: "Mario.jpg")
@@ -98,6 +99,9 @@ class FeedTableViewCell: UITableViewCell {
             var feedBody = UILabel(frame: CGRectMake(10, 80, width - 20, 0))
             if (feed.objectForKey("type") as! Int) != 1{
                 feedBody.numberOfLines = 5
+                if isDetail {
+                    feedBody.numberOfLines = 0
+                }
                 feedBody.lineBreakMode = NSLineBreakMode.ByCharWrapping
                 feedBody.font = UIFont(name: "Helvetica", size: 13.0)
                 feedBody.text = (feed.objectForKey("body") as! String).stringByReplacingOccurrencesOfString("*", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
@@ -120,11 +124,11 @@ class FeedTableViewCell: UITableViewCell {
                 for treatment in treatmentList {
                     var treatmentItemStr:String = treatment as! String
                     
-                    if (treatmentItemStr as! NSString).length == 0{
+                    if (treatmentItemStr as NSString).length == 0{
                         break
                     }
-                    if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: advance(treatmentItemStr.startIndex, 1))) == "*" {
-                        treatmentItemStr = treatmentItemStr.substringFromIndex(advance(treatmentStr.startIndex, 1))
+                    if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: treatmentItemStr.startIndex.advancedBy(1))) == "*" {
+                        treatmentItemStr = treatmentItemStr.substringFromIndex(treatmentStr.startIndex.advancedBy(1))
                     }
                     var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
                     var treatmentName = treatmentNameAndDosage[0] as! String
@@ -174,7 +178,7 @@ class FeedTableViewCell: UITableViewCell {
                     var postSImageView = UIImageView(frame: CGRectMake(postSImageX, postSImageY, postSImageWidth, postSImageWidth))
                     if postSImage is String{
                         let dataString = postSImage as! String
-                        let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+                        let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                         postSImageView.image = UIImage(data: imageData)
                     }else if postSImage is NSData{
                         postSImageView.image = UIImage(data: postSImage as! NSData)
@@ -217,7 +221,7 @@ class FeedTableViewCell: UITableViewCell {
     
     func imageTapHandler(sender: UITapGestureRecognizer){
         
-        println(feed["insertUsername"])
+        print(feed["insertUsername"])
         self.imageTapDelegate?.imageTap(feed["insertUsername"] as! String)
     }
     

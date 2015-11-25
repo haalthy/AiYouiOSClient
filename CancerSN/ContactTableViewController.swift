@@ -20,12 +20,12 @@ class ContactTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         var userListData = NSData()
-        var keychainAccess = KeychainAccess()
-        var username = keychainAccess.getPasscode(usernameKeyChain) as! String
+        let keychainAccess = KeychainAccess()
+        let username = keychainAccess.getPasscode(usernameKeyChain) as! String
 
         userListData = haalthyService.getFollowingUsers(username)!
 
-        var jsonResult = NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers)
         if jsonResult is NSArray {
             contactList = jsonResult as! NSArray
         }
@@ -52,12 +52,12 @@ class ContactTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("contactListCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("contactListCell", forIndexPath: indexPath) 
         var user = contactList[indexPath.row] as! NSDictionary
         // Configure the cell...
         if((user["image"] is NSNull) == false){
             let dataString = user.objectForKey("image") as! String
-            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
             
             cell.imageView?.image = UIImage(data: imageData)
         }

@@ -34,10 +34,10 @@ class UserListTableViewCell: UITableViewCell {
     @IBAction func addFollowing(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         if profileSet.objectForKey(accessNSUserData) != nil{
-            var addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            var deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
-            println(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+            let addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
+            var jsonResult = try? NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers)
+            let deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
+            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
         }else{
             self.delegate?.performLoginSegue()
         }
@@ -59,7 +59,7 @@ class UserListTableViewCell: UITableViewCell {
     func updateUI(){
         if((user["image"] is NSNull) == false){
             let dataString = user["image"] as! String
-            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(0))!
+            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
             
             userImage.image = UIImage(data: imageData)
         }

@@ -28,7 +28,7 @@ class AddNewTreatmentEndDateViewController: UIViewController {
         datePickerContainerView.backgroundColor = UIColor.whiteColor()
         self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
         self.datePicker.datePickerMode = UIDatePickerMode.Date
-        var confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
         confirmButton.setTitle("确定", forState: UIControlState.Normal)
         confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
         confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
@@ -104,6 +104,29 @@ class AddNewTreatmentEndDateViewController: UIViewController {
 
 extension AddNewTreatmentEndDateViewController: CVCalendarViewDelegate
 {
+    func presentationMode() -> CalendarMode {
+        return .MonthView
+    }
+    
+    func shouldShowWeekdaysOut() -> Bool {
+        return true
+    }
+    
+    func firstWeekday() -> Weekday {
+        return .Sunday
+    }
+    
+    
+    func didSelectDayView(dayView: CVCalendarDayView) {
+        let date = dayView.date
+        print("\(calendarView.presentedDate.commonDescription) is selected!")
+        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentEnddate)
+    }
+    
+    
+    func topMarker(shouldDisplayOnDayView dayView: CVCalendarDayView) -> Bool {
+        return true
+    }
     func presentedDateUpdated(date: CVDate) {
         if monthLabel.titleLabel!.text != date.globalDescription && self.animationFinished {
             let updatedMonthLabel = UILabel()
@@ -170,32 +193,7 @@ extension AddNewTreatmentEndDateViewController: CVCalendarViewDelegate
 }
 
 
-extension AddNewTreatmentEndDateViewController: CVCalendarViewDelegate {
-    func presentationMode() -> CalendarMode {
-        return .MonthView
-    }
-    
-    func shouldShowWeekdaysOut() -> Bool {
-        return true
-    }
-    
-    func firstWeekday() -> Weekday {
-        return .Sunday
-    }
-    
-    
-    func didSelectDayView(dayView: CVCalendarDayView) {
-        let date = dayView.date
-        println("\(calendarView.presentedDate.commonDescription) is selected!")
-        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentEnddate)
-    }
-    
-    
-    func topMarker(shouldDisplayOnDayView dayView: CVCalendarDayView) -> Bool {
-        return true
-    }
-    
-}
+
 
 // MARK: - CVCalendarViewAppearanceDelegate
 
