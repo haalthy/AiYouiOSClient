@@ -26,8 +26,11 @@ class PatientStatusTableViewCell: UITableViewCell {
         dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
         let insertedDateStr = dateFormatter.stringFromDate(insertedDate)
         patientStatusDate.text = insertedDateStr
+        var clinicReportStr: String = ""
         let patientStatusStr = (patientStatus.objectForKey("statusDesc") as! String)
-        let clinicReportStr = (patientStatus.objectForKey("clinicReport") as! String)
+        if (patientStatus.objectForKey("clinicReport") != nil) && (patientStatus.objectForKey("clinicReport") is NSNull) == false {
+            clinicReportStr = (patientStatus.objectForKey("clinicReport") as! String)
+        }
         var patientsDetailStr = patientStatusStr + clinicReportStr
         patientsDetailStr = patientsDetailStr.stringByReplacingOccurrencesOfString("*", withString: " ")
         patientStatusDetail.text = patientsDetailStr as String

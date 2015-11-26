@@ -130,12 +130,14 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     
     func addTreatmentPublic(){
         submitTreatment(1)
-        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
+//        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func addTreatmentPrivate(){
         submitTreatment(0)
-        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
+//        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func submitTreatment(isPublic: Int){

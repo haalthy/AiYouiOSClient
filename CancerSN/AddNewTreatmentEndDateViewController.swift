@@ -21,7 +21,7 @@ class AddNewTreatmentEndDateViewController: UIViewController {
     var dateInserted:NSDate?
     
     @IBAction func selectDate(sender: UIButton) {
-        let datePickerHeight:CGFloat = 200
+        let datePickerHeight :CGFloat = 200
         let confirmButtonWidth:CGFloat = 100
         let confirmButtonHeight:CGFloat = 30
         datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
@@ -80,6 +80,7 @@ class AddNewTreatmentEndDateViewController: UIViewController {
 //        println(date)
 //        profileSet.setObject(date.timeIntervalSince1970, forKey: newTreatmentEnddate)
         profileSet.setObject(defaultTreatmentEndDate, forKey: newTreatmentEnddate)
+        self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
 
     }
     
@@ -87,6 +88,7 @@ class AddNewTreatmentEndDateViewController: UIViewController {
         if profileSet.objectForKey(newTreatmentEnddate) == nil{
             profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentEnddate)
         }
+    self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

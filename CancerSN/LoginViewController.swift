@@ -32,7 +32,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     @IBAction func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-        self.performSegueWithIdentifier("fillInfoSegue", sender: self)
+//        self.performSegueWithIdentifier("fillInfoSegue", sender: self)
+        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        var controller = storyboard.instantiateViewControllerWithIdentifier("StartRegister") as UIViewController
+        
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func tencentDidLogin(){

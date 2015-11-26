@@ -738,7 +738,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 usedToBeInLoginView = true
             }
             if indexPath.section == 1 {
-                self.performSegueWithIdentifier("setProfileSegue", sender: self)
+//                self.performSegueWithIdentifier("setProfileSegue", sender: self)
+                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                var controller = storyboard.instantiateViewControllerWithIdentifier("ProfileDetail") as UIViewController
+                
+                self.navigationController?.pushViewController(controller, animated: true)
+//                    .presentViewController(controller, animated: true, completion: nil)
             }
             if indexPath.section == 0 {
                 if indexPath.row == 2 {
