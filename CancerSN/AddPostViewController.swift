@@ -30,18 +30,18 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     let haalthyService = HaalthyService()
     var allTagList = NSArray()
 
-    @IBAction func testButton(sender: UIButton) {
-//        self.postContent.frame.size.height = 50
-        self.addMentionBtn.center = CGPoint(x: self.addMentionBtn.center.x + 10, y: self.addMentionBtn.center.y + 10 )
-    }
+//    @IBAction func testButton(sender: UIButton) {
+////        self.postContent.frame.size.height = 50
+//        self.addMentionBtn.center = CGPoint(x: self.addMentionBtn.center.x + 10, y: self.addMentionBtn.center.y + 10 )
+//    }
     
-    @IBAction func selectTags(sender: UIButton) {
-        self.performSegueWithIdentifier("selectTagSegue", sender: self)
-    }
+//    @IBAction func selectTags(sender: UIButton) {
+//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
+//    }
     
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(false, completion: nil)
-        self.performSegueWithIdentifier("selectTagSegue", sender: self)
+//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
     }
     
     @IBAction func submit(sender: UIButton) {

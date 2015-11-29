@@ -63,6 +63,7 @@
 		2AAA37B91B96416C00576C7C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */; };
 		2AB7BE821BABF3010069C27B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB7BE811BABF3010069C27B /* ContactViewController.swift */; };
 		2AB8E4441C05B6E300F39409 /* Registeration.Storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8E4431C05B6E300F39409 /* Registeration.Storyboard */; settings = {ASSET_TAGS = (); }; };
+		2AB8E4461C06E54900F39409 /* Add.Storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8E4451C06E54900F39409 /* Add.Storyboard */; settings = {ASSET_TAGS = (); }; };
 		2ABCAE471BCECFE9004C9373 /* AddPatientStatusHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABCAE461BCECFE9004C9373 /* AddPatientStatusHeaderTableViewCell.swift */; };
 		2AC59C141B5D77C600C4FE36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C131B5D77C600C4FE36 /* AppDelegate.swift */; };
 		2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1A1B5D77C600C4FE36 /* Images.xcassets */; };
@@ -170,6 +171,7 @@
 		2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		2AB7BE811BABF3010069C27B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		2AB8E4431C05B6E300F39409 /* Registeration.Storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Registeration.Storyboard; sourceTree = "<group>"; };
+		2AB8E4451C06E54900F39409 /* Add.Storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Add.Storyboard; sourceTree = "<group>"; };
 		2ABCAE461BCECFE9004C9373 /* AddPatientStatusHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		2AC59C0E1B5D77C600C4FE36 /* CancerSN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CancerSN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC59C121B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 		2AB8E43B1C05A80D00F39409 /* Add */ = {
 			isa = PBXGroup;
 			children = (
+				2AB8E4451C06E54900F39409 /* Add.Storyboard */,
 				2AB8E43D1C05A91300F39409 /* Controller */,
 				2AB8E43C1C05A90800F39409 /* View */,
 			);
@@ -392,7 +395,6 @@
 				2AC59C391B5DEF4C00C4FE36 /* TagHeaderTableViewCell.swift */,
 				2A9957F51BBF329800DAB05B /* FeedTableViewCell.swift */,
 				2A2436051B6FE7B5009F7F71 /* CommentListTableViewCell.swift */,
-				2AA264DA1B6836AB001E52E7 /* FeedsTableViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -404,6 +406,7 @@
 				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
 				2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */,
 				2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */,
+				2AA264DA1B6836AB001E52E7 /* FeedsTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -593,6 +596,7 @@
 				2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */,
 				2A91D4641BAE408300ADC095 /* tagOnPostViewbackground.png in Resources */,
 				2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */,
+				2AB8E4461C06E54900F39409 /* Add.Storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

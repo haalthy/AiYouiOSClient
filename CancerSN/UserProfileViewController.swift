@@ -582,9 +582,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-        if profileSegment.selectedSegmentIndex == 1 {
-            heightForHeader = 40
-        }
+//        if profileSegment.selectedSegmentIndex == 1 {
+//            heightForHeader = 40
+//        }
         if profileSegment.selectedSegmentIndex == 2 {
             heightForHeader = 10
         }
@@ -708,20 +708,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-        if profileSegment.selectedSegmentIndex == 1{
-            let addBroadcastBtnWidth = 200
-            let coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
-            let addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
-            addBroadcastBtn.backgroundColor = mainColor
-            addBroadcastBtn.layer.cornerRadius = 5
-            addBroadcastBtn.titleLabel?.textAlignment = NSTextAlignment.Center
-            addBroadcastBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-            addBroadcastBtn.setTitle("有新问题？点击发送广播", forState: UIControlState.Normal)
-            addBroadcastBtn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 14)
-            addBroadcastBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
-            headerView.addSubview(addBroadcastBtn)
-            
-        }
+//        if profileSegment.selectedSegmentIndex == 1{
+//            let addBroadcastBtnWidth = 200
+//            let coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
+//            let addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
+//            addBroadcastBtn.backgroundColor = mainColor
+//            addBroadcastBtn.layer.cornerRadius = 5
+//            addBroadcastBtn.titleLabel?.textAlignment = NSTextAlignment.Center
+//            addBroadcastBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+//            addBroadcastBtn.setTitle("有新问题？点击发送广播", forState: UIControlState.Normal)
+//            addBroadcastBtn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 14)
+//            addBroadcastBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
+//            headerView.addSubview(addBroadcastBtn)
+//            
+//        }
         if profileSegment.selectedSegmentIndex == 2 {
             headerView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 10))
             headerView.backgroundColor = sectionHeaderColor
@@ -776,14 +776,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
     }
     
-    func addPost(){
-        self.performSegueWithIdentifier("addPostSegue", sender: self)
-    }
+//    func addPost(){
+//        var storyboard = UIStoryboard(name: "Add", bundle: nil)
+//        var popController = (storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostViewController)
+//        
+//        self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
+//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "addPostSegue" {
-            (segue.destinationViewController as! AddPostViewController).isBroadcast = 1
-        }
+//        if segue.identifier == "addPostSegue" {
+//            (segue.destinationViewController as! AddPostViewController).isBroadcast = 1
+//        }
         if segue.identifier == "setPasswordSegue" {
             (segue.destinationViewController as! SettingPasswordViewController).username = userProfile.objectForKey("username") as! String
         }

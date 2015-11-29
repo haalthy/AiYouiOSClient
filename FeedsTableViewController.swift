@@ -23,6 +23,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     var isRefreshData: Bool = false
     let profileSet = NSUserDefaults.standardUserDefaults()
     
+    @IBOutlet weak var addItem: UIButton!
     @IBAction func selectTags(sender: UIButton) {
         self.performSegueWithIdentifier("showTagsSegue", sender: self)
     }
@@ -33,24 +34,51 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBAction func addPopover(sender: UIButton) {
         if username != nil{
-            self.performSegueWithIdentifier("addViewSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Add", bundle: nil)
+            var popoverContent = storyboard.instantiateViewControllerWithIdentifier("AddEntry") as! UIViewController
+//            var popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as! AddItemViewController).popoverPresentationController
+            var nav = UINavigationController(rootViewController: popoverContent)
+            nav.modalPresentationStyle = UIModalPresentationStyle.Popover
+            var popover = nav.popoverPresentationController
+            popoverContent.preferredContentSize = CGSizeMake(100,100)
+            popover!.delegate = self
+            popover!.sourceView = self.view
+            popover!.sourceRect = CGRectMake(300,0,0,0)
+            popover?.permittedArrowDirections = UIPopoverArrowDirection.Up
+            
+            self.presentViewController(nav, animated: true, completion: nil)
+//            popController!.delegate = self
+//            popController!.permittedArrowDirections = UIPopoverArrowDirection.Any
+//            popController?.sourceView = self.view
+//            popController!.sourceRect = CGRectMake(30, 50, 10, 10)
+//            self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
+//            self.performSegueWithIdentifier("addViewSegue", sender: self)
         }else{
             self.performSegueWithIdentifier("loginSegue", sender: self)
         }
     }
     
     @IBAction func addActionPopover(sender: UIBarButtonItem) {
-        self.performSegueWithIdentifier("addViewSegue", sender: self)
+//        self.performSegueWithIdentifier("addViewSegue", sender: self)
+        var storyboard = UIStoryboard(name: "Add", bundle: nil)
+        var popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as UIViewController).popoverPresentationController
+        popController?.delegate = self
+        popController!.permittedArrowDirections = UIPopoverArrowDirection.Any
+        popController?.sourceView = self.view
+        popController!.sourceRect = CGRectMake(30, 50, 10, 10)
+        self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
+//        self.presentationController(<#T##presentationController: UIPresentationController##UIPresentationController#>, willPresentWithAdaptiveStyle: <#T##UIModalPresentationStyle#>, transitionCoordinator: UIViewControllerTransitionCoordinator?) .presentViewController(controller, animated: true, completion: nil)
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "addViewSegue"{
-            let vc = segue.destinationViewController 
-            let controller = vc.popoverPresentationController
-            if controller != nil{
-                controller?.delegate = self
-            }
-        }
+//        if segue.identifier == "addViewSegue"{
+//            let vc = segue.destinationViewController 
+//            let controller = vc.popoverPresentationController
+//            if controller != nil{
+//                controller?.delegate = self
+//            }
+//        }
         if segue.identifier == "postDetailSegue" {
             (segue.destinationViewController as! ShowPostDetailTableViewController).post = feed
         }
@@ -62,6 +90,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
     }
     
+    //add pop over segue
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
     }

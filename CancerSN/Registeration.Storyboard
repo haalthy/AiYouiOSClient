@@ -1599,10 +1599,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="lAV-8d-waS"/>
-        <segue reference="xPz-QV-07u"/>
-        <segue reference="qX1-Si-3zI"/>
         <segue reference="laP-2l-Jos"/>
+        <segue reference="xPz-QV-07u"/>
+        <segue reference="lAV-8d-waS"/>
+        <segue reference="qX1-Si-3zI"/>
         <segue reference="apJ-0b-JRt"/>
     </inferredMetricsTieBreakers>
 </document>

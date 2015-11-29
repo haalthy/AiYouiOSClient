@@ -28,7 +28,13 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         if accessToken == nil{
             self.performSegueWithIdentifier("loginSegue", sender: self)
         }else{
-            self.performSegueWithIdentifier("addCommentSegue", sender: self)
+//            self.performSegueWithIdentifier("addCommentSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Add", bundle: nil)
+            var popController = (storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostViewController)
+            popController.postID = self.post.objectForKey("postID") as! Int
+            popController.isComment = 1
+//            popController.postID
+            self.presentViewController(popController, animated: true, completion: nil)
         }
     }
 
@@ -61,10 +67,10 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         }
     }
     
-    @IBAction func addComment(sender: UIButton) {
-        self.performSegueWithIdentifier("addCommentSegue", sender: self)
-        
-    }
+//    @IBAction func addComment(sender: UIButton) {
+//        self.performSegueWithIdentifier("addCommentSegue", sender: self)
+//        
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
