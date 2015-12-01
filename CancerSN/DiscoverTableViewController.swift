@@ -139,20 +139,33 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
         return rowHeight
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showPatientProfileSegue" {
-            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwner
-        }
-    }
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if segue.identifier == "showPatientProfileSegue" {
+//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwner
+//        }
+//    }
     func performLoginSegue() {
-        self.performSegueWithIdentifier("loginSegue", sender: nil)
+//        self.performSegueWithIdentifier("loginSegue", sender: nil)
+        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+        
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     func imageTap(username:String){
         if self.username == nil{
-            self.performSegueWithIdentifier("loginSegue", sender: nil)
+//            self.performSegueWithIdentifier("loginSegue", sender: nil)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }else{
             selectedProfileOwner = username
-            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+            var storyboard = UIStoryboard(name: "User", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            controller.profileOwnername = selectedProfileOwner
+            self.navigationController?.pushViewController(controller, animated: true)
+//            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     

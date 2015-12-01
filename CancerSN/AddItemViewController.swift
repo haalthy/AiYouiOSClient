@@ -27,7 +27,11 @@ class AddItemViewController: UIViewController {
     }
     @IBAction func addBroadcast(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
-            self.performSegueWithIdentifier("loginSegue", sender: nil)
+//            self.performSegueWithIdentifier("loginSegue", sender: nil)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }else{
             self.isBroadcast = 1
             isDismiss = true
@@ -37,7 +41,11 @@ class AddItemViewController: UIViewController {
     
     @IBAction func addPrivatePost(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
-            self.performSegueWithIdentifier("loginSegue", sender: nil)
+//            self.performSegueWithIdentifier("loginSegue", sender: nil)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }
         self.isBroadcast = 0
         isDismiss = true

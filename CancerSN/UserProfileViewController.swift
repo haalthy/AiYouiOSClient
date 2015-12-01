@@ -210,11 +210,18 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        var storyboard = UIStoryboard(name: "User", bundle: nil)
+//        var controller = storyboard.instantiateInitialViewController()!
+//        addChildViewController(controller)
+//        view.addSubview(controller.view)
+//        controller.didMoveToParentViewController(self)
+        
         let dummyViewHeight : CGFloat = 40
         let dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
         self.tableview.tableHeaderView = dummyView;
         self.tableview.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0)
         ((self.tabBarController?.tabBar.items as! NSArray).objectAtIndex(1) as! UITabBarItem).title = "我"
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -242,13 +249,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
+        
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         getAccessToken.getAccessToken()
         accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
             if usedToBeInLoginView == false{
-                self.performSegueWithIdentifier("loginSegue", sender: self)
+//                self.performSegueWithIdentifier("loginSegue", sender: self)
+                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                
+                self.presentViewController(controller, animated: true, completion: nil)
                 usedToBeInLoginView = true
             }else{
                 self.tabBarController?.selectedIndex = 0
@@ -290,8 +303,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         var isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
                         if isFollowingUserStr == "0"{
                             self.tabBarController?.tabBar.hidden = true
-                            var addFollowingBtnWidth: CGFloat = 60
-                            var addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
+                            let addFollowingBtnWidth: CGFloat = 60
+                            let addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
+//                            let addFollowingBtnOriginY:CGFloat = 80 + 30
+
                             addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
                             addFollowingBtn.layer.cornerRadius = 5
                             addFollowingBtn.layer.masksToBounds = true
@@ -734,7 +749,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if indexPath.section == 2 {
                 publicService.logOutAccount()
                 print("logout")
-                self.performSegueWithIdentifier("loginSegue", sender: self)
+//                self.performSegueWithIdentifier("loginSegue", sender: self)
+                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                
+                self.presentViewController(controller, animated: true, completion: nil)
                 usedToBeInLoginView = true
             }
             if indexPath.section == 1 {
@@ -772,7 +791,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         if profileSegment.selectedSegmentIndex == 1 {
             selectedPostId = (broadcastList[indexPath.row] as! NSDictionary).objectForKey("postID") as! Int
-            self.performSegueWithIdentifier("postDetailSegue", sender: self)
+//            self.performSegueWithIdentifier("postDetailSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Feed", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("PostDetailEntry") as! ShowPostDetailTableViewController
+            controller.postId = selectedPostId
+            //            controller.isFirstTagSelection = true
+            self.navigationController?.pushViewController(controller, animated: true)
+//            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
@@ -810,8 +835,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if segue.identifier == "updateTreatment" {
             (segue.destinationViewController as! UpdateTreatmentTableViewController).treatmentList = self.treatmentList
         }
-        if segue.identifier == "postDetailSegue" {
-            (segue.destinationViewController as! ShowPostDetailTableViewController).postId = selectedPostId
-        }
+//        if segue.identifier == "postDetailSegue" {
+//            (segue.destinationViewController as! ShowPostDetailTableViewController).postId = selectedPostId
+//        }
     }
 }

@@ -54,7 +54,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
 //            self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
 //            self.performSegueWithIdentifier("addViewSegue", sender: self)
         }else{
-            self.performSegueWithIdentifier("loginSegue", sender: self)
+//            self.performSegueWithIdentifier("loginSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
@@ -82,9 +86,9 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         if segue.identifier == "postDetailSegue" {
             (segue.destinationViewController as! ShowPostDetailTableViewController).post = feed
         }
-        if segue.identifier == "showPatientProfileSegue" {
-            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
-        }
+//        if segue.identifier == "showPatientProfileSegue" {
+//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
+//        }
         if segue.identifier == "showTagsSegue" {
             (segue.destinationViewController as! TagTableViewController).userTagDelegate = self
         }
@@ -440,9 +444,18 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         print(username)
         selectedProfileOwnername = username
         if self.username != nil{
-            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+            var storyboard = UIStoryboard(name: "User", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            controller.profileOwnername = selectedProfileOwnername
+//            self.presentViewController(controller, animated: true, completion: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
         }else{
-            self.performSegueWithIdentifier("loginSegue", sender: self)
+//            self.performSegueWithIdentifier("loginSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     

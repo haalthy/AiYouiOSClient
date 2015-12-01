@@ -11,7 +11,7 @@ import UIKit
 
 //restful service URL setting
 
-let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
 
 let getSuggestUserByTagsURL = haalthyServiceRestfulURL + "open/user/suggestedusers"
 let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"

@@ -26,7 +26,11 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
-            self.performSegueWithIdentifier("loginSegue", sender: self)
+//            self.performSegueWithIdentifier("loginSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }else{
 //            self.performSegueWithIdentifier("addCommentSegue", sender: self)
             var storyboard = UIStoryboard(name: "Add", bundle: nil)
@@ -89,9 +93,9 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
             destinationVC.postID = self.post.objectForKey("postID") as! Int
             destinationVC.isComment = 1
         }
-        if segue.identifier == "showPatientProfileSegue"{
-            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
-        }
+//        if segue.identifier == "showPatientProfileSegue"{
+//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
+//        }
     }
 
     
@@ -178,9 +182,18 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         }
         let keyChainAcess = KeychainAccess()
         if keyChainAcess.getPasscode(usernameKeyChain) != nil{
-            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
+            var storyboard = UIStoryboard(name: "User", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            controller.profileOwnername = selectedProfileOwnername
+            self.navigationController?.pushViewController(controller, animated: true)
+//            self.presentViewController(controller, animated: true, completion: nil)
         }else{
-            self.performSegueWithIdentifier("loginSegue", sender: self)
+//            self.performSegueWithIdentifier("loginSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     

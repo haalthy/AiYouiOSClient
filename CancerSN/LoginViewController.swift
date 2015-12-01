@@ -32,11 +32,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     @IBAction func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-//        self.performSegueWithIdentifier("fillInfoSegue", sender: self)
-        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        var controller = storyboard.instantiateViewControllerWithIdentifier("StartRegister") as UIViewController
-        
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.performSegueWithIdentifier("RegistrationSegue", sender: self)
+//        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+//        var controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
+//        
+//        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func tencentDidLogin(){
@@ -75,7 +75,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
             self.performSegueWithIdentifier("fillInfoSegue", sender: self)
         }else{
-            self.performSegueWithIdentifier("homeSegue", sender: self)
+//            self.performSegueWithIdentifier("homeSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Main", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
+            
+            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
@@ -119,7 +123,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
 //        }
         var loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
         if isRootViewController{
-            self.performSegueWithIdentifier("homeSegue", sender: self)
+//            self.performSegueWithIdentifier("homeSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Main", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as! UIViewController
+//            controller.isFirstTagSelection = true
+            self.presentViewController(controller, animated: true, completion: nil)
         }else{
             self.dismissViewControllerAnimated(true, completion: nil)
         }
@@ -130,14 +138,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func ignore(sender: UIButton) {
-        self.performSegueWithIdentifier("tagSegue", sender: self)
+//        self.performSegueWithIdentifier("tagSegue", sender: self)
+        var storyboard = UIStoryboard(name: "Feed", bundle: nil)
+        var controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+        controller.isFirstTagSelection = true
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "tagSegue"{
-            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
-        }
-    }
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if segue.identifier == "tagSegue"{
+//            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+//        }
+//    }
     
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -160,7 +172,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let username = keychainAccess.getPasscode(usernameKeyChain)
         let password = keychainAccess.getPasscode(passwordKeyChain)
         if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
-            self.performSegueWithIdentifier("tagSegue", sender: self)
+//            self.performSegueWithIdentifier("tagSegue", sender: self)
+            var storyboard = UIStoryboard(name: "Feed", bundle: nil)
+            var controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+            controller.isFirstTagSelection = true
+            self.presentViewController(controller, animated: true, completion: nil)
         }
         if isRootViewController {
             cancelBtn.hidden = true

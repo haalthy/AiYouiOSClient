@@ -50,7 +50,11 @@ class TagTableViewController: UITableViewController {
             }
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
-                self.performSegueWithIdentifier("homeSegue", sender: self)
+//                self.performSegueWithIdentifier("homeSegue", sender: self)
+                var storyboard = UIStoryboard(name: "Main", bundle: nil)
+                var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
+                
+                self.presentViewController(controller, animated: true, completion: nil)
             }else{
                 self.dismissViewControllerAnimated(true, completion: nil)
             }

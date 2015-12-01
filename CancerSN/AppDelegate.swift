@@ -31,8 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let keychainAccess = KeychainAccess()
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
                 
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! LoginViewController
                 if self.window != nil {
                     self.window!.rootViewController = rootController
                     rootController.isRootViewController = true

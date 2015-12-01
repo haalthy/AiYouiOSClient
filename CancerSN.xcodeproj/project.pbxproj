@@ -33,6 +33,10 @@
 		2A410A4C1BB9E7DB00E4272B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A4B1BB9E7DB00E4272B /* libz.dylib */; };
 		2A410A4F1BBA0DA200E4272B /* Tencent_QQ.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A410A4E1BBA0DA200E4272B /* Tencent_QQ.png */; };
 		2A5BDF171BB1C78900732AF8 /* AddStatusTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */; };
+		2A68CAC71C0B3FDB0012F47B /* User.Storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A68CAC61C0B3FDB0012F47B /* User.Storyboard */; settings = {ASSET_TAGS = (); }; };
+		2A68CACB1C0B52AF0012F47B /* UserEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68CACA1C0B52AF0012F47B /* UserEntryViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2A68CACD1C0B586A0012F47B /* FeedEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68CACC1C0B586A0012F47B /* FeedEntryViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2A68CACF1C0B58810012F47B /* Feed.Storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A68CACE1C0B58810012F47B /* Feed.Storyboard */; settings = {ASSET_TAGS = (); }; };
 		2A74CCE21B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */; };
 		2A81C8F81BD574B200EE5FB1 /* MentionedPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */; };
 		2A81C8FA1BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */; };
@@ -141,6 +145,10 @@
 		2A410A4D1BB9E94100E4272B /* CancerSNiOSClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CancerSNiOSClient-Bridging-Header.h"; sourceTree = "<group>"; };
 		2A410A4E1BBA0DA200E4272B /* Tencent_QQ.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Tencent_QQ.png; sourceTree = "<group>"; };
 		2A5BDF161BB1C78900732AF8 /* AddStatusTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatusTableViewController.swift; sourceTree = "<group>"; };
+		2A68CAC61C0B3FDB0012F47B /* User.Storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = User.Storyboard; sourceTree = "<group>"; };
+		2A68CACA1C0B52AF0012F47B /* UserEntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserEntryViewController.swift; sourceTree = "<group>"; };
+		2A68CACC1C0B586A0012F47B /* FeedEntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedEntryViewController.swift; sourceTree = "<group>"; };
+		2A68CACE1C0B58810012F47B /* Feed.Storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Feed.Storyboard; sourceTree = "<group>"; };
 		2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePreviousTreatmentViewController.swift; sourceTree = "<group>"; };
 		2A81C8F71BD574B200EE5FB1 /* MentionedPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentionedPostTableViewController.swift; sourceTree = "<group>"; };
 		2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicTrailTableViewController.swift; sourceTree = "<group>"; };
@@ -316,6 +324,7 @@
 		2AB8E4391C05A2FC00F39409 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
+				2A68CACE1C0B58810012F47B /* Feed.Storyboard */,
 				2AB8E4411C05A96C00F39409 /* Controller */,
 				2AB8E4401C05A95900F39409 /* View */,
 			);
@@ -325,6 +334,7 @@
 		2AB8E43A1C05A31800F39409 /* User */ = {
 			isa = PBXGroup;
 			children = (
+				2A68CAC61C0B3FDB0012F47B /* User.Storyboard */,
 				2AB8E43F1C05A94000F39409 /* Controller */,
 				2AB8E43E1C05A93500F39409 /* View */,
 			);
@@ -375,6 +385,7 @@
 		2AB8E43F1C05A94000F39409 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2A68CACA1C0B52AF0012F47B /* UserEntryViewController.swift */,
 				2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */,
 				2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */,
 				2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */,
@@ -402,6 +413,7 @@
 		2AB8E4411C05A96C00F39409 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2A68CACC1C0B586A0012F47B /* FeedEntryViewController.swift */,
 				2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */,
 				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
 				2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */,
@@ -587,10 +599,12 @@
 				2A410A4F1BBA0DA200E4272B /* Tencent_QQ.png in Resources */,
 				2A3228B61B72ECC3006FB92D /* grayline.png in Resources */,
 				2AE59DB81B83FBBF00BE910D /* mytagsBtnImg.png in Resources */,
+				2A68CAC71C0B3FDB0012F47B /* User.Storyboard in Resources */,
 				2AB8E4441C05B6E300F39409 /* Registeration.Storyboard in Resources */,
 				2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */,
 				2AC59C1B1B5D77C600C4FE36 /* Images.xcassets in Resources */,
 				2A91D4681BB07A2F00ADC095 /* triangle-xxl.png in Resources */,
+				2A68CACF1C0B58810012F47B /* Feed.Storyboard in Resources */,
 				2AE59DB41B83F71300BE910D /* myTagButton.png in Resources */,
 				2AA264A61B607402001E52E7 /* Mario-icon.png in Resources */,
 				2AA264D11B66AE71001E52E7 /* Mario.jpg in Resources */,
@@ -619,6 +633,7 @@
 				2A9957FC1BC2F5AB00DAB05B /* SettingUsernameViewController.swift in Sources */,
 				2AF6737E1B88416F00E220CD /* CVRange.swift in Sources */,
 				2AA3363F1B86FE71006DDD50 /* AddNewTreatmentDateViewController.swift in Sources */,
+				2A68CACB1C0B52AF0012F47B /* UserEntryViewController.swift in Sources */,
 				2A3228AA1B7135DB006FB92D /* AddPostViewController.swift in Sources */,
 				2AF673771B88416F00E220CD /* CVCalendarViewAppearanceDelegate.swift in Sources */,
 				2AF6736E1B88416F00E220CD /* CVCalendarMenuView.swift in Sources */,
@@ -656,6 +671,7 @@
 				2AF6737C1B88416F00E220CD /* CVCalendarWeekView.swift in Sources */,
 				2AF673751B88416F00E220CD /* CVCalendarViewAnimatorDelegate.swift in Sources */,
 				2AA264A41B6063E1001E52E7 /* UserListTableViewCell.swift in Sources */,
+				2A68CACD1C0B586A0012F47B /* FeedEntryViewController.swift in Sources */,
 				2AF6736C1B88416F00E220CD /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				2AF673731B88416F00E220CD /* CVCalendarView.swift in Sources */,
 				2A9957FA1BBFB85900DAB05B /* PatientProfileTableViewController.swift in Sources */,
