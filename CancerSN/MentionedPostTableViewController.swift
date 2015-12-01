@@ -94,18 +94,11 @@ class MentionedPostTableViewController: UITableViewController, FeedBodyDelegate 
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.selectedPost = postList[indexPath.row] as! NSDictionary
-//        self.performSegueWithIdentifier("postDetailSegue", sender: self)
-        var storyboard = UIStoryboard(name: "Feed", bundle: nil)
-        var controller = storyboard.instantiateViewControllerWithIdentifier("PostDetailEntry") as! ShowPostDetailTableViewController
+        let storyboard = UIStoryboard(name: "Feed", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("PostDetailEntry") as! ShowPostDetailTableViewController
         controller.post = self.selectedPost
-        //            controller.isFirstTagSelection = true
         self.presentViewController(controller, animated: true, completion: nil)
         
     }
-//    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "postDetailSegue" {
-//            (segue.destinationViewController as! ShowPostDetailTableViewController).post = self.selectedPost
-//        }
-//    }
+
 }

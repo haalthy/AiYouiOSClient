@@ -26,18 +26,15 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
-//            self.performSegueWithIdentifier("loginSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
         }else{
-//            self.performSegueWithIdentifier("addCommentSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Add", bundle: nil)
-            var popController = (storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostViewController)
-            popController.postID = self.post.objectForKey("postID") as! Int
+            let storyboard = UIStoryboard(name: "Add", bundle: nil)
+            let popController = (storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostViewController)
+            popController.postID = self.post.objectForKey("postID") as? Int
             popController.isComment = 1
-//            popController.postID
             self.presentViewController(popController, animated: true, completion: nil)
         }
     }
@@ -71,11 +68,6 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         }
     }
     
-//    @IBAction func addComment(sender: UIButton) {
-//        self.performSegueWithIdentifier("addCommentSegue", sender: self)
-//        
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         if postId != nil{
@@ -90,12 +82,9 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "addCommentSegue" {
             let destinationVC = segue.destinationViewController as! AddPostViewController
-            destinationVC.postID = self.post.objectForKey("postID") as! Int
+            destinationVC.postID = self.post.objectForKey("postID") as? Int
             destinationVC.isComment = 1
         }
-//        if segue.identifier == "showPatientProfileSegue"{
-//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
-//        }
     }
 
     
@@ -128,8 +117,6 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 2
     }
 
@@ -153,16 +140,13 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if(indexPath.section == 0){
         let cell = tableView.dequeueReusableCellWithIdentifier("postIdentifier", forIndexPath: indexPath) as! FeedTableViewCell
-//            cell.post = self.post
             cell.removeAllSubviews()
             cell.isDetail = true
-//            cell.imageTapDelegate = self
             cell.feedBodyDelegate = self
             cell.width = cell.frame.width
             cell.indexPath = indexPath
             cell.feed = post
             return cell
-        // Configure the cell...
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier("commentListIdentifier", forIndexPath: indexPath) as! CommentListTableViewCell
             cell.comment = self.commentList[indexPath.row] as! NSDictionary
@@ -182,16 +166,13 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         }
         let keyChainAcess = KeychainAccess()
         if keyChainAcess.getPasscode(usernameKeyChain) != nil{
-//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
-            var storyboard = UIStoryboard(name: "User", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            let storyboard = UIStoryboard(name: "User", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
             controller.profileOwnername = selectedProfileOwnername
             self.navigationController?.pushViewController(controller, animated: true)
-//            self.presentViewController(controller, animated: true, completion: nil)
         }else{
-//            self.performSegueWithIdentifier("loginSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
         }

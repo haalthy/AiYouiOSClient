@@ -107,25 +107,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func login(sender: UIButton) {
-        let usernameStr = username.text
-        let passwordStr = password.text
-//        let respData = haalthyService.getAccessToken(usernameStr, password: passwordStr)
-//        var jsonResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(respData, options: NSJSONReadingOptions.MutableContainers, error: nil)
-//        var accessToken: AnyObject?  = jsonResult?.objectForKey("access_token")
-//        var refreshToken: AnyObject? = jsonResult?.objectForKey("refresh_token")
-//        if(accessToken != nil && refreshToken != nil){
-//            let profileSet = NSUserDefaults.standardUserDefaults()
-//            profileSet.setObject(accessToken, forKey: accessNSUserData)
-//            profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-//            let keychainAccess = KeychainAccess()
-//            keychainAccess.setPasscode(usernameKeyChain, passcode: username.text)
-//            keychainAccess.setPasscode(passwordKeyChain, passcode: password.text)
-//        }
-        var loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
+//        let usernameStr = username.text
+//        let passwordStr = password.text
+//        var loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
         if isRootViewController{
-//            self.performSegueWithIdentifier("homeSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Main", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as! UIViewController
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry")
 //            controller.isFirstTagSelection = true
             self.presentViewController(controller, animated: true, completion: nil)
         }else{
@@ -138,18 +125,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func ignore(sender: UIButton) {
-//        self.performSegueWithIdentifier("tagSegue", sender: self)
-        var storyboard = UIStoryboard(name: "Feed", bundle: nil)
-        var controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+        let storyboard = UIStoryboard(name: "Feed", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
         controller.isFirstTagSelection = true
         self.presentViewController(controller, animated: true, completion: nil)
     }
-    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "tagSegue"{
-//            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
-//        }
-//    }
     
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -173,8 +153,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let password = keychainAccess.getPasscode(passwordKeyChain)
         if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
 //            self.performSegueWithIdentifier("tagSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Feed", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+            let storyboard = UIStoryboard(name: "Feed", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
             controller.isFirstTagSelection = true
             self.presentViewController(controller, animated: true, completion: nil)
         }

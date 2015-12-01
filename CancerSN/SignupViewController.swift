@@ -92,11 +92,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
             print(selectedImage.size.width, selectedImage.size.height)
             let imageDataStr = imageData.base64EncodedStringWithOptions([])
-            //        println(imageDataStr)
             
             fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
             
-//            var getImagePath = paths.stringByAppendingPathComponent(imageFileName)
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(emailInput.text, forKey: emailNSUserData)
             profileSet.setObject(imageDataStr, forKey: imageNSUserData)
@@ -112,11 +110,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             //upload UserInfo to Server
             let haalthyService = HaalthyService()
             let addUserRespData = haalthyService.addUser("AY")
-//            var returnStr: NSString = NSString(data: addUserRespData, encoding: NSUTF8StringEncoding)!
             var returnStr = String()
             let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
-//            self.dismissViewControllerAnimated(true, completion: nil)
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers)
             if jsonResult is NSDictionary {
                 returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
@@ -149,12 +145,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         self.data!.appendData(data)
     }
     
-    func connectionDidFinishLoading(connection: NSURLConnection!)
-    {
-        var error: NSErrorPointer=nil
-        let str: NSString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-        print(str)
-    }
+//    func connectionDidFinishLoading(connection: NSURLConnection!)
+//    {
+//        let str: NSString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -29,7 +29,7 @@ class FeedTableViewCell: UITableViewCell {
         didSet{
 
             //imageView
-            var imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
+            let imageView = UIImageView(frame: CGRectMake(10, 10, 32, 32))
             if((feed.valueForKey("image") != nil) && (feed.valueForKey("image") is NSNull) == false){
                 let dataString = feed.valueForKey("image") as! String
                 let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
@@ -37,20 +37,20 @@ class FeedTableViewCell: UITableViewCell {
             }else{
                 imageView.image = UIImage(named: "Mario.jpg")
             }
-            var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+            let tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
             imageView.userInteractionEnabled = true
             imageView.addGestureRecognizer(tapImage)
             
             //username View
-            var usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, self.width - 10 - 32 - 10 - 80, 20))
+            let usernameLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 10, self.width - 10 - 32 - 10 - 80, 20))
             usernameLabelView.font = UIFont(name: "Helvetica-Bold", size: 13.0)
             usernameLabelView.text = feed.valueForKey("displayname") as? String
             
             //insert date View
-            var insertDateLabelView = UILabel(frame: CGRectMake(self.width - 90, 10, 80, 20))
+            let insertDateLabelView = UILabel(frame: CGRectMake(self.width - 90, 10, 80, 20))
             insertDateLabelView.font = UIFont(name: "Helvetica", size: 12.0)
-            var dateFormatter = NSDateFormatter()
-            var insertedDate = NSDate(timeIntervalSince1970: (feed.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
+            let dateFormatter = NSDateFormatter()
+            let insertedDate = NSDate(timeIntervalSince1970: (feed.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
             dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
             let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
             let currentDayStr = dateFormatter.stringFromDate(NSDate())
@@ -67,7 +67,7 @@ class FeedTableViewCell: UITableViewCell {
             //
             
             //profile View
-            var profileLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 30, width - 10 - 32 - 10, 12))
+            let profileLabelView = UILabel(frame: CGRectMake(10 + 32 + 10, 30, width - 10 - 32 - 10, 12))
             profileLabelView.font = UIFont(name: "Helvetica", size: 11.5)
             profileLabelView.text = feed.valueForKey("patientProfile") as? String
             profileLabelView.textColor = UIColor.grayColor()
@@ -89,14 +89,14 @@ class FeedTableViewCell: UITableViewCell {
                     typeStr = "更新病友状态"
                 }
             }
-            var typeLabel = UILabel(frame: CGRectMake(10, 50, 80, 25))
+            let typeLabel = UILabel(frame: CGRectMake(10, 50, 80, 25))
             typeLabel.text = typeStr
             typeLabel.backgroundColor = sectionHeaderColor
             typeLabel.font = UIFont(name: fontStr, size: 12.0)
             typeLabel.textAlignment = NSTextAlignment.Center
             
             //feed body view
-            var feedBody = UILabel(frame: CGRectMake(10, 80, width - 20, 0))
+            let feedBody = UILabel(frame: CGRectMake(10, 80, width - 20, 0))
             if (feed.objectForKey("type") as! Int) != 1{
                 feedBody.numberOfLines = 5
                 if isDetail {
@@ -107,11 +107,9 @@ class FeedTableViewCell: UITableViewCell {
                 feedBody.text = (feed.objectForKey("body") as! String).stringByReplacingOccurrencesOfString("*", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
                 feedBody.textColor = UIColor.blackColor()
                 feedBody.sizeToFit()
-//                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
-//                feedBodyDelegate?.setFeedBodyHeight(feedBody.frame.height, indexpath: indexPath!)
             }else if (feed.objectForKey("type") as! Int) == 1{
-                var treatmentStr = feed.objectForKey("body") as! String
-                var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
+                let treatmentStr = feed.objectForKey("body") as! String
+                let treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
                 for treatment in treatmentList {
                     var treatmentItemStr:String = treatment as! String
                     
@@ -130,11 +128,11 @@ class FeedTableViewCell: UITableViewCell {
                     if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: treatmentItemStr.startIndex.advancedBy(1))) == "*" {
                         treatmentItemStr = treatmentItemStr.substringFromIndex(treatmentStr.startIndex.advancedBy(1))
                     }
-                    var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
-                    var treatmentName = treatmentNameAndDosage[0] as! String
+                    let treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
+                    let treatmentName = treatmentNameAndDosage[0] as! String
                     var treatmentDosage = String()
                     var treatmentNameLabel = UILabel()
-                    var dosageLabel = UILabel()
+                    let dosageLabel = UILabel()
                     treatmentNameLabel = UILabel(frame: CGRectMake(0.0, treatmentY, 90.0, 28.0))
                     treatmentNameLabel.text = treatmentName
                     treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
@@ -162,20 +160,18 @@ class FeedTableViewCell: UITableViewCell {
                     feedBody.addSubview(dosageLabel)
                 }
                 feedBody.frame = CGRectMake(10, 80, width - 20, treatmentY)
-//                self.heightForFeedRow.setObject(feedBody.frame.height, forKey: indexPath)
-//                feedBodyDelegate?.setFeedBodyHeight(feedBody.frame.height, indexpath: indexPath!)
             }
             
             //postImage
             var feedBodyHeight: CGFloat = 0
             if (feed.valueForKey("postImageList") != nil) && ((feed.valueForKey("postImageList") is NSNull) == false) && ((feed.valueForKey("postImageList") as! NSArray).count > 0){
-                var postImageList = feed.valueForKey("postImageList") as! NSArray
+                let postImageList = feed.valueForKey("postImageList") as! NSArray
                 var index:Int = 0
-                var postSImageWidth:CGFloat = (width - 10)/3 - 10
+                let postSImageWidth:CGFloat = (width - 10)/3 - 10
                 for postSImage in postImageList{
-                    var postSImageX: CGFloat = 10 + CGFloat(index % imageCountPerLine)*CGFloat(postSImageWidth + 10)
-                    var postSImageY = 5 + CGFloat(index/imageCountPerLine)*CGFloat(postSImageWidth + 5) + feedBody.frame.origin.y + feedBody.frame.height
-                    var postSImageView = UIImageView(frame: CGRectMake(postSImageX, postSImageY, postSImageWidth, postSImageWidth))
+                    let postSImageX: CGFloat = 10 + CGFloat(index % imageCountPerLine)*CGFloat(postSImageWidth + 10)
+                    let postSImageY = 5 + CGFloat(index/imageCountPerLine)*CGFloat(postSImageWidth + 5) + feedBody.frame.origin.y + feedBody.frame.height
+                    let postSImageView = UIImageView(frame: CGRectMake(postSImageX, postSImageY, postSImageWidth, postSImageWidth))
                     if postSImage is String{
                         let dataString = postSImage as! String
                         let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
@@ -193,7 +189,7 @@ class FeedTableViewCell: UITableViewCell {
             feedBodyDelegate?.setFeedBodyHeight(feedBodyHeight, indexpath: indexPath!)
             
             //tagBody
-            var tagLabel = UILabel(frame: CGRectMake(10, 80 + feedBodyHeight + 10, width - 80, 20))
+            let tagLabel = UILabel(frame: CGRectMake(10, 80 + feedBodyHeight + 10, width - 80, 20))
             
             if (feed.objectForKey("tags") is NSNull) == false{
                 tagLabel.font = UIFont(name: "Helvetica", size: 11.5)
@@ -202,7 +198,7 @@ class FeedTableViewCell: UITableViewCell {
                 
             }
             //review View
-            var reviewLabel = UILabel(frame: CGRectMake(10 + tagLabel.frame.width, tagLabel.frame.origin.y, 60, 20))
+            let reviewLabel = UILabel(frame: CGRectMake(10 + tagLabel.frame.width, tagLabel.frame.origin.y, 60, 20))
             reviewLabel.font = UIFont(name: "Helvetica", size: 11.5)
             reviewLabel.textAlignment = NSTextAlignment.Right
             reviewLabel.text = feed.valueForKey("countComments")!.stringValue + "评论"

@@ -70,27 +70,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
             }
         }
     }
-//
-//    @IBAction func selectCancerType(sender: UIButton) {
-//        var cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
-//        var selectedCancerType :String = cancerTypeMapping.objectForKey(cancerType) as! String
-//        if isUpdate{
-//            cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }else{
-//            profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
-//            if(cancerType == "肺部"){
-//                self.performSegueWithIdentifier("showMoreForLung", sender: nil)
-//            }else{
-//                if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-//                    self.performSegueWithIdentifier("signupSegue", sender: self)
-//                }else{
-//                    haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-//                    self.dismissViewControllerAnimated(true, completion: nil)
-//                }
-//            }
-//        }
-//    }
     
     override func viewDidLoad() {
         if isUpdate{
@@ -106,13 +85,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         pathologicalPickerView.dataSource = self
         pathologicalPickerView.delegate = self
         pathologicalPickerView.selectRow(1, inComponent: 0, animated: false)
-//        confirmBtn.layer.cornerRadius = 5
-//        confirmBtn.layer.masksToBounds = true
-//        skipBtn.layer.cornerRadius = 5
-//        skipBtn.layer.masksToBounds = true
-//        if isUpdate{
-//            skipBtn.hidden = true
-//        }
         
         pathologicalPickerView.hidden = true
         if isUpdate{

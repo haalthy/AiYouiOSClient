@@ -105,9 +105,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         
         // Menu delegate [Required]
         self.menuView.menuViewDelegate = self
-//        monthLabel .text = CVDate(date: NSDate()).globalDescription
         monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
-        //        getProcessingTreatmentsFromLocalDB()
         getProcessingTreatments()
         if treatmentList.count > 0 {
             previousTreatment = treatmentList[0] as! NSDictionary
@@ -121,11 +119,10 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showPreviousTreatment"{
-            var vc = segue.destinationViewController as! UpdatePreviousTreatmentViewController
-            var controller = vc.popoverPresentationController
+            let vc = segue.destinationViewController as! UpdatePreviousTreatmentViewController
+            let controller = vc.popoverPresentationController
             if controller != nil{
                 controller?.delegate = self
-//                controller?.permittedArrowDirections = UIPopoverArrowDirection.
             }
             vc.treatment = previousTreatment
         }

@@ -62,19 +62,16 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
     }
     
     override func viewDidAppear(animated: Bool) {
-        //                cell.detailTextLabel?.frame = CGRectMake(cell.detailTextLabel?.frame.origin.x, cell.detailTextLabel?.frame.origin.y, 64, 64)
         self.tableView.reloadData()
 
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("profileListIdentifier", forIndexPath: indexPath) 
-////        cell.accessoryType = UITableViewCellAccessoryType.DetailDisclosureButton
         if indexPath.section == 0{
             switch indexPath.row{
             case 0:
-                var imageView = UIImageView(frame: CGRectMake(cell.frame.width - 90, 10, 64, 64))
-//                cell.detailTextLabel?.frame = CGRectMake(cell.detailTextLabel?.frame.origin.x, cell.detailTextLabel?.frame.origin.y, 64, 64)
+                let imageView = UIImageView(frame: CGRectMake(cell.frame.width - 90, 10, 64, 64))
                 if (self.userProfile.objectForKey("image") != nil) && (self.userProfile.objectForKey("image") is NSNull) == false{
                     let dataString = self.userProfile.objectForKey("image") as! String
                     let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!

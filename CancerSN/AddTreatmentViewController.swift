@@ -168,7 +168,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                 coordinateY = 55
             }
             let tagBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagBtnWidth - 5, tagBtnHeight))
-            tagBtn.setTitle(treatmentFormatList[index].objectForKey("treatmentName") as! String, forState: UIControlState.Normal)
+            tagBtn.setTitle(treatmentFormatList[index].objectForKey("treatmentName") as? String, forState: UIControlState.Normal)
             tagBtn.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
             tagBtn.setTitleColor(mainColor, forState: UIControlState.Normal)
             tagBtn.backgroundColor = UIColor.whiteColor()

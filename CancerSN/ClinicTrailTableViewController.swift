@@ -117,16 +117,12 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             let selectBtnHeight: CGFloat = 30
             treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
             typeBtn = UIButton(frame: CGRectMake(30 + selectBtnWidth, 7, selectBtnWidth, selectBtnHeight))
-//            stageBtn = UIButton(frame: CGRectMake(40 + selectBtnWidth * 2, 7, selectBtnWidth, selectBtnHeight))
             formatSelectBtn(treatmentBtn, title: "PD-1 v")
             formatSelectBtn(typeBtn, title: "选择癌症类型v")
-//            formatSelectBtn(stageBtn, title: "选择癌症分期v")
             treatmentBtn.addTarget(self, action: "selectTreatment", forControlEvents: UIControlEvents.TouchUpInside)
             typeBtn.addTarget(self, action: "selectCancerType", forControlEvents: UIControlEvents.TouchUpInside)
-//            stageBtn.addTarget(self, action: "selectStage", forControlEvents: UIControlEvents.TouchUpInside)
             cell.addSubview(treatmentBtn)
             cell.addSubview(typeBtn)
-//            cell.addSubview(stageBtn)
             return cell
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailList", forIndexPath: indexPath) 
@@ -205,7 +201,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerDataSource.count
     }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerDataSource[row]
     }
 }

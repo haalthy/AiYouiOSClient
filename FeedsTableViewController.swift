@@ -34,12 +34,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBAction func addPopover(sender: UIButton) {
         if username != nil{
-            var storyboard = UIStoryboard(name: "Add", bundle: nil)
-            var popoverContent = storyboard.instantiateViewControllerWithIdentifier("AddEntry") as! UIViewController
-//            var popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as! AddItemViewController).popoverPresentationController
-            var nav = UINavigationController(rootViewController: popoverContent)
+            let storyboard = UIStoryboard(name: "Add", bundle: nil)
+            let popoverContent = storyboard.instantiateViewControllerWithIdentifier("AddEntry")
+            let nav = UINavigationController(rootViewController: popoverContent)
             nav.modalPresentationStyle = UIModalPresentationStyle.Popover
-            var popover = nav.popoverPresentationController
+            let popover = nav.popoverPresentationController
             popoverContent.preferredContentSize = CGSizeMake(100,100)
             popover!.delegate = self
             popover!.sourceView = self.view
@@ -47,48 +46,28 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             popover?.permittedArrowDirections = UIPopoverArrowDirection.Up
             
             self.presentViewController(nav, animated: true, completion: nil)
-//            popController!.delegate = self
-//            popController!.permittedArrowDirections = UIPopoverArrowDirection.Any
-//            popController?.sourceView = self.view
-//            popController!.sourceRect = CGRectMake(30, 50, 10, 10)
-//            self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
-//            self.performSegueWithIdentifier("addViewSegue", sender: self)
         }else{
-//            self.performSegueWithIdentifier("loginSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
     @IBAction func addActionPopover(sender: UIBarButtonItem) {
-//        self.performSegueWithIdentifier("addViewSegue", sender: self)
-        var storyboard = UIStoryboard(name: "Add", bundle: nil)
-        var popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as UIViewController).popoverPresentationController
+        let storyboard = UIStoryboard(name: "Add", bundle: nil)
+        let popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as UIViewController).popoverPresentationController
         popController?.delegate = self
         popController!.permittedArrowDirections = UIPopoverArrowDirection.Any
         popController?.sourceView = self.view
         popController!.sourceRect = CGRectMake(30, 50, 10, 10)
         self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
-//        self.presentationController(<#T##presentationController: UIPresentationController##UIPresentationController#>, willPresentWithAdaptiveStyle: <#T##UIModalPresentationStyle#>, transitionCoordinator: UIViewControllerTransitionCoordinator?) .presentViewController(controller, animated: true, completion: nil)
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "addViewSegue"{
-//            let vc = segue.destinationViewController 
-//            let controller = vc.popoverPresentationController
-//            if controller != nil{
-//                controller?.delegate = self
-//            }
-//        }
         if segue.identifier == "postDetailSegue" {
             (segue.destinationViewController as! ShowPostDetailTableViewController).post = feed
         }
-//        if segue.identifier == "showPatientProfileSegue" {
-//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwnername
-//        }
         if segue.identifier == "showTagsSegue" {
             (segue.destinationViewController as! TagTableViewController).userTagDelegate = self
         }
@@ -164,10 +143,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     func addFeedslist(feedArray: NSArray, isLoadLatestFeeds: Bool){
-        var newFeedList:NSMutableArray = feedArray as! NSMutableArray
+        let newFeedList:NSMutableArray = feedArray as! NSMutableArray
         
-        var appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context:NSManagedObjectContext = appDel.managedObjectContext!
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
         for feed in newFeedList{
             if (((feed as! NSDictionary)["postID"] as! Int) == ((newFeedList[newFeedList.count - 1] as! NSDictionary)["postID"] as! Int)) && (isLoadLatestFeeds == false) {
                 print(feed["dateInserted"])
@@ -175,7 +154,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                 print(previousFeedFetchTimeStamp)
             }
             setPatientProfile(feed as! NSDictionary)
-            var feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) 
+            let feedItem = NSEntityDescription.insertNewObjectForEntityForName("Feed", inManagedObjectContext: context) 
             feedItem.setValue(feed["postID"], forKey: "postID")
             feedItem.setValue(feed["insertUsername"], forKey: "insertUsername")
             feedItem.setValue(feed["countComments"], forKey: "countComments")
@@ -213,13 +192,12 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                             let dataString = image as! String
                             let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
                             let fileManager = NSFileManager.defaultManager()
-                            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
-                            var indexStr: String = (index as NSNumber).stringValue
-                            var fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
-                            var filePathToWrite = "\(paths)/" + fileNameStr
+                            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+                            let indexStr: String = (index as NSNumber).stringValue
+                            let fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
+                            let filePathToWrite = "\(paths)/" + fileNameStr
                             fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
-//                            var getImagePath = paths.stringByAppendingPathComponent(fileNameStr)
-                            var getImagePath = paths + fileNameStr
+                            let getImagePath = paths + fileNameStr
                             print(getImagePath)
                             if (fileManager.fileExistsAtPath(getImagePath))
                             {
@@ -413,7 +391,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
                         let fileNameStr: String = (feed["postID"] as! NSNumber).stringValue + "." + indexStr + ".small" + ".jpg"
                         let fileManager = NSFileManager.defaultManager()
                         let fileData = fileManager.contentsAtPath(paths + fileNameStr)
-//                        let fileData = fileManager.contentsAtPath(paths.stringByAppendingPathComponent(fileNameStr))
                         if fileData != nil{
                             postImageList.addObject(fileData!)
                         }
@@ -444,16 +421,13 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         print(username)
         selectedProfileOwnername = username
         if self.username != nil{
-//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
-            var storyboard = UIStoryboard(name: "User", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            let storyboard = UIStoryboard(name: "User", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
             controller.profileOwnername = selectedProfileOwnername
-//            self.presentViewController(controller, animated: true, completion: nil)
             self.navigationController?.pushViewController(controller, animated: true)
         }else{
-//            self.performSegueWithIdentifier("loginSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
         }

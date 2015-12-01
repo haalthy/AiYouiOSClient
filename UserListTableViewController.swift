@@ -71,9 +71,8 @@ class UserListTableViewController: UITableViewController, UserListDelegate {
             return rowHeight
     }
     func performLoginSegue() {
-//        self.performSegueWithIdentifier("loginSegue", sender: nil)
-        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
         
         self.presentViewController(controller, animated: true, completion: nil)
     }

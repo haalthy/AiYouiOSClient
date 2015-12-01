@@ -14,8 +14,8 @@ class UserEntryViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        var storyboard = UIStoryboard(name: "User", bundle: nil)
-        var controller = storyboard.instantiateInitialViewController()!
+        let storyboard = UIStoryboard(name: "User", bundle: nil)
+        let controller = storyboard.instantiateInitialViewController()!
         addChildViewController(controller)
         view.addSubview(controller.view)
         controller.didMoveToParentViewController(self)

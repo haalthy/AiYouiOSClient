@@ -156,7 +156,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                             treatmentCountInSection++
                             var dosageLabel = UILabel()
                             dosageLabel = UILabel(frame: CGRectMake(0, 0, 150.0, CGFloat.max))
-                            dosageLabel.text = treatment["dosage"] as! String
+                            dosageLabel.text = treatment["dosage"] as? String
                             dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
                             dosageLabel.numberOfLines = 0
                             dosageLabel.sizeToFit()
@@ -203,18 +203,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         dateFormatter.dateFormat = "YY-MM-dd" // superset of OP's format
         let dateInserted = NSDate(timeIntervalSince1970: date/1000 as NSTimeInterval)
         let dateStr = dateFormatter.stringFromDate(dateInserted)
-//        var newDataStr = dateStr + " 00:00:00"
         let timeInterval = dateFormatter.dateFromString(dateStr)?.timeIntervalSince1970
         return timeInterval! * 1000
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        var storyboard = UIStoryboard(name: "User", bundle: nil)
-//        var controller = storyboard.instantiateInitialViewController()!
-//        addChildViewController(controller)
-//        view.addSubview(controller.view)
-//        controller.didMoveToParentViewController(self)
         
         let dummyViewHeight : CGFloat = 40
         let dummyView: UIView = UIView(frame:CGRectMake(0, 0, self.tableview.frame.width, dummyViewHeight))
@@ -258,8 +252,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if accessToken == nil{
             if usedToBeInLoginView == false{
 //                self.performSegueWithIdentifier("loginSegue", sender: self)
-                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
                 
                 self.presentViewController(controller, animated: true, completion: nil)
                 usedToBeInLoginView = true
@@ -277,7 +271,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             
             getTreatmentsData()
             if self.userProfile.count > 0 {
-                var imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
+                let imageView = UIImageView(frame: CGRectMake(4, 4, 88, 88))
                 viewContainer = UIView(frame: CGRectMake(28, 16, 96, 96))
                 //            imageView.image = UIImage(named: "Mario.jpg")
                 if self.userProfile.valueForKey("image") != nil{
@@ -296,16 +290,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 let profileStr = publicService.getProfileStrByDictionary(userProfile)
                 self.patientProfile.text = profileStr
                 self.patientProfile.font = UIFont(name: "Helvetica", size: 12)
-                self.usernameLabel.text = self.userProfile.objectForKey("displayname") as! String
+                self.usernameLabel.text = self.userProfile.objectForKey("displayname") as? String
                 if profileOwnername != username{
-                    var isFollowingUserData: NSData? = haalthyService.isFollowingUser(profileOwnername as! String)
+                    let isFollowingUserData: NSData? = haalthyService.isFollowingUser(profileOwnername as! String)
                     if isFollowingUserData != nil {
-                        var isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
+                        let isFollowingUserStr = NSString(data: isFollowingUserData!, encoding: NSUTF8StringEncoding)
                         if isFollowingUserStr == "0"{
                             self.tabBarController?.tabBar.hidden = true
                             let addFollowingBtnWidth: CGFloat = 60
                             let addFollowingBtnOriginY:CGFloat = (self.navigationController?.navigationBar.frame)!.height + 30
-//                            let addFollowingBtnOriginY:CGFloat = 80 + 30
 
                             addFollowingBtn = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - addFollowingBtnWidth - 15, addFollowingBtnOriginY, addFollowingBtnWidth, 30))
                             addFollowingBtn.layer.cornerRadius = 5
@@ -318,15 +311,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         }
                     }
                 }else{
-                    var newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
+                    let newFollowerCountData: NSData? = haalthyService.selectNewFollowCount()
                     if newFollowerCountData != nil{
-                        var jsonResult = try? NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers)
+                        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(newFollowerCountData!, options: NSJSONReadingOptions.MutableContainers)
                         if jsonResult is NSDictionary {
                             newFollowerCount = ((jsonResult as! NSDictionary).objectForKey("count") as! NSNumber).integerValue
                             if newFollowerCount != 0{
                                 self.profileSegment.selectedSegmentIndex = 2
                             }else{
-                                var unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
+                                let unreadMentionedPostCountData: NSData = haalthyService.getUnreadMentionedPostCount()!
                                 unreadMentionedPostCount =  Int((NSString(data: unreadMentionedPostCountData, encoding: NSUTF8StringEncoding)! as String))!
                                 if unreadMentionedPostCount != 0 {
                                     self.profileSegment.selectedSegmentIndex = 2
@@ -418,7 +411,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if indexPath.section == 0{
                 if indexPath.row == 0{
                     let cell = tableView.dequeueReusableCellWithIdentifier("treatmentSummaryCell", forIndexPath: indexPath) as! TreatmentSummaryTableViewCell
-//                    cell.selectionStyle = UITableViewCellSelectionStyle.None
                     if clinicReportList.count > 0{
                         cell.treatmentList = treatmentList
                         cell.clinicReportList = clinicReportList
@@ -451,13 +443,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }
         }else if profileSegment.selectedSegmentIndex == 1{
             let cell = tableView.dequeueReusableCellWithIdentifier("questionListCell", forIndexPath: indexPath) 
-//            cell.selectionStyle = UITableViewCellSelectionStyle.None
             let broadcast = broadcastList[indexPath.row] as! NSDictionary
-            
-//            cell.feedBodyDelegate = self
-//            cell.width = cell.frame.width
-//            cell.indexPath = indexPath
-//            cell.feed = broadcast
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
             let dateInserted = NSDate(timeIntervalSince1970: (broadcast["dateInserted"] as! Double)/1000 as NSTimeInterval)
@@ -597,9 +583,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-//        if profileSegment.selectedSegmentIndex == 1 {
-//            heightForHeader = 40
-//        }
         if profileSegment.selectedSegmentIndex == 2 {
             heightForHeader = 10
         }
@@ -723,20 +706,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-//        if profileSegment.selectedSegmentIndex == 1{
-//            let addBroadcastBtnWidth = 200
-//            let coordinateX:CGFloat = CGFloat((Int(UIScreen.mainScreen().bounds.width) - addBroadcastBtnWidth)/2)
-//            let addBroadcastBtn = UIButton(frame: CGRectMake(coordinateX, 5.0, CGFloat(addBroadcastBtnWidth), 30.0))
-//            addBroadcastBtn.backgroundColor = mainColor
-//            addBroadcastBtn.layer.cornerRadius = 5
-//            addBroadcastBtn.titleLabel?.textAlignment = NSTextAlignment.Center
-//            addBroadcastBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//            addBroadcastBtn.setTitle("有新问题？点击发送广播", forState: UIControlState.Normal)
-//            addBroadcastBtn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 14)
-//            addBroadcastBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
-//            headerView.addSubview(addBroadcastBtn)
-//            
-//        }
         if profileSegment.selectedSegmentIndex == 2 {
             headerView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 10))
             headerView.backgroundColor = sectionHeaderColor
@@ -748,21 +717,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 2 {
             if indexPath.section == 2 {
                 publicService.logOutAccount()
-                print("logout")
-//                self.performSegueWithIdentifier("loginSegue", sender: self)
-                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
                 
                 self.presentViewController(controller, animated: true, completion: nil)
                 usedToBeInLoginView = true
             }
             if indexPath.section == 1 {
-//                self.performSegueWithIdentifier("setProfileSegue", sender: self)
-                var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                var controller = storyboard.instantiateViewControllerWithIdentifier("ProfileDetail") as UIViewController
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("ProfileDetail") as UIViewController
                 
                 self.navigationController?.pushViewController(controller, animated: true)
-//                    .presentViewController(controller, animated: true, completion: nil)
             }
             if indexPath.section == 0 {
                 if indexPath.row == 2 {
@@ -791,27 +756,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         if profileSegment.selectedSegmentIndex == 1 {
             selectedPostId = (broadcastList[indexPath.row] as! NSDictionary).objectForKey("postID") as! Int
-//            self.performSegueWithIdentifier("postDetailSegue", sender: self)
-            var storyboard = UIStoryboard(name: "Feed", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("PostDetailEntry") as! ShowPostDetailTableViewController
+            let storyboard = UIStoryboard(name: "Feed", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("PostDetailEntry") as! ShowPostDetailTableViewController
             controller.postId = selectedPostId
-            //            controller.isFirstTagSelection = true
             self.navigationController?.pushViewController(controller, animated: true)
-//            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
-//    func addPost(){
-//        var storyboard = UIStoryboard(name: "Add", bundle: nil)
-//        var popController = (storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostViewController)
-//        
-//        self.presentViewController(popController as! UIViewController, animated: true, completion: nil)
-//    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "addPostSegue" {
-//            (segue.destinationViewController as! AddPostViewController).isBroadcast = 1
-//        }
         if segue.identifier == "setPasswordSegue" {
             (segue.destinationViewController as! SettingPasswordViewController).username = userProfile.objectForKey("username") as! String
         }
@@ -835,8 +787,5 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if segue.identifier == "updateTreatment" {
             (segue.destinationViewController as! UpdateTreatmentTableViewController).treatmentList = self.treatmentList
         }
-//        if segue.identifier == "postDetailSegue" {
-//            (segue.destinationViewController as! ShowPostDetailTableViewController).postId = selectedPostId
-//        }
     }
 }

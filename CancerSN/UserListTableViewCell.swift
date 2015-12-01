@@ -63,14 +63,14 @@ class UserListTableViewCell: UITableViewCell {
             
             userImage.image = UIImage(data: imageData)
         }
-        var tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
+        let tapImage = UITapGestureRecognizer(target: self, action: Selector("imageTapHandler:"))
         userImage.userInteractionEnabled = true
         userImage.addGestureRecognizer(tapImage)
         
         usernameDisplay.text = user["username"] as? String
         
         var userProfileStr : String
-        var gender = user["gender"] as! String
+        let gender = user["gender"] as! String
         var displayGender:String = String()
         if(gender == "M"){
             displayGender = "男"
@@ -87,8 +87,8 @@ class UserListTableViewCell: UITableViewCell {
         }
 //        var pathological = user["pathological"] as! String
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-            var stageStr = user["stage"]! as! Int
-            var stages = stageMapping.allKeysForObject(stageStr) as NSArray
+            let stageStr = user["stage"]! as! Int
+            let stages = stageMapping.allKeysForObject(stageStr) as NSArray
             if stages.count > 0 {
                 stage = stages[0] as! String
             }
@@ -118,15 +118,6 @@ class UserListTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-//        if !hiddenFollowButton{
-//            addFollowingBtn.layer.cornerRadius = 5
-//            addFollowingBtn.layer.borderWidth = 2.0
-//            addFollowingBtn.layer.borderColor = mainColor.CGColor
-//            addFollowingBtn.layer.masksToBounds = true
-//            addFollowingBtn.backgroundColor = UIColor.whiteColor()
-//            addFollowingBtn.titleLabel?.textColor = mainColor
-//        }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

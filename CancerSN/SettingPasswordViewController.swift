@@ -8,10 +8,6 @@
 
 import UIKit
 
-//protocol SettingPasswordDelegate{
-//    func getPassword(password: String)
-//}
-
 class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var usernameLabel: UILabel!
@@ -26,21 +22,18 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
         self.title = "设置密码"
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        self.navigationController?.navigationBar.titleTextAttributes = titleDict as! [String : AnyObject]
+        self.navigationController?.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
         
-//        var cancelButton : UIBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
-        
-        var submitButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Plain, target: self, action: "submit")
+        let submitButton : UIBarButtonItem = UIBarButtonItem(title: "确定", style: UIBarButtonItemStyle.Plain, target: self, action: "submit")
         submitButton.tintColor = UIColor(white: 1, alpha: 0.5)
         
-//        self.navigationItem.leftBarButtonItem = cancelButton
         self.navigationItem.rightBarButtonItem = submitButton
         password.delegate = self
         confirmPassword.delegate = self
     }
     
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
@@ -65,13 +58,13 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
     func submit(){
         if password.text == confirmPassword.text {
             var jsonResult:AnyObject? = nil
-            var resetPwd = haalthyService.resetPassword(password.text!)
+            let resetPwd = haalthyService.resetPassword(password.text!)
             if resetPwd != nil{
                 jsonResult = try? NSJSONSerialization.JSONObjectWithData(resetPwd!, options: NSJSONReadingOptions.MutableContainers)
                 let str: NSString = NSString(data: resetPwd!, encoding: NSUTF8StringEncoding)!
                 if str == "1"{
                     print(str)
-                    var keychainAccess = KeychainAccess()
+                    let keychainAccess = KeychainAccess()
                     keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                     self.navigationController?.popToRootViewControllerAnimated(true)
                 }

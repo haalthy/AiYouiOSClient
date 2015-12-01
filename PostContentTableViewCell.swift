@@ -27,13 +27,13 @@ class PostContentTableViewCell: UITableViewCell {
     }
     
     func updateUI(){
-        username.text = post.objectForKey("insertUsername") as! String
+        username.text = post.objectForKey("insertUsername") as? String
         if (post.objectForKey("type") as! Int) != 1{
-            postContent.text = post.objectForKey("body") as! String
+            postContent.text = post.objectForKey("body") as? String
         }else{
             postContent.text = nil
-            var treatmentStr = post.objectForKey("body") as! String
-            var treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
+            let treatmentStr = post.objectForKey("body") as! String
+            let treatmentList: NSMutableArray = NSMutableArray(array: treatmentStr.componentsSeparatedByString("**"))
             for treatment in treatmentList {
                 var treatmentItemStr:String = treatment as! String
                 
@@ -52,11 +52,11 @@ class PostContentTableViewCell: UITableViewCell {
                 if treatmentItemStr.substringWithRange(Range(start: treatmentItemStr.startIndex, end: treatmentItemStr.startIndex.advancedBy(1))) == "*" {
                     treatmentItemStr = treatmentItemStr.substringFromIndex(treatmentStr.startIndex.advancedBy(1))
                 }
-                var treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
-                var treatmentName = treatmentNameAndDosage[0] as! String
+                let treatmentNameAndDosage:NSArray = treatmentItemStr.componentsSeparatedByString("*")
+                let treatmentName = treatmentNameAndDosage[0] as! String
                 var treatmentDosage = String()
                 var treatmentNameLabel = UILabel()
-                var dosageLabel = UILabel()
+                let dosageLabel = UILabel()
                 treatmentNameLabel = UILabel(frame: CGRectMake(0.0, treatmentY, 90.0, 28.0))
                 treatmentNameLabel.text = treatmentName
                 treatmentNameLabel.font = UIFont(name: "Helvetica-Bold", size: 13.0)
@@ -74,7 +74,7 @@ class PostContentTableViewCell: UITableViewCell {
                     dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
                     dosageLabel.numberOfLines = 0
                     dosageLabel.sizeToFit()
-                    var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
+                    let height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
                     treatmentY += height + 5
                     dosageLabel.textColor = mainColor
                 }else{
@@ -117,8 +117,8 @@ class PostContentTableViewCell: UITableViewCell {
         }
         
         //insert date View
-        var dateFormatter = NSDateFormatter()
-        var insertedDate = NSDate(timeIntervalSince1970: (post.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
+        let dateFormatter = NSDateFormatter()
+        let insertedDate = NSDate(timeIntervalSince1970: (post.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
         dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
         let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
         let currentDayStr = dateFormatter.stringFromDate(NSDate())

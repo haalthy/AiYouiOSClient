@@ -50,9 +50,8 @@ class TagTableViewController: UITableViewController {
             }
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
-//                self.performSegueWithIdentifier("homeSegue", sender: self)
-                var storyboard = UIStoryboard(name: "Main", bundle: nil)
-                var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
                 
                 self.presentViewController(controller, animated: true, completion: nil)
             }else{
@@ -75,10 +74,6 @@ class TagTableViewController: UITableViewController {
                 
                 for tagItem in tagList{
                     let tag = tagItem as! NSDictionary
-                    //                var groupedTagListItem = NSMutableArray()
-                    //                var tagTypeItem = NSMutableDictionary()
-                    //                tagTypeItem.setObject(tag.objectForKey("TypeRank")!, forKey: "TypeRank")
-                    //                tagTypeItem.setObject(tag.objectForKey("TypeName")!, forKey: "TypeName")
                     var groupedTagsItem = NSMutableDictionary()
                     if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
                         for groupedTag in groupedTagList{
@@ -145,10 +140,6 @@ class TagTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let numberOfRows = 1
-//        if section > 0 && section < tagTypeList.count + 1{
-//            var groupIndex:Int = section - 1
-//            numberOfRows = ((groupedTagList[groupIndex] as! NSDictionary).objectForKey("tagsInGroup"))!.count
-//        }
         return numberOfRows
     }
 
@@ -184,8 +175,6 @@ class TagTableViewController: UITableViewController {
                     coordinateY = 40
                 }
                 let tagButton = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagButtonWidth, tagButtonHeight))
-//                tagButton.setTitle(((tag as! NSDictionary).objectForKey("name") as! String), forState: UIControlState.Normal)
-//                tagButton.setTitleColor(mainColor, forState: UIControlState.Normal)
                 cell.addSubview(tagButton)
                 publicService.formatButton(tagButton, title: tagItem.objectForKey("name") as! String)
                 tagButton.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
@@ -224,9 +213,8 @@ class TagTableViewController: UITableViewController {
         var headerView = UIView()
         if section > 0 && section < tagTypeList.count + 1{
             headerView =  UIView(frame: CGRectMake(0, 0,self.tableView.bounds.size.width, 40))
-//            headerView.backgroundColor = sectionHeaderColor
             let tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
-            tagTypeLabel.text = (groupedTagList[section-1] as! NSDictionary).objectForKey("typeName") as! String
+            tagTypeLabel.text = (groupedTagList[section-1] as! NSDictionary).objectForKey("typeName") as? String
             tagTypeLabel.textColor = mainColor
             tagTypeLabel.font = UIFont(name: fontStr, size: 15.0)
             headerView.addSubview(tagTypeLabel)
@@ -236,16 +224,7 @@ class TagTableViewController: UITableViewController {
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var heightForRow: CGFloat = 80
-//        if indexPath.section == 0{
-//            heightForRow = 80
-//        }
         if indexPath.section > 0 && indexPath.section < tagTypeList.count + 1{
-//            var groupIndex:Int = indexPath.section - 1
-//            if ((groupedTagList[groupIndex] as! NSDictionary).objectForKey("tagsInGroup"))!.count <= 5 {
-//                heightForRow = 40
-//            }else{
-//                heightForRow = 80
-//            }
             heightForRow = (rowHightForTagContainer[indexPath.section - 1] as! CGFloat)
         }
         return heightForRow

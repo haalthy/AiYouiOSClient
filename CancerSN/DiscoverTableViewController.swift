@@ -55,9 +55,9 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
             }
         }
         
-        if((username == nil) && (tagList.count == 0)){
+//        if((username == nil) && (tagList.count == 0)){
 //            self.performSegueWithIdentifier("setTagSegue", sender: nil)
-        }
+//        }
         var getSuggestUsers:NSData?
         if((username != nil) && (password != nil)){
             getSuggestUsers = haalthyService.getSuggestUserByProfile(0, rangeEnd: 20)
@@ -95,8 +95,6 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: - Table view data source
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 1
     }
 
@@ -138,34 +136,25 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
         }
         return rowHeight
     }
-    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "showPatientProfileSegue" {
-//            (segue.destinationViewController as! UserProfileViewController).profileOwnername = selectedProfileOwner
-//        }
-//    }
+
     func performLoginSegue() {
-//        self.performSegueWithIdentifier("loginSegue", sender: nil)
-        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
         
         self.presentViewController(controller, animated: true, completion: nil)
     }
     func imageTap(username:String){
         if self.username == nil{
-//            self.performSegueWithIdentifier("loginSegue", sender: nil)
-            var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
         }else{
             selectedProfileOwner = username
-//            self.performSegueWithIdentifier("showPatientProfileSegue", sender: self)
-            var storyboard = UIStoryboard(name: "User", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            let storyboard = UIStoryboard(name: "User", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
             controller.profileOwnername = selectedProfileOwner
             self.navigationController?.pushViewController(controller, animated: true)
-//            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     

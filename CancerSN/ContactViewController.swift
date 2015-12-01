@@ -60,7 +60,7 @@ class ContactViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("contactListCell", forIndexPath: indexPath) 
-        var user = contactList[indexPath.row] as! NSDictionary
+        let user = contactList[indexPath.row] as! NSDictionary
         // Configure the cell...
         if((user["image"] is NSNull) == false){
             let dataString = user.objectForKey("image") as! String
@@ -68,7 +68,7 @@ class ContactViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             cell.imageView?.image = UIImage(data: imageData)
         }
-        cell.textLabel?.text = user.objectForKey("username") as! String
+        cell.textLabel?.text = user.objectForKey("username") as? String
         
         return cell
     }

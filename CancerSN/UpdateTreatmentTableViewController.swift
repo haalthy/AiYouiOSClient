@@ -30,11 +30,11 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         super.viewDidLoad()
         for treatment in treatmentList{
             let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
-            treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
+            treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as? String
             treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
             treatmentLabel.sizeToFit()
             let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
-            dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as! String
+            dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as? String
             dosageLabel.font = UIFont(name: fontStr, size: 12.0)
             dosageLabel.sizeToFit()
             heightForRowForTreatmentList.addObject(treatmentLabel.frame.height + dosageLabel.frame.height)
@@ -103,7 +103,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             formatUpdateDateButton(beginDateButton, title: beginDateStr)
             formatUpdateDateButton(endDateButton, title: endDateStr)
             let treatmentNameTextField = UITextField(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, treatmentNameTextFieldHeight))
-            treatmentNameTextField.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as! String
+            treatmentNameTextField.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as? String
             let dosageTextView = UITextView(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth + treatmentNameTextFieldHeight + marginWidth, cell.frame.width - marginWidth * 2, dosageTextViewHeight))
             dosageTextView.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as! String
             treatmentNameTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
@@ -117,25 +117,18 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             
             let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, 60))
             treatmentLabel.textColor = mainColor
-            treatmentLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as! String
+            treatmentLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as? String
             treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
             treatmentLabel.sizeToFit()
             let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, cell.frame.width - marginWidth * 2, 100))
             dosageLabel.textColor = mainColor
-            dosageLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as! String
+            dosageLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as? String
             dosageLabel.font = UIFont(name: fontStr, size: 12.0)
             dosageLabel.sizeToFit()
             
             let editButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
             let deleteButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth*2 - editButtonWidth*2, marginWidth * 3 + treatmentLabel.frame.height + dosageLabel.frame.height + dateLabelHeight, editButtonWidth, 25))
 
-//            editButton.layer.borderColor = mainColor.CGColor
-//            editButton.layer.borderWidth = 1.0
-//            editButton.layer.cornerRadius = 5
-//            editButton.layer.masksToBounds = true
-//            editButton.setTitle("编辑", forState: UIControlState.Normal)
-//            editButton.setTitleColor(mainColor, forState: UIControlState.Normal)
-//            editButton.titleLabel?.font = UIFont(name: fontStr, size: 13.0)
             formatButton(editButton, title: "编辑")
             formatButton(deleteButton, title: "删除")
             editButton.addTarget(self, action: "editItem:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -201,12 +194,12 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     }
     
     func saveItem(sender:UIButton){
-        var buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
-        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
+        let buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         isEditForRow[indexPath.row] = 0
-        var updateTreatment = treatmentList[indexPath.row] as! NSMutableDictionary
-        var cell = self.tableView.cellForRowAtIndexPath(indexPath)
-        var views = cell?.subviews as! NSArray
+        let updateTreatment = treatmentList[indexPath.row] as! NSMutableDictionary
+        let cell = self.tableView.cellForRowAtIndexPath(indexPath)
+        let views = cell?.subviews as! NSArray
         for view in views{
             if view is UITextField{
                 
@@ -217,24 +210,12 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
                 print("剂量"+(view as! UITextView).text)
                 updateTreatment.setObject((view as! UITextView).text, forKey: "dosage")
             }
-//            if (view is UIButton) && (view.frame.origin.x < 100) && (view.frame.origin.y < 10){
-//                println("开始时间" + ((view as! UIButton).titleLabel?.text!)!)
-//                updateTreatment.setObject(((view as! UIButton).titleLabel?.text!)!, forKey: "beginDate")
-//
-//            }
-//            if (view is UIButton) && (view.frame.origin.x > 100) && (view.frame.origin.y < 10){
-//                println("结束时间" + ((view as! UIButton).titleLabel?.text!)!)
-//                updateTreatment.setObject(((view as! UIButton).titleLabel?.text!)!, forKey: "endDate")
-//            }
         }
         haalthyService.updateTreatment(updateTreatment)
         self.tableView.reloadData()
     }
     
     func selectDate(sender:UIButton){
-//        self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
-//        [self.datePicker setDatePickerMode:UIDatePickerModeDate];
-//        [self.datePicker addTarget:self action:@selector(onDatePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
         let datePickerHeight:CGFloat = 200
         let confirmButtonWidth:CGFloat = 100
         let confirmButtonHeight:CGFloat = 30
@@ -242,7 +223,6 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         datePickerContainerView!.backgroundColor = UIColor.whiteColor()
         self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
         self.datePicker.datePickerMode = UIDatePickerMode.Date
-//        self.datePicker.addTarget(self, action: "dateChanged:", forControlEvents: UIControlEvents.ValueChanged)
         let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
         confirmButton.setTitle("确定", forState: UIControlState.Normal)
         confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
@@ -250,21 +230,9 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         datePickerContainerView!.addSubview(self.datePicker)
         datePickerContainerView?.addSubview(confirmButton)
         self.view.addSubview(datePickerContainerView!)
-//        editDateItem.objectForKey(sender.)
-//        self.performSegueWithIdentifier("showDatePickerIdentifier", sender: self)
         editDateButton = sender
     }
-    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "showDatePickerIdentifier"{
-//            var vc = segue.destinationViewController as! UIViewController
-//            var controller = vc.popoverPresentationController
-//            if controller != nil{
-//                controller?.delegate = self
-//                controller?.permittedArrowDirections = nil
-//            }
-//        }
-//    }
+
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
     }
@@ -290,7 +258,6 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         sender.titleLabel?.textAlignment = NSTextAlignment.Center
         let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
         let underlineAttributedString = NSAttributedString(string: title, attributes: underlineAttribute)
-        //            clinicTrailButton.titleLabel?.attributedText = underlineAttributedString
         sender.setAttributedTitle(underlineAttributedString, forState: UIControlState.Normal)
     }
     

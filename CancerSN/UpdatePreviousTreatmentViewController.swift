@@ -27,8 +27,8 @@ class UpdatePreviousTreatmentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        treatmentName.text = treatment.objectForKey("treatmentName") as! String
-        dosage.text = treatment.objectForKey("dosage") as! String
+        treatmentName.text = treatment.objectForKey("treatmentName") as? String
+        dosage.text = treatment.objectForKey("dosage") as? String
         self.preferredContentSize = CGSizeMake(360, 350)
 
     }

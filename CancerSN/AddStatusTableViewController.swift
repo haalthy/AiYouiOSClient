@@ -101,7 +101,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             let cell = tableView.dequeueReusableCellWithIdentifier("clinicReportCell", forIndexPath: indexPath) 
             let reportNameLabel = UILabel(frame: CGRectMake(20, 10, 60, 30))
             let textField = UITextField(frame: CGRectMake(reportNameLabel.bounds.origin.x + reportNameLabel.bounds.width + 15, 10, UIScreen.mainScreen().bounds.width - reportNameLabel.bounds.width - 30, reportNameLabel.bounds.height))
-            reportNameLabel.text = (clinicReportFormatList[indexPath.row] as! NSDictionary).objectForKey("clinicItem") as! String
+            reportNameLabel.text = (clinicReportFormatList[indexPath.row] as! NSDictionary).objectForKey("clinicItem") as? String
             reportNameLabel.textColor = mainColor
             textField.layer.borderColor = mainColor.CGColor
             textField.layer.borderWidth = 1.0
@@ -188,12 +188,12 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             patientStatusDetail += "**" + textView.text
         }
 
-        var clinicItemList = NSMutableArray()
+        let clinicItemList = NSMutableArray()
         var index = 0
         for index = 0; index < clinicReportFormatList.count; index++ {
-            var indexPath = NSIndexPath(forRow: index, inSection: 3)
-            var clinicItem = NSMutableDictionary()
-            var cell = self.tableView.cellForRowAtIndexPath(indexPath)
+            let indexPath = NSIndexPath(forRow: index, inSection: 3)
+            let clinicItem = NSMutableDictionary()
+            let cell = self.tableView.cellForRowAtIndexPath(indexPath)
             for clinicItemView in cell!.subviews {
                 if clinicItemView is UILabel{
                     clinicItem.setObject((clinicItemView as! UILabel).text!, forKey: "clinicItemName")
@@ -213,11 +213,11 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
             }
         }
         
-        var clinicReport = NSMutableDictionary()
+        let clinicReport = NSMutableDictionary()
         clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
         clinicReport.setValue(isPublic, forKey: "isPosted")
         clinicReport.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "dateInserted")
-        var patientStatus = NSMutableDictionary()
+        let patientStatus = NSMutableDictionary()
         patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
         patientStatus.setValue(isPublic, forKey: "isPosted")
         patientStatus.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "insertedDate")
@@ -245,50 +245,6 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
         }
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var rowHeight:CGFloat = 0

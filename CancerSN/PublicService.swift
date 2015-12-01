@@ -28,9 +28,7 @@ class PublicService:NSObject{
         if user["age"] != nil{
             age = (user["age"] as! NSNumber).stringValue
         }
-        //        var pathological = user["pathological"] as! String
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-//            var stageStr = user["stage"]! as! Int
             let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
             if stages.count > 0 {
                 stage = stages[0] as! String
@@ -76,7 +74,6 @@ class PublicService:NSObject{
     }
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {
-        // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
         let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage!)
         
         // Get the size of the contextImage
@@ -87,7 +84,6 @@ class PublicService:NSObject{
         let width: CGFloat
         let height: CGFloat
         
-        // Check to see which length is the longest and create the offset based on that length, then set the width and height of our rect
         if contextSize.width > contextSize.height {
             posX = ((contextSize.width - contextSize.height) / 2)
             posY = 0
