@@ -57,15 +57,22 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
     
     func submit(){
         if password.text == confirmPassword.text {
+            let publicService = PublicService()
+//            let digest = publicService.md5(password.text!)
+//            let passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+            let passwordStr = password.text!
+            print(passwordStr)
+            var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
+
             var jsonResult:AnyObject? = nil
-            let resetPwd = haalthyService.resetPassword(password.text!)
+            let resetPwd = haalthyService.resetPassword(passwordEndedeStr)
             if resetPwd != nil{
                 jsonResult = try? NSJSONSerialization.JSONObjectWithData(resetPwd!, options: NSJSONReadingOptions.MutableContainers)
                 let str: NSString = NSString(data: resetPwd!, encoding: NSUTF8StringEncoding)!
                 if str == "1"{
                     print(str)
                     let keychainAccess = KeychainAccess()
-                    keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
+                    keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
                     self.navigationController?.popToRootViewControllerAnimated(true)
                 }
             }

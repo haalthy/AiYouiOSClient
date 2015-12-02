@@ -27,7 +27,7 @@ class AddItemViewController: UIViewController {
     }
     @IBAction func addBroadcast(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
@@ -41,7 +41,7 @@ class AddItemViewController: UIViewController {
     @IBAction func addPrivatePost(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
 //            self.performSegueWithIdentifier("loginSegue", sender: nil)
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)

@@ -16,7 +16,10 @@ class GetAccessToken: NSObject {
         let keychainAccess = KeychainAccess()
         if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
             let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
-            let passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
+            var passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
+            let publicService = PublicService()
+            passwordStr = publicService.passwordEncode(passwordStr)
+//            var passwordEncode = passwordStr.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
             var urlPath: String = getOauthTokenURL + "username=" + usernameStr + "&password=" + passwordStr
             urlPath = urlPath.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             let url: NSURL = NSURL(string: urlPath)!

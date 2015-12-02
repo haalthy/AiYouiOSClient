@@ -32,11 +32,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     @IBAction func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-        self.performSegueWithIdentifier("RegistrationSegue", sender: self)
-//        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-//        var controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
-//        
-//        self.presentViewController(controller, animated: true, completion: nil)
+//        self.performSegueWithIdentifier("RegistrationSegue", sender: self)
+        var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        var controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
+        
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func tencentDidLogin(){
@@ -83,8 +83,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         }
     }
     
-    func userLogin(usernameStr: String, passwordStr: String)->Bool{
-        let respData = haalthyService.getAccessToken(usernameStr, password: passwordStr)
+    func userLogin(usernameStr: String, var passwordStr: String)->Bool{
+        let publicService = PublicService()
+//        let digest = publicService.md5(passwordStr)
+//        passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+//        var passwordEncode = passwordStr.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        
+//        print(passwordStr.utf16)
+        var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
+//        for character in passwordStr.utf16 {
+//            print(character)
+//            passwordEndedeStr += "a"+(String(character))
+//        }
+//        print(passwordEndedeStr)
+//        print(passwordEncode)
+        
+        let respData = haalthyService.getAccessToken(usernameStr, password: passwordEndedeStr)
         let respDataStr = NSString(data: respData, encoding: NSUTF8StringEncoding)
         print(respDataStr)
         let jsonResult: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(respData, options: NSJSONReadingOptions.MutableContainers)
@@ -94,6 +108,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(accessToken, forKey: accessNSUserData)
             profileSet.setObject(refreshToken, forKey: refreshNSUserData)
+
+//            let pwd: String = String(format: "The current time is %02d:%02d", digest[0], digest[1])
             let keychainAccess = KeychainAccess()
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
@@ -107,14 +123,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func login(sender: UIButton) {
-//        let usernameStr = username.text
-//        let passwordStr = password.text
-//        var loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
-        if isRootViewController{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry")
-//            controller.isFirstTagSelection = true
-            self.presentViewController(controller, animated: true, completion: nil)
+        let usernameStr = username.text
+        let passwordStr = password.text
+        
+        let loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
+        if isRootViewController && loginSucessful{
+            self.performSegueWithIdentifier("homeSegue", sender: self)
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry")
+////            controller.isFirstTagSelection = true
+//            self.navigationController?.pushViewController(controller, animated: true)
+//            self.presentViewController(controller, animated: true, completion: nil)
         }else{
             self.dismissViewControllerAnimated(true, completion: nil)
         }

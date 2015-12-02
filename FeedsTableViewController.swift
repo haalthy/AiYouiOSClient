@@ -47,7 +47,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             
             self.presentViewController(nav, animated: true, completion: nil)
         }else{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
@@ -268,7 +268,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
         let keychainAccess = KeychainAccess()
-        
+//        
+//        keychainAccess.deletePasscode(usernameKeyChain)
+//        keychainAccess.deletePasscode(passwordKeyChain)
+//        
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
         let getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)
@@ -426,7 +429,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
             controller.profileOwnername = selectedProfileOwnername
             self.navigationController?.pushViewController(controller, animated: true)
         }else{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)

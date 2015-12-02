@@ -136,4 +136,23 @@ class PublicService:NSObject{
         sender.presentViewController(alert, animated: true, completion: nil)
     }
     
+    func md5(string: String) -> NSData {
+        var digest = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
+        if let data :NSData = string.dataUsingEncoding(NSUTF8StringEncoding) {
+            CC_MD5(data.bytes, CC_LONG(data.length),
+                UnsafeMutablePointer<UInt8>(digest.mutableBytes))
+        }
+        return digest
+    }
+    
+    func passwordEncode(password:String)->String{
+        var passwordEndedeStr:String = ""
+        for character in password.utf16 {
+            print(character)
+            passwordEndedeStr += "a"+(String(character))
+        }
+        print(passwordEndedeStr)
+        return passwordEndedeStr
+    }
+    
 }

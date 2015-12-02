@@ -80,6 +80,17 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             self.presentViewController(alert, animated: true, completion: nil)
         }else{
             
+            let usernameStr:String = usernameInput.text!
+            let publicService = PublicService()
+//            let digest = publicService.md5((passwordInput.text)!)
+//            let passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+            print("passwordStr")
+//            var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
+
+            let passwordStr = publicService.passwordEncode(passwordInput.text!)
+
+            print(passwordStr)
+            
             //save image
             let selectedImage: UIImage = portrait.image!
             
@@ -104,7 +115,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 profileSet.setObject(displayname.text, forKey: displaynameUserData)
             }
             let keychainAccess = KeychainAccess()
-            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameInput.text!)
+            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text!)
             
             //upload UserInfo to Server

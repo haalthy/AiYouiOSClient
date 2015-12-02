@@ -389,7 +389,6 @@
 				2A74CCE11B8A3704003F6233 /* UpdatePreviousTreatmentViewController.swift */,
 				2AC59C3F1B5F2D0500C4FE36 /* UserListTableViewController.swift */,
 				2A97EB331B96D0CE0051BC5C /* UserProfileViewController.swift */,
-				2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */,
 				2ADD66671BA9EE5C0064A7C1 /* CommentListTableViewController.swift */,
 				2AB7BE811BABF3010069C27B /* ContactViewController.swift */,
 				2A9957FB1BC2F5AB00DAB05B /* SettingUsernameViewController.swift */,
@@ -426,6 +425,7 @@
 		2AB8E4421C05A98900F39409 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */,
 				2A9957F91BBFB85900DAB05B /* PatientProfileTableViewController.swift */,
 				2A1E87581BF43C2E0059090D /* GeneticMutationViewController.swift */,
 				2AA264BC1B631525001E52E7 /* CancerTypeSettingViewController.swift */,

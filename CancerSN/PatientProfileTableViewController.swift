@@ -162,7 +162,9 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                     var stageAndMetastasisStr = String()
                     if (userProfile.objectForKey("stage") != nil) && (userProfile.objectForKey("stage") is NSNull) == false{
                         var stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray
-                        stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray)[0] as! String
+                        if stage.count > 0 {
+                            stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray)[0] as! String
+                        }
                     }else{
                         stageAndMetastasisStr = nullItemStr
                     }

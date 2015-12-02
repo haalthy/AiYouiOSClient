@@ -138,14 +138,14 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     func performLoginSegue() {
-        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
         
         self.presentViewController(controller, animated: true, completion: nil)
     }
     func imageTap(username:String){
         if self.username == nil{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)

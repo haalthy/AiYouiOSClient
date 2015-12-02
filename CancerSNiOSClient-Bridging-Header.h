@@ -20,3 +20,4 @@
 #import <TencentOpenAPI/TencentOAuthObject.h>
 #import <TencentOpenAPI/WeiBoAPI.h>
 #import <TencentOpenAPI/WeiyunAPI.h>
+#import <CommonCrypto/CommonCrypto.h>

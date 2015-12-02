@@ -252,7 +252,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if accessToken == nil{
             if usedToBeInLoginView == false{
 //                self.performSegueWithIdentifier("loginSegue", sender: self)
-                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
                 
                 self.presentViewController(controller, animated: true, completion: nil)
@@ -717,7 +717,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSegment.selectedSegmentIndex == 2 {
             if indexPath.section == 2 {
                 publicService.logOutAccount()
-                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
                 
                 self.presentViewController(controller, animated: true, completion: nil)
@@ -726,7 +726,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if indexPath.section == 1 {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
                 let controller = storyboard.instantiateViewControllerWithIdentifier("ProfileDetail") as UIViewController
-                
+                (controller as! PatientProfileTableViewController).userProfile = userProfile.mutableCopy() as! NSMutableDictionary
+
                 self.navigationController?.pushViewController(controller, animated: true)
             }
             if indexPath.section == 0 {

@@ -26,7 +26,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
@@ -171,7 +171,7 @@ class ShowPostDetailTableViewController: UITableViewController, FeedBodyDelegate
             controller.profileOwnername = selectedProfileOwnername
             self.navigationController?.pushViewController(controller, animated: true)
         }else{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
             self.presentViewController(controller, animated: true, completion: nil)
