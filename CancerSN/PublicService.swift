@@ -145,7 +145,9 @@ class PublicService:NSObject{
         return digest
     }
     
-    func passwordEncode(password:String)->String{
+    func passwordEncode(var password:String)->String{
+        password = md5(password).base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+        print(password)
         var passwordEndedeStr:String = ""
         for character in password.utf16 {
             print(character)
