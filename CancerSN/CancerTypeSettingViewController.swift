@@ -21,7 +21,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     var pathologicalSettingVCDelegate: PathologicalSettingVCDelegate?
     var cancerTypeSettingVCDelegate: CancerTypeSettingVCDelegate?
     @IBOutlet weak var confirmBtn: UIButton!
-    @IBOutlet weak var skipBtn: UIButton!
     @IBOutlet weak var cancerTypePickerView: UIPickerView!
     var pickerDataSource = [String]()
     var pathologicaPickerDataSource = [String]()
@@ -30,14 +29,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     @IBOutlet weak var pathologicalPickerView: UIPickerView!
 
     @IBOutlet weak var titleLabel: UILabel!
-    @IBAction func cancel(sender: UIButton) {
-        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-            self.performSegueWithIdentifier("signupSegue", sender: self)
-        }else{
-            haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
     
     @IBAction func confirm(sender: UIButton) {
         let cancerType = pickerDataSource[cancerTypePickerView.selectedRowInComponent(0)]
@@ -49,12 +40,12 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
                 self.dismissViewControllerAnimated(true, completion: nil)
             } else {
-                if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-                    self.performSegueWithIdentifier("signupSegue", sender: self)
-                }else{
-                    haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+//                }else{
+                        haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+//                    self.dismissViewControllerAnimated(true, completion: nil)
                 }
+                self.performSegueWithIdentifier("selectTagSegue", sender: self)
             }
         }else{
             let pathological = pathologicaPickerDataSource[pathologicalPickerView.selectedRowInComponent(0)]
@@ -68,6 +59,12 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 profileSet.setObject(selectedPathological, forKey: pathologicalNSUserData)
                 self.performSegueWithIdentifier("geneticMutationSegue", sender: nil)
             }
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "selectTagSegue" {
+            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
         }
     }
     

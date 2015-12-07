@@ -154,7 +154,8 @@
                                                             <exclude reference="qH4-zR-9KT"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="250" y="13" width="57" height="21"/>
                                                         <mask key="constraints">
                                                             <include reference="fNA-3z-fbB"/>
                                                             <include reference="qH4-zR-9KT"/>
@@ -166,6 +167,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="23" y="13" width="219" height="59.5"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>

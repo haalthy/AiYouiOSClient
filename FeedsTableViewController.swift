@@ -25,7 +25,11 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBOutlet weak var addItem: UIButton!
     @IBAction func selectTags(sender: UIButton) {
-        self.performSegueWithIdentifier("showTagsSegue", sender: self)
+//        self.performSegueWithIdentifier("showTagsSegue", sender: self)
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+        controller.userTagDelegate = self
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     @IBAction func discover(sender: UIButton) {
@@ -132,8 +136,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         }
         if((feed.valueForKey("cancerType") != nil) && ((feed.valueForKey("cancerType") is NSNull) == false)){
             if(feed.valueForKey("cancerType") as! String != "lung"){
-                let cancerTypeKey = feed.valueForKey("cancerType")!
-                profileStr += cancerTypeMapping.allKeysForObject(cancerTypeKey)[0] as! String
+                let cancerTypeKey = feed.valueForKey("cancerType") as! String
+                if ((cancerTypeKey is NSNull) == false) && (cancerTypeKey != ""){
+                    profileStr += cancerTypeMapping.allKeysForObject(cancerTypeKey)[0] as! String
+                }
             }else if((feed.valueForKey("pathological") != nil) && ((feed.valueForKey("pathological") is NSNull) == false) && (feed.valueForKey("pathological") as! String != "")){
                 
                 profileStr += pathologicalMapping.allKeysForObject(feed.valueForKey("pathological")!)[0] as! String
@@ -268,10 +274,10 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         self.navigationController?.navigationBar.backgroundColor = headerColor
         
         let keychainAccess = KeychainAccess()
-//        
+        
 //        keychainAccess.deletePasscode(usernameKeyChain)
 //        keychainAccess.deletePasscode(passwordKeyChain)
-//        
+
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
         let getUpdatePostCountData = haalthyService.getUpdatedPostCount(0)

@@ -22,6 +22,7 @@ class StageViewController: UIViewController, UITextFieldDelegate {
     var publicService = PublicService()
     var selectedStage:Int?
     var selectedMetastasis = NSMutableArray()
+    var haalthyService = HaalthyService()
     
     @IBOutlet weak var liverMetastasisBtn: UIButton!
     @IBOutlet weak var boneMetastasisBtn: UIButton!
@@ -37,8 +38,6 @@ class StageViewController: UIViewController, UITextFieldDelegate {
     
     
 //    @IBOutlet weak var selectBtn: UIButton!
-//    
-    @IBOutlet weak var titleLabel: UILabel!
     
     @IBAction func confirm(sender: UIButton) {
         var selectedMetastasisStr = String()
@@ -54,9 +53,20 @@ class StageViewController: UIViewController, UITextFieldDelegate {
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(selectedStage, forKey: stageNSUserData)
             profileSet.setObject(selectedMetastasisStr, forKey: metastasisNSUserData)
-            self.performSegueWithIdentifier("signupSegue", sender: self)
+            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            }
+            self.performSegueWithIdentifier("selectTagSegue", sender: self)
+            
         }
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "selectTagSegue" {
+            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

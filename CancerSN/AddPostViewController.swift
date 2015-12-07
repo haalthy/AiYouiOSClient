@@ -29,6 +29,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     var mentionUsernameList = NSMutableArray()
     let haalthyService = HaalthyService()
     var allTagList = NSArray()
+    var keychainAccess = KeychainAccess()
 
 //    @IBAction func testButton(sender: UIButton) {
 ////        self.postContent.frame.size.height = 50
@@ -54,6 +55,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             post.setObject(0, forKey: "closed")
             post.setObject(self.isBroadcast, forKey: "isBroadcast")
             post.setObject("TXT", forKey: "type")
+            post.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
             var respData:NSData
             if(self.isBroadcast == 0){
                 respData = haalthyService.addPost(post as NSDictionary)
@@ -83,7 +85,12 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             print(str)
             self.dismissViewControllerAnimated(false, completion: nil)
         }else{
-            self.performSegueWithIdentifier("selectTagSegue", sender: self)
+//            self.performSegueWithIdentifier("selectTagSegue", sender: self)
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+            tagViewController.isBroadcastTagSelection = 1
+            tagViewController.postDelegate = self
+            self.presentViewController(tagViewController, animated: true, completion: nil)
         }
     }
     
@@ -198,7 +205,12 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     }
     
     func displayMoreTags(){
-        self.performSegueWithIdentifier("selectTagSegue", sender: self)
+//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+        tagViewController.isBroadcastTagSelection = 1
+        tagViewController.postDelegate = self
+        self.presentViewController(tagViewController, animated: true, completion: nil)
     }
     
     func selectTag(sender:UIButton){

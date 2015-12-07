@@ -10,6 +10,8 @@ import UIKit
 
 class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate  {
     
+    var isFirstSignup: Bool = false
+    
     @IBOutlet weak var submitBtn: UIButton!
     func cropToSquare(image originalImage: UIImage) -> UIImage {
         // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
@@ -50,7 +52,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     @IBOutlet weak var portrait: UIImageView!
     
     @IBOutlet weak var emailInput: UITextField!
-    @IBOutlet weak var usernameInput: UITextField!
+//    @IBOutlet weak var usernameInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
     @IBOutlet weak var passwordReInput: UITextField!
     @IBOutlet weak var displayname: UITextField!
@@ -70,17 +72,19 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             let alert = UIAlertController(title: "提示", message: "请输入邮箱／手机", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
-        }else if usernameInput.text == ""{
-            let alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
-        }else if passwordInput.text == ""{
+        }else
+//            if usernameInput.text == ""{
+//            let alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
+//            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+//            self.presentViewController(alert, animated: true, completion: nil)
+//        }else
+            if passwordInput.text == ""{
             let alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else{
             
-            let usernameStr:String = usernameInput.text!
+            var usernameStr:String = String()
             let publicService = PublicService()
 //            let digest = publicService.md5((passwordInput.text)!)
 //            let passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
@@ -109,21 +113,21 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(emailInput.text, forKey: emailNSUserData)
             profileSet.setObject(imageDataStr, forKey: imageNSUserData)
-            if displayname.text == ""{
-                profileSet.setObject(usernameInput.text, forKey: displaynameUserData)
-            }else{
+//            if displayname.text == ""{
+//                profileSet.setObject(usernameInput.text, forKey: displaynameUserData)
+//            }else{
                 profileSet.setObject(displayname.text, forKey: displaynameUserData)
-            }
+//            }
             let keychainAccess = KeychainAccess()
-            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+            let haalthyService = HaalthyService()
+            keychainAccess.setPasscode(usernameKeyChain, passcode: emailInput.text!)
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text!)
             
             //upload UserInfo to Server
-            let haalthyService = HaalthyService()
             let addUserRespData = haalthyService.addUser("AY")
             var returnStr = String()
-            let getAccessToken = GetAccessToken()
-            getAccessToken.getAccessToken()
+//            let getAccessToken = GetAccessToken()
+//            getAccessToken.getAccessToken()
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers)
             if jsonResult is NSDictionary {
                 returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
@@ -147,7 +151,23 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 self.presentViewController(alert, animated: true, completion: nil)
             }
             if returnStr == "create successful!" {
-                self.dismissViewControllerAnimated(true, completion: nil)
+//                if publicService.checkIsUsername(usernameStr) == false{
+                    usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
+//                }
+                keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+                let getAccessToken = GetAccessToken()
+                getAccessToken.getAccessToken()
+//                if isFirstSignup {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
+                    self.presentViewController(controller, animated: true, completion: nil)
+//                    self.navigationController?.pushViewController(controller, animated: true)
+
+//                }else{
+//                    self.dismissViewControllerAnimated(true, completion: nil)
+////                    self.navigationController?.popToRootViewControllerAnimated(true)
+//                }
+                haalthyService.updateUserTag(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray)
             }
         }
     }
@@ -170,7 +190,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         portrait.addGestureRecognizer(tapImage)
         
         emailInput.delegate = self
-        usernameInput.delegate = self
+//        usernameInput.delegate = self
         passwordInput.delegate = self
         submitBtn.layer.cornerRadius = 5
         submitBtn.layer.masksToBounds = true

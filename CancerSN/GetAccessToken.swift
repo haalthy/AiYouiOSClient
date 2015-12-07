@@ -16,6 +16,8 @@ class GetAccessToken: NSObject {
         let keychainAccess = KeychainAccess()
         if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
             let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
+            print("get access token username")
+            print(usernameStr)
             var passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String
             let publicService = PublicService()
             passwordStr = publicService.passwordEncode(passwordStr)

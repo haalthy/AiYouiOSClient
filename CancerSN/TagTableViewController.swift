@@ -44,16 +44,20 @@ class TagTableViewController: UITableViewController {
             }
         }
         if isBroadcastTagSelection == 0 {
+            var profileSet = NSUserDefaults.standardUserDefaults()
             NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
                 var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
             }
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
-                
-                self.presentViewController(controller, animated: true, completion: nil)
+                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
+                    self.presentViewController(controller, animated: true, completion: nil)
+                }else{
+                    self.performSegueWithIdentifier("signupSegue", sender: self)
+                }
             }else{
                 self.dismissViewControllerAnimated(true, completion: nil)
             }

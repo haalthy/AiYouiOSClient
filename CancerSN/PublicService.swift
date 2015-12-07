@@ -150,11 +150,28 @@ class PublicService:NSObject{
         print(password)
         var passwordEndedeStr:String = ""
         for character in password.utf16 {
-            print(character)
             passwordEndedeStr += "a"+(String(character))
         }
-        print(passwordEndedeStr)
         return passwordEndedeStr
     }
     
+    func checkIsUsername(str: String) -> Bool{
+        do {
+            // - 1、创建规则
+            let pattern = "[A-Z][A-Z][0-9]{13}.[0-9]{3}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+            if res.count>0{
+                return true
+            }else{
+                return false
+            }
+        }
+        catch {
+            print(error)
+            return false
+        }
+    }
 }

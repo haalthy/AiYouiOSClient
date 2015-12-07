@@ -413,7 +413,6 @@
 			isa = PBXGroup;
 			children = (
 				2A68CACC1C0B586A0012F47B /* FeedEntryViewController.swift */,
-				2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */,
 				2A2435FF1B6D9BDE009F7F71 /* ShowPostDetailTableViewController.swift */,
 				2AAA37B81B96416C00576C7C /* DiscoverTableViewController.swift */,
 				2A81C8F91BD961CC00EE5FB1 /* ClinicTrailTableViewController.swift */,
@@ -425,6 +424,7 @@
 		2AB8E4421C05A98900F39409 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2A11876D1BB4B8620074BB65 /* TagTableViewController.swift */,
 				2A2733FC1BA770250076696A /* SettingPasswordViewController.swift */,
 				2A9957F91BBFB85900DAB05B /* PatientProfileTableViewController.swift */,
 				2A1E87581BF43C2E0059090D /* GeneticMutationViewController.swift */,

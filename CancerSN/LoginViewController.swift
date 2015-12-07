@@ -35,8 +35,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
 //        self.performSegueWithIdentifier("RegistrationSegue", sender: self)
         var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
         var controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
-        
-        self.presentViewController(controller, animated: true, completion: nil)
+//        if isRootViewController{
+            self.presentViewController(controller, animated: true, completion: nil)
+//        }else{
+//            self.navigationController?.pushViewController(controller, animated: true)
+//        }
     }
     
     func tencentDidLogin(){
@@ -83,7 +86,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         }
     }
     
-    func userLogin(usernameStr: String, var passwordStr: String)->Bool{
+    func userLogin(var usernameStr: String, var passwordStr: String)->Bool{
         let publicService = PublicService()
 //        let digest = publicService.md5(passwordStr)
 //        passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
@@ -111,6 +114,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
 
 //            let pwd: String = String(format: "The current time is %02d:%02d", digest[0], digest[1])
             let keychainAccess = KeychainAccess()
+//            if checkIsUsername(username)
+            let publicService = PublicService()
+            if publicService.checkIsUsername(usernameStr) == false{
+                usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
+//                usernameStr = haalthyService.getUsernameByEmail()
+            }
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
             return true
@@ -118,6 +127,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
+            return false
+        }
+    }
+    
+    private func checkIsUsername(str: String) -> Bool{
+        do {
+            // - 1、创建规则
+            let pattern = "[A-Z][A-Z][0-9]{13}.[0-9]{3}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+
+            if res.count>0{
+                return true
+            }else{
+                return false
+            }
+        }
+        catch {
+            print(error)
             return false
         }
     }
@@ -172,10 +202,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let password = keychainAccess.getPasscode(passwordKeyChain)
         if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
 //            self.performSegueWithIdentifier("tagSegue", sender: self)
-            let storyboard = UIStoryboard(name: "Feed", bundle: nil)
-            let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-            controller.isFirstTagSelection = true
-            self.presentViewController(controller, animated: true, completion: nil)
+//            let storyboard = UIStoryboard(name: "Feed", bundle: nil)
+//            let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+//            controller.isFirstTagSelection = true
+//            self.presentViewController(controller, animated: true, completion: nil)
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
         if isRootViewController {
             cancelBtn.hidden = true

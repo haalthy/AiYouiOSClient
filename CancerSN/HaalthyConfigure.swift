@@ -53,6 +53,7 @@ let isFollowingUserURL = haalthyServiceRestfulURL + "security/user/follow/isfoll
 let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
+let getUsernameByEmailURL = haalthyServiceRestfulURL + "security/user/getusername"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
