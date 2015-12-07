@@ -40,7 +40,6 @@ class AddItemViewController: UIViewController {
     
     @IBAction func addPrivatePost(sender: UIButton) {
         if profileSet.objectForKey(accessNSUserData) == nil{
-//            self.performSegueWithIdentifier("loginSegue", sender: nil)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
             
@@ -56,7 +55,6 @@ class AddItemViewController: UIViewController {
     }
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
-//        self.tabBarController?.selectedIndex = 1
     }
     
     override func viewWillAppear(animated: Bool) {

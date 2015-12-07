@@ -74,11 +74,6 @@ class AddNewTreatmentEndDateViewController: UIViewController {
     }
 
     @IBAction func unselectNewTreatmentEndDate(sender: UIButton) {
-//        let tenYrIntervalSec:Int = 60*60*24*365*10
-//        let tenYrTimeInterval = NSTimeInterval(tenYrIntervalSec)
-//        var date = NSDate(timeIntervalSinceNow: tenYrTimeInterval)
-//        println(date)
-//        profileSet.setObject(date.timeIntervalSince1970, forKey: newTreatmentEnddate)
         profileSet.setObject(defaultTreatmentEndDate, forKey: newTreatmentEnddate)
         self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
 

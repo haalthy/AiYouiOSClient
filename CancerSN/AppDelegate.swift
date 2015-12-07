@@ -25,14 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UINavigationBar.appearance().barStyle = .Black
 
-        // instantiate your desired ViewController
-//        println(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData)!)
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
             let keychainAccess = KeychainAccess()
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
-//                let signupStoryBoard = UIStoryboard(name: "Registeration", bundle: nil)
-//                let rootSignupViewController = signupStoryBoard.instantiateViewControllerWithIdentifier("signupEntry") as! SignupViewController
-//                rootSignupViewController.isFirstSignup = true
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! LoginViewController
                 if self.window != nil {

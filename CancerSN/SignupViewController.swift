@@ -73,113 +73,86 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }else
-//            if usernameInput.text == ""{
-//            let alert = UIAlertController(title: "提示", message: "请输入用户名", preferredStyle: UIAlertControllerStyle.Alert)
-//            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-//            self.presentViewController(alert, animated: true, completion: nil)
-//        }else
             if passwordInput.text == ""{
-            let alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
-        }else{
-            
-            var usernameStr:String = String()
-            let publicService = PublicService()
-//            let digest = publicService.md5((passwordInput.text)!)
-//            let passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
-            print("passwordStr")
-//            var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
-
-            let passwordStr = publicService.passwordEncode(passwordInput.text!)
-
-            print(passwordStr)
-            
-            //save image
-            let selectedImage: UIImage = portrait.image!
-            
-            let fileManager = NSFileManager.defaultManager()
-            
-            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
-            
-            let filePathToWrite = "\(paths)/" + imageFileName
-            
-            let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
-            print(selectedImage.size.width, selectedImage.size.height)
-            let imageDataStr = imageData.base64EncodedStringWithOptions([])
-            
-            fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
-            
-            let profileSet = NSUserDefaults.standardUserDefaults()
-            profileSet.setObject(emailInput.text, forKey: emailNSUserData)
-            profileSet.setObject(imageDataStr, forKey: imageNSUserData)
-//            if displayname.text == ""{
-//                profileSet.setObject(usernameInput.text, forKey: displaynameUserData)
-//            }else{
-                profileSet.setObject(displayname.text, forKey: displaynameUserData)
-//            }
-            let keychainAccess = KeychainAccess()
-            let haalthyService = HaalthyService()
-            keychainAccess.setPasscode(usernameKeyChain, passcode: emailInput.text!)
-            keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text!)
-            
-            //upload UserInfo to Server
-            let addUserRespData = haalthyService.addUser("AY")
-            var returnStr = String()
-//            let getAccessToken = GetAccessToken()
-//            getAccessToken.getAccessToken()
-            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers)
-            if jsonResult is NSDictionary {
-                returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
-            }
-            print(returnStr)
-            if returnStr != "create successful!"{
-                keychainAccess.deletePasscode(usernameKeyChain)
-                keychainAccess.deletePasscode(passwordKeyChain)
-            }
-            if returnStr == "this email has been registed, please use another name" {
-                let alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
+                let alert = UIAlertController(title: "提示", message: "请输入密码", preferredStyle: UIAlertControllerStyle.Alert)
                 alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
-            }
-            if returnStr == "this email has been registed, please login" {
-                let alert = UIAlertController(title: "提示", message: "此邮箱/手机已被注册，请登录", preferredStyle: UIAlertControllerStyle.Alert)
+            }else{
                 
-                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                }))
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-            if returnStr == "create successful!" {
-//                if publicService.checkIsUsername(usernameStr) == false{
+                var usernameStr:String = String()
+                let publicService = PublicService()
+                print("passwordStr")
+                
+                let passwordStr = publicService.passwordEncode(passwordInput.text!)
+                
+                print(passwordStr)
+                
+                //save image
+                let selectedImage: UIImage = portrait.image!
+                
+                let fileManager = NSFileManager.defaultManager()
+                
+                let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                
+                let filePathToWrite = "\(paths)/" + imageFileName
+                
+                let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
+                print(selectedImage.size.width, selectedImage.size.height)
+                let imageDataStr = imageData.base64EncodedStringWithOptions([])
+                
+                fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
+                
+                let profileSet = NSUserDefaults.standardUserDefaults()
+                profileSet.setObject(emailInput.text, forKey: emailNSUserData)
+                profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+                profileSet.setObject(displayname.text, forKey: displaynameUserData)
+                let keychainAccess = KeychainAccess()
+                let haalthyService = HaalthyService()
+                keychainAccess.setPasscode(usernameKeyChain, passcode: emailInput.text!)
+                keychainAccess.setPasscode(passwordKeyChain, passcode: passwordInput.text!)
+                
+                //upload UserInfo to Server
+                let addUserRespData = haalthyService.addUser("AY")
+                var returnStr = String()
+                let jsonResult = try? NSJSONSerialization.JSONObjectWithData(addUserRespData, options: NSJSONReadingOptions.MutableContainers)
+                if jsonResult is NSDictionary {
+                    returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
+                }
+                print(returnStr)
+                if returnStr != "create successful!"{
+                    keychainAccess.deletePasscode(usernameKeyChain)
+                    keychainAccess.deletePasscode(passwordKeyChain)
+                }
+                if returnStr == "this email has been registed, please use another name" {
+                    let alert = UIAlertController(title: "提示", message: "此用户名已被注册，请使用其他用户名", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
+                if returnStr == "this email has been registed, please login" {
+                    let alert = UIAlertController(title: "提示", message: "此邮箱/手机已被注册，请登录", preferredStyle: UIAlertControllerStyle.Alert)
+                    
+                    alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
+                if returnStr == "create successful!" {
                     usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
-//                }
-                keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
-                let getAccessToken = GetAccessToken()
-                getAccessToken.getAccessToken()
-//                if isFirstSignup {
+                    keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+                    let getAccessToken = GetAccessToken()
+                    getAccessToken.getAccessToken()
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
                     self.presentViewController(controller, animated: true, completion: nil)
-//                    self.navigationController?.pushViewController(controller, animated: true)
-
-//                }else{
-//                    self.dismissViewControllerAnimated(true, completion: nil)
-////                    self.navigationController?.popToRootViewControllerAnimated(true)
-//                }
-                haalthyService.updateUserTag(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray)
-            }
+                    
+                    haalthyService.updateUserTag(NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray)
+                }
         }
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!){
         self.data!.appendData(data)
     }
-    
-//    func connectionDidFinishLoading(connection: NSURLConnection!)
-//    {
-//        let str: NSString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

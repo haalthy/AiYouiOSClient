@@ -179,9 +179,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
                     }
                     index++
-//                    if (treatmentSection.objectForKey("treatmentDetails") != nil) && ((treatmentSection.objectForKey("treatmentDetails") is NSNull) == false) && ((treatmentSection.objectForKey("treatmentDetails") as! NSString).length > 0){
-                        treatmentSections.addObject(treatmentSection)
-//                    }
+                    treatmentSections.addObject(treatmentSection)
                 }
                 if patientStatusIndex < patientStatusList.count{
                     let treatmentSection = NSMutableDictionary()

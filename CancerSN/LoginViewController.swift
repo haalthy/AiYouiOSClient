@@ -32,14 +32,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     @IBAction func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-//        self.performSegueWithIdentifier("RegistrationSegue", sender: self)
         var storyboard = UIStoryboard(name: "Registeration", bundle: nil)
         var controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
-//        if isRootViewController{
-            self.presentViewController(controller, animated: true, completion: nil)
-//        }else{
-//            self.navigationController?.pushViewController(controller, animated: true)
-//        }
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     func tencentDidLogin(){
@@ -67,9 +62,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             profileSet.setObject("", forKey: emailNSUserData)
             let qqImage = UIImage(named: "Tencent_QQ.png")
             let imageData: NSData = UIImagePNGRepresentation(qqImage!)!
-
+            
             let imageDataStr = imageData.base64EncodedStringWithOptions([])
-
+            
             profileSet.setObject(imageDataStr, forKey: imageNSUserData)
             profileSet.setObject(resp.objectForKey("nickname"), forKey: displaynameUserData)
             profileSet.setObject(qqUserType, forKey: userTypeUserData)
@@ -78,7 +73,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
             self.performSegueWithIdentifier("fillInfoSegue", sender: self)
         }else{
-//            self.performSegueWithIdentifier("homeSegue", sender: self)
             var storyboard = UIStoryboard(name: "Main", bundle: nil)
             var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
             
@@ -88,18 +82,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func userLogin(var usernameStr: String, var passwordStr: String)->Bool{
         let publicService = PublicService()
-//        let digest = publicService.md5(passwordStr)
-//        passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
-//        var passwordEncode = passwordStr.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-        
-//        print(passwordStr.utf16)
         var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
-//        for character in passwordStr.utf16 {
-//            print(character)
-//            passwordEndedeStr += "a"+(String(character))
-//        }
-//        print(passwordEndedeStr)
-//        print(passwordEncode)
         
         let respData = haalthyService.getAccessToken(usernameStr, password: passwordEndedeStr)
         let respDataStr = NSString(data: respData, encoding: NSUTF8StringEncoding)
@@ -111,14 +94,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let profileSet = NSUserDefaults.standardUserDefaults()
             profileSet.setObject(accessToken, forKey: accessNSUserData)
             profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-
-//            let pwd: String = String(format: "The current time is %02d:%02d", digest[0], digest[1])
+            
             let keychainAccess = KeychainAccess()
-//            if checkIsUsername(username)
             let publicService = PublicService()
             if publicService.checkIsUsername(usernameStr) == false{
                 usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
-//                usernameStr = haalthyService.getUsernameByEmail()
             }
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
@@ -139,7 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
             // - 3、开始匹配
             let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
-
+            
             if res.count>0{
                 return true
             }else{
@@ -159,11 +139,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
         if isRootViewController && loginSucessful{
             self.performSegueWithIdentifier("homeSegue", sender: self)
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry")
-////            controller.isFirstTagSelection = true
-//            self.navigationController?.pushViewController(controller, animated: true)
-//            self.presentViewController(controller, animated: true, completion: nil)
         }else{
             self.dismissViewControllerAnimated(true, completion: nil)
         }
@@ -186,13 +161,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
         
         let imageFilePath = "\(paths)/" + imageFileName
         portrait.image = UIImage(contentsOfFile: imageFilePath)
         password.delegate = self
         username.delegate = self
-
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -201,11 +176,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let username = keychainAccess.getPasscode(usernameKeyChain)
         let password = keychainAccess.getPasscode(passwordKeyChain)
         if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
-//            self.performSegueWithIdentifier("tagSegue", sender: self)
-//            let storyboard = UIStoryboard(name: "Feed", bundle: nil)
-//            let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-//            controller.isFirstTagSelection = true
-//            self.presentViewController(controller, animated: true, completion: nil)
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         if isRootViewController {

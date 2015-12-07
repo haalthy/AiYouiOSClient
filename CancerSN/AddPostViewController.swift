@@ -30,15 +30,6 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     let haalthyService = HaalthyService()
     var allTagList = NSArray()
     var keychainAccess = KeychainAccess()
-
-//    @IBAction func testButton(sender: UIButton) {
-////        self.postContent.frame.size.height = 50
-//        self.addMentionBtn.center = CGPoint(x: self.addMentionBtn.center.x + 10, y: self.addMentionBtn.center.y + 10 )
-//    }
-    
-//    @IBAction func selectTags(sender: UIButton) {
-//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
-//    }
     
     @IBAction func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(false, completion: nil)
@@ -132,9 +123,6 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
         self.addImageBtn = UIButton(frame: CGRectMake(10 + 55 * 0, addNextImageLinePositionY, 50, 40))
         self.addMentionBtn = UIButton(frame: CGRectMake(10 + 55 * 1, addNextImageLinePositionY, 50, 40))
         if isBroadcast == 1{
-            //            self.addTagBtn = UIButton(frame: CGRectMake(10 + 55 * 2, addNextImageLinePositionY, 50, 40))
-            //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: "selectTags")
-            //            initButtonItem(addTagBtn, labelTitle: "Tag", targetAction: nil)
             let getTagListRespData:NSData = haalthyService.getTagList()!
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){

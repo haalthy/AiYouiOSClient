@@ -41,9 +41,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 self.dismissViewControllerAnimated(true, completion: nil)
             } else {
                 if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-//                }else{
-                        haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-//                    self.dismissViewControllerAnimated(true, completion: nil)
+                    haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
                 }
                 self.performSegueWithIdentifier("selectTagSegue", sender: self)
             }
