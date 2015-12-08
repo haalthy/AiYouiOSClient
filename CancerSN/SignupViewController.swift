@@ -119,7 +119,11 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                     returnStr = (jsonResult as! NSDictionary).objectForKey("status") as! String
                 }
                 print(returnStr)
-                if returnStr != "create successful!"{
+                let isReturnUsername = publicService.checkIsUsername(returnStr)
+
+//                publicService.checkIsUsername(returnStr)
+//                if returnStr != "create successful!"{
+                if !isReturnUsername{
                     keychainAccess.deletePasscode(usernameKeyChain)
                     keychainAccess.deletePasscode(passwordKeyChain)
                 }
@@ -136,9 +140,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                     }))
                     self.presentViewController(alert, animated: true, completion: nil)
                 }
-                if returnStr == "create successful!" {
-                    usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
-                    keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+                if isReturnUsername {
+//                    usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
+                    keychainAccess.setPasscode(usernameKeyChain, passcode: returnStr)
                     let getAccessToken = GetAccessToken()
                     getAccessToken.getAccessToken()
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)

@@ -100,9 +100,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             if publicService.checkIsUsername(usernameStr) == false{
                 usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
             }
-            keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
-            keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
-            return true
+            if usernameStr != "no user in database" {
+                keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+                keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
+                return true
+            }
+            else{
+                let alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                return false
+            }
         }else{
             let alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))

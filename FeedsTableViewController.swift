@@ -275,8 +275,8 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         
         let keychainAccess = KeychainAccess()
         
-        keychainAccess.deletePasscode(usernameKeyChain)
-        keychainAccess.deletePasscode(passwordKeyChain)
+//        keychainAccess.deletePasscode(usernameKeyChain)
+//        keychainAccess.deletePasscode(passwordKeyChain)
 
         username = keychainAccess.getPasscode(usernameKeyChain) as? String
         password = keychainAccess.getPasscode(passwordKeyChain) as? String
