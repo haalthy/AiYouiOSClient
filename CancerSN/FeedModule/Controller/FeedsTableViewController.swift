@@ -9,10 +9,12 @@
 import UIKit
 import CoreData
 
+
 class FeedsTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UserTagVCDelegate, UIGestureRecognizerDelegate, ImageTapDelegate, FeedBodyDelegate {
+    
     var username:String?
     var password:String?
-    var feedList = NSArray()
+    var feedList:NSArray = NSArray()
     var automatedShowDiscoverView:Bool = true
     var heightForFeedRow = NSMutableDictionary()
     var selectTags = NSArray()
@@ -60,7 +62,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
     
     @IBAction func addActionPopover(sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
-        let popController = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as UIViewController).popoverPresentationController
+        let popController:UIPopoverPresentationController! = (storyboard.instantiateViewControllerWithIdentifier("AddEntry") as UIViewController).popoverPresentationController
         popController?.delegate = self
         popController!.permittedArrowDirections = UIPopoverArrowDirection.Any
         popController?.sourceView = self.view
@@ -82,7 +84,6 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         return .None
     }
     
-    @IBOutlet weak var myTags: UIButton!
     
     func getexistFeedsFromLocalDB(){
         let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
@@ -241,7 +242,7 @@ class FeedsTableViewController: UITableViewController, UIPopoverPresentationCont
         var jsonResult:AnyObject? = nil
         if getFeedsData != nil{
             jsonResult = try? NSJSONSerialization.JSONObjectWithData(getFeedsData!, options: NSJSONReadingOptions.MutableContainers)
-            let str: NSString = NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding)!
+            let str: NSString = (NSString(data: getFeedsData!, encoding: NSUTF8StringEncoding))!
         }
         refreshControl?.endRefreshing()
         if((jsonResult is NSArray) && (jsonResult as! NSArray).count > 0){
