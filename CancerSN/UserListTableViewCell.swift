@@ -20,6 +20,8 @@ class UserListTableViewCell: UITableViewCell {
     
     var hiddenFollowButton = Bool()
     var haalthyService = HaalthyService()
+    
+    var username = String()
 
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var usernameDisplay: UILabel!
@@ -34,18 +36,18 @@ class UserListTableViewCell: UITableViewCell {
     @IBAction func addFollowing(sender: AnyObject) {
         let profileSet = NSUserDefaults.standardUserDefaults()
         if profileSet.objectForKey(accessNSUserData) != nil{
-            let addFollowingData = haalthyService.addFollowing(usernameDisplay.text!)
+            let addFollowingData = haalthyService.addFollowing(username)
             var jsonResult = try? NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers)
-            let deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
-            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+//            let deleteResult = haalthyService.deleteFromSuggestedUser(usernameDisplay.text!)
+//            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+            addFollowingBtn.enabled = false
+            addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
+            addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
+            addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
+//            haalthyService.increaseNewFollowCount(usernameDisplay.text!)
         }else{
             self.delegate?.performLoginSegue()
         }
-        addFollowingBtn.enabled = false
-        addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
-        addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
-        addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
-        haalthyService.increaseNewFollowCount(usernameDisplay.text!)
     }
     
     var user=NSDictionary(){

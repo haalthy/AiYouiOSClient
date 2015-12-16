@@ -73,7 +73,7 @@ class TreatmentSummaryTableViewCell: UITableViewCell {
         self.chartScrollView.removeAllSubviews()
         let beginDate = clinicReportList[clinicReportList.count-1].objectForKey("dateInserted") as! Int
         let endDate = clinicReportList[0].objectForKey("dateInserted") as! Int
-        getCEAList()
+//        getCEAList()
         var width:CGFloat = 0
         if CEAList.count<=5 {
             width = UIScreen.mainScreen().bounds.width-10.0

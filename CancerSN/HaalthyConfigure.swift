@@ -11,8 +11,8 @@ import UIKit
 
 //restful service URL setting
 
-let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-//let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
+//let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
 
 let getSuggestUserByTagsURL = haalthyServiceRestfulURL + "open/user/suggestedusers"
 let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"
@@ -55,6 +55,7 @@ let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/m
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
 let getUsernameByEmailURL = haalthyServiceRestfulURL + "security/user/getusername"
+let getUsersByDisplaynameURL = haalthyServiceRestfulURL + "security/user/getusersbydisplayname"
 
 //store info in keychain
 let usernameKeyChain = "haalthyUsernameIdentifier"
@@ -90,7 +91,7 @@ let imageFileName = "portrait.jpg"
 //UI Displayname<--> Database Mapping
 let genderMapping = NSDictionary(objects:["M","F"], forKeys:["男","女"])
 let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝部", "肾部", "肺部", "胆管", "肠部", "胃部", "妇科", "血液"])
-let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma"], forKeys: ["腺癌","鳞癌","腺鳞癌"])
+let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma","smallcell"], forKeys: ["腺癌","鳞癌","腺鳞癌","小细胞"])
 let stageMapping = NSDictionary(objects: [1,2,3,4], forKeys: ["I","II","III","IV"])
 let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否","是"])
 let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"], forKeys: ["肝转移","骨转移","肾上腺转移","脑转移"])

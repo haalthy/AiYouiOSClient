@@ -60,7 +60,17 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
                         if (subStr as NSString).length > 0{
                             var subStrArr = (subStr ).componentsSeparatedByString(" ")
                             if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
-                                mentionUsernameList.addObject(subStrArr[0])
+//                                mentionUsernameList.addObject(subStrArr[0])
+                                let getMentionedUsernamesRequest = NSMutableDictionary()
+                                getMentionedUsernamesRequest.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+                                getMentionedUsernamesRequest.setObject(subStrArr[0], forKey: "mentionedDisplayname")
+                                let mentionListRespData = haalthyService.getUsersByDisplayname(getMentionedUsernamesRequest)
+                                let jsonResult = try? NSJSONSerialization.JSONObjectWithData(mentionListRespData!, options: NSJSONReadingOptions.MutableContainers)
+                                if(jsonResult is NSArray){
+                                    for user in (jsonResult as! NSArray){
+                                        mentionUsernameList.addObject(user.objectForKey("username")!)
+                                    }
+                                }
                             }
                         }
                     }

@@ -51,7 +51,7 @@ class TagTableViewController: UITableViewController {
             }
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
-                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                if (profileSet.objectForKey(userTypeUserData) == nil) || (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
                     self.presentViewController(controller, animated: true, completion: nil)
@@ -73,38 +73,43 @@ class TagTableViewController: UITableViewController {
         if getTagListRespData != nil{
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData!, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
-                tagList = jsonResult as! NSArray
-                let tagTypeSet = NSMutableSet()
-                
-                for tagItem in tagList{
-                    let tag = tagItem as! NSDictionary
-                    var groupedTagsItem = NSMutableDictionary()
-                    if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
-                        for groupedTag in groupedTagList{
-                            let groupedTagItem = groupedTag as! NSMutableDictionary
-                            if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
-                                let tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
-                                tagListsInGroup.addObject(tag)
-                                groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
-                                break
-                            }
-                        }
-                    }else {
-                        tagTypeSet.addObject(tag.objectForKey("typeName")!)
-                        let groupedTagItem = NSMutableDictionary()
-                        groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
-                        groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
-                        groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
-                        groupedTagList.addObject(groupedTagItem)
-                    }
-                }
-                tagTypeList = NSArray(array: tagTypeSet.allObjects)
+//                tagList = jsonResult as! NSArray
+//                let tagTypeSet = NSMutableSet()
+//                
+//                for tagItem in tagList{
+//                    let tag = tagItem as! NSDictionary
+//                    var groupedTagsItem = NSMutableDictionary()
+//                    if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
+//                        for groupedTag in groupedTagList{
+//                            let groupedTagItem = groupedTag as! NSMutableDictionary
+//                            if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
+//                                let tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
+//                                tagListsInGroup.addObject(tag)
+//                                groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
+//                                break
+//                            }
+//                        }
+//                    }else {
+//                        tagTypeSet.addObject(tag.objectForKey("typeName")!)
+//                        let groupedTagItem = NSMutableDictionary()
+//                        groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
+//                        groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
+//                        groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
+//                        groupedTagList.addObject(groupedTagItem)
+//                    }
+//                }
+//                tagTypeList = NSArray(array: tagTypeSet.allObjects)
+//                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
+//                groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
+                groupedTagList = jsonResult as! NSMutableArray
                 let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
                 groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
             }
             
             for groupedTag in groupedTagList {
-                if groupedTag.objectForKey("tagsInGroup")!.count <= 5{
+//                if groupedTag.objectForKey("tagsInGroup")!.count <= 5{
+                if groupedTag.objectForKey("tags")!.count <= 5{
+
                     rowHightForTagContainer.addObject(40)
                 }else{
                     rowHightForTagContainer.addObject(80)
@@ -139,7 +144,7 @@ class TagTableViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
-        return tagTypeList.count + 2
+        return groupedTagList.count + 2
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -161,13 +166,14 @@ class TagTableViewController: UITableViewController {
             cell.header.textColor = textColor
             return cell
             
-        } else if (indexPath.section == tagTypeList.count+1){
+        } else if (indexPath.section == groupedTagList.count+1){
             let cell = tableView.dequeueReusableCellWithIdentifier("submitCell", forIndexPath: indexPath) 
             return cell
         }
         else{
             let cell = tableView.dequeueReusableCellWithIdentifier("tagContainerCell", forIndexPath: indexPath) 
-            let groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup") as! NSArray
+//            let groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tagsInGroup") as! NSArray
+            let groupedTagsInType = (groupedTagList[indexPath.section - 1] as! NSDictionary).objectForKey("tags") as! NSArray
             var index: Int = 0
             let tagButtonHeight: CGFloat = 30
             let tagButtonWidth: CGFloat = (cell.frame.width - 20)/5 - 5
@@ -207,7 +213,7 @@ class TagTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         var heightForHeader:CGFloat = 0
-        if section > 0 && section < tagTypeList.count + 1{
+        if section > 0 && section < groupedTagList.count + 1{
             heightForHeader = 50
         }
         return heightForHeader
@@ -215,7 +221,7 @@ class TagTableViewController: UITableViewController {
 
     override func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView {
         var headerView = UIView()
-        if section > 0 && section < tagTypeList.count + 1{
+        if section > 0 && section < groupedTagList.count + 1{
             headerView =  UIView(frame: CGRectMake(0, 0,self.tableView.bounds.size.width, 40))
             let tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
             tagTypeLabel.text = (groupedTagList[section-1] as! NSDictionary).objectForKey("typeName") as? String
@@ -228,7 +234,7 @@ class TagTableViewController: UITableViewController {
     
     override func tableView(_tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         var heightForRow: CGFloat = 80
-        if indexPath.section > 0 && indexPath.section < tagTypeList.count + 1{
+        if indexPath.section > 0 && indexPath.section < groupedTagList.count + 1{
             heightForRow = (rowHightForTagContainer[indexPath.section - 1] as! CGFloat)
         }
         return heightForRow
