@@ -8,34 +8,73 @@
 
 import UIKit
 
-class FeedTableViewController: UITableViewController {
 
+class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+
+    // 控件关联
+    @IBOutlet weak var tableView: UITableView!
+    
+    // 自定义变量
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        initVariables()
+        initContentView()
+    }
+
+    // MARK: - Init Variables
+    
+    func initVariables() {
+    
+        
+    }
+    
+    // MARK: - Init Related ContentView
+    
+    func initContentView() {
+    
         self.tableView.tableHeaderView?.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 45)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    // MARK: - Net Request
+    
+    func getFeedListFromServer(parameters:NSDictionary) {
+    
+        
+    }
+    
+    // MARK: - Function
+    
+    // 进入到查看临床数据
+    
+    @IBAction func pushClinicalDataAction(sender: AnyObject) {
+        
+        performSegueWithIdentifier("EnterClinicTVC", sender: self)
     }
 
+    
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 44
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cellIdentifier:String = "cell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)! as UITableViewCell
+        let cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: cellIdentifier)
+        //let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)! as UITableViewCell
         
         return cell
     }

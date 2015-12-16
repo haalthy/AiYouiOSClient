@@ -22,8 +22,10 @@
 		2AC59C1E1B5D77C600C4FE36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AC59C1C1B5D77C600C4FE36 /* LaunchScreen.xib */; };
 		2AC59C2A1B5D77C700C4FE36 /* CancerSNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC59C291B5D77C700C4FE36 /* CancerSNTests.swift */; };
 		6B5B3AC71C20072700CB58D4 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */; };
+		6B7FA2AA1C2119A600094FB0 /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */; };
+		6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */; };
+		6B7FA2B21C2124DB00094FB0 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2B11C2124DB00094FB0 /* HttpUrl.swift */; };
 		6B93FBFD1C1E58A000A81EA9 /* GetAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FBF81C1E58A000A81EA9 /* GetAccessToken.swift */; };
-		6B93FBFE1C1E58A000A81EA9 /* HealthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FBF91C1E58A000A81EA9 /* HealthyConfigure.swift */; };
 		6B93FBFF1C1E58A000A81EA9 /* HealthyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FBFA1C1E58A000A81EA9 /* HealthyService.swift */; };
 		6B93FC001C1E58A000A81EA9 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FBFB1C1E58A000A81EA9 /* KeychainAccess.swift */; };
 		6B93FC011C1E58A000A81EA9 /* PublicService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FBFC1C1E58A000A81EA9 /* PublicService.swift */; };
@@ -139,8 +141,10 @@
 		2AC59C281B5D77C600C4FE36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AC59C291B5D77C700C4FE36 /* CancerSNTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancerSNTests.swift; sourceTree = "<group>"; };
 		6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
+		6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftNotice.swift; sourceTree = "<group>"; };
+		6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthyConfigure.swift; sourceTree = "<group>"; };
+		6B7FA2B11C2124DB00094FB0 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B93FBF81C1E58A000A81EA9 /* GetAccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccessToken.swift; sourceTree = "<group>"; };
-		6B93FBF91C1E58A000A81EA9 /* HealthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthyConfigure.swift; sourceTree = "<group>"; };
 		6B93FBFA1C1E58A000A81EA9 /* HealthyService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthyService.swift; sourceTree = "<group>"; };
 		6B93FBFB1C1E58A000A81EA9 /* KeychainAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainAccess.swift; sourceTree = "<group>"; };
 		6B93FBFC1C1E58A000A81EA9 /* PublicService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicService.swift; sourceTree = "<group>"; };
@@ -335,9 +339,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		6B7FA2A81C2119A600094FB0 /* SwiftNotice */ = {
+			isa = PBXGroup;
+			children = (
+				6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */,
+			);
+			path = SwiftNotice;
+			sourceTree = "<group>";
+		};
 		6B93FBF61C1E571C00A81EA9 /* NetRequest */ = {
 			isa = PBXGroup;
 			children = (
+				6B7FA2B11C2124DB00094FB0 /* HttpUrl.swift */,
 			);
 			name = NetRequest;
 			sourceTree = "<group>";
@@ -346,7 +359,6 @@
 			isa = PBXGroup;
 			children = (
 				6B93FBF81C1E58A000A81EA9 /* GetAccessToken.swift */,
-				6B93FBF91C1E58A000A81EA9 /* HealthyConfigure.swift */,
 				6B93FBFA1C1E58A000A81EA9 /* HealthyService.swift */,
 				6B93FBFB1C1E58A000A81EA9 /* KeychainAccess.swift */,
 				6B93FBFC1C1E58A000A81EA9 /* PublicService.swift */,
@@ -501,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				6B93FC9F1C1E66CA00A81EA9 /* CanlendarManager */,
+				6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -508,6 +521,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				6B7FA2A81C2119A600094FB0 /* SwiftNotice */,
 				6B93FCEA1C1E68EB00A81EA9 /* Tencent */,
 			);
 			path = ThirdPart;
@@ -692,12 +706,13 @@
 				6B93FC541C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift in Sources */,
 				6B93FC881C1E5C3800A81EA9 /* TagTableViewController.swift in Sources */,
 				6B93FC551C1E5A9D00A81EA9 /* UserEntryViewController.swift in Sources */,
-				6B93FBFE1C1E58A000A81EA9 /* HealthyConfigure.swift in Sources */,
 				6B93FCBD1C1E66CA00A81EA9 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */,
 				6B93FC511C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift in Sources */,
 				6B93FC871C1E5C3800A81EA9 /* StageViewController.swift in Sources */,
+				6B7FA2B21C2124DB00094FB0 /* HttpUrl.swift in Sources */,
 				6B93FCE91C1E685E00A81EA9 /* CancerSN.xcdatamodeld in Sources */,
+				6B7FA2AA1C2119A600094FB0 /* SwiftNotice.swift in Sources */,
 				6B93FCD11C1E66CA00A81EA9 /* CVSelectionType.swift in Sources */,
 				6B93FC3D1C1E5A4F00A81EA9 /* AddTreatmentViewController.swift in Sources */,
 				6B93FC811C1E5C3800A81EA9 /* GenderSettingViewController.swift in Sources */,
@@ -720,6 +735,7 @@
 				6B93FCD31C1E66CA00A81EA9 /* CVShape.swift in Sources */,
 				6B93FC851C1E5C3800A81EA9 /* SettingPasswordViewController.swift in Sources */,
 				6B93FC501C1E5A9D00A81EA9 /* ContactViewController.swift in Sources */,
+				6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */,
 				6B93FC6D1C1E5B9400A81EA9 /* ShowPostDetailTableViewController.swift in Sources */,
 				6B93FCC01C1E66CA00A81EA9 /* CVCalendarMenuViewDelegate.swift in Sources */,
 				6B93FC691C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift in Sources */,
@@ -887,6 +903,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -904,6 +921,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
