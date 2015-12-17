@@ -98,7 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let keychainAccess = KeychainAccess()
             let publicService = PublicService()
             if publicService.checkIsUsername(usernameStr) == false{
-                usernameStr = NSString(data: haalthyService.getUsernameByEmail(), encoding: NSUTF8StringEncoding) as! String
+                usernameStr = NSString(data: haalthyService.getUsernameByEmail(usernameStr), encoding: NSUTF8StringEncoding) as! String
             }
             if usernameStr != "no user in database" {
                 keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
@@ -157,9 +157,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func ignore(sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Feed", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as! UINavigationController
-        //controller.isFirstTagSelection = true
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
+        controller.isFirstTagSelection = true
         self.presentViewController(controller, animated: true, completion: nil)
     }
     

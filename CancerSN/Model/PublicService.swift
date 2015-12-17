@@ -71,6 +71,7 @@ class PublicService:NSObject{
         profileSet.removeObjectForKey(emailNSUserData)
         profileSet.removeObjectForKey(accessNSUserData)
         profileSet.removeObjectForKey(refreshNSUserData)
+        profileSet.removeObjectForKey(userTypeUserData)
     }
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {

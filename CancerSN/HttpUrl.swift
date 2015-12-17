@@ -55,5 +55,64 @@ let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/m
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
 let getUsernameByEmailURL = haalthyServiceRestfulURL + "security/user/getusername"
+let getUsersByDisplaynameURL = haalthyServiceRestfulURL + "security/user/getusersbydisplayname"
 
 //store info in keychain
+let usernameKeyChain = "haalthyUsernameIdentifier"
+let passwordKeyChain = "haalthyPasswordIdentifier"
+
+//store info in NSUserData
+let favTagsNSUserData = "favoriteTags"
+let genderNSUserData = "haalthyUserGender"
+let ageNSUserData = "haalthyUserAge"
+let cancerTypeNSUserData = "haalthyUserCancertype"
+let pathologicalNSUserData = "haalthyUserPathological"
+let stageNSUserData = "haalthyUserStage"
+let smokingNSUserData = "haalthyUserSmoking"
+let metastasisNSUserData = "haalthyUserMetastasis"
+let geneticMutationNSUserData = "haalthyUserGeneticMutation"
+let emailNSUserData = "haalthyUserEmail"
+let accessNSUserData = "haalthyUserAccessToken"
+let refreshNSUserData = "haalthyUserRefreshToken"
+let imageNSUserData = "haalthyUserImageToken"
+let displaynameUserData = "haalthyUserDisplayname"
+let userTypeUserData = "haalthyUserType"
+let qqUserType = "QQ"
+let aiyouUserType = "AY"
+let wechatUserType = "WC"
+
+let newTreatmentBegindate = "haalthyNewTreatmentBeginDate"
+let newTreatmentEnddate = "haalthyNewTreatmentEndDate"
+
+
+//store ImageFilename
+let imageFileName = "portrait.jpg"
+
+//UI Displayname<--> Database Mapping
+let genderMapping = NSDictionary(objects:["M","F"], forKeys:["男","女"])
+let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝部", "肾部", "肺部", "胆管", "肠部", "胃部", "妇科", "血液"])
+let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma","smallcell"], forKeys: ["腺癌","鳞癌","腺鳞癌","小细胞"])
+let stageMapping = NSDictionary(objects: [1,2,3,4], forKeys: ["I","II","III","IV"])
+let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否","是"])
+let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"], forKeys: ["肝转移","骨转移","肾上腺转移","脑转移"])
+let geneticMutationMapping = NSDictionary(objects: ["KRAS", "EGFR", "ALK", "OTHERS", "NONE"], forKeys: ["KRAS","EGFR","ALK","其他","没有基因突变"])
+
+//
+let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
+let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
+
+//
+let headerColor : UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:0.9)
+let tabBarColor : UIColor = UIColor.init(red:0.1, green:0.6, blue:0.7, alpha:0.3)
+let highlightColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:1)
+let textColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
+let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:0.4)
+let mainColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
+let sectionHeaderColor: UIColor = UIColor.init(red:0.15, green:0.67, blue:0.8, alpha:0.2)
+
+let fontStr: String = "Helvetica"
+
+let defaultTreatmentEndDate: NSTimeInterval = 1767225600
+
+
+

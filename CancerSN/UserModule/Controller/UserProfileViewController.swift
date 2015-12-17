@@ -335,14 +335,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if profileSet.objectForKey(accessNSUserData) != nil{
             let addFollowingData = haalthyService.addFollowing(profileOwnername as! String)
             var jsonResult = try? NSJSONSerialization.JSONObjectWithData(addFollowingData, options: NSJSONReadingOptions.MutableContainers)
-            let deleteResult = haalthyService.deleteFromSuggestedUser(profileOwnername as! String)
-            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+//            let deleteResult = haalthyService.deleteFromSuggestedUser(profileOwnername as! String)
+//            print(NSString(data: deleteResult, encoding: NSUTF8StringEncoding))
+            addFollowingBtn.enabled = false
+            addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
+            addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
+            addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
+//            haalthyService.increaseNewFollowCount(profileOwnername as! String)
         }
-        addFollowingBtn.enabled = false
-        addFollowingBtn.setTitle("已关注", forState: UIControlState.Normal)
-        addFollowingBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
-        addFollowingBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
-        haalthyService.increaseNewFollowCount(profileOwnername as! String)
     }
     
     func sortFunc(num1: Int, num2: Int) -> Bool {

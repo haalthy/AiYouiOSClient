@@ -112,6 +112,7 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if showUserlist{
             let cell = tableView.dequeueReusableCellWithIdentifier("userListCell", forIndexPath: indexPath) as! UserListTableViewCell
+            cell.username = userList.objectAtIndex(indexPath.row) as! String
             cell.addFollowingBtn.layer.cornerRadius = 5
             cell.addFollowingBtn.layer.borderWidth = 2.0
             cell.addFollowingBtn.layer.borderColor = mainColor.CGColor

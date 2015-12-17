@@ -27,12 +27,18 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     
 
     @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
-        
-        if (treatmentList.count > 0) || (treatmentTextInput.textColor == UIColor.grayColor()){
+        var isSelectedTreatment = false
+        for treatmentButtonView in suggestTreatmentDetailView.subviews {
+            if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == mainColor{
+                isSelectedTreatment = true
+            }
+        }
+        if isSelectedTreatment || (treatmentTextInput.textColor != UIColor.grayColor()){
             
             let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
             
             let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
+                self.getTreatmentDetail()
                 self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
             }
             
@@ -51,6 +57,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             self.presentViewController(alertController, animated: true) {
                 // ...
             }
+        }else{
+            self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
         }
     }
     
