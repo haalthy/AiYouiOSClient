@@ -778,7 +778,6 @@ class HaalthyService:NSObject{
         let str: NSString = NSString(data: getUsernameRespData!, encoding: NSUTF8StringEncoding)!
         return getUsernameRespData!
     }
-}
 
     func queryPostBody(query:String)->NSData?{
         var urlPath: String = queryPostBodyURL + query
@@ -788,10 +787,9 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+        return try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
     }
-}
-    
+
     func getUsersByDisplayname(getMentionedUsernamesRequest: NSDictionary)->NSData?{
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
@@ -807,6 +805,7 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(getMentionedUsernamesRequest, options: NSJSONWritingOptions())
         let getUsersByDisplaynameRespData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
-        return getUsersByDisplaynameRespData!
+        return getUsersByDisplaynameRespData
     }
 }
+
