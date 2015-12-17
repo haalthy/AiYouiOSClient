@@ -759,3 +759,15 @@ class HaalthyService:NSObject{
         return getUsernameRespData!
     }
 }
+
+    func queryPostBody(query:String)->NSData?{
+        var urlPath: String = queryPostBodyURL + query
+        var url: NSURL = NSURL(string: urlPath)!
+        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        return NSURLConnection.sendSynchronousRequest(request, returningResponse: response, error: nil)!
+    }
+}
