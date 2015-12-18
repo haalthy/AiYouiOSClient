@@ -23,29 +23,52 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         
         let feedItem = feedSB.instantiateInitialViewController() as! UINavigationController
         feedItem.delegate = self
-        feedItem.tabBarItem = UITabBarItem.init(title: "智囊团", image: UIImage(named: ""), tag: 0)
+        feedItem.tabBarItem = UITabBarItem.init(title: "智囊团", image: UIImage(named: "icon_home"), selectedImage: UIImage(named: "icon_homeSelected"))
+        
+        let postVC = PostViewController()
+        postVC.tabBarItem = UITabBarItem.init()
+        postVC.tabBarItem.enabled = false
         
         let profile : UIStoryboard = UIStoryboard.init(name: "User", bundle: nil)
         
         let profileItem  = profile.instantiateInitialViewController() as! UINavigationController
         profileItem.delegate = self
-        profileItem.tabBarItem = UITabBarItem.init(title: "我的奇迹", image: UIImage(named: ""), tag: 0)
+        profileItem.tabBarItem = UITabBarItem.init(title: "我的奇迹", image: UIImage(named: "icon_profile"), selectedImage: UIImage(named: "icon_profileSelected"))
         
-        self.viewControllers = [feedItem, profileItem]
+        self.viewControllers = [feedItem, postVC, profileItem]
         
+        // 加载post按钮
+        
+        self.addPostBtn()
         
         // 设置tabbar属性
         
         self.setTabBarAttributes()
     }
     
+    // MARK: - 添加中间postBtn
+    
+    func addPostBtn() {
+    
+        let postBtn = UIButton.init(type: UIButtonType.Custom)
+        
+        let barSize : CGSize = self.tabBar.frame.size;
+        postBtn.frame = CGRectMake(0, 0, barSize.height, barSize.height)
+        postBtn.center = CGPointMake(barSize.width * 0.5, barSize.height * 0.5)
+        postBtn.layer.cornerRadius = 0.3
+        
+        postBtn.setBackgroundImage(UIImage(named: "btn_post"), forState: UIControlState.Normal )
+        self.tabBar .addSubview(postBtn)
+        
+    }
+    
     // MARK: - set TabBar attributes 
     
     func setTabBarAttributes() {
     
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: tabBarItemNormalColor], forState:.Normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: mainColor], forState:.Selected)
-        
+       // UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: tabBarItemNormalColor], forState:.Normal)
+        //UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: mainColor], forState:.Selected)
+        UITabBar.appearance().tintColor = mainColor
         UITabBar.appearance().barTintColor = tabBarColor
 
     }

@@ -1,24 +1,19 @@
 //
-//  NSNavigationViewController.swift
+//  PostViewController.swift
 //  CancerSN
 //
-//  Created by lay on 15/12/17.
+//  Created by lay on 15/12/18.
 //  Copyright © 2015年 lily. All rights reserved.
 //
 
 import UIKit
 
-class NSNavigationViewController: UINavigationController {
+class PostViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
 

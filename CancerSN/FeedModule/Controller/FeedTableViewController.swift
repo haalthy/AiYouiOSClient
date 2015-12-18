@@ -14,7 +14,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     // 控件关联
     @IBOutlet weak var tableView: UITableView!
     
-    //@IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerView: UIView!
     
     // 自定义变量
     
@@ -39,8 +39,8 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         //self.tableView.tableHeaderView?.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 45)
         
-      //  headerView.layer.borderWidth = 0.5
-      //  headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
+        headerView.layer.borderWidth = 0.7
+        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
     }
     
