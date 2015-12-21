@@ -44,13 +44,13 @@ class TagTableViewController: UITableViewController {
             }
         }
         if isBroadcastTagSelection == 0 {
-            var profileSet = NSUserDefaults.standardUserDefaults()
+            let profileSet = NSUserDefaults.standardUserDefaults()
             NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
                 var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
             }
             userTagDelegate?.updateUserTagList(selectedTags)
-            if isFirstTagSelection {
+             if isFirstTagSelection {
                 if (profileSet.objectForKey(userTypeUserData) == nil) || (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController

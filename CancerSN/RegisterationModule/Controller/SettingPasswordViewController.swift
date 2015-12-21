@@ -62,7 +62,7 @@ class SettingPasswordViewController: UIViewController, UITextFieldDelegate {
 //            let passwordStr = digest.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
             let passwordStr = password.text!
             print(passwordStr)
-            var passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
+            let passwordEndedeStr:String = publicService.passwordEncode(passwordStr)
 
             var jsonResult:AnyObject? = nil
             let resetPwd = haalthyService.resetPassword(passwordEndedeStr)

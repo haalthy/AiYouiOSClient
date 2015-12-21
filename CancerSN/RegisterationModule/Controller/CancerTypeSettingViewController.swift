@@ -123,7 +123,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
             return pathologicaPickerDataSource.count
         }
     }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == cancerTypePickerView{
             return pickerDataSource[row]
         }else{

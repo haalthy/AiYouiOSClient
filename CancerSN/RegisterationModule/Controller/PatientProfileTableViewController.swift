@@ -85,7 +85,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 break;
             case 1:
                 if (userProfile.objectForKey("username") != nil) && (userProfile.objectForKey("username") is NSNull) == false{
-                    cell.detailTextLabel?.text = userProfile.objectForKey("username") as! String
+                    cell.detailTextLabel?.text = userProfile.objectForKey("username") as? String
                 }else{
                     cell.detailTextLabel?.text = nullItemStr
                 }
@@ -94,7 +94,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 break
             case 2:
                 if (userProfile.objectForKey("email") != nil) && (userProfile.objectForKey("email") is NSNull) == false{
-                    cell.detailTextLabel?.text = userProfile.objectForKey("email") as! String
+                    cell.detailTextLabel?.text = userProfile.objectForKey("email") as? String
                 }else{
                     cell.detailTextLabel?.text = nullItemStr
                 }
@@ -103,7 +103,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 break
             case 3:
                 if (userProfile.objectForKey("displayname") != nil) && (userProfile.objectForKey("displayname") is NSNull) == false{
-                    cell.detailTextLabel?.text = userProfile.objectForKey("displayname") as! String
+                    cell.detailTextLabel?.text = userProfile.objectForKey("displayname") as? String
                 }else{
                     cell.detailTextLabel?.text = nullItemStr
                 }
@@ -161,7 +161,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
                 case 3:
                     var stageAndMetastasisStr = String()
                     if (userProfile.objectForKey("stage") != nil) && (userProfile.objectForKey("stage") is NSNull) == false{
-                        var stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray
+                        let stage = stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray
                         if stage.count > 0 {
                             stageAndMetastasisStr = (stageMapping.allKeysForObject(userProfile.objectForKey("stage")!) as NSArray)[0] as! String
                         }

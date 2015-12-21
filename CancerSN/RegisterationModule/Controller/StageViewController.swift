@@ -92,7 +92,7 @@ class StageViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func selectStage(sender: UIButton) {
         print((sender.titleLabel?.text)!)
-        selectedStage = stageMapping.objectForKey((sender.titleLabel?.text)!) as! Int
+        selectedStage = stageMapping.objectForKey((sender.titleLabel?.text)!) as? Int
         switch sender{
         case stage1Btn:
             publicService.selectedBtnFormat(stage1Btn)
@@ -142,7 +142,7 @@ class StageViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }

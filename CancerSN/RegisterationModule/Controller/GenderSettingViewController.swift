@@ -29,7 +29,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     @IBOutlet weak var agePickerView: UIPickerView!
     @IBAction func SelectGender(sender: UIButton) {
         if sender.backgroundColor == UIColor.whiteColor(){
-            gender = genderMapping.objectForKey((sender.titleLabel?.text)!) as! String
+            gender = genderMapping.objectForKey((sender.titleLabel?.text)!) as? String
         }else{
             gender = nil
         }
@@ -130,7 +130,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerDataSource.count
     }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerDataSource[row]
     }
 }
