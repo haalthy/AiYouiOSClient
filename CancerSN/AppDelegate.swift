@@ -17,17 +17,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.magentaColor()], forState:.Normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.whiteColor()], forState:.Selected)
+        
+        
+        let tabViewController : TabViewController = TabViewController()
+        self.window!.rootViewController = tabViewController
+        
+        // 初始化导航栏
+        self.initNavigationBar()
+        
+        self.window!.makeKeyAndVisible()
+        return true
+    }
+    
+    // MARK: - init Navigation Bar
+    
+    func initNavigationBar() {
+        
+        // 定义navigation属性
         UINavigationBar.appearance().barTintColor = headerColor
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-        UITabBar.appearance().barTintColor = tabBarColor
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UINavigationBar.appearance().barStyle = .Black
-
-        //若用户没有使用过此App，则进入登录页面
-        if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) ||
-            (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
+    }
+    
+    // MARK: - 是否进入到主页界面
+    
+    func checkUserStatus() {
+        
+        if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
             let keychainAccess = KeychainAccess()
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -39,8 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             }
         }
-        
-        return true
+
     }
 
     func applicationWillResignActive(application: UIApplication) {

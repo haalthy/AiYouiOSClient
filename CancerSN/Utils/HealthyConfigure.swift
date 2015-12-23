@@ -60,7 +60,12 @@ let geneticMutationMapping = NSDictionary(objects: ["KRAS", "EGFR", "ALK", "OTHE
 
 // navigation Bar color
 let headerColor : UIColor = UIColor.init(red:61 / 255.0, green:208 / 255.0, blue:221 / 255.0, alpha:1)
-let tabBarColor : UIColor = UIColor.init(red:0.1, green:0.6, blue:0.7, alpha:0.3)
+
+// tab Bar color
+let tabBarColor : UIColor = UIColor.init(red:244 / 255.0, green:251 / 255.0, blue:252 / 255.0, alpha:0.3)
+
+let tabBarItemNormalColor : UIColor = UIColor.init(red: 141 / 255.0, green: 162 / 255.0, blue: 164 / 255.0, alpha: 1)
+
 let highlightColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:1)
 let textColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
 let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:0.4)
