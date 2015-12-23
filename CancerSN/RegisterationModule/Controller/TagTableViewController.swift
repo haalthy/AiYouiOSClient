@@ -26,7 +26,7 @@ class TagTableViewController: UITableViewController {
     var isBroadcastTagSelection = 0
     var selectedTags = NSMutableArray()
     var selectedTagsStr = NSMutableSet()
-    var tagList = NSArray()
+    var tagList = NSMutableArray()
     var tagTypeList = NSArray()
     var groupedTagList = NSMutableArray()
     var rowHightForTagContainer = NSMutableArray()
@@ -104,6 +104,9 @@ class TagTableViewController: UITableViewController {
                 groupedTagList = jsonResult as! NSMutableArray
                 let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
                 groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
+                for groupedTags in groupedTagList{
+                    self.tagList.addObjectsFromArray((groupedTags.objectForKey("tags") as? [AnyObject])!)
+                }
             }
             
             for groupedTag in groupedTagList {

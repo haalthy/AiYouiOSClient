@@ -28,7 +28,7 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
     var imageHeight:CGFloat = 0
     var mentionUsernameList = NSMutableArray()
     let haalthyService = HaalthyService()
-    var allTagList = NSArray()
+    var allTagList = NSMutableArray()
     var keychainAccess = KeychainAccess()
     
     @IBAction func cancel(sender: UIButton) {
@@ -136,7 +136,12 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             let getTagListRespData:NSData = haalthyService.getTagList()!
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
-                self.allTagList = jsonResult as! NSArray
+                var groupedTagList = jsonResult as! NSMutableArray
+                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
+                groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
+                for groupedTags in groupedTagList{
+                    self.allTagList.addObjectsFromArray((groupedTags.objectForKey("tags") as? [AnyObject])!)
+                }
             }
             if allTagList.count > 0{
                 
