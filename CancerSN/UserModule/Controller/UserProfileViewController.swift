@@ -123,7 +123,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
                     treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
                     treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                    while ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index] as Int)) {
+                    while ((patientStatusIndex < patientStatusList.count) && (patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index] as Int)) {
                         patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
                         patientStatusIndex++
                     }
