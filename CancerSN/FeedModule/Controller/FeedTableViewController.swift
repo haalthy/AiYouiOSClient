@@ -24,6 +24,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
 
         initVariables()
         initContentView()
+        
+        NetRequest.sharedInstance.POST("http://121.42.155.47/xueFei/index.php/AppInterface/user/login") { (data, response, error) -> Void in
+            print(data)
+        }
     }
 
     // MARK: - Init Variables

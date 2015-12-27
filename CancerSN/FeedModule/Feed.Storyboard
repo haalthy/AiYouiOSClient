@@ -56,117 +56,138 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PC7-0a-wxG">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PC7-0a-wxG">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="5Ce-YD-0MS">
-                                    <rect key="frame" x="0.0" y="64" width="600" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Bf-zL0">
-                                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="新增临床数据" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g4b-Et-Cz9">
-                                                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <variation key="widthClass=compact" fixedFrame="YES">
-                                                        <rect key="frame" x="20" y="12" width="84" height="21"/>
-                                                    </variation>
-                                                </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePD-hI-VDo">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                                    <state key="normal" title="点击查看">
-                                                        <color key="titleColor" red="0.23921568627450979" green="0.81568627450980391" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </state>
-                                                    <variation key="widthClass=compact" fixedFrame="YES">
-                                                        <rect key="frame" x="105" y="8" width="64" height="30"/>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="pushClinicalDataAction:" destination="2C5-eZ-hoO" eventType="touchUpInside" id="5cc-sT-MDy"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="45" id="OMt-6N-69Y"/>
-                                                <constraint firstAttribute="width" constant="200" id="xXB-CA-JTp"/>
-                                            </constraints>
-                                            <variation key="default">
-                                                <mask key="subviews">
-                                                    <exclude reference="g4b-Et-Cz9"/>
-                                                    <exclude reference="ePD-hI-VDo"/>
-                                                </mask>
-                                                <mask key="constraints">
-                                                    <exclude reference="OMt-6N-69Y"/>
-                                                    <exclude reference="xXB-CA-JTp"/>
-                                                </mask>
-                                            </variation>
-                                            <variation key="widthClass=compact">
-                                                <mask key="subviews">
-                                                    <include reference="g4b-Et-Cz9"/>
-                                                    <include reference="ePD-hI-VDo"/>
-                                                </mask>
-                                                <mask key="constraints">
-                                                    <include reference="OMt-6N-69Y"/>
-                                                    <include reference="xXB-CA-JTp"/>
-                                                </mask>
-                                            </variation>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" red="0.94901960784313721" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstItem="sW8-Bf-zL0" firstAttribute="centerX" secondItem="5Ce-YD-0MS" secondAttribute="centerX" id="4OQ-Z4-t5X"/>
-                                        <constraint firstItem="sW8-Bf-zL0" firstAttribute="top" secondItem="5Ce-YD-0MS" secondAttribute="top" id="cXF-KI-Jon"/>
-                                    </constraints>
-                                    <variation key="default">
-                                        <mask key="subviews">
-                                            <exclude reference="sW8-Bf-zL0"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <exclude reference="4OQ-Z4-t5X"/>
-                                            <exclude reference="cXF-KI-Jon"/>
-                                        </mask>
-                                    </variation>
-                                    <variation key="widthClass=compact">
-                                        <mask key="subviews">
-                                            <include reference="sW8-Bf-zL0"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <include reference="4OQ-Z4-t5X"/>
-                                            <include reference="cXF-KI-Jon"/>
-                                        </mask>
-                                    </variation>
-                                </view>
                                 <connections>
                                     <outlet property="dataSource" destination="2C5-eZ-hoO" id="6AC-7l-Gtu"/>
                                     <outlet property="delegate" destination="2C5-eZ-hoO" id="w20-bJ-VMa"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ce-YD-0MS">
+                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Bf-zL0">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="新增临床数据" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g4b-Et-Cz9">
+                                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <variation key="widthClass=compact" fixedFrame="YES">
+                                                    <rect key="frame" x="20" y="12" width="84" height="21"/>
+                                                </variation>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePD-hI-VDo">
+                                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <state key="normal" title="点击查看">
+                                                    <color key="titleColor" red="0.23921568627450979" green="0.81568627450980391" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <variation key="widthClass=compact" fixedFrame="YES">
+                                                    <rect key="frame" x="105" y="8" width="64" height="30"/>
+                                                </variation>
+                                                <connections>
+                                                    <action selector="pushClinicalDataAction:" destination="2C5-eZ-hoO" eventType="touchUpInside" id="5cc-sT-MDy"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="OMt-6N-69Y"/>
+                                            <constraint firstAttribute="width" constant="200" id="xXB-CA-JTp"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="g4b-Et-Cz9"/>
+                                                <exclude reference="ePD-hI-VDo"/>
+                                            </mask>
+                                            <mask key="constraints">
+                                                <exclude reference="OMt-6N-69Y"/>
+                                                <exclude reference="xXB-CA-JTp"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="subviews">
+                                                <include reference="g4b-Et-Cz9"/>
+                                                <include reference="ePD-hI-VDo"/>
+                                            </mask>
+                                            <mask key="constraints">
+                                                <include reference="OMt-6N-69Y"/>
+                                                <include reference="xXB-CA-JTp"/>
+                                            </mask>
+                                        </variation>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="sW8-Bf-zL0" firstAttribute="centerX" secondItem="5Ce-YD-0MS" secondAttribute="centerX" id="4OQ-Z4-t5X"/>
+                                    <constraint firstAttribute="height" constant="44" id="YKX-yk-mMR"/>
+                                    <constraint firstItem="sW8-Bf-zL0" firstAttribute="top" secondItem="5Ce-YD-0MS" secondAttribute="top" id="cXF-KI-Jon"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="subviews">
+                                        <exclude reference="sW8-Bf-zL0"/>
+                                    </mask>
+                                    <mask key="constraints">
+                                        <exclude reference="YKX-yk-mMR"/>
+                                        <exclude reference="4OQ-Z4-t5X"/>
+                                        <exclude reference="cXF-KI-Jon"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="subviews">
+                                        <include reference="sW8-Bf-zL0"/>
+                                    </mask>
+                                    <mask key="constraints">
+                                        <include reference="YKX-yk-mMR"/>
+                                        <include reference="4OQ-Z4-t5X"/>
+                                        <include reference="cXF-KI-Jon"/>
+                                    </mask>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PC7-0a-wxG" secondAttribute="trailing" id="7GM-rK-Ofc"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="BAE-rh-Pgp"/>
-                            <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U"/>
-                            <constraint firstItem="O9c-bF-ZlT" firstAttribute="top" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="brA-WK-nwf"/>
+                            <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U">
+                                <variation key="widthClass=compact" constant="45"/>
+                            </constraint>
+                            <constraint firstItem="5Ce-YD-0MS" firstAttribute="top" secondItem="tRF-t9-zLr" secondAttribute="bottom" id="NZB-Pl-0lw"/>
+                            <constraint firstItem="5Ce-YD-0MS" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="UuZ-BF-HgS"/>
+                            <constraint firstItem="O9c-bF-ZlT" firstAttribute="top" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="brA-WK-nwf">
+                                <variation key="widthClass=compact" constant="-45"/>
+                            </constraint>
+                            <constraint firstAttribute="trailing" secondItem="5Ce-YD-0MS" secondAttribute="trailing" id="xec-ee-P2o"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="5Ce-YD-0MS"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="7GM-rK-Ofc"/>
                                 <exclude reference="BAE-rh-Pgp"/>
                                 <exclude reference="Ee6-Za-i6U"/>
                                 <exclude reference="brA-WK-nwf"/>
+                                <exclude reference="NZB-Pl-0lw"/>
+                                <exclude reference="UuZ-BF-HgS"/>
+                                <exclude reference="xec-ee-P2o"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="5Ce-YD-0MS"/>
+                            </mask>
                             <mask key="constraints">
                                 <include reference="7GM-rK-Ofc"/>
                                 <include reference="BAE-rh-Pgp"/>
                                 <include reference="Ee6-Za-i6U"/>
                                 <include reference="brA-WK-nwf"/>
+                                <include reference="NZB-Pl-0lw"/>
+                                <include reference="UuZ-BF-HgS"/>
+                                <include reference="xec-ee-P2o"/>
                             </mask>
                         </variation>
                     </view>
