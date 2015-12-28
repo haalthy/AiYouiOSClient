@@ -9,6 +9,41 @@
 import Foundation
 import UIKit
 
+// MARK: - Function
+
+// RGBA颜色方法
+
+func RGBA(r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat) -> UIColor {
+
+    return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
+}
+
+// RGB颜色方法
+
+func RGB(r: CGFloat, _ g: CGFloat, _ b: CGFloat) -> UIColor {
+    
+    return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: 1.0)
+}
+
+// frameMake方法
+
+func CGRECT(x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) -> CGRect {
+
+    return CGRectMake(x, y, w, h)
+}
+
+// MARK: - 常用常量
+
+// 屏幕尺寸
+let SCREEN_WIDTH = UIScreen.mainScreen().bounds.width
+let SCREEN_HEIGHT = UIScreen.mainScreen().bounds.height
+
+// 系统版本
+let IOS_7 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 7.0
+let IOS_8 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 8.0
+let IOS_9 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 9.0
+
+
 // MARK: - String Name
 
 //store ImageFilename

@@ -10,13 +10,8 @@ import UIKit
 
 class PostFeedFrame: NSObject {
 
-    // 头像frame
-    var portraitFrame:CGRect?
-    // 姓名frame
-    var userNameFrame:CGRect?
-    //
+        
     
-    // 1.计算头像位置
     
     
     
