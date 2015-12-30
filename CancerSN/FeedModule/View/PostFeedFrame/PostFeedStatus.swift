@@ -25,5 +25,14 @@ class PostFeedStatus: NSObject {
     // 评论数
     var commentCount : NSNumber?
     
+    // Feed high标签
+    var tag: String?
+    
     // Feed 标签
+    var highlight: String?
+    
+    // Feed 配图
+    var picArr: NSArray?
+    
+    
 }

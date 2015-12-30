@@ -8,18 +8,17 @@
 
 import UIKit
 
+// 配置常量
+
+// cell左边间距
+let kCellLeftInside: CGFloat = 15.0
+// cell上边间距
+let kCellTopInside: CGFloat = 20.0
+// 昵称的font
+let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(12)
+
 
 class FeedOriginalFrame: NSObject {
-    
-    // 配置常量
-    
-    // cell左边间距
-    let kCellLeftInside: CGFloat = 15.0
-    // cell上边间距
-    let kCellTopInside: CGFloat = 20.0
-    // 昵称的font
-    let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(12)
-    
     
     // 加载数据
     var feedModel: PostFeedStatus?
@@ -99,7 +98,37 @@ class FeedOriginalFrame: NSObject {
         let ageH: CGFloat = 14.0
         self.ageFrame = CGRECT(ageX, ageY, ageW, ageH)
         
+        if (self.feedModel!.tag == nil) {
+            
+            // 6.内容详情
+            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+            let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))))!
+            self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
+        }
+        else {
+            
+            // 6.tag标签
+            let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+            let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+            let tagW = SCREEN_WIDTH - tagX
+            let tagH: CGFloat = 24
+            self.tagFrame = CGRECT(tagX, tagY, tagW, tagH)
+            
+            // 7.内容详情
+            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+            let contentY: CGFloat = CGRectGetMaxY(self.tagFrame!) + 8.0
+            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))))!
+            self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
+        }
         
+        // 8.图片相册
+        
+        let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+        let photosY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8.0
+        
+        let photosSize: CGSize = FeedPhotosView .layoutForPhotos((self.feedModel!.picArr?.count)!)
+        self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
     }
     
 }

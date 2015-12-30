@@ -154,11 +154,13 @@
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="BAE-rh-Pgp"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U">
                                 <variation key="widthClass=compact" constant="45"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="64"/>
                             </constraint>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="top" secondItem="tRF-t9-zLr" secondAttribute="bottom" id="NZB-Pl-0lw"/>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="UuZ-BF-HgS"/>
                             <constraint firstItem="O9c-bF-ZlT" firstAttribute="top" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="brA-WK-nwf">
                                 <variation key="widthClass=compact" constant="-45"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="5Ce-YD-0MS" secondAttribute="trailing" id="xec-ee-P2o"/>
                         </constraints>
@@ -193,14 +195,19 @@
                     </view>
                     <navigationItem key="navigationItem" id="jnX-HJ-pgR">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Item" id="kGw-wf-M0a">
+                        <barButtonItem key="leftBarButtonItem" image="icon_search" id="kGw-wf-M0a">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <segue destination="87n-XM-dTI" kind="push" id="Meu-SP-R53"/>
+                            </connections>
                         </barButtonItem>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ULL-bx-Ack">
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ULL-bx-Ack">
                             <rect key="frame" x="255" y="7" width="90" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                            <state key="normal" title="我的智囊团">
+                            <inset key="contentEdgeInsets" minX="-10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="110" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="我的智囊团" image="icon_down">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                         </button>
@@ -312,8 +319,7 @@
                                                             <exclude reference="NZd-vn-c3r"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="239" y="5" width="60" height="35"/>
+                                                    <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
                                                             <include reference="NZd-vn-c3r"/>
                                                         </mask>
@@ -567,13 +573,14 @@
                         </variation>
                     </view>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="2U3-Ke-eqL"/>
                     <connections>
                         <outlet property="tableView" destination="wB4-6U-CIj" id="Bha-5V-afM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DMp-cc-KBQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5647.5" y="617"/>
+            <point key="canvasLocation" x="5167.5" y="406.5"/>
         </scene>
         <!--Show Post Detail Table View Controller-->
         <scene sceneID="Vz0-q0-ET7">
@@ -980,4 +987,8 @@
             <point key="canvasLocation" x="3603" y="-479.25"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon_down" width="11" height="6"/>
+        <image name="icon_search" width="30" height="30"/>
+    </resources>
 </document>
