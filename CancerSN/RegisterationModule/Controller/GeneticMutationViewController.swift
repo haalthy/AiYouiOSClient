@@ -33,8 +33,26 @@ class GeneticMutationViewController: UIViewController {
         publicService.unselectBtnFormat(alkBtn)
         publicService.unselectBtnFormat(otherMutationBtn)
         publicService.unselectBtnFormat(noMutationBtn)
+        
+        PieChart()
     }
 
+    func PieChart(){
+        
+        let items = [PNPieChartDataItem(value: 10, color: UIColor.blueColor(), description: ""),PNPieChartDataItem(value: 35, color: UIColor.redColor(), description: ""),PNPieChartDataItem(value: 15, color: UIColor.orangeColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.greenColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.yellowColor(), description: "")]
+        
+        let pieChart = PNPieChart(frame: CGRectMake(68, 425, self.view.bounds.width * 0.65, 200), items: items)
+        pieChart.descriptionTextFont = UIFont.boldSystemFontOfSize(13)
+        pieChart.strokeChart()
+        self.view.addSubview(pieChart)
+        
+        //        pieChart.legendStyle = PNLegendItemStyle.Stacked
+        //        let legend = pieChart.getLegendWithMaxWidth(200)
+        //        legend.frame = CGRectMake(150,550, legend.frame.size.width, legend.frame.size.height)
+        //        self.view.addSubview(legend)
+    }
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
