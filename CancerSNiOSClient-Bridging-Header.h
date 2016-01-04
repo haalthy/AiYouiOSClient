@@ -24,3 +24,4 @@
 #import "UIImageView+WebCache.h"
 #import "MJRefresh.h"
 #import "SwiftyJSON.h"
+#import "PNChart.h"
