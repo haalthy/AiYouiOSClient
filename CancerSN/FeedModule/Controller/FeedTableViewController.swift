@@ -27,7 +27,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initVariables()
         initContentView()
         
-        
+        self .getFeedListFromServer()
         }
 
     // MARK: - Init Variables
@@ -69,6 +69,11 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListFromServer() {
         
+        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=245112c0-36f8-47b1-8194-9228a9ef1db6", parameters:["begin":0,"end":1456803188202,"username":"AY1449549912985.679"],  success: { (content , message) -> Void in
+            
+            }) { (content, message) -> Void in
+                
+        }
     }
     
     // MARK: - Function
