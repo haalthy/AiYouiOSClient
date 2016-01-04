@@ -29,17 +29,24 @@ class FeedPhotosView: UIView {
     // 网络图片数组
     var picsUrl: [String] {
 
-        set(newPicsUrl) {
+        didSet {
         
-            let picsCount = newPicsUrl.count
+            // 初始化图片imageView
+            self.addFeedPhotos()
+            
+            // 图片布局
+            self.layoutForPic()
+            
+            let picsCount = self.picsUrl.count
+        
             
             for var i = 0; i < kPhotosMaxCount; i++ {
             
-                let photoView: UIImageView = self.subviews[i] as! UIImageView
-                
+                let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
                 
-                    photoView.addImageCache(self.picsUrl[i], placeHolder: "")
+                    print(self.picsUrl[i])
+                    photoView.addImageCache(self.picsUrl[i], placeHolder: "icon_profile")
                     photoView.hidden = false
                 }
                 else {
@@ -50,22 +57,18 @@ class FeedPhotosView: UIView {
             
         }
         
-        get {
-            
-            return self.picsUrl;
-        }
-        
     }
     
-    override init(frame: CGRect) {
+    init(feedModel: PostFeedStatus, frame: CGRect) {
         
+
+        self.picsUrl = feedModel.picArr!
+
         super.init(frame: frame)
         
         self.userInteractionEnabled = true
-        
-        // 初始化图片imageView
-        self .addFeedPhotos()
-        
+
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -95,6 +98,26 @@ class FeedPhotosView: UIView {
     func addPhotoOnTap(gesture: UITapGestureRecognizer) {
     
         
+    }
+    
+    // MARK: - 单张图片布局
+    
+    func layoutForPic() {
+    
+        let count = self.subviews.count
+        let maxCols = getPhotosMaxCols(count)
+        
+        for var i = 0; i < count; i++ {
+        
+            let imageView: UIImageView = self.subviews[i] as! UIImageView
+            
+            let photoW: CGFloat = kPhotosWidth
+            let photoH: CGFloat = kPhotosWidth
+            let photoX: CGFloat = CGFloat(i % maxCols) * (kPhotosWidth + CGFloat(kPhotosMargin))
+            let photoY: CGFloat = CGFloat(i / maxCols) * (kPhotosWidth + CGFloat(kPhotosMargin))
+
+            imageView.frame = CGRECT(photoX, photoY, photoW, photoH)
+        }
     }
     
     // MARK: - 图片布局

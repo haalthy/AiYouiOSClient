@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
 
@@ -14,9 +15,17 @@ extension String {
 
     func sizeWithFont(font: UIFont, maxSize: CGSize) -> CGSize {
     
-        let dict = [NSFontAttributeName : font]
         
-        let size: CGSize = self.boundingRectWithSize(maxSize, options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: dict, context: nil).size
+        let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
+
+        let dict = [NSFontAttributeName : font,
+            NSParagraphStyleAttributeName : paragraphStyle.copy()
+        ]
+                
+        let str = self as NSString
+        
+        let size: CGSize = str.boundingRectWithSize(maxSize, options:.UsesLineFragmentOrigin, attributes: dict, context: nil).size
 
         return size
     }

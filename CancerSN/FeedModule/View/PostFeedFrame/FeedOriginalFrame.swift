@@ -11,12 +11,14 @@ import UIKit
 // 配置常量
 
 // cell左边间距
-let kCellLeftInside: CGFloat = 15.0
+let kCellLeftInside: CGFloat = CGFloat(15)
 // cell上边间距
-let kCellTopInside: CGFloat = 20.0
+let kCellTopInside: CGFloat = CGFloat(20.0)
 // 昵称的font
-let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(12)
+let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(16)
 
+// 距离头像的距离
+let kPortraitMargin: CGFloat = CGFloat(10.0)
 
 class FeedOriginalFrame: NSObject {
     
@@ -52,11 +54,17 @@ class FeedOriginalFrame: NSObject {
     
     // 标签frame
     var tagFrame: CGRect?
+    
+    // 帖子的frame
+    var frame: CGRect?
 
      init(feedModel: PostFeedStatus) {
         
         super.init()
         self.feedModel = feedModel;
+        
+        self.setFrame()
+    
     }
     
     // MARK: - 设置frame
@@ -71,64 +79,82 @@ class FeedOriginalFrame: NSObject {
         self.portraitFrame = CGRECT(portraitX, portraitY, portraitW, portraitH)
         
         // 2.昵称
-        let nicknameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+        let nicknameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let nicknameY: CGFloat = kCellTopInside
-        let nicknameW: CGFloat = (self.feedModel?.userName?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))).width)!
-        let nicknameH: CGFloat = 12.0
+        print(feedModel?.nickname)
+        let nicknameW: CGFloat = ("王磊").sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
+        let nicknameH: CGFloat = 15
         self.nicknameFrame = CGRECT(nicknameX, nicknameY, nicknameW, nicknameH)
         
         // 3.feed type
         let feedTypeX: CGFloat = CGRectGetMaxX(self.nicknameFrame!)
         let feedTypeY: CGFloat = kCellTopInside
-        let feedTypeW: CGFloat = ("我的提问".sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))).width)
-        let feedTypeH: CGFloat = 24.0
+        let feedTypeW: CGFloat = ("我的提问".sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, 15)).width)
+        let feedTypeH: CGFloat = 15
         self.feedTypeFrame = CGRECT(feedTypeX, feedTypeY, feedTypeW, feedTypeH)
         
         // 4.性别
-        let sexX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+        let sexX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let sexY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
-        let sexW: CGFloat = 14.0
-        let sexH: CGFloat = 14.0
+        let sexW: CGFloat = 20.0
+        let sexH: CGFloat = 20.0
         self.genderFrame = CGRECT(sexX, sexY, sexW, sexH)
         
         // 5.年龄
-        let ageX: CGFloat = CGRectGetMaxX(self.genderFrame!) + 5
+        let ageX: CGFloat = CGRectGetMaxX(self.genderFrame!) + CGFloat(5)
         let ageY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
-        let ageW: CGFloat = 14.0
-        let ageH: CGFloat = 14.0
+        let ageW: CGFloat = 25.0
+        let ageH: CGFloat = 20.0
         self.ageFrame = CGRECT(ageX, ageY, ageW, ageH)
         
         if (self.feedModel!.tag == nil) {
             
             // 6.内容详情
-            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))))!
+            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
             self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         }
         else {
             
             // 6.tag标签
-            let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+            let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
             let tagW = SCREEN_WIDTH - tagX
             let tagH: CGFloat = 24
             self.tagFrame = CGRECT(tagX, tagY, tagW, tagH)
             
             // 7.内容详情
-            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
-            let contentY: CGFloat = CGRectGetMaxY(self.tagFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat(MAXFLOAT), CGFloat(MAXFLOAT))))!
+            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
             self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         }
         
         // 8.图片相册
-        
-        let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + 10.0
+        let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let photosY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8.0
         
         let photosSize: CGSize = FeedPhotosView .layoutForPhotos((self.feedModel!.picArr?.count)!)
         self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
+        
+        // 9.帖子的frame
+        
+        let frameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let frameY: CGFloat = 0
+        var frameHeight: CGFloat = 0
+        let frameWidth: CGFloat  = SCREEN_WIDTH - frameX
+        if feedModel?.picArr?.count == 0   {
+        
+            frameHeight = CGRectGetMaxY(self.contentFrame!) + kCellTopInside
+        }
+        else {
+        
+            frameHeight = CGRectGetMaxY(self.photosFrame!) + kCellTopInside
+        }
+        
+        self.frame = CGRECT(frameX, frameY, frameWidth, frameHeight)
+        
     }
     
 }

@@ -21,6 +21,7 @@ class FeedTagView: UIView {
     // text font size
     let kTagFont: UIFont = UIFont.systemFontOfSize(12)
     
+    // tag 字符串数组
     var tagArr: [String]?
     
     override init(frame: CGRect) {

@@ -8,6 +8,7 @@
 
 import UIKit
 
+let cellIdentifier = "FeedCell"
 
 class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
@@ -18,6 +19,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     // 自定义变量
     
+    var dataArr: NSMutableArray!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,16 +27,29 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initVariables()
         initContentView()
         
-        NetRequest.sharedInstance.POST("http://121.42.155.47/xueFei/index.php/AppInterface/user/login") { (data, response, error) -> Void in
-            print(data)
+        
         }
-    }
 
     // MARK: - Init Variables
     
     func initVariables() {
     
+        dataArr = NSMutableArray()
         
+        // 假数据
+        let feedModel: PostFeedStatus = PostFeedStatus()
+        feedModel.nickname = "王磊"
+        feedModel.gender = "男"
+        feedModel.age = "25"
+        feedModel.feedId = 22
+        feedModel.createdDate = "2015-22-22"
+        feedModel.feedPortrait = ""
+        feedModel.feedContent = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
+        feedModel.picArr = ["http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg", "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"]
+        let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
+        
+        dataArr.addObject(feedFrame)
+
     }
     
     // MARK: - Init Related ContentView
@@ -43,15 +58,16 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         //self.tableView.tableHeaderView?.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 45)
         
+        // headerView样式
         headerView.layer.borderWidth = 0.7
         headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
+        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     
     // MARK: - Net Request
     
-    func getFeedListFromServer(parameters:NSDictionary) {
-    
+    func getFeedListFromServer() {
         
     }
     
@@ -72,19 +88,25 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return dataArr.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 44
+        
+        let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
+        
+        return feedFrame.cellHeight
+        
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier:String = "cell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)! as! FeedCell
         
-        let cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: cellIdentifier)
-        //let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)! as UITableViewCell
+        
+        let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
+
+        cell.feedOriginFrame = feedFrame.feedOriginalFrame
         
         return cell
     }

@@ -87,6 +87,9 @@
                                                 <variation key="widthClass=compact" fixedFrame="YES">
                                                     <rect key="frame" x="105" y="8" width="64" height="30"/>
                                                 </variation>
+                                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                                    <rect key="frame" x="105" y="8" width="64" height="30"/>
+                                                </variation>
                                                 <connections>
                                                     <action selector="pushClinicalDataAction:" destination="2C5-eZ-hoO" eventType="touchUpInside" id="5cc-sT-MDy"/>
                                                 </connections>
@@ -154,7 +157,7 @@
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="BAE-rh-Pgp"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U">
                                 <variation key="widthClass=compact" constant="45"/>
-                                <variation key="heightClass=regular-widthClass=compact" constant="64"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="44"/>
                             </constraint>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="top" secondItem="tRF-t9-zLr" secondAttribute="bottom" id="NZB-Pl-0lw"/>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="UuZ-BF-HgS"/>
@@ -319,7 +322,8 @@
                                                             <exclude reference="NZd-vn-c3r"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="239" y="5" width="60" height="35"/>
                                                         <mask key="constraints">
                                                             <include reference="NZd-vn-c3r"/>
                                                         </mask>
