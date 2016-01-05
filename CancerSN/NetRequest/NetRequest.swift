@@ -10,9 +10,9 @@ import UIKit
 import Foundation
 
 // 获取数据成功 block
-typealias successBlock = (content: Dictionary<String, AnyObject>, message: String) -> Void
+typealias successBlock = (content: AnyObject, message: String) -> Void
 // 获取数据失败 block
-typealias failedBlock = (content: Dictionary<String, AnyObject>, message: String) -> Void
+typealias failedBlock = (content: AnyObject, message: String) -> Void
 
 
 class NetRequest: NSObject {
@@ -93,7 +93,7 @@ class NetRequest: NSObject {
     
     // MARK: not Params
     
-    func request(method: String, url: String, success: successBlock, failed: failedBlock) {
+    func request(method: String, url: String,  success: successBlock, _ failed: failedBlock) {
         
         let manager = NetRequestManager(url: url, method: method) { (data, response, error) -> Void in
             
@@ -120,7 +120,22 @@ class NetRequest: NSObject {
     
     func callbackWithResult(data: NSDictionary, success: successBlock, failed: failedBlock) {
     
-        print(data)
+
+        // 判断返回结果是否正确
+        if (data["result"] as! Int) == 1 {
+        
+            // 回归主线程
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                success(content: data["posts"]!, message: "")
+            })
+        }
+        else {
+        
+            // 回归主线程
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                failed(content: ["": ""], message: data["resultDesp"] as! String)
+            })
+        }
     }
     
     // MARK: - 异常处理及获取数据
