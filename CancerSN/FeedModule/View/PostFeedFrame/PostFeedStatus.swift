@@ -8,39 +8,91 @@
 
 import UIKit
 
-class PostFeedStatus: NSObject {
+class PostFeedStatus: D3Model {
     
     // 创建时间
-    var createdDate : String?
+    var createdDate: String?
     
     // Feed id
-    var feedId : Int?
+    var postID: Int?
     
-    var feedPortrait: String?
+    // 用户标识
+    var insertUsername: String?
     
     // Feed 内容
-    var feedContent : String?
-    
-    // Feed 昵称
-    var nickname : String?
-    
-    // user 性别
-    var gender: String?
+    var body: String?
 
-    // 年龄
-    var age: String?
+    // 内容下面的标签
+    var tags: String?
     
     // 评论数
-    var commentCount : NSNumber?
+    var countComments : Int?
     
-    // Feed high标签
-    var tag: String?
+    // 
+    var countBookmarks: Int?
     
-    // Feed 标签
+    // 浏览数
+    var countViews: Int?
+    
+    //
+    var closed: Int?
+    
+    // 是否为广播消息
+    var isBroadcast: Int?
+    
+    // 插入时间
+    var dateInserted: Int64?
+    
+    // 更新时间
+    var dateUpdated: Int64?
+    
+    // 
+    var isActive: Int?
+    
+    //
+    var type: Int?
+    
+    // 治疗ID
+    var treatmentID: Int?
+    
+    // 
+    var patientStatusID: Int?
+    
+    // 性别
+    var gender: String?
+    
+    // 病理类型
+    var pathological: String?
+    
+    // 年龄
+    var age: Int?
+    
+    // 癌症类型
+    var cancerType: String?
+    
+    // 转移
+    var metastasis: String?
+    
+    // 初诊分期
+    var stage: Int?
+    
+    // 图片数量
+    var hasImage: Int?
+    
+    // 用户昵称
+    var displayname: String?
+    
+    // 类似 “特罗凯” “中药”这个部分,内容上部标签
     var highlight: String?
     
-    // Feed 配图
-    var picArr: [String]?
+    //
+    var clinicReport: String?
+    
+    // 图片信息
+    var imageURL: String?
+    
+    // 用户头像
+    var portraitURL: String?
     
     
 }

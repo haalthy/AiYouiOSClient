@@ -38,14 +38,15 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         // 假数据
         let feedModel: PostFeedStatus = PostFeedStatus()
-        feedModel.nickname = "王磊"
+        feedModel.displayname = "王磊"
         feedModel.gender = "男"
-        feedModel.age = "25"
-        feedModel.feedId = 22
+        feedModel.age = 25
+        feedModel.postID = 22
         feedModel.createdDate = "2015-22-22"
-        feedModel.feedPortrait = ""
-        feedModel.feedContent = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
-        feedModel.picArr = ["http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg", "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"]
+        feedModel.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
+        feedModel.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
+        feedModel.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
+        feedModel.hasImage = 2
         let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
         
         dataArr.addObject(feedFrame)
@@ -62,6 +63,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         headerView.layer.borderWidth = 0.7
         headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
+        // tableView 注册
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     

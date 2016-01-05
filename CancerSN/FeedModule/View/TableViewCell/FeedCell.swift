@@ -65,14 +65,14 @@ class FeedCell: UITableViewCell {
         
         // 1.头像
         let portraitView = UIImageView()
-        portraitView.image = UIImage(named: "")
+        portraitView.addImageCache((feedModel?.portraitURL)!, placeHolder: "icon_profile")
         portraitView.frame = (feedOriginFrame?.portraitFrame)!
         portraitView.backgroundColor = UIColor.greenColor()
         self.addSubview(portraitView)
         
         // 2.昵称
         let nickname = UILabel()
-        nickname.text = feedModel?.nickname
+        nickname.text = feedModel?.displayname
         nickname.frame = (self.feedOriginFrame?.nicknameFrame)!
         nickname.textColor = kNicknameColor
         nickname.font = UIFont.systemFontOfSize(kCellNicknameFontSize)
@@ -95,16 +95,17 @@ class FeedCell: UITableViewCell {
         
         // 5.年龄
         let ageLabel = UILabel()
-        ageLabel.text = feedModel?.age
+        ageLabel.text = String.intToString((feedModel?.age)!)
+        //print(String(feedModel?.age))
         ageLabel.frame = (self.feedOriginFrame?.ageFrame)!
         ageLabel.textColor = kAgeColor
         self.addSubview(ageLabel)
         
-        if feedModel?.tag != nil {
+        if feedModel?.highlight != nil {
             
             // 6.标签
             let tagView = FeedTagView()
-            tagView.tagArr =  (feedModel?.tag)?.componentsSeparatedByString("**")
+            tagView.tagArr =  (feedModel?.highlight)?.componentsSeparatedByString(" ")
             tagView.frame = (self.feedOriginFrame?.tagFrame)!
             self.addSubview(tagView)
         }
@@ -112,7 +113,7 @@ class FeedCell: UITableViewCell {
         
         // 7.帖子内容
         let contentLabel = UILabel()
-        contentLabel.text = feedModel?.feedContent
+        contentLabel.text = feedModel?.body
         contentLabel.frame = (self.feedOriginFrame?.contentFrame)!
         contentLabel.textColor = kContentColor
         contentLabel.font = UIFont.systemFontOfSize(kContentFontSize)
@@ -120,12 +121,12 @@ class FeedCell: UITableViewCell {
         contentLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         self.addSubview(contentLabel)
         
-        if feedModel?.picArr?.count > 0 {
+        if feedModel?.hasImage > 0 {
         
             // 8.配图
+                        
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
-            picsView.picsUrl = (feedModel?.picArr)!
             self.addSubview(picsView)
         }
         

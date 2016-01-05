@@ -26,6 +26,8 @@
 		6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */; };
 		6B2BB7961C33B1BB00C685A6 /* UIImageView-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7951C33B1BB00C685A6 /* UIImageView-Extension.swift */; };
 		6B2BB79B1C33CE1600C685A6 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB79A1C33CE1600C685A6 /* FeedCell.swift */; };
+		6B2BF6D51C3BA3AB00654A91 /* D3Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BF6D41C3BA3AB00654A91 /* D3Model.swift */; };
+		6B2BF6D71C3BB7BB00654A91 /* NSdate-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BF6D61C3BB7BB00654A91 /* NSdate-Extension.swift */; };
 		6B5B3AC71C20072700CB58D4 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */; };
 		6B7FA2AA1C2119A600094FB0 /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */; };
 		6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */; };
@@ -219,6 +221,8 @@
 		6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPhotosView.swift; sourceTree = "<group>"; };
 		6B2BB7951C33B1BB00C685A6 /* UIImageView-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView-Extension.swift"; sourceTree = "<group>"; };
 		6B2BB79A1C33CE1600C685A6 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		6B2BF6D41C3BA3AB00654A91 /* D3Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = D3Model.swift; sourceTree = "<group>"; };
+		6B2BF6D61C3BB7BB00654A91 /* NSdate-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSdate-Extension.swift"; sourceTree = "<group>"; };
 		6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftNotice.swift; sourceTree = "<group>"; };
 		6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthyConfigure.swift; sourceTree = "<group>"; };
@@ -563,6 +567,14 @@
 			path = TableViewCell;
 			sourceTree = "<group>";
 		};
+		6B2BF6D31C3BA3AB00654A91 /* D3Model */ = {
+			isa = PBXGroup;
+			children = (
+				6B2BF6D41C3BA3AB00654A91 /* D3Model.swift */,
+			);
+			path = D3Model;
+			sourceTree = "<group>";
+		};
 		6B7FA2A81C2119A600094FB0 /* SwiftNotice */ = {
 			isa = PBXGroup;
 			children = (
@@ -767,6 +779,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				6B2BF6D31C3BA3AB00654A91 /* D3Model */,
 				DDD6A10B1C37C28C00C258D2 /* PNChart */,
 				6BBFD91B1C32785700282573 /* JsonModel */,
 				6BBFD8C91C3273F900282573 /* MJRefresh */,
@@ -866,6 +879,7 @@
 			children = (
 				6BA46E3C1C31437200DCBD11 /* NSString-Extension.swift */,
 				6B2BB7951C33B1BB00C685A6 /* UIImageView-Extension.swift */,
+				6B2BF6D61C3BB7BB00654A91 /* NSdate-Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1287,6 +1301,7 @@
 				6B93FCC41C1E66CA00A81EA9 /* CVCalendarView.swift in Sources */,
 				6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */,
 				6B854F0A1C22AC370027FE44 /* TabViewController.swift in Sources */,
+				6B2BF6D71C3BB7BB00654A91 /* NSdate-Extension.swift in Sources */,
 				DDD6A13B1C37C28C00C258D2 /* PNScatterChart.m in Sources */,
 				6BBFD8AB1C326FBF00282573 /* MKAnnotationView+WebCache.m in Sources */,
 				6BBFD9011C3273F900282573 /* MJRefreshHeader.m in Sources */,
@@ -1312,6 +1327,7 @@
 				6BBFD90F1C3273F900282573 /* UIView+MJExtension.m in Sources */,
 				6B93FCBE1C1E66CA00A81EA9 /* CVCalendarManager.swift in Sources */,
 				6B93FBFF1C1E58A000A81EA9 /* HealthyService.swift in Sources */,
+				6B2BF6D51C3BA3AB00654A91 /* D3Model.swift in Sources */,
 				6B93FCC11C1E66CA00A81EA9 /* CVCalendarMonthContentViewController.swift in Sources */,
 				6B93FC571C1E5A9D00A81EA9 /* UserProfileViewController.swift in Sources */,
 				6B93FCCB1C1E66CA00A81EA9 /* CVCalendarWeekContentViewController.swift in Sources */,

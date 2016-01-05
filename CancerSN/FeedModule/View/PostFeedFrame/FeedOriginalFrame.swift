@@ -81,7 +81,7 @@ class FeedOriginalFrame: NSObject {
         // 2.昵称
         let nicknameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let nicknameY: CGFloat = kCellTopInside
-        print(feedModel?.nickname)
+        print(feedModel?.displayname)
         let nicknameW: CGFloat = ("王磊").sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
         let nicknameH: CGFloat = 15
         self.nicknameFrame = CGRECT(nicknameX, nicknameY, nicknameW, nicknameH)
@@ -103,16 +103,16 @@ class FeedOriginalFrame: NSObject {
         // 5.年龄
         let ageX: CGFloat = CGRectGetMaxX(self.genderFrame!) + CGFloat(5)
         let ageY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
-        let ageW: CGFloat = 25.0
+        let ageW: CGFloat = 40.0
         let ageH: CGFloat = 20.0
         self.ageFrame = CGRECT(ageX, ageY, ageW, ageH)
         
-        if (self.feedModel!.tag == nil) {
+        if (self.feedModel!.highlight == nil) {
             
             // 6.内容详情
             let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
+            let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
             self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         }
         else {
@@ -127,7 +127,7 @@ class FeedOriginalFrame: NSObject {
             // 7.内容详情
             let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.feedContent?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
+            let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
             self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         }
         
@@ -135,7 +135,7 @@ class FeedOriginalFrame: NSObject {
         let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let photosY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8.0
         
-        let photosSize: CGSize = FeedPhotosView .layoutForPhotos((self.feedModel!.picArr?.count)!)
+        let photosSize: CGSize = FeedPhotosView.layoutForPhotos(self.feedModel!.hasImage!)
         self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
         
         // 9.帖子的frame
@@ -144,7 +144,7 @@ class FeedOriginalFrame: NSObject {
         let frameY: CGFloat = 0
         var frameHeight: CGFloat = 0
         let frameWidth: CGFloat  = SCREEN_WIDTH - frameX
-        if feedModel?.picArr?.count == 0   {
+        if feedModel?.hasImage == 0   {
         
             frameHeight = CGRectGetMaxY(self.contentFrame!) + kCellTopInside
         }

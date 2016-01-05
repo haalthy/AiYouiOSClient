@@ -62,7 +62,11 @@ class FeedPhotosView: UIView {
     init(feedModel: PostFeedStatus, frame: CGRect) {
         
 
-        self.picsUrl = feedModel.picArr!
+        let picArr: Array<String> = ((feedModel.imageURL)?.componentsSeparatedByString(","))!
+
+        self.picsUrl = picArr
+        
+        
 
         super.init(frame: frame)
         
