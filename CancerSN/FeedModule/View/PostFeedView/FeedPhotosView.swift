@@ -19,7 +19,7 @@ func getPhotosMaxCols(photoCount: Int) -> Int {
     return photoCount == 4 ? 2 : 3
 }
 
-let kPhotosWidth = SCREEN_WIDTH * 0.25
+let kPhotosWidth = SCREEN_WIDTH * 0.22
 let kPhotosHeight = kPhotosWidth
 // 图片间距
 let kPhotosMargin = 7
@@ -45,7 +45,6 @@ class FeedPhotosView: UIView {
                 let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
                 
-                    print(self.picsUrl[i])
                     photoView.addImageCache(self.picsUrl[i], placeHolder: "icon_profile")
                     photoView.hidden = false
                 }
@@ -108,7 +107,7 @@ class FeedPhotosView: UIView {
     
     func layoutForPic() {
     
-        let count = self.subviews.count
+        let count = self.picsUrl.count
         let maxCols = getPhotosMaxCols(count)
         
         for var i = 0; i < count; i++ {

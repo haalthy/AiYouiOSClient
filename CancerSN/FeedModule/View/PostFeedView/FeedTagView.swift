@@ -19,15 +19,16 @@ class FeedTagView: UIView {
     let kTagTextColor: UIColor = RGB(51, 51, 51)
 
     // text font size
-    let kTagFont: UIFont = UIFont.systemFontOfSize(12)
+    let kTagFont: UIFont = UIFont.systemFontOfSize(16)
     
     // tag 字符串数组
     var tagArr: [String]?
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, highTag: [String]) {
        
         super.init(frame: frame)
         
+        self.tagArr = highTag
         // 添加tag
         self.addSubTagLabel()
     }
@@ -41,29 +42,25 @@ class FeedTagView: UIView {
 
     override func layoutSubviews() {
         
+        super.layoutSubviews()
+        
         let tagCount = self.subviews.count
         
         for var i = 0; i < tagCount; i++ {
             
             let label = self.subviews[i]
-            if i == 0 {
             
-                let x: CGFloat = 0
-                let y: CGFloat = 0
-                let w: CGFloat = (self.tagArr![i].sizeWithFont(kTagFont, maxSize: CGSizeMake(CGFloat.max, CGFloat.max))).width
-                let h: CGFloat = 24
-                label.frame = CGRECT(x, y, w, h)
+            var x: CGFloat = 0
+            if i == 0 {
+                x = 0
             }
             else {
-                
-                let x: CGFloat = CGRectGetMaxX(self.subviews[i - 1].frame) + 8.0
-                let y: CGFloat = 0
-                let w: CGFloat = (self.tagArr![i].sizeWithFont(kTagFont, maxSize: CGSizeMake((CGFloat.max, CGFloat.max)))).width
-                let h: CGFloat = 24
-                label.frame = CGRECT(x, y, w, h)
-                
+                x = CGRectGetMaxX(self.subviews[i - 1].frame) + 8.0
             }
-            
+            let y: CGFloat = 0
+            let w: CGFloat = (self.tagArr![i].sizeWithFont(kTagFont, maxSize: CGSizeMake((CGFloat.max, CGFloat.max)))).width + 6
+            let h: CGFloat = 24
+            label.frame = CGRECT(x, y, w, h)
         }
     }
     
@@ -78,9 +75,11 @@ class FeedTagView: UIView {
                 let tagLabel: UILabel = UILabel()
                 tagLabel.text = tagArr![i]
                 tagLabel.layer.cornerRadius = 4.0
-                tagLabel.layer.borderWidth = 2.0
+                tagLabel.layer.borderWidth = 1.0
                 tagLabel.layer.borderColor = kTagBorderColor.CGColor
                 tagLabel.textColor = kTagTextColor
+                tagLabel.font = kTagFont
+                tagLabel.textAlignment = NSTextAlignment.Center
                 self.addSubview(tagLabel)
                 
             }

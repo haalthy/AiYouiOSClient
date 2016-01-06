@@ -120,13 +120,23 @@ class NetRequest: NSObject {
     
     func callbackWithResult(data: NSDictionary, success: successBlock, failed: failedBlock) {
     
+        // token无效
+        if (data["error"] as! String) == "invalid_token" {
+            
+            // 回归主线程
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                failed(content: ["": ""], message: "token失效，请重新登录")
+            })
+            
+            return;
+        }
 
         // 判断返回结果是否正确
         if (data["result"] as! Int) == 1 {
         
             // 回归主线程
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                success(content: data["posts"]!, message: "")
+                success(content: data["content"]!, message: "")
             })
         }
         else {
@@ -146,8 +156,8 @@ class NetRequest: NSObject {
         if error == nil {
             
             // 解析json
-            //let json = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-            //self.callbackWithResult(json, success: success, failed: failed)
+            let json = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+            self.callbackWithResult(json, success: success, failed: failed)
             
         }
         else {

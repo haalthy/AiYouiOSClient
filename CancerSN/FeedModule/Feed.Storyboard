@@ -155,16 +155,13 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PC7-0a-wxG" secondAttribute="trailing" id="7GM-rK-Ofc"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="BAE-rh-Pgp"/>
+                            <constraint firstAttribute="bottom" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="EWj-7p-WxJ"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U">
                                 <variation key="widthClass=compact" constant="45"/>
                                 <variation key="heightClass=regular-widthClass=compact" constant="44"/>
                             </constraint>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="top" secondItem="tRF-t9-zLr" secondAttribute="bottom" id="NZB-Pl-0lw"/>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="UuZ-BF-HgS"/>
-                            <constraint firstItem="O9c-bF-ZlT" firstAttribute="top" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="brA-WK-nwf">
-                                <variation key="widthClass=compact" constant="-45"/>
-                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="5Ce-YD-0MS" secondAttribute="trailing" id="xec-ee-P2o"/>
                         </constraints>
                         <variation key="default">
@@ -174,8 +171,8 @@
                             <mask key="constraints">
                                 <exclude reference="7GM-rK-Ofc"/>
                                 <exclude reference="BAE-rh-Pgp"/>
+                                <exclude reference="EWj-7p-WxJ"/>
                                 <exclude reference="Ee6-Za-i6U"/>
-                                <exclude reference="brA-WK-nwf"/>
                                 <exclude reference="NZB-Pl-0lw"/>
                                 <exclude reference="UuZ-BF-HgS"/>
                                 <exclude reference="xec-ee-P2o"/>
@@ -189,10 +186,14 @@
                                 <include reference="7GM-rK-Ofc"/>
                                 <include reference="BAE-rh-Pgp"/>
                                 <include reference="Ee6-Za-i6U"/>
-                                <include reference="brA-WK-nwf"/>
                                 <include reference="NZB-Pl-0lw"/>
                                 <include reference="UuZ-BF-HgS"/>
                                 <include reference="xec-ee-P2o"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="EWj-7p-WxJ"/>
                             </mask>
                         </variation>
                     </view>

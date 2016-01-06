@@ -104,10 +104,12 @@ class FeedCell: UITableViewCell {
         if feedModel?.highlight != nil {
             
             // 6.标签
-            let tagView = FeedTagView()
-            tagView.tagArr =  (feedModel?.highlight)?.componentsSeparatedByString(" ")
-            tagView.frame = (self.feedOriginFrame?.tagFrame)!
-            self.addSubview(tagView)
+            var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
+            highTagsArr.removeLast()
+            
+            let highView = FeedTagView(frame: (self.feedOriginFrame?.cureFrame)!, highTag: highTagsArr)
+            highView.frame = (self.feedOriginFrame?.cureFrame)!
+            self.addSubview(highView)
         }
         
         
@@ -127,9 +129,57 @@ class FeedCell: UITableViewCell {
                         
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
+            let picArr: Array<String> = ((feedModel!.imageURL)?.componentsSeparatedByString(","))!
+            picsView.picsUrl = picArr;
             self.addSubview(picsView)
         }
         
+        // 8.tags
+        if feedModel?.tags != nil {
+            
+            let tagsLabel = UILabel()
+            tagsLabel.frame = (self.feedOriginFrame?.tagFrame)!
+            tagsLabel.textColor = kAgeColor
+            // 获取内容
+            tagsLabel.text = self.showTagsWithString((feedModel?.tags)!)
+            tagsLabel.font = UIFont.systemFontOfSize(kContentFontSize)
+            self.addSubview(tagsLabel)
+        }
+        
+        // 9.toolbar
+        let toolsView: PostFeedToolBar = PostFeedToolBar()
+        toolsView.frame = (self.feedOriginFrame?.toolBarFrame)!
+        toolsView.backgroundColor = UIColor.clearColor()
+        toolsView.initVariables(feedModel!)
+        toolsView.layoutWithContent()
+        self.addSubview(toolsView)
+
+        
     }
 
+    // MARK: - 功能方法
+    
+    // MARK: tag标签处理
+    
+    func showTagsWithString(tagsStr: String) -> String {
+    
+        let tagArr: Array<String> = tagsStr.componentsSeparatedByString("**")
+        
+        var resultStr: String = "Tag: "
+        
+        for  tag in tagArr {
+        
+            // tag为空不拼接
+            if tag == "" {
+                break
+            }
+            resultStr = "\(resultStr)\(tag), "
+        }
+        
+        let result: NSString = resultStr as NSString
+        // 去除最后一个逗号
+        resultStr = result.substringToIndex(result.length - 2)
+        
+        return resultStr
+    }
 }

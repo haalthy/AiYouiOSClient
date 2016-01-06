@@ -47,9 +47,31 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         feedModel.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
         feedModel.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
         feedModel.hasImage = 2
+        feedModel.tags = "易瑞沙**阿西替尼**"
+        feedModel.highlight = "易瑞沙 阿西替尼 "
+        feedModel.dateUpdated = 1452033200
+        feedModel.countComments = 200
         let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
         
         dataArr.addObject(feedFrame)
+        
+        let feedModel1: PostFeedStatus = PostFeedStatus()
+        feedModel1.displayname = "王磊"
+        feedModel1.gender = "男"
+        feedModel1.age = 25
+        feedModel1.postID = 22
+        feedModel1.createdDate = "2015-22-22"
+        feedModel1.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
+        feedModel1.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
+        feedModel1.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
+        feedModel1.hasImage = 4
+        feedModel1.tags = "易瑞沙**阿西替尼**"
+        feedModel1.dateUpdated = 1452033200
+        feedModel1.countComments = 20000
+        let feedFrame1: PostFeedFrame = PostFeedFrame(feedModel: feedModel1)
+        
+        dataArr.addObject(feedFrame1)
+
 
     }
     

@@ -55,6 +55,9 @@ class FeedOriginalFrame: NSObject {
     // 标签frame
     var tagFrame: CGRect?
     
+    // toolBar frame
+    var toolBarFrame: CGRect?
+    
     // 帖子的frame
     var frame: CGRect?
 
@@ -122,14 +125,15 @@ class FeedOriginalFrame: NSObject {
             let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
             let tagW = SCREEN_WIDTH - tagX
             let tagH: CGFloat = 24
-            self.tagFrame = CGRECT(tagX, tagY, tagW, tagH)
+            self.cureFrame = CGRECT(tagX, tagY, tagW, tagH)
             
             // 7.内容详情
             let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+            let contentY: CGFloat = CGRectGetMaxY(self.cureFrame!) + 8.0
             let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
             self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         }
+        
         
         // 8.图片相册
         let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
@@ -138,20 +142,62 @@ class FeedOriginalFrame: NSObject {
         let photosSize: CGSize = FeedPhotosView.layoutForPhotos(self.feedModel!.hasImage!)
         self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
         
-        // 9.帖子的frame
+        if self.feedModel?.hasImage == 0 {
+            
+            // 9.tag标签（下面的）
+            let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            let tagsY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8
+            let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
+            let tagsH: CGFloat = 15
+            self.cureFrame = CGRECT(tagsX, tagsY, tagsW, tagsH)
+        }
+        else {
         
+            // 9.tag标签（下面的）
+            let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            let tagsY: CGFloat = CGRectGetMaxY(self.photosFrame!) + 8
+            let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
+            let tagsH: CGFloat = 15
+            self.tagFrame = CGRECT(tagsX, tagsY, tagsW, tagsH)
+            
+        }
+        
+        // toolBar frame
+        if self.feedModel?.tags == nil {
+        
+            let toolX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            var toolY: CGFloat = 0
+            
+            if feedModel?.hasImage == 0  {
+                
+                toolY = CGRectGetMaxY(self.contentFrame!) + 8
+            }
+            else {
+                
+                toolY = CGRectGetMaxY(self.photosFrame!) + 8
+            }
+            let toolW: CGFloat = SCREEN_WIDTH - toolX
+            let toolH: CGFloat = 30
+            
+            self.toolBarFrame = CGRECT(toolX, toolY, toolW, toolH)
+        }
+        else {
+            
+            let toolX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            let toolY: CGFloat = CGRectGetMaxY(self.tagFrame!) + 8
+            let toolW: CGFloat = SCREEN_WIDTH - toolX
+            let toolH: CGFloat = 30
+            self.toolBarFrame = CGRECT(toolX, toolY, toolW, toolH)
+
+        }
+    
+        // 11.帖子的frame
         let frameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let frameY: CGFloat = 0
         var frameHeight: CGFloat = 0
         let frameWidth: CGFloat  = SCREEN_WIDTH - frameX
-        if feedModel?.hasImage == 0   {
         
-            frameHeight = CGRectGetMaxY(self.contentFrame!) + kCellTopInside
-        }
-        else {
-        
-            frameHeight = CGRectGetMaxY(self.photosFrame!) + kCellTopInside
-        }
+        frameHeight = CGRectGetMaxY(self.toolBarFrame!) + 10
         
         self.frame = CGRECT(frameX, frameY, frameWidth, frameHeight)
         
