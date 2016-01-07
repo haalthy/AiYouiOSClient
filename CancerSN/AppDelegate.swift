@@ -37,6 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = headerColor
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        let dict = [NSFontAttributeName : UIFont.systemFontOfSize(20)]
+        UINavigationBar.appearance().titleTextAttributes = dict
         UINavigationBar.appearance().barStyle = .Black
     }
     

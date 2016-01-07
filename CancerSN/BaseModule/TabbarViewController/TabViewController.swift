@@ -73,6 +73,24 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
 
     }
     
+    // MARK: - Navigation 
+    
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+        
+        let rootVC: UIViewController = navigationController.viewControllers[0]
+        if rootVC != viewController {
+        
+            viewController.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "btn_back"), style: UIBarButtonItemStyle.Plain, target: self, action: "callback")
+        }
+    }
+    
+    // MARK: 返回方法
+    
+    func callback() {
+    
+        (self.viewControllers![self.selectedIndex] as! UINavigationController).popViewControllerAnimated(true)
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -77,10 +77,8 @@ class NetRequestManager: NSObject {
         if self.parameters.count > 0 && self.method != "GET" {
             
             do {
-            
                 // 建立FTTPBody
                 let jsonData:NSData! = try NSJSONSerialization.dataWithJSONObject(                 self.parameters, options: NSJSONWritingOptions())
-                
                 self.request.HTTPBody = jsonData
             }
             catch {

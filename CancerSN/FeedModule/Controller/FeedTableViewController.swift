@@ -8,7 +8,7 @@
 
 import UIKit
 
-let cellIdentifier = "FeedCell"
+let cellFeedIdentifier = "FeedCell"
 
 class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
@@ -27,7 +27,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initVariables()
         initContentView()
         
-        self .getFeedListFromServer()
+       // self .getFeedListFromServer()
         }
 
     // MARK: - Init Variables
@@ -86,7 +86,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
         // tableView 注册
-        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellIdentifier)
+        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
     }
     
     // MARK: - Net Request
@@ -138,14 +138,23 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)! as! FeedCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier)! as! FeedCell
         
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
 
         cell.feedOriginFrame = feedFrame.feedOriginalFrame
         
+        
+        
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

@@ -44,7 +44,7 @@ class NetRequest: NSObject {
     
         let manager = NetRequestManager(url: url, method: "POST", parameters: parameters) { (data, response, error) -> Void in
             
-            self.getDataAndCheck(data, error, success, failed)
+            //self.getDataAndCheck(data, error, success, failed)
         }
         manager.netWorkFire()
     }

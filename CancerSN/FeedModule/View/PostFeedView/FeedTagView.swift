@@ -60,6 +60,7 @@ class FeedTagView: UIView {
             let y: CGFloat = 0
             let w: CGFloat = (self.tagArr![i].sizeWithFont(kTagFont, maxSize: CGSizeMake((CGFloat.max, CGFloat.max)))).width + 6
             let h: CGFloat = 24
+            
             label.frame = CGRECT(x, y, w, h)
         }
     }
