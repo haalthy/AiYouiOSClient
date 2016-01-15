@@ -155,22 +155,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         //关注
 
         if (haalthyService.isFollowingUser(self.profileOwnername as! String) != nil) && (self.username != self.profileOwnername){
-            let followBtnHeight:CGFloat = 23
-            let followBtn = UIButton(frame: CGRectMake(screenWidth - 15 - followBtnWidth , 28 + 45, followBtnWidth, followBtnHeight))
-            followBtn.setTitle("+关注", forState: UIControlState.Normal)
-            followBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
-            followBtn.titleLabel?.font = UIFont(name: fontStr, size: 13.0)
-            followBtn.layer.borderColor = headerColor.CGColor
-            followBtn.layer.borderWidth = 2
-            followBtn.layer.cornerRadius = 2
-            //        self.view.addSubview(followBtn)
+            let followBtn = UIButton(frame: CGRectMake(screenWidth - followBtnRightSpace - followBtnWidth , followBtnTopSpace, followBtnWidth, followBtnHeight))
+            let addFollowingImage = UIImageView(image: UIImage(named: "btn_addFollowing"))
+            followBtn.addSubview(addFollowingImage)
+            followBtn.layer.borderColor = followBtnBorderColor.CGColor
+            followBtn.layer.borderWidth = followBtnBorderWidth
+            followBtn.layer.cornerRadius = cornerRadius
             self.userProfileHeaderView.addSubview(followBtn)
         }
         //昵称 和 profile描述 标签
         let profileLabelWidth: CGFloat = screenWidth - 25 - 40 - 15 - followBtnWidth
         let nicknameLabel = UILabel(frame: CGRectMake(65, 45 + 23, profileLabelWidth, 14))
-        nicknameLabel.textColor = UIColor.grayColor()
-        nicknameLabel.font = UIFont(name: fontStr, size: 14.0)
+        nicknameLabel.textColor = nicknameColor
+        nicknameLabel.font = nicknameFont
         nicknameLabel.text = self.userProfile.valueForKey("displayname") as? String
 //        self.view.addSubview(nicknameLabel)
         self.userProfileHeaderView.addSubview(nicknameLabel)
@@ -182,9 +179,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         profileLabel.text = profileStr
 //        self.view.addSubview(profileLabel)
         self.userProfileHeaderView.addSubview(profileLabel)
-        
         //
-        
     }
     
     
@@ -252,7 +247,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }else{
-            numberOfRows = relatedToMe.count
+            numberOfRows = relatedToMe.count + 1
         }
         return numberOfRows
     }
@@ -273,7 +268,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 rowHeight = patientStatusFrame.cellHeight
             }
         }else{
-            rowHeight = 44
+            if indexPath.row < relatedToMe.count {
+                rowHeight = cellHeight
+            }else{
+                rowHeight = logoutCellHeight
+            }
         }
         return rowHeight
     }
@@ -300,9 +299,26 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 return patientstatusCell
             }
         }else{
-            cell.textLabel?.text = relatedToMe[indexPath.row] as! String
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-         }
+            if indexPath.row < relatedToMe.count{
+                cell.textLabel?.text = relatedToMe[indexPath.row] as! String
+                cell.textLabel?.textColor = cellTextColor
+                cell.textLabel?.font = cellTextFont
+                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            }else{
+                //退出登录
+                let logoutBtn = UIButton(frame: CGRect(x: logoutBtnLeftSpace, y: logoutBtnTopSpace, width: screenWidth - logoutBtnLeftSpace - logoutBtnRightSpce, height: logoutBtnHeight))
+                logoutBtn.backgroundColor = headerColor
+                logoutBtn.setTitle("退出登录", forState: UIControlState.Normal)
+                logoutBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                logoutBtn.titleLabel?.font = logoutBtnTextFont
+                logoutBtn.layer.cornerRadius = cornerRadius
+                logoutBtn.layer.masksToBounds = true
+                cell.addSubview(logoutBtn)
+            }
+            let seperatorLine:UIView = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: seperatorLineH))
+            seperatorLine.backgroundColor = seperateLineColor
+            cell.addSubview(seperatorLine)
+        }
         return cell
     }
 

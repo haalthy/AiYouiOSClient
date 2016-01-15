@@ -14,11 +14,18 @@ let herProfileStr: String = String("与她相关")
 let hisProfileStr: String = String("与他相关")
 let processHeaderStr: String = String("治疗过程")
 
+//nickname
+let nicknameFont = UIFont.systemFontOfSize(14)
+let nicknameColor = UIColor.init(red: 51 / 255.0, green: 51 / 255.0, blue: 51 / 255.0, alpha: 1)
+
 //关注 按钮
-let followBtnTopSpace: CGFloat = CGFloat(20)
+let followBtnTopSpace: CGFloat = CGFloat(65)
 let followBtnWidth: CGFloat = CGFloat(64)
 let followBtnHeight: CGFloat = CGFloat(40)
 let followBtnRightSpace: CGFloat = CGFloat(15)
+let cornerRadius: CGFloat = CGFloat(2)
+let followBtnBorderWidth: CGFloat = CGFloat(1)
+let followBtnBorderColor: UIColor = UIColor.init(red:228 / 255.0, green:228 / 255.0, blue:228 / 255.0, alpha:1)
 
 //chart图表内框架设置
 let userProfileChartHeaderFontSize: UIFont = UIFont.systemFontOfSize(12)
@@ -111,4 +118,26 @@ let patientstatusSeperateStr: String = String("::")
 
 //与我相关
 let relatedToMe: NSArray = ["我的信息列表", "@我的", "关注", "基本资料"]
+let cellHeight: CGFloat = CGFloat(49)
+let cellTextColor: UIColor = UIColor.init(red: 51 / 255.0, green: 51 / 255.0, blue: 51 / 255.0, alpha: 1)
+let cellTextFont: UIFont = UIFont.systemFontOfSize(15)
+//退出登录
+let logoutCellHeight: CGFloat = CGFloat(105)
+let logoutBtnTopSpace: CGFloat = CGFloat(30)
+let logoutBtnLeftSpace: CGFloat = CGFloat(15)
+let logoutBtnRightSpce: CGFloat = CGFloat(15)
+let logoutBtnHeight: CGFloat = CGFloat(45)
+let logoutBtnTextFont: UIFont = UIFont.systemFontOfSize(17)
+
+//chart图表
+let chartLeftSpace: CGFloat = CGFloat(18)
+let spaceBetweenClinicItems: CGFloat = CGFloat(43)
+let chartButtomLineButtomSpace: CGFloat =  CGFloat(33)
+let chartButtomLineTopSpace: CGFloat =  CGFloat(158)
+let chartButtomLineHeight: CGFloat = CGFloat(1)
+let chartButtomLineColor: UIColor = UIColor.init(red:204 / 255.0, green:204 / 255.0, blue:204 / 255.0, alpha:1)
+let chartDateLabelWidth: CGFloat = CGFloat(26)
+let chartDateLabelHeight: CGFloat = CGFloat(9)
+let chartDateTopSpace: CGFloat = CGFloat(2)
+let chartDateFont = UIFont.systemFontOfSize(9)
 
