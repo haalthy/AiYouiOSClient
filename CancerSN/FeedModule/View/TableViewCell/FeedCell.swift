@@ -65,14 +65,14 @@ class FeedCell: UITableViewCell {
         
         // 1.头像
         let portraitView = UIImageView()
-        portraitView.image = UIImage(named: "")
+        portraitView.addImageCache((feedModel?.portraitURL)!, placeHolder: "icon_profile")
         portraitView.frame = (feedOriginFrame?.portraitFrame)!
         portraitView.backgroundColor = UIColor.greenColor()
         self.addSubview(portraitView)
         
         // 2.昵称
         let nickname = UILabel()
-        nickname.text = feedModel?.nickname
+        nickname.text = feedModel?.displayname
         nickname.frame = (self.feedOriginFrame?.nicknameFrame)!
         nickname.textColor = kNicknameColor
         nickname.font = UIFont.systemFontOfSize(kCellNicknameFontSize)
@@ -95,24 +95,27 @@ class FeedCell: UITableViewCell {
         
         // 5.年龄
         let ageLabel = UILabel()
-        ageLabel.text = feedModel?.age
+        ageLabel.text = String.intToString((feedModel?.age)!)
+        //print(String(feedModel?.age))
         ageLabel.frame = (self.feedOriginFrame?.ageFrame)!
         ageLabel.textColor = kAgeColor
         self.addSubview(ageLabel)
         
-        if feedModel?.tag != nil {
+        if feedModel?.highlight != nil {
             
             // 6.标签
-            let tagView = FeedTagView()
-            tagView.tagArr =  (feedModel?.tag)?.componentsSeparatedByString("**")
-            tagView.frame = (self.feedOriginFrame?.tagFrame)!
-            self.addSubview(tagView)
+            var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
+            highTagsArr.removeLast()
+            
+            let highView = FeedTagView(frame: (self.feedOriginFrame?.cureFrame)!, highTag: highTagsArr)
+            highView.frame = (self.feedOriginFrame?.cureFrame)!
+            self.addSubview(highView)
         }
         
         
         // 7.帖子内容
         let contentLabel = UILabel()
-        contentLabel.text = feedModel?.feedContent
+        contentLabel.text = feedModel?.body
         contentLabel.frame = (self.feedOriginFrame?.contentFrame)!
         contentLabel.textColor = kContentColor
         contentLabel.font = UIFont.systemFontOfSize(kContentFontSize)
@@ -120,15 +123,63 @@ class FeedCell: UITableViewCell {
         contentLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         self.addSubview(contentLabel)
         
-        if feedModel?.picArr?.count > 0 {
+        if feedModel?.hasImage > 0 {
         
             // 8.配图
+                        
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
-            picsView.picsUrl = (feedModel?.picArr)!
+            let picArr: Array<String> = ((feedModel!.imageURL)?.componentsSeparatedByString(";"))!
+            picsView.picsUrl = picArr;
             self.addSubview(picsView)
         }
         
+        // 8.tags
+        if feedModel?.tags != nil {
+            
+            let tagsLabel = UILabel()
+            tagsLabel.frame = (self.feedOriginFrame?.tagFrame)!
+            tagsLabel.textColor = kAgeColor
+            // 获取内容
+            tagsLabel.text = self.showTagsWithString((feedModel?.tags)!)
+            tagsLabel.font = UIFont.systemFontOfSize(kContentFontSize)
+            self.addSubview(tagsLabel)
+        }
+        
+        // 9.toolbar
+        let toolsView: PostFeedToolBar = PostFeedToolBar()
+        toolsView.frame = (self.feedOriginFrame?.toolBarFrame)!
+        toolsView.backgroundColor = UIColor.clearColor()
+        toolsView.initVariables(feedModel!)
+        toolsView.layoutWithContent()
+        self.addSubview(toolsView)
+
+        
     }
 
+    // MARK: - 功能方法
+    
+    // MARK: tag标签处理
+    
+    func showTagsWithString(tagsStr: String) -> String {
+    
+        let tagArr: Array<String> = tagsStr.componentsSeparatedByString("**")
+        
+        var resultStr: String = "Tag: "
+        
+        for  tag in tagArr {
+        
+            // tag为空不拼接
+            if tag == "" {
+                break
+            }
+            resultStr = "\(resultStr)\(tag), "
+        }
+        
+        let result: NSString = resultStr as NSString
+        // 去除最后一个逗号
+        resultStr = result.substringToIndex(result.length - 2)
+        
+        return resultStr
+    }
 }

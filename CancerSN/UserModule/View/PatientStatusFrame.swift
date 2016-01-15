@@ -100,11 +100,12 @@ class PatientStatusFrame: NSObject {
             patientstatusY += imageTopSpace
             
             let feedModel = PostFeedStatus()
-            feedModel.picArr = imageURLArr
+            feedModel.imageURL = imageURLStr
+//            feedModel.picArr = imageURLArr
             
             //配图
             
-            let photosSize: CGSize = FeedPhotosView.layoutForPhotos((feedModel.picArr?.count)!)
+            let photosSize: CGSize = FeedPhotosView.layoutForPhotos(imageURLArr.count)
             patientstatusY += photosSize.height + imageTopSpace
         }
         

@@ -127,18 +127,19 @@ class PatientStatusTableViewCell: UITableViewCell {
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace
             var feedModel = PostFeedStatus()
-            feedModel.picArr = imageURLArr
+            feedModel.imageURL = imageURLStr
+//            feedModel.picArr = imageURLArr
             
             //配图
             let photosX: CGFloat = patientstatusX
             let photosY: CGFloat = patientstatusY
             
-            let photosSize: CGSize = FeedPhotosView.layoutForPhotos((feedModel.picArr?.count)!)
+            let photosSize: CGSize = FeedPhotosView.layoutForPhotos((imageURLArr.count))
             let photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
             
             let picsView = FeedPhotosView(feedModel: feedModel, frame: photosFrame)
             picsView.frame = photosFrame
-            picsView.picsUrl = (feedModel.picArr)!
+            picsView.picsUrl = imageURLArr
             self.addSubview(picsView)
         }
         self.addSubview(seperatorLine)

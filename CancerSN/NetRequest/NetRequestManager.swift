@@ -64,7 +64,9 @@ class NetRequestManager: NSObject {
         
         if self.parameters.count > 0 {
             
-            self.request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            //self.request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            self.request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            self.request.addValue("application/json", forHTTPHeaderField: "Accept")
         }
     }
     
@@ -73,7 +75,17 @@ class NetRequestManager: NSObject {
     func buildRequestBody() {
         
         if self.parameters.count > 0 && self.method != "GET" {
-            self.request.HTTPBody = buildParameters(self.parameters).dataUsingEncoding(NSUTF8StringEncoding)!
+            
+            do {
+                // 建立FTTPBody
+                let jsonData:NSData! = try NSJSONSerialization.dataWithJSONObject(                 self.parameters, options: NSJSONWritingOptions())
+                self.request.HTTPBody = jsonData
+            }
+            catch {
+            
+                print("error")
+            }
+            //self.request.HTTPBody = buildParameters(self.parameters).dataUsingEncoding(NSUTF8StringEncoding)!
         }
     }
     

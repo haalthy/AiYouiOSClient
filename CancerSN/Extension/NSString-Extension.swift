@@ -11,6 +11,11 @@ import UIKit
 
 extension String {
 
+    static func intToString(intValue: Int) -> String {
+        
+        return String(format: "%i", intValue)
+    }
+    
     // 动态计算字符串长度
 
     func sizeWithFont(font: UIFont, maxSize: CGSize) -> CGSize {
@@ -29,4 +34,5 @@ extension String {
 
         return size
     }
-}
+    
+    }

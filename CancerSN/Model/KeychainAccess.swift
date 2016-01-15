@@ -11,7 +11,7 @@ import Foundation
 class KeychainAccess: NSObject {
     
     func setPasscode(identifier: String, passcode: String) {
-        var dataFromString: NSData = passcode.dataUsingEncoding(NSUTF8StringEncoding)!;
+        let dataFromString: NSData = passcode.dataUsingEncoding(NSUTF8StringEncoding)!;
         let keychainQuery = [String(kSecClass): kSecClassGenericPassword, String(kSecAttrService): identifier, String(kSecValueData): dataFromString]
 
         SecItemDelete(keychainQuery as CFDictionaryRef);

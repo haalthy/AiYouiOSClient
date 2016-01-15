@@ -155,16 +155,13 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PC7-0a-wxG" secondAttribute="trailing" id="7GM-rK-Ofc"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="BAE-rh-Pgp"/>
+                            <constraint firstAttribute="bottom" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="EWj-7p-WxJ"/>
                             <constraint firstItem="PC7-0a-wxG" firstAttribute="top" secondItem="gNC-0s-BiD" secondAttribute="top" id="Ee6-Za-i6U">
                                 <variation key="widthClass=compact" constant="45"/>
                                 <variation key="heightClass=regular-widthClass=compact" constant="44"/>
                             </constraint>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="top" secondItem="tRF-t9-zLr" secondAttribute="bottom" id="NZB-Pl-0lw"/>
                             <constraint firstItem="5Ce-YD-0MS" firstAttribute="leading" secondItem="gNC-0s-BiD" secondAttribute="leading" id="UuZ-BF-HgS"/>
-                            <constraint firstItem="O9c-bF-ZlT" firstAttribute="top" secondItem="PC7-0a-wxG" secondAttribute="bottom" id="brA-WK-nwf">
-                                <variation key="widthClass=compact" constant="-45"/>
-                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="5Ce-YD-0MS" secondAttribute="trailing" id="xec-ee-P2o"/>
                         </constraints>
                         <variation key="default">
@@ -174,8 +171,8 @@
                             <mask key="constraints">
                                 <exclude reference="7GM-rK-Ofc"/>
                                 <exclude reference="BAE-rh-Pgp"/>
+                                <exclude reference="EWj-7p-WxJ"/>
                                 <exclude reference="Ee6-Za-i6U"/>
-                                <exclude reference="brA-WK-nwf"/>
                                 <exclude reference="NZB-Pl-0lw"/>
                                 <exclude reference="UuZ-BF-HgS"/>
                                 <exclude reference="xec-ee-P2o"/>
@@ -189,10 +186,14 @@
                                 <include reference="7GM-rK-Ofc"/>
                                 <include reference="BAE-rh-Pgp"/>
                                 <include reference="Ee6-Za-i6U"/>
-                                <include reference="brA-WK-nwf"/>
                                 <include reference="NZB-Pl-0lw"/>
                                 <include reference="UuZ-BF-HgS"/>
                                 <include reference="xec-ee-P2o"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="EWj-7p-WxJ"/>
                             </mask>
                         </variation>
                     </view>
@@ -219,6 +220,7 @@
                         <outlet property="headerView" destination="5Ce-YD-0MS" id="HWD-nh-hKD"/>
                         <outlet property="tableView" destination="PC7-0a-wxG" id="pXv-MT-J0U"/>
                         <segue destination="Rai-sY-pfa" kind="push" identifier="EnterClinicTVC" id="ooM-RZ-CwX"/>
+                        <segue destination="Yr6-xU-CRW" kind="push" identifier="EnterDetailView" id="o0g-uE-Ong"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIH-YP-hgA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -586,10 +588,28 @@
             </objects>
             <point key="canvasLocation" x="5167.5" y="406.5"/>
         </scene>
-        <!--Show Post Detail Table View Controller-->
+        <!--详情-->
+        <scene sceneID="1zq-dv-6iC">
+            <objects>
+                <viewController id="Yr6-xU-CRW" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tTn-Tv-6rb"/>
+                        <viewControllerLayoutGuide type="bottom" id="KcY-d2-gOy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lLa-9g-eR9">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="详情" id="XTP-7l-RP1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gYh-OO-yv5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5248.5" y="-480"/>
+        </scene>
+        <!--详情-->
         <scene sceneID="Vz0-q0-ET7">
             <objects>
-                <tableViewController storyboardIdentifier="PostDetailEntry" hidesBottomBarWhenPushed="YES" id="HhV-a0-I6y" customClass="ShowPostDetailTableViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="PostDetailEntry" hidesBottomBarWhenPushed="YES" id="HhV-a0-I6y" customClass="FeedD" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ui1-XK-2gk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -954,22 +974,12 @@
                             <outlet property="delegate" destination="HhV-a0-I6y" id="QjK-B4-K34"/>
                         </connections>
                     </tableView>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="u1D-RY-XOm"/>
-                        <barButtonItem title="添加评论" id="4bg-ac-H3o">
-                            <color key="tintColor" red="0.1192146986" green="0.66784882140000001" blue="0.78261204780000004" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="addCommentView:" destination="HhV-a0-I6y" id="cQ5-l9-yUV"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="chc-FO-mHk"/>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" id="Ddg-PL-7fI"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="详情" id="Ddg-PL-7fI"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oiW-f3-Q9H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5248.5" y="-480"/>
+            <point key="canvasLocation" x="5799" y="-488.25"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KbP-Kc-3Ex">
