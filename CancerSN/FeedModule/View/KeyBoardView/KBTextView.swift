@@ -29,11 +29,12 @@ class KBTextView: UITextView {
         
         // 默认字体与颜色
         self.placeHolder = ""
-        self.placeHolderColor = UIColor.lightGrayColor()
-        
+        self.placeHolderColor = RGB(204, 204, 204)
         self.layer.borderColor = kKBTextViewBoardColor.CGColor
         self.layer.borderWidth = kKBTextViewBoardWidth
         self.layer.cornerRadius = 4.0
+        
+        self.font = UIFont.systemFontOfSize(18)
         
     }
 
@@ -49,13 +50,16 @@ class KBTextView: UITextView {
         if self.text == "" {
         
             var placeHolderRect: CGRect = CGRECT(0, 0, 0, 0)
-            placeHolderRect.origin.y = 8
+            placeHolderRect.origin.y = 9
             placeHolderRect.size.height = CGRectGetHeight(self.frame) - 8
             placeHolderRect.origin.x = 5
             placeHolderRect.size.width = CGRectGetWidth(self.frame) - 5
             
-            self.placeHolderColor!.set()
-            
+           // self.placeHolderColor!.set()
+           
+            let context: CGContextRef = UIGraphicsGetCurrentContext()!
+            CGContextSetFillColorWithColor(context, self.placeHolderColor?.CGColor)
+
             // 定义属性
             let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
@@ -65,9 +69,9 @@ class KBTextView: UITextView {
             ]
             self.placeHolder?.drawInRect(placeHolderRect, withAttributes: dict)
             
+
         }
     }
-
 
     func textChange(noti: NSNotification) {
         
