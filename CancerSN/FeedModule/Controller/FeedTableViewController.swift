@@ -116,7 +116,13 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         performSegueWithIdentifier("EnterClinicTVC", sender: self)
     }
+    
+    // 进入到选择标签页
 
+    @IBAction func pushTagAction(sender: AnyObject) {
+        
+        performSegueWithIdentifier("EnterTagView", sender: self)
+    }
     
     // MARK: - Table view data source
 

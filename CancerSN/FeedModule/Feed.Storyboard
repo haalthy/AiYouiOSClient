@@ -215,6 +215,9 @@
                             <state key="normal" title="我的智囊团" image="icon_down">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
+                            <connections>
+                                <action selector="pushTagAction:" destination="2C5-eZ-hoO" eventType="touchUpInside" id="0rD-Qa-87h"/>
+                            </connections>
                         </button>
                     </navigationItem>
                     <connections>
@@ -222,6 +225,7 @@
                         <outlet property="tableView" destination="PC7-0a-wxG" id="pXv-MT-J0U"/>
                         <segue destination="Rai-sY-pfa" kind="push" identifier="EnterClinicTVC" id="ooM-RZ-CwX"/>
                         <segue destination="Yr6-xU-CRW" kind="push" identifier="EnterDetailView" id="o0g-uE-Ong"/>
+                        <segue destination="VgM-G8-VMe" kind="push" identifier="EnterTagView" id="M2d-bA-tK9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIH-YP-hgA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -580,7 +584,37 @@
                         </variation>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="2U3-Ke-eqL"/>
+                    <navigationItem key="navigationItem" id="2U3-Ke-eqL">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="STU-Dz-Yh8">
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0t0-ew-oOo">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <scopeButtonTitles>
+                                        <string>Title</string>
+                                    </scopeButtonTitles>
+                                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                        <rect key="frame" x="-2" y="-5" width="378" height="44"/>
+                                    </variation>
+                                </searchBar>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <variation key="default">
+                                <mask key="subviews">
+                                    <exclude reference="0t0-ew-oOo"/>
+                                </mask>
+                            </variation>
+                            <variation key="heightClass=regular-widthClass=compact">
+                                <mask key="subviews">
+                                    <include reference="0t0-ew-oOo"/>
+                                </mask>
+                            </variation>
+                        </view>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="wB4-6U-CIj" id="Bha-5V-afM"/>
                     </connections>
@@ -642,14 +676,11 @@
                                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="内容" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1u-Gm-yFM">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="内容" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="315" translatesAutoresizingMaskIntoConstraints="NO" id="f1u-Gm-yFM">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="65" y="64" width="155" height="21"/>
-                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>
@@ -758,25 +789,67 @@
             </objects>
             <point key="canvasLocation" x="5248.5" y="-480"/>
         </scene>
-        <!--详情-->
-        <scene sceneID="Vz0-q0-ET7">
+        <!--请选择您关注的标签-->
+        <scene sceneID="Dbk-72-ZOs">
             <objects>
-                <tableViewController storyboardIdentifier="PostDetailEntry" hidesBottomBarWhenPushed="YES" id="HhV-a0-I6y" customClass="FeedD" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ui1-XK-2gk">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="VgM-G8-VMe" customClass="FeedTagsViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qay-pa-k5O"/>
+                        <viewControllerLayoutGuide type="bottom" id="akV-qL-shW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dbv-Ny-kjA">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="5" sectionFooterHeight="5" translatesAutoresizingMaskIntoConstraints="NO" id="3TL-jy-dWN">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="VgM-G8-VMe" id="mNF-oI-jAk"/>
+                                    <outlet property="delegate" destination="VgM-G8-VMe" id="LU7-f0-3y2"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="HhV-a0-I6y" id="rvE-r6-U5j"/>
-                            <outlet property="delegate" destination="HhV-a0-I6y" id="QjK-B4-K34"/>
-                        </connections>
-                    </tableView>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="详情" id="Ddg-PL-7fI"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oiW-f3-Q9H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="3TL-jy-dWN" secondAttribute="trailing" id="4iy-N5-0oX"/>
+                            <constraint firstItem="3TL-jy-dWN" firstAttribute="leading" secondItem="Dbv-Ny-kjA" secondAttribute="leading" id="Noj-kA-3AA"/>
+                            <constraint firstItem="akV-qL-shW" firstAttribute="top" secondItem="3TL-jy-dWN" secondAttribute="bottom" id="bqV-tl-f3u"/>
+                            <constraint firstItem="3TL-jy-dWN" firstAttribute="top" secondItem="Dbv-Ny-kjA" secondAttribute="top" id="pHj-uc-S6Y">
+                                <variation key="heightClass=regular-widthClass=compact" constant="64"/>
+                            </constraint>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="3TL-jy-dWN"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="bqV-tl-f3u"/>
+                                <exclude reference="4iy-N5-0oX"/>
+                                <exclude reference="Noj-kA-3AA"/>
+                                <exclude reference="pHj-uc-S6Y"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="3TL-jy-dWN"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="bqV-tl-f3u"/>
+                                <include reference="4iy-N5-0oX"/>
+                                <include reference="Noj-kA-3AA"/>
+                                <include reference="pHj-uc-S6Y"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="请选择您关注的标签" id="VdX-2r-8Wo"/>
+                    <connections>
+                        <outlet property="tableView" destination="3TL-jy-dWN" id="B7f-7e-WL0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ERe-pw-mgt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5955" y="-479.25"/>
+            <point key="canvasLocation" x="6111" y="-480"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KbP-Kc-3Ex">

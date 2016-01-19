@@ -44,7 +44,7 @@ class NetRequest: NSObject {
     
         let manager = NetRequestManager(url: url, method: "POST", parameters: parameters) { (data, response, error) -> Void in
             
-            //self.getDataAndCheck(data, error, success, failed)
+            self.getDataAndCheck(data, error, success, failed)
         }
         manager.netWorkFire()
     }
@@ -89,6 +89,49 @@ class NetRequest: NSObject {
         
     }
     
+    // MARK: 同步GET请求, 带参数
+    
+    func GET_A(url: String,  parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    
+        var session: NSURLSession = NSURLSession()
+        var request: NSMutableURLRequest = NSMutableURLRequest()
+        var task: NSURLSessionTask!
+        
+        let semaphore = dispatch_semaphore_create(0)
+        request = NSMutableURLRequest(URL: NSURL(string: url + "?" + self.buildParameters(parameters))!)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+
+        // 网络配置
+        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        // 设置请求超时时间
+        config.timeoutIntervalForRequest = 30
+        
+        session = NSURLSession(configuration: config)
+
+        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            
+            // 返回任务结果
+            if error == nil {
+            
+                // 解析json
+                let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                self.callbackWithResult(json, success: success, failed: failed)
+                
+            }
+            else {
+                
+                failed(content: ["": ""], message: "网络异常")
+            }
+        
+            dispatch_semaphore_signal(semaphore)
+        })
+        // 任务结束
+        task.resume()
+
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+    }
+    
     // MARK: - 自定义
     
     // MARK: not Params
@@ -121,7 +164,7 @@ class NetRequest: NSObject {
     func callbackWithResult(data: NSDictionary, success: successBlock, failed: failedBlock) {
     
         // token无效
-        if (data["error"] as! String) == "invalid_token" {
+        if (data["error"] as? String) == "invalid_token" {
             
             // 回归主线程
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -150,13 +193,13 @@ class NetRequest: NSObject {
     
     // MARK: - 异常处理及获取数据
     
-    func getDataAndCheck(data: NSData, _ error: NSError!, _ success: successBlock, _ failed: failedBlock) {
+    func getDataAndCheck(data: NSData?, _ error: NSError!, _ success: successBlock, _ failed: failedBlock) {
     
         // 获取成功
         if error == nil {
             
             // 解析json
-            let json = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+            let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
             self.callbackWithResult(json, success: success, failed: failed)
             
         }
@@ -179,4 +222,45 @@ class NetRequest: NSObject {
             self.url = url
         }
     }
+    
+    // MARK: - 动态拼接参数
+    
+    func buildParameters(parameters: [String : AnyObject]) -> String {
+        
+        var components: [(String, String)] = []
+        for key in Array(parameters.keys).sort(<) {
+            let value: AnyObject! = parameters[key]
+            components += self.queryComponents(key, value)
+        }
+        return (components.map{"\($0)=\($1)"} as [String]).joinWithSeparator("&")
+    }
+    
+    
+    func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
+        var components: [(String, String)] = []
+        if let dictionary = value as? [String: AnyObject] {
+            for (nestedKey, value) in dictionary {
+                components += queryComponents("\(key)[\(nestedKey)]", value)
+            }
+        } else if let array = value as? [AnyObject] {
+            for value in array {
+                components += queryComponents("\(key)", value)
+            }
+        } else {
+            components.appendContentsOf([(escape(key), escape("\(value)"))])
+        }
+        
+        return components
+    }
+    
+    func escape(string: String) -> String {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+        
+        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
+        allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
+        
+        return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? ""
+    }
+
 }
