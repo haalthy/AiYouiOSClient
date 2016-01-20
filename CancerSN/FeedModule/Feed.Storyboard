@@ -203,7 +203,7 @@
                         <barButtonItem key="leftBarButtonItem" image="icon_search" id="kGw-wf-M0a">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="87n-XM-dTI" kind="push" id="Meu-SP-R53"/>
+                                <segue destination="U8h-Mn-B3t" kind="push" id="Ap9-jP-5cP"/>
                             </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ULL-bx-Ack">
@@ -231,6 +231,59 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIH-YP-hgA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4383" y="-480"/>
+        </scene>
+        <!--搜索-->
+        <scene sceneID="7dX-CA-qmN">
+            <objects>
+                <viewController id="U8h-Mn-B3t" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="LZP-nU-Bs1"/>
+                        <viewControllerLayoutGuide type="bottom" id="Hft-y4-JE2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UcT-2K-TDO">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="IRU-yt-D36">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="64" width="400" height="44"/>
+                                </variation>
+                                <connections>
+                                    <outlet property="delegate" destination="U8h-Mn-B3t" id="IuS-pm-6MW"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="IRU-yt-D36"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="IRU-yt-D36"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="搜索" id="QFW-Ab-F7x"/>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="30y-jS-SgH" id="2pR-gl-h67"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gkt-Pm-nSK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="30y-jS-SgH">
+                    <connections>
+                        <outlet property="delegate" destination="U8h-Mn-B3t" id="Wht-At-kXT"/>
+                        <outlet property="searchBar" destination="IRU-yt-D36" id="Drf-to-Was"/>
+                        <outlet property="searchContentsController" destination="U8h-Mn-B3t" id="wSi-9Q-vHT"/>
+                        <outlet property="searchResultsDataSource" destination="U8h-Mn-B3t" id="tXH-Y6-eje"/>
+                        <outlet property="searchResultsDelegate" destination="U8h-Mn-B3t" id="Wcm-Qn-EGa"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="5248.5" y="254.25"/>
         </scene>
         <!--Discover Table View Controller-->
         <scene sceneID="65B-DD-gAP">
@@ -471,7 +524,8 @@
                                         <exclude reference="mrD-Wc-W7Q"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="4" y="152" width="392" height="648"/>
                                     <mask key="constraints">
                                         <exclude reference="mrD-Wc-W7Q"/>
                                     </mask>
@@ -485,6 +539,9 @@
                                     <segment title="查找治疗方案"/>
                                 </segments>
                                 <color key="tintColor" red="0.1192146986" green="0.66784882140000001" blue="0.78261204780000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="12" y="114" width="377" height="29"/>
+                                </variation>
                                 <connections>
                                     <action selector="indexChanged:" destination="87n-XM-dTI" eventType="valueChanged" id="qee-VW-xTJ"/>
                                 </connections>
@@ -495,6 +552,9 @@
                                 <color key="tintColor" red="0.1192146986" green="0.66784882140000001" blue="0.78261204780000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="0.1176470588" green="0.66666666669999997" blue="0.78178967929999998" alpha="0.73999999999999999" colorSpace="calibratedRGB"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="4" y="64" width="392" height="44"/>
+                                </variation>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -621,7 +681,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DMp-cc-KBQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5167.5" y="406.5"/>
+            <point key="canvasLocation" x="5992.5" y="479.25"/>
         </scene>
         <!--详情-->
         <scene sceneID="1zq-dv-6iC">

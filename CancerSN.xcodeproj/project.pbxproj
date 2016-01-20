@@ -27,6 +27,10 @@
 		6B5B3AC71C20072700CB58D4 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */; };
 		6B7FA2AA1C2119A600094FB0 /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */; };
 		6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */; };
+		6B8412341C4F7C9F00BE54B0 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B8412301C4F7C9F00BE54B0 /* 37x-Checkmark.png */; };
+		6B8412351C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B8412311C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png */; };
+		6B8412361C4F7C9F00BE54B0 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8412331C4F7C9F00BE54B0 /* MBProgressHUD.m */; };
+		6B8412391C4F7E5900BE54B0 /* HudProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8412381C4F7E5900BE54B0 /* HudProgressManager.swift */; };
 		6B854F0A1C22AC370027FE44 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B854F091C22AC370027FE44 /* TabViewController.swift */; };
 		6B854F121C23AB700027FE44 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B854F111C23AB700027FE44 /* PostViewController.swift */; };
 		6B8A46F21C43454F0001F164 /* FaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8A46F11C43454F0001F164 /* FaceView.swift */; };
@@ -274,6 +278,11 @@
 		6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		6B7FA2A91C2119A600094FB0 /* SwiftNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftNotice.swift; sourceTree = "<group>"; };
 		6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthyConfigure.swift; sourceTree = "<group>"; };
+		6B8412301C4F7C9F00BE54B0 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
+		6B8412311C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark@2x.png"; sourceTree = "<group>"; };
+		6B8412321C4F7C9F00BE54B0 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		6B8412331C4F7C9F00BE54B0 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		6B8412381C4F7E5900BE54B0 /* HudProgressManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudProgressManager.swift; sourceTree = "<group>"; };
 		6B854F091C22AC370027FE44 /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		6B854F111C23AB700027FE44 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		6B8A46F11C43454F0001F164 /* FaceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceView.swift; sourceTree = "<group>"; };
@@ -699,6 +708,25 @@
 			path = SwiftNotice;
 			sourceTree = "<group>";
 		};
+		6B84122F1C4F7C9F00BE54B0 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				6B8412301C4F7C9F00BE54B0 /* 37x-Checkmark.png */,
+				6B8412311C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png */,
+				6B8412321C4F7C9F00BE54B0 /* MBProgressHUD.h */,
+				6B8412331C4F7C9F00BE54B0 /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		6B8412371C4F7E2900BE54B0 /* HudProgressManager */ = {
+			isa = PBXGroup;
+			children = (
+				6B8412381C4F7E5900BE54B0 /* HudProgressManager.swift */,
+			);
+			path = HudProgressManager;
+			sourceTree = "<group>";
+		};
 		6B854F031C22AB750027FE44 /* BaseModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -940,6 +968,7 @@
 		6B93FC9D1C1E5CBE00A81EA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6B8412371C4F7E2900BE54B0 /* HudProgressManager */,
 				6BA46E351C31145800DCBD11 /* UtilsFunction */,
 				6B93FC9F1C1E66CA00A81EA9 /* CanlendarManager */,
 				6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */,
@@ -950,6 +979,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				6B84122F1C4F7C9F00BE54B0 /* MBProgressHUD */,
 				6B2BF6D31C3BA3AB00654A91 /* D3Model */,
 				DDD6A10B1C37C28C00C258D2 /* PNChart */,
 				6BBFD91B1C32785700282573 /* JsonModel */,
@@ -1402,6 +1432,7 @@
 				6B8A47351C434E940001F164 /* emoji_bell_s.png in Resources */,
 				6B8A47451C434E940001F164 /* emoji_corner_left.png in Resources */,
 				6BBFD9221C32785800282573 /* Info-iOS.plist in Resources */,
+				6B8412341C4F7C9F00BE54B0 /* 37x-Checkmark.png in Resources */,
 				6B8A472A1C434E940001F164 /* btn_publish_face_a@3x.png in Resources */,
 				6B93FC891C1E5C3800A81EA9 /* Registeration.Storyboard in Resources */,
 				6B8A473B1C434E940001F164 /* emoji_characters_n.png in Resources */,
@@ -1427,6 +1458,7 @@
 				6B8A47491C434E940001F164 /* emoji_face_n.png in Resources */,
 				6B93FCDF1C1E682300A81EA9 /* grayline.png in Resources */,
 				6BBFD90B1C3273F900282573 /* MJRefresh.bundle in Resources */,
+				6B8412351C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png in Resources */,
 				6B8A475D1C434E940001F164 /* EmojisList.plist in Resources */,
 				6B8A47291C434E940001F164 /* btn_publish_face_a@2x.png in Resources */,
 				6B8A47371C434E940001F164 /* emoji_car_n.png in Resources */,
@@ -1457,6 +1489,7 @@
 				DDD6A1321C37C28C00C258D2 /* PNColor.m in Sources */,
 				6B93FC551C1E5A9D00A81EA9 /* UserEntryViewController.swift in Sources */,
 				6BBFD9071C3273F900282573 /* MJRefreshBackStateFooter.m in Sources */,
+				6B8412361C4F7C9F00BE54B0 /* MBProgressHUD.m in Sources */,
 				6BA14E831C4CB38200B6FDD1 /* SubTagModel.swift in Sources */,
 				6B93FCBD1C1E66CA00A81EA9 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */,
@@ -1496,6 +1529,7 @@
 				6BBFD8FD1C3273F900282573 /* MJRefreshAutoFooter.m in Sources */,
 				6B93FCC91C1E66CA00A81EA9 /* CVCalendarViewDelegate.swift in Sources */,
 				6B93FC4F1C1E5A9D00A81EA9 /* CommentListTableViewController.swift in Sources */,
+				6B8412391C4F7E5900BE54B0 /* HudProgressManager.swift in Sources */,
 				6B93FCC31C1E66CA00A81EA9 /* CVCalendarTouchController.swift in Sources */,
 				6B93FBFD1C1E58A000A81EA9 /* GetAccessToken.swift in Sources */,
 				6B93FCBA1C1E66CA00A81EA9 /* CVAuxiliaryView.swift in Sources */,

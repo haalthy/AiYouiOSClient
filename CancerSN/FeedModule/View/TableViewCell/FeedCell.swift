@@ -22,6 +22,9 @@ let kGenderColor: UIColor = RGB(153, 153, 153)
 // 内容颜色
 let kContentColor: UIColor = RGB(51, 51, 51)
 
+// clinic颜色
+let kClinicColor: UIColor = RGB(153, 153, 153)
+
 // 昵称字体
 let kCellNicknameFontSize: CGFloat = 16.0
 
@@ -30,6 +33,99 @@ let kFeedTypeFontSize: CGFloat = 16.0
 
 // 内容字体大小
 let kContentFontSize: CGFloat = 16.0
+
+// 得到病变位置
+
+func getPatientLocation(name: String) -> String {
+
+    var resultStr: String = ""
+    switch name {
+        
+    case "liver":
+        resultStr = "肝部"
+        break
+    case "kidney":
+        resultStr = "肾部"
+        break
+    case "lung":
+        resultStr = "肺部"
+        break
+    case "bravery":
+        resultStr = "胆管"
+        break
+    case "intestine":
+        resultStr = "肠部"
+        break
+    case "stomach":
+        resultStr = "胃部"
+        break
+    case "female":
+        resultStr = "妇科"
+        break
+    case "blood":
+        resultStr = "血液"
+        break
+
+    default: break
+    }
+    
+    return resultStr
+
+}
+
+// 得到病例分析
+
+func getPathological(name: String) -> String {
+
+    var resultStr: String = ""
+    switch name {
+        
+    case "adenocarcinoma":
+        resultStr = "腺癌"
+        break
+    case "carcinoma":
+        resultStr = "鳞癌"
+        break
+    case "AdenosquamousCarcinoma":
+        resultStr = "腺鳞癌"
+        break
+        
+    default: break
+    }
+    
+    return resultStr
+
+}
+
+// 得到病例期号
+
+func getPatientNum(index: Int) -> String {
+
+    var resultStr: String = ""
+    switch index {
+        
+    case 0:
+        resultStr = ""
+        break
+    case 1:
+        resultStr = "I"
+        break
+    case 2:
+        resultStr = "II"
+        break
+    case 3:
+        resultStr = "III"
+        break
+    case 4:
+        resultStr = "IV"
+        break
+
+    default: break
+    }
+    
+    return resultStr
+
+}
 
 class FeedCell: UITableViewCell {
 
@@ -80,7 +176,7 @@ class FeedCell: UITableViewCell {
         
         // 3.帖子类别
         let feedTypeLabel = UILabel()
-        feedTypeLabel.text = "我的提问"
+        feedTypeLabel.text = getFeedTypeName((feedModel?.type)!)
         feedTypeLabel.frame = (self.feedOriginFrame?.feedTypeFrame)!
         feedTypeLabel.textColor = kAgeColor
         feedTypeLabel.font = UIFont.systemFontOfSize(kFeedTypeFontSize)
@@ -101,6 +197,13 @@ class FeedCell: UITableViewCell {
         ageLabel.textColor = kAgeColor
         self.addSubview(ageLabel)
         
+        // 6.病人状态
+        let statusLabel = UILabel()
+        statusLabel.text = "\(getPatientLocation((feedModel?.cancerType)!)) \(getPathological((feedModel?.pathological)!)) \(getPatientNum(feedModel!.stage))"
+        statusLabel.frame = (self.feedOriginFrame?.userStatusFrame)!
+        statusLabel.textColor = kAgeColor
+        self.addSubview(statusLabel)
+        
         if feedModel?.highlight != nil {
             
             // 6.标签
@@ -110,6 +213,16 @@ class FeedCell: UITableViewCell {
             let highView = FeedTagView(frame: (self.feedOriginFrame?.cureFrame)!, highTag: highTagsArr)
             highView.frame = (self.feedOriginFrame?.cureFrame)!
             self.addSubview(highView)
+        }
+        
+        // 7.clinic
+        if feedModel?.clinicReport != nil {
+            
+            let clinicLabel: UILabel = UILabel()
+            clinicLabel.text = feedModel?.clinicReport
+            clinicLabel.frame = (self.feedOriginFrame?.clinicFrame)!
+            clinicLabel.textColor = kClinicColor
+            self.addSubview(clinicLabel)
         }
         
         

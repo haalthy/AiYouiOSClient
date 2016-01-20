@@ -26,7 +26,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
 
         initVariables()
         initContentView()
-        
+        initRefresh()
        // self .getFeedListFromServer()
         }
 
@@ -36,42 +36,42 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         dataArr = NSMutableArray()
         
-        // 假数据
-        let feedModel: PostFeedStatus = PostFeedStatus()
-        feedModel.displayname = "王磊"
-        feedModel.gender = "男"
-        feedModel.age = 25
-        feedModel.postID = 22
-        feedModel.createdDate = "2015-22-22"
-        feedModel.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
-        feedModel.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
-        feedModel.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
-        feedModel.hasImage = 2
-        feedModel.tags = "易瑞沙**阿西替尼**"
-        feedModel.highlight = "易瑞沙 阿西替尼 "
-        feedModel.dateUpdated = 1452033200
-        feedModel.countComments = 200
-        let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
-        
-        dataArr.addObject(feedFrame)
-        
-        let feedModel1: PostFeedStatus = PostFeedStatus()
-        feedModel1.displayname = "王磊"
-        feedModel1.gender = "男"
-        feedModel1.age = 25
-        feedModel1.postID = 22
-        feedModel1.createdDate = "2015-22-22"
-        feedModel1.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
-        feedModel1.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
-        feedModel1.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
-        feedModel1.hasImage = 4
-        feedModel1.tags = "易瑞沙**阿西替尼**"
-        feedModel1.dateUpdated = 1452033200
-        feedModel1.countComments = 20000
-        let feedFrame1: PostFeedFrame = PostFeedFrame(feedModel: feedModel1)
-        
-        dataArr.addObject(feedFrame1)
-
+//        // 假数据
+//        let feedModel: PostFeedStatus = PostFeedStatus()
+//        feedModel.displayname = "王磊"
+//        feedModel.gender = "男"
+//        feedModel.age = 25
+//        feedModel.postID = 22
+//        feedModel.createdDate = "2015-22-22"
+//        feedModel.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
+//        feedModel.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
+//        feedModel.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
+//        feedModel.hasImage = 2
+//        feedModel.tags = "易瑞沙**阿西替尼**"
+//        feedModel.highlight = "易瑞沙 阿西替尼 "
+//        feedModel.dateUpdated = 1452033200
+//        feedModel.countComments = 200
+//        let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
+//        
+//        dataArr.addObject(feedFrame)
+//        
+//        let feedModel1: PostFeedStatus = PostFeedStatus()
+//        feedModel1.displayname = "王磊"
+//        feedModel1.gender = "男"
+//        feedModel1.age = 25
+//        feedModel1.postID = 22
+//        feedModel1.createdDate = "2015-22-22"
+//        feedModel1.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
+//        feedModel1.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
+//        feedModel1.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
+//        feedModel1.hasImage = 4
+//        feedModel1.tags = "易瑞沙**阿西替尼**"
+//        feedModel1.dateUpdated = 1452033200
+//        feedModel1.countComments = 20000
+//        let feedFrame1: PostFeedFrame = PostFeedFrame(feedModel: feedModel1)
+//        
+//        dataArr.addObject(feedFrame1)
+//
 
     }
     
@@ -89,20 +89,33 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
     }
     
+    // MARK: - Init Refresh
+    
+    func initRefresh() {
+    
+        self.tableView.mj_header = MJRefreshNormalHeader.init(refreshingBlock: { () -> Void in
+            
+            self.getFeedListFromServer()
+            
+        })
+    }
+    
     // MARK: - Net Request
     
     func getFeedListFromServer() {
-        
         
         
         NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=74367639-ab0b-4c5a-a036-69d2f619ec9e", parameters:["begin":0,"end":1456803188202,"username":"AY1449549912985.679"],
             
             success: { (content , message) -> Void in
             
-            print(content)
+                self.tableView.mj_header.endRefreshing()
             
             }) { (content, message) -> Void in
                 
+                self.tableView.mj_header.endRefreshing()
+                
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
         
         

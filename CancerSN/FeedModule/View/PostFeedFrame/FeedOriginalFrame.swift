@@ -20,6 +20,34 @@ let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(16)
 // 距离头像的距离
 let kPortraitMargin: CGFloat = CGFloat(10.0)
 
+// 帖子类别
+
+func getFeedTypeName(type: Int) -> String {
+
+    var resultStr: String = ""
+    switch type {
+    
+    case 1:
+        resultStr = "我的提问"
+        break
+    case 2:
+        resultStr = "推荐"
+        break
+    case 3:
+        resultStr = "更新状态"
+        break
+    case 4:
+        resultStr = "治疗方案"
+        break
+    case 5:
+        resultStr = "心情"
+        break
+    default: break
+    }
+    
+    return resultStr
+}
+
 class FeedOriginalFrame: NSObject {
     
     // 加载数据
@@ -45,6 +73,9 @@ class FeedOriginalFrame: NSObject {
     
     // 治疗过程tagframe
     var cureFrame: CGRect?
+    
+    // clinicFrame
+    var clinicFrame: CGRect?
     
     // 正文frame
     var contentFrame: CGRect?
@@ -84,15 +115,14 @@ class FeedOriginalFrame: NSObject {
         // 2.昵称
         let nicknameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let nicknameY: CGFloat = kCellTopInside
-        print(feedModel?.displayname)
-        let nicknameW: CGFloat = ("王磊").sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
+        let nicknameW: CGFloat = (feedModel?.displayname)!.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
         let nicknameH: CGFloat = 15
         self.nicknameFrame = CGRECT(nicknameX, nicknameY, nicknameW, nicknameH)
         
         // 3.feed type
         let feedTypeX: CGFloat = CGRectGetMaxX(self.nicknameFrame!)
         let feedTypeY: CGFloat = kCellTopInside
-        let feedTypeW: CGFloat = ("我的提问".sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, 15)).width)
+        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!).sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, 15)).width)
         let feedTypeH: CGFloat = 15
         self.feedTypeFrame = CGRECT(feedTypeX, feedTypeY, feedTypeW, feedTypeH)
         
@@ -110,41 +140,67 @@ class FeedOriginalFrame: NSObject {
         let ageH: CGFloat = 20.0
         self.ageFrame = CGRECT(ageX, ageY, ageW, ageH)
         
+        // 6.患者状态
+        let statusX: CGFloat = CGRectGetMaxX(self.ageFrame!) + 5
+        let statusY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
+        let statusW: CGFloat = SCREEN_WIDTH - statusX - kCellLeftInside
+        let statusH: CGFloat = 20.0
+        self.userStatusFrame = CGRECT(statusX, statusY, statusW, statusH)
+        
+        // 7.tag标签
+        let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+        let tagW = SCREEN_WIDTH - tagX
+        let tagH: CGFloat = 24
+        self.cureFrame = CGRECT(tagX, tagY, tagW, tagH)
+        
+        
+        // 8.clinic
+        let clinicX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        var clinicY: CGFloat = 0
+        var clinicSize: CGSize = CGSize(width: 0, height: 0)
+        if self.feedModel?.clinicReport != nil {
+            clinicSize = (self.feedModel?.clinicReport?.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: SCREEN_WIDTH - clinicY - kCellLeftInside, height: CGFloat.max)))!
+        }
         if (self.feedModel!.highlight == nil) {
-            
-            // 6.内容详情
-            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let contentY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
-            self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
+            clinicY = CGRectGetMaxY(self.ageFrame!) + 8.0
         }
         else {
-            
-            // 6.tag标签
-            let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
-            let tagW = SCREEN_WIDTH - tagX
-            let tagH: CGFloat = 24
-            self.cureFrame = CGRECT(tagX, tagY, tagW, tagH)
-            
-            // 7.内容详情
-            let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let contentY: CGFloat = CGRectGetMaxY(self.cureFrame!) + 8.0
-            let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
-            self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
+            clinicY = CGRectGetMaxY(self.cureFrame!) + 8.0
         }
+        self.clinicFrame = CGRECT(clinicX, clinicY, clinicSize.width, clinicSize.height)
         
         
-        // 8.图片相册
+        // 9.内容详情
+        let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        var contentY: CGFloat = 0
+        let contentSize: CGSize = (self.feedModel?.body?.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
+        
+        if self.feedModel?.clinicReport == nil {
+            if self.feedModel?.highlight == nil {
+                contentY = CGRectGetMaxY(self.ageFrame!) + 8.0
+            }
+            else {
+                contentY = CGRectGetMaxY(self.cureFrame!) + 8.0
+            }
+        }
+        else {
+            contentY = CGRectGetMaxY(self.clinicFrame!) + 8.0
+
+        }
+        self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
+        
+        
+        // 10.图片相册
         let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let photosY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8.0
         
-        let photosSize: CGSize = FeedPhotosView.layoutForPhotos(self.feedModel!.hasImage!)
+        let photosSize: CGSize = FeedPhotosView.layoutForPhotos(self.feedModel!.hasImage)
         self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
         
         if self.feedModel?.hasImage == 0 {
             
-            // 9.tag标签（下面的）
+            // 11.tag标签（下面的）
             let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let tagsY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8
             let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
@@ -153,7 +209,7 @@ class FeedOriginalFrame: NSObject {
         }
         else {
         
-            // 9.tag标签（下面的）
+            // 11.tag标签（下面的）
             let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
             let tagsY: CGFloat = CGRectGetMaxY(self.photosFrame!) + 8
             let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
@@ -191,7 +247,7 @@ class FeedOriginalFrame: NSObject {
 
         }
     
-        // 11.帖子的frame
+        // 12.帖子的frame
         let frameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let frameY: CGFloat = 0
         var frameHeight: CGFloat = 0

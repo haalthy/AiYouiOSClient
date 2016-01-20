@@ -17,7 +17,6 @@ typealias failedBlock = (content: AnyObject, message: String) -> Void
 
 class NetRequest: NSObject {
     
-    var session: NSURLSession!
     
     // MARK: - 单例模式
     class var sharedInstance: NetRequest {
