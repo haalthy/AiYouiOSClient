@@ -1,98 +1,70 @@
 //
-//  AddNewTreatmentDateViewController.swift
+//  CalenderViewController.swift
 //  CancerSN
 //
-//  Created by lily on 8/20/15.
-//  Copyright (c) 2015 lily. All rights reserved.
+//  Created by hui luo on 18/1/2016.
+//  Copyright © 2016 lily. All rights reserved.
 //
 
 import UIKit
-import CoreData
 
-class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+class CalenderViewController: UIViewController {
+    
 
-    var haalthyService = HaalthyService()
-    var keychainAccess = KeychainAccess()
-    var username:String?
-    @IBOutlet weak var monthLabel: UIButton!
-    @IBOutlet weak var menuView: CVCalendarMenuView!
-    @IBOutlet weak var calendarView: CVCalendarView!
-    let profileSet = NSUserDefaults.standardUserDefaults()
-    var datePickerContainerView = UIView()
-    var datePicker = UIDatePicker()
-    var dateInserted:NSDate?
+    var monthLabel: UIButton!
+    var menuView: CVCalendarMenuView!
+    var calendarView: CVCalendarView!
     
-    @IBAction func selectDate(sender: UIButton) {
-        let datePickerHeight:CGFloat = 200
-        let confirmButtonWidth:CGFloat = 100
-        let confirmButtonHeight:CGFloat = 30
-        datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
-        datePickerContainerView.backgroundColor = UIColor.whiteColor()
-        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
-        self.datePicker.datePickerMode = UIDatePickerMode.Date
-        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
-        confirmButton.setTitle("确定", forState: UIControlState.Normal)
-        confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
-        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
-        datePickerContainerView.addSubview(self.datePicker)
-        datePickerContainerView.addSubview(confirmButton)
-        self.view.addSubview(datePickerContainerView)
-    }
-    
-    func dateChanged(){
-        dateInserted = datePicker.date
-        profileSet.setObject(dateInserted?.timeIntervalSince1970, forKey: newTreatmentBegindate)
-        monthLabel.setTitle(CVDate(date: dateInserted!).globalDescription, forState: UIControlState.Normal)
-        self.datePickerContainerView.removeFromSuperview()
-    }
-    
-    @IBAction func loadPrevious(sender: AnyObject) {
-        calendarView.loadPreviousView()
-    }
-    
-    
-    @IBAction func loadNext(sender: AnyObject) {
-        calendarView.loadNextView()
-    }
-    
-    @IBAction func cancelNewTreatment(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-
-    var treatmentList = NSArray()
-    var previousTreatment = NSDictionary()
-    
-    func getProcessingTreatmentsFromLocalDB(){
-        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        let context:NSManagedObjectContext = appDel.managedObjectContext!
-        let request = NSFetchRequest(entityName: "Treatment")
-        let resultPredicate = NSPredicate(format: "endDate = nil")
-        request.predicate = resultPredicate
-        request.returnsObjectsAsFaults = false
-        request.sortDescriptors = [NSSortDescriptor(key: "beginDate", ascending: false)]
-        treatmentList = try! context.executeFetchRequest(request)
-    }
-    
-    @IBAction func submitNewTreatmentBeginDate(sender: UIButton) {
-        if profileSet.objectForKey(newTreatmentBegindate) == nil{
-            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentBegindate)
-        }
-    }
-    
-    func getProcessingTreatments(){
-        let getTreatmentListData = haalthyService.getTreatments(username!)
-        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers)
-        if(jsonResult is NSArray){
-            self.treatmentList = jsonResult as! NSArray
-        }
-    }
+//    func getProcessingTreatments(){
+//        let getTreatmentListData = haalthyService.getTreatments(username!)
+//        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers)
+//        if(jsonResult is NSArray){
+//            self.treatmentList = jsonResult as! NSArray
+//        }
+//    }
     
     var animationFinished = true
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//        username = keychainAccess.getPasscode(usernameKeyChain) as! String
+//        profileSet.removeObjectForKey(newTreatmentBegindate)
+//        
+//        // Do any additional setup after loading the view.
+//        self.calendarView.calendarAppearanceDelegate = self
+//        
+//        // Animator delegate [Unnecessary]
+//        self.calendarView.animatorDelegate = self
+//        
+//        // Calendar delegate [Required]
+//        self.calendarView.calendarDelegate = self
+//        
+//        // Menu delegate [Required]
+//        self.menuView.menuViewDelegate = self
+//        monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
+//        getProcessingTreatments()
+//        if treatmentList.count > 0 {
+//            previousTreatment = treatmentList[0] as! NSDictionary
+//            print(previousTreatment.objectForKey("endDate"))
+//            print(NSDate().timeIntervalSince1970)
+//            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) ){
+//                self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
+//            }
+//        }
+//    }
+//    
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if segue.identifier == "showPreviousTreatment"{
+//            let vc = segue.destinationViewController as! UpdatePreviousTreatmentViewController
+//            let controller = vc.popoverPresentationController
+//            if controller != nil{
+//                controller?.delegate = self
+//            }
+//            vc.treatment = previousTreatment
+//        }
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        username = keychainAccess.getPasscode(usernameKeyChain) as! String
-        profileSet.removeObjectForKey(newTreatmentBegindate)
         
         // Do any additional setup after loading the view.
         self.calendarView.calendarAppearanceDelegate = self
@@ -106,33 +78,14 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
         // Menu delegate [Required]
         self.menuView.menuViewDelegate = self
         monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
-        getProcessingTreatments()
-        if treatmentList.count > 0 {
-            previousTreatment = treatmentList[0] as! NSDictionary
-            print(previousTreatment.objectForKey("endDate"))
-            print(NSDate().timeIntervalSince1970)
-            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) ){
-                self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
-            }
-        }
+        print(monthLabel.titleLabel?.text)
+
     }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showPreviousTreatment"{
-            let vc = segue.destinationViewController as! UpdatePreviousTreatmentViewController
-            let controller = vc.popoverPresentationController
-            if controller != nil{
-                controller?.delegate = self
-            }
-            vc.treatment = previousTreatment
-        }
-    }
-    
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -146,7 +99,7 @@ class AddNewTreatmentDateViewController: UIViewController, UIPopoverPresentation
     }
 }
 
-extension AddNewTreatmentDateViewController: CVCalendarViewDelegate
+extension CalenderViewController: CVCalendarViewDelegate
 {
     func presentedDateUpdated(date: CVDate) {
         if monthLabel.titleLabel!.text != date.globalDescription && self.animationFinished {
@@ -214,7 +167,7 @@ extension AddNewTreatmentDateViewController: CVCalendarViewDelegate
 
 // MARK: - CVCalendarViewAppearanceDelegate
 
-extension AddNewTreatmentDateViewController: CVCalendarViewAppearanceDelegate {
+extension CalenderViewController: CVCalendarViewAppearanceDelegate {
     func presentationMode() -> CalendarMode {
         return .MonthView
     }
@@ -231,7 +184,7 @@ extension AddNewTreatmentDateViewController: CVCalendarViewAppearanceDelegate {
     func didSelectDayView(dayView: CVCalendarDayView) {
         let date = dayView.date
         print("\(calendarView.presentedDate.commonDescription) is selected!")
-        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
+//        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
     }
     
     
@@ -250,7 +203,7 @@ extension AddNewTreatmentDateViewController: CVCalendarViewAppearanceDelegate {
 
 // MARK: - CVCalendarMenuViewDelegate
 
-extension AddNewTreatmentDateViewController: CVCalendarMenuViewDelegate {
+extension CalenderViewController: CVCalendarMenuViewDelegate {
     // firstWeekday() has been already implemented.
 }
 
@@ -272,12 +225,11 @@ extension AddNewTreatmentDateViewController: CVCalendarMenuViewDelegate {
 //        calendarView.changeMode(.MonthView)
 //    }
 //    
-//    
 //}
 
 // MARK: - Convenience API Demo
 
-extension AddNewTreatmentDateViewController {
+extension CalenderViewController {
     func toggleMonthViewWithMonthOffset(offset: Int) {
         let calendar = NSCalendar.currentCalendar()
         let calendarManager = calendarView.manager

@@ -351,7 +351,7 @@ extension CVCalendarWeekContentViewController {
 extension CVCalendarWeekContentViewController {
     func prepareTopMarkersOnWeekView(weekView: WeekView, hidden: Bool) {
         weekView.mapDayViews { dayView in
-            dayView.topMarker?.hidden = hidden
+//            dayView.topMarker?.hidden = hidden
         }
     }
     
