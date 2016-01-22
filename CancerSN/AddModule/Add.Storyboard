@@ -31,7 +31,7 @@
                                 </variation>
                                 <connections>
                                     <action selector="addPatientStatusSegue:" destination="fi6-EX-be1" eventType="touchUpInside" id="VBo-pD-l2i"/>
-                                    <segue destination="WsQ-1J-N9l" kind="presentation" id="eO6-96-MGa"/>
+                                    <segue destination="K7a-5y-dcS" kind="presentation" id="MFn-b1-rIn"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VY6-n4-dgt">
@@ -1534,7 +1534,57 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fh7-Fh-wdO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9612" y="-1079"/>
+            <point key="canvasLocation" x="11065.5" y="-1152"/>
+        </scene>
+        <!--Add Patient Status View Controller-->
+        <scene sceneID="qwF-dS-kQJ">
+            <objects>
+                <viewController id="eIU-WN-uXC" customClass="AddPatientStatusViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wup-gR-Dz8"/>
+                        <viewControllerLayoutGuide type="bottom" id="MeX-5t-mHb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="K08-UA-672">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Tue-48-12d">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="cQh-cP-zcZ">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pBg-V9-m8A">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="取消"/>
+                                <connections>
+                                    <action selector="cancelNewTreatment:" destination="jRT-9H-PZ0" eventType="touchUpInside" id="xpK-kJ-z50"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qWv-zZ-18A">
+                            <rect key="frame" x="140" y="7" width="120" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="添加病人状态">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="pme-iK-n2K">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0jE-c5-bxh">
+                                <rect key="frame" x="334" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="提交">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="submitNewTreatmentBeginDate:" destination="jRT-9H-PZ0" eventType="touchUpInside" id="rjb-AA-MeM"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eij-UU-7ms" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="10188" y="-1110"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="akh-r0-Lz4">
@@ -1555,6 +1605,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eAW-I7-BlM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="9605" y="-316"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="yBy-T7-zVl">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K7a-5y-dcS" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="tdF-Gj-76q">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="eIU-WN-uXC" kind="relationship" relationship="rootViewController" id="Kcs-hi-arK"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="21o-nr-kdK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9270" y="-1110"/>
         </scene>
     </scenes>
     <resources>
