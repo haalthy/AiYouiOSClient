@@ -32,23 +32,6 @@ class AddTreatmentDateViewController: CalenderViewController {
         profileSet.removeObjectForKey(newTreatmentBegindate)
     }
     
-//    @IBAction func selectDate(sender: UIButton) {
-//        let datePickerHeight:CGFloat = 200
-//        let confirmButtonWidth:CGFloat = 100
-//        let confirmButtonHeight:CGFloat = 30
-//        datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
-//        datePickerContainerView.backgroundColor = UIColor.whiteColor()
-//        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
-//        self.datePicker.datePickerMode = UIDatePickerMode.Date
-//        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
-//        confirmButton.setTitle("确定", forState: UIControlState.Normal)
-//        confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
-//        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
-//        datePickerContainerView.addSubview(self.datePicker)
-//        datePickerContainerView.addSubview(confirmButton)
-//        self.view.addSubview(datePickerContainerView)
-//    }
-    
     func dateChanged(){
         dateInserted = datePicker.date
         profileSet.setObject(dateInserted?.timeIntervalSince1970, forKey: newTreatmentBegindate)

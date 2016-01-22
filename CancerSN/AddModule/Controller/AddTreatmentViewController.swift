@@ -17,10 +17,18 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     var treatmentFormatOfTKI = NSMutableArray()
     var treatmentFormatOfChemo = NSMutableArray()
     var treatmentTypeArr: NSArray = ["靶向", "化疗", "放疗", "手术", "其他"]
-    
+    var selectedIndex: Int = Int()
+    var selectedTreatmentList: NSArray = NSArray()
+    var treatmentList = NSMutableArray()
+    var isPosted: Int = 1
+    var keyboardheight:CGFloat = 0
+    let profileSet = NSUserDefaults.standardUserDefaults()
+
     //
     var treatmentTypeBtmLineView = UIView()
-    var treatmentNamesSectionView = UIView()
+    var treatmentFormatSectionView = UIView()
+    var treatmentTextInput = UITextView()
+    var treatmentBtmSectionView = UIView()
     
     var screenWidth: CGFloat = CGFloat()
     var treatmentTypeBtnW: CGFloat = CGFloat()
@@ -31,12 +39,12 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         initVariables()
         initContentView()
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
     }
     
     
     func initVariables(){
-//        treatmentTypeCount = 3
         screenWidth = UIScreen.mainScreen().bounds.width
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         let getTreatmentFormatData = haalthyService.getTreatmentFormat()
@@ -51,8 +59,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                     treatmentFormatOfChemo.addObject(treatment)
                 }
             }
-//            treatmentTypeCount += treatmentFormatList.count
         }
+        treatmentTextInput.delegate = self
     }
     
     func initContentView(){
@@ -80,263 +88,203 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         treatmentHeaderSeperateLine.backgroundColor = treatmentSeperateLineColor
         self.view.addSubview(treatmentHeaderSeperateLine)
         
-        //添加治疗方案 选择 按钮
-        
+        //添加底部选择框
+        treatmentBtmSectionView = UIView(frame: CGRect(x: 0, y: UIScreen.mainScreen().bounds.height - buttomSectionHeight, width: screenWidth, height: buttomSectionHeight))
+        let btmSeperateLine = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 0.5))
+        btmSeperateLine.backgroundColor = seperateLineColor
+        treatmentBtmSectionView.addSubview(btmSeperateLine)
+        let checkbox = UIButton(frame: CGRect(x: checkboxLeftSpace, y: checkboxTopSpace, width: checkboxHeight, height: checkboxHeight))
+        checkbox.layer.borderColor = privateLabelColor.CGColor
+        checkbox.layer.borderWidth = checkboxBorderWidth
+        checkbox.layer.cornerRadius = checkboxCornerRadius
+        checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
+        treatmentBtmSectionView.addSubview(checkbox)
+        let privateLbl = UILabel(frame: CGRect(x: privateLabelLeftSpace, y: 0, width: screenWidth - privateLabelLeftSpace, height: buttomSectionHeight))
+        privateLbl.textAlignment = NSTextAlignment.Left
+        privateLbl.textColor = privateLabelColor
+        privateLbl.text = "不发送到我的智囊圈"
+        treatmentBtmSectionView.addSubview(privateLbl)
+        self.view.addSubview(treatmentBtmSectionView)
     }
     
     func selectedTreatmentType(sender: UIButton){
-        let typeIndex = treatmentTypeArr.indexOfObject((sender.titleLabel?.text)!)
-        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, headerHeight + treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
+        var isSelectedTreatment:Bool = false
+        for treatmentButtonView in treatmentFormatSectionView.subviews {
+            if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == headerColor{
+                isSelectedTreatment = true
+            }
+        }
+        if isSelectedTreatment || ((treatmentTextInput.textColor != treatmentTextInputViewColor) && (treatmentTextInput.text != "")){
+            
+            let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
+            
+            let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
+                self.getTreatmentDetail()
+                self.resetView(sender)
+            }
+            
+            alertController.addAction(OKAction)
+            let cancelAction = UIAlertAction(title: "不要", style: .Cancel) { (action) in
+                self.resetView(sender)
+            }
+            alertController.addAction(cancelAction)
+            
+            let ContinueAction = UIAlertAction(title: "继续编辑", style: .Default){ (action)in
+                //...
+//                self.treatmentTypeSegment.selectedSegmentIndex = Int(self.pointer.center.x / self.segmentSectionWidth)
+            }
+            alertController.addAction(ContinueAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }else{
+            self.resetView(sender)
+        }
 
     }
     
-//    var treatmentList = NSMutableArray()
-//    var shareToFriendButton = UIButton()
-//    var saveToMyselfButton = UIButton()
-//    let profileSet = NSUserDefaults.standardUserDefaults()
-//    var pointer = UIImageView()
-//    var segmentHeight = CGFloat()
-//    var segmentSectionWidth = CGFloat()
-//    var segmentSections = Int()
-//    var suggestTreatmentDetailView = UIView()
-//    var treatmentTextInput = UITextView()
+    @IBAction func loadPreviousView(sender: UIButton) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
     
+    func keyboardWillAppear(notification: NSNotification) {
+        
+        // 获取键盘信息
+        let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
+        
+        keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
+        
+        self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y - keyboardheight)
+    }
     
-
-//    @IBAction func segmentIndexChanged(sender: UISegmentedControl) {
-//        var isSelectedTreatment = false
-//        for treatmentButtonView in suggestTreatmentDetailView.subviews {
-//            if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == mainColor{
-//                isSelectedTreatment = true
-//            }
-//        }
-//        if isSelectedTreatment || (treatmentTextInput.textColor != UIColor.grayColor()){
-//            
-//            let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
-//            
-//            let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
-//                self.getTreatmentDetail()
-//                self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
-//            }
-//            
-//            alertController.addAction(OKAction)
-//            let cancelAction = UIAlertAction(title: "不要", style: .Cancel) { (action) in
-//                self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
-//            }
-//            alertController.addAction(cancelAction)
-//            
-//            let ContinueAction = UIAlertAction(title: "继续编辑", style: .Default){ (action)in
-//                //...
-//                self.treatmentTypeSegment.selectedSegmentIndex = Int(self.pointer.center.x / self.segmentSectionWidth)
-//            }
-//            alertController.addAction(ContinueAction)
-//            
-//            self.presentViewController(alertController, animated: true) {
-//                // ...
-//            }
-//        }else{
-//            self.resetView(self.treatmentTypeSegment.selectedSegmentIndex)
-//        }
-//    }
-//    
-//    func resetView(selectedSegmentIndex: Int){
-//        self.pointer.removeFromSuperview()
-//        self.suggestTreatmentDetailView.removeAllSubviews()
-//        self.suggestTreatmentDetailView.removeFromSuperview()
-//        if selectedSegmentIndex == 0 || selectedSegmentIndex == 1{
-//            pointer.center = CGPoint(x: treatmentTypeSegment.frame.origin.x + segmentSectionWidth/2 + segmentSectionWidth * CGFloat(selectedSegmentIndex), y: pointer.center.y)
-//            treatmentTextInput.center = CGPoint(x: treatmentTextInput.center.x, y: treatmentTypeSegment.center.y + 190)
-//            self.view.addSubview(pointer)
-//            self.view.addSubview(suggestTreatmentDetailView)
-//        }else{
-//            treatmentTextInput.center = CGPoint(x: treatmentTextInput.center.x, y: treatmentTypeSegment.center.y + 80)
-//        }
-//        shareToFriendButton.frame = CGRectMake(20, treatmentTextInput.frame.origin.y + 120, UIScreen.mainScreen().bounds.width/2 - 30, 30)
-//        saveToMyselfButton.frame = CGRectMake(shareToFriendButton.frame.width + 40, treatmentTextInput.frame.origin.y + 120, shareToFriendButton.frame.width, 30)
-//        var textPlaceholder = String()
-//        switch selectedSegmentIndex {
-//        case 0: textPlaceholder = "请输入病人的剂量以及使用方法（例如：200mg/天，隔天服用，午餐后两小时服用）"
-//        addTreatmentInView(treatmentFormatOfTKI, containerView: self.suggestTreatmentDetailView)
-//            break
-//        case 1: textPlaceholder = "请输入病人的剂量"
-//        addTreatmentInView(treatmentFormatOfChemo, containerView: self.suggestTreatmentDetailView)
-//            break
-//        case 2: textPlaceholder = "请输入病人的使用剂量以及放疗部位"
-//            break
-//        case 3: textPlaceholder = "请输入手术名称以及手术结果"
-//            break
-//        case 4: textPlaceholder = "请输入其他治疗方案"
-//            break
-//        default: textPlaceholder = ""
-//            break
-//        }
-//        treatmentTextInput.text = textPlaceholder
-//    }
+    func keyboardWillDisappear(notification:NSNotification){
+        
+        self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y + keyboardheight)
+    }
     
-//    @IBOutlet weak var treatmentTypeSegment: UISegmentedControl!
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        segmentSections = 5
-//        treatmentTypeSegment.tintColor = mainColor
-//        pointer.image = UIImage(named: "triangle-xxl.png")
-//        pointer.alpha = 0.2
-//        suggestTreatmentDetailView.backgroundColor = sectionHeaderColor
-////        suggestTreatmentDetailView.alpha = 0.3
-//        treatmentTextInput.delegate = self
-//        treatmentTextInput.returnKeyType = UIReturnKeyType.Done
-//        self.view.addSubview(pointer)
-//        self.view.addSubview(suggestTreatmentDetailView)
-//        self.view.addSubview(treatmentTextInput)
-//        self.view.addSubview(shareToFriendButton)
-//        self.view.addSubview(saveToMyselfButton)
-//        shareToFriendButton.backgroundColor = mainColor
-//        saveToMyselfButton.backgroundColor = mainColor
-//        shareToFriendButton.setTitle("听听病友们的意见", forState: UIControlState.Normal)
-//        saveToMyselfButton.setTitle("仅自己可见", forState: UIControlState.Normal)
-//        shareToFriendButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        saveToMyselfButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        shareToFriendButton.titleLabel!.font = UIFont(name: "Helvetica", size: 13.0)
-//        saveToMyselfButton.titleLabel!.font = UIFont(name: "Helvetica", size: 13.0)
-//        shareToFriendButton.addTarget(self, action: "addTreatmentPublic", forControlEvents: UIControlEvents.TouchUpInside)
-//        saveToMyselfButton.addTarget(self, action: "addTreatmentPrivate", forControlEvents: UIControlEvents.TouchUpInside)
-//
-//        let getTreatmentFormatData = haalthyService.getTreatmentFormat()
-//        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentFormatData, options: NSJSONReadingOptions.MutableContainers)
-//        if (jsonResult is NSDictionary) && (jsonResult!.objectForKey("content") != nil) && (jsonResult!.objectForKey("content") is NSArray){
-//            treatmentFormatList = jsonResult!.objectForKey("content") as! NSArray
-//            for treatment in treatmentFormatList {
-//                if ((treatment as! NSDictionary).objectForKey("type") as! String) == "TKI" {
-//                    treatmentFormatOfTKI.addObject(treatment)
-//                }
-//                if ((treatment as! NSDictionary).objectForKey("type") as! String) == "CHEMO" {
-//                    treatmentFormatOfChemo.addObject(treatment)
-//                }
-//            }
-//        }
-//    }
+    func checkedPrivate(sender: UIButton){
+        if isPosted == 0 {
+            isPosted = 1
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.layer.borderColor = privateLabelColor.CGColor
+            sender.removeAllSubviews()
+        }else{
+            isPosted = 0
+            sender.backgroundColor = headerColor
+            let checkImgView = UIImageView(image: UIImage(named: "btn_check"))
+            checkImgView.frame = CGRECT(0, 0, sender.frame.width, sender.frame.height)
+            checkImgView.contentMode = UIViewContentMode.ScaleAspectFit
+            sender.layer.borderColor = headerColor.CGColor
+            sender.addSubview(checkImgView)
+        }
+    }
     
-//    func addTreatmentPublic(){
-//        submitTreatment(1)
-////        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
-//        self.dismissViewControllerAnimated(true, completion: nil)
-//    }
-//    
-//    func addTreatmentPrivate(){
-//        submitTreatment(0)
-////        self.performSegueWithIdentifier("patientStatusSegue", sender: self)
-//        self.dismissViewControllerAnimated(true, completion: nil)
-//    }
-//    
-//    func submitTreatment(isPublic: Int){
-//        self.getTreatmentDetail()
-//        if treatmentList.count > 0 {
-//            for treatment in treatmentList{
-//                treatment.setObject(isPublic, forKey:"isPosted")
-//                treatment.setObject((profileSet.objectForKey(newTreatmentBegindate) as! Int)*1000, forKey: "beginDate")
-//                if profileSet.objectForKey(newTreatmentEnddate) != nil {
-//                    treatment.setObject((profileSet.objectForKey(newTreatmentEnddate) as! Int)*1000, forKey: "endDate")
-//                }
-//            }
-//            haalthyService.addTreatment(treatmentList)
-//        }
-//    }
-//    
-//    func addTreatmentInView(treatmentFormatList : NSArray, containerView: UIView){
-//        let tagBtnHeight:CGFloat = 40
-//        let tagBtnWidth:CGFloat = (containerView.frame.width - 10)/5
-//        var index:Int = 0
-//        let maxTagCount = treatmentFormatList.count > 10 ? 10 : treatmentFormatList.count
-//        for index = 0; index < maxTagCount; index++ {
-//            let coordinateX:CGFloat = 5 + CGFloat(index%5) * tagBtnWidth
-//            var coordinateY:CGFloat = 0
-//            if index < 5{
-//                coordinateY = 5
-//            }else{
-//                coordinateY = 55
-//            }
-//            let tagBtn = UIButton(frame: CGRectMake(coordinateX, coordinateY, tagBtnWidth - 5, tagBtnHeight))
-//            tagBtn.setTitle(treatmentFormatList[index].objectForKey("treatmentName") as? String, forState: UIControlState.Normal)
-//            tagBtn.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
-//            tagBtn.setTitleColor(mainColor, forState: UIControlState.Normal)
-//            tagBtn.backgroundColor = UIColor.whiteColor()
-//            tagBtn.layer.borderColor = mainColor.CGColor
-//            tagBtn.layer.borderWidth = 1.0
-//            tagBtn.layer.masksToBounds = true
-//            tagBtn.layer.cornerRadius = 5.0
-//            tagBtn.alpha = 1.0
-//            tagBtn.addTarget(self, action: "selectTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
-//            
-//            self.suggestTreatmentDetailView.addSubview(tagBtn)
-//
-//        }
-//    }
-//    
-//    func getTreatmentDetail(){
-//        var treatmentName = String()
-//        for treatmentButtonView in suggestTreatmentDetailView.subviews {
-//            if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == mainColor{
-//                 treatmentName += ((treatmentButtonView as! UIButton).titleLabel!).text! + " "
-//            }
-//        }
-//        if (treatmentName as NSString).length == 0{
-//            treatmentName = treatmentTypeSegment.titleForSegmentAtIndex(treatmentTypeSegment.selectedSegmentIndex)!
-//        }
-//        var treatmentDosage = String()
-//        if treatmentTextInput.textColor == UIColor.blackColor(){
-//            treatmentDosage = treatmentTextInput.text!
-//        }
-//        let treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
-//        treatmentList.addObject(treatment)
-//    }
-//    
-//    func selectTreatment(sender:UIButton){
-//        if sender.backgroundColor == UIColor.whiteColor(){
-//            sender.backgroundColor = mainColor
-//            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        }else{
-//            sender.backgroundColor = UIColor.whiteColor()
-//            sender.setTitleColor(mainColor, forState: UIControlState.Normal)
-//        }
-//    }
-//    
-//    override func viewDidAppear(animated: Bool) {
-//        treatmentTypeSegment.selectedSegmentIndex = 0
-//        segmentHeight = treatmentTypeSegment.frame.height
-//        segmentSectionWidth = treatmentTypeSegment.frame.width/CGFloat(segmentSections)
-//        pointer.frame = CGRectMake(treatmentTypeSegment.frame.origin.x + segmentSectionWidth/2, treatmentTypeSegment.frame.origin.y + segmentHeight, 20, 20)
-//        suggestTreatmentDetailView.frame = CGRectMake(10, pointer.frame.origin.y + 18, UIScreen.mainScreen().bounds.width - 20, 100)
-//        
-//        treatmentTextInput.frame = CGRectMake(10, suggestTreatmentDetailView.frame.origin.y + 105, UIScreen.mainScreen().bounds.width - 20, 100)
-//        treatmentTextInput.layer.borderColor = mainColor.CGColor
-//        treatmentTextInput.layer.borderWidth = 1.0
-//        treatmentTextInput.textColor = UIColor.grayColor()
-//        treatmentTextInput.text = "请输入剂量及使用方法"
-//        shareToFriendButton.frame = CGRectMake(20, treatmentTextInput.frame.origin.y + 120, UIScreen.mainScreen().bounds.width/2 - 30, 30)
-//        saveToMyselfButton.frame = CGRectMake(shareToFriendButton.frame.width + 40, treatmentTextInput.frame.origin.y + 120, shareToFriendButton.frame.width, 30)
-//        addTreatmentInView(treatmentFormatOfTKI, containerView: suggestTreatmentDetailView)
-//    }
-//    
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-//    
-//    func textViewDidBeginEditing(textView: UITextView) {
-//        if textView.textColor != UIColor.blackColor() {
-//            textView.text = nil
-//            textView.textColor = UIColor.blackColor()
-//        }
-//    }
-//    
-////    func textViewShouldEndEditing(textView: UITextView) -> Bool {
-////        textView.resignFirstResponder()
-////        return true
-////    }
-//    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-//        if text == "\n"{
-//            textView.resignFirstResponder()
-//            return false
-//        }
-//        return true
-//    }
+    func resetView(sender: UIButton){
+        let typeIndex = treatmentTypeArr.indexOfObject((sender.titleLabel?.text)!)
+        selectedIndex = typeIndex
+        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, headerHeight + treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
+        //添加治疗方案 选择 按钮
+        treatmentFormatSectionView.removeAllSubviews()
+        if selectedIndex == 0{
+            selectedTreatmentList = treatmentFormatOfTKI
+        }else if selectedIndex == 1 {
+            selectedTreatmentList = treatmentFormatOfChemo
+        }else{
+            selectedTreatmentList = NSArray()
+            treatmentFormatSectionView = UIView()
+        }
+        if selectedIndex == 0 || selectedIndex == 1{
+            var treatmentBtnX: CGFloat = treatmentBtnLeftSpace
+            var treatmentBtnY: CGFloat =  treatmentBtnTopSpace
+            for treatment in selectedTreatmentList{
+                let treatmentName: String = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
+                let treatmentNameTextSize = (treatmentName).sizeWithFont(treatmentBtnTextFont, maxSize: CGSize(width: CGFloat.max, height: treatmentBtnHeight))
+                if (treatmentNameTextSize.width + treatmentBtnX + treatmentBtnTextHorizonSpace * 2 + treatmentBtnTextHorizonSpace ) > screenWidth - treatmentBtnLeftSpace * 2 {
+                    treatmentBtnX = treatmentBtnLeftSpace
+                    treatmentBtnY += treatmentBtnHeight + treatmentBtnVerticalSpace
+                }
+                let treatmentNameBtn = UIButton(frame: CGRect(x: treatmentBtnX, y: treatmentBtnY, width: treatmentNameTextSize.width + treatmentBtnTextHorizonSpace * 2, height: treatmentBtnHeight))
+                treatmentNameBtn.setTitle(treatmentName, forState: UIControlState.Normal)
+                treatmentNameBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
+                treatmentNameBtn.titleLabel?.font = treatmentBtnTextFont
+                treatmentNameBtn.layer.borderColor = treatmentBtnBorderColor.CGColor
+                treatmentNameBtn.layer.borderWidth = treatmentBtnBorderWidth
+                treatmentNameBtn.layer.cornerRadius = treatmentBtnCornerRadius
+                treatmentNameBtn.addTarget(self, action: "selectTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+                treatmentFormatSectionView.addSubview(treatmentNameBtn)
+                treatmentBtnX += treatmentNameBtn.frame.width + treatmentBtnHorizonSpace
+            }
+            treatmentFormatSectionView.frame = CGRECT(0, 0 + headerHeight + treatmentTypeSectionHeight, screenWidth - treatmentBtnLeftSpace * 2, treatmentBtnY + treatmentBtnHeight + treatmentBtnTopSpace)
+            let treatmentSectionSeperateLine = UIView(frame: CGRect(x: 0, y: treatmentFormatSectionView.frame.height, width: screenWidth, height: 0.5))
+            treatmentSectionSeperateLine.backgroundColor = seperateLineColor
+            treatmentFormatSectionView.addSubview(treatmentSectionSeperateLine)
+            self.view.addSubview(treatmentFormatSectionView)
+        }
+        //treatment text view
+        let treatmentTextInputY = treatmentTextInputViewTopSpace + headerHeight + treatmentTypeSectionHeight + treatmentFormatSectionView.frame.height
+        treatmentTextInput.frame = CGRECT(treatmentTextInputViewLeftSpace, treatmentTextInputY, screenWidth - treatmentTextInputViewLeftSpace * 2, UIScreen.mainScreen().bounds.height - treatmentTextInputY - buttomSectionHeight)
+        treatmentTextInput.text = "请输入剂量及使用方法..."
+        treatmentTextInput.font = treatmentTextInputViewFont
+        treatmentTextInput.textColor = treatmentTextInputViewColor
+        self.view.addSubview(treatmentTextInput)
+    }
+    
+    func getTreatmentDetail(){
+        var treatmentName = String()
+        for treatmentButtonView in treatmentFormatSectionView.subviews {
+            if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == headerColor{
+                treatmentName += ((treatmentButtonView as! UIButton).titleLabel!).text! + " "
+            }
+        }
+        if (treatmentName as NSString).length == 0{
+            treatmentName = treatmentTypeArr.objectAtIndex(selectedIndex) as! String
+        }
+        var treatmentDosage = String()
+        if treatmentTextInput.textColor == UIColor.blackColor(){
+            treatmentDosage = treatmentTextInput.text!
+        }
+        let treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
+        treatmentList.addObject(treatment)
+    }
+    
+    func selectTreatment(sender:UIButton){
+        if sender.backgroundColor == UIColor.whiteColor(){
+            sender.backgroundColor = headerColor
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        }else{
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
+        }
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor != UIColor.blackColor() {
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    @IBAction func submitTreatment(){
+        self.getTreatmentDetail()
+        if treatmentList.count > 0 {
+            for treatment in treatmentList{
+                treatment.setObject(isPosted, forKey:"isPosted")
+                treatment.setObject((profileSet.objectForKey(newTreatmentBegindate) as! Int)*1000, forKey: "beginDate")
+                if profileSet.objectForKey(newTreatmentEnddate) != nil {
+                    treatment.setObject((profileSet.objectForKey(newTreatmentEnddate) as! Int)*1000, forKey: "endDate")
+                }
+            }
+            haalthyService.addTreatment(treatmentList)
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 }

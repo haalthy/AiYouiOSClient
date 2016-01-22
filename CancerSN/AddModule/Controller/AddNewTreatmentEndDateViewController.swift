@@ -12,14 +12,6 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
 //    var animationFinished = true
     let profileSet = NSUserDefaults.standardUserDefaults()
     
-//    @IBOutlet weak var menuView: CVCalendarMenuView!
-//
-//    @IBOutlet weak var calendarView: CVCalendarView!
-//    @IBOutlet weak var monthLabel: UIButton!
-//    var datePickerContainerView = UIView()
-//    var datePicker = UIDatePicker()
-//    var dateInserted:NSDate?
-    
     @IBOutlet weak var currentmonthLabel: UIButton!
     @IBOutlet weak var currentmenuView: CVCalendarMenuView!
     @IBOutlet weak var currentcalendarView: CVCalendarView!
@@ -27,31 +19,6 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
     @IBAction func loadPreviousView(sender: UIButton) {
         self.navigationController?.popViewControllerAnimated(true)
     }
-    
-//    @IBAction func selectDate(sender: UIButton) {
-//        let datePickerHeight :CGFloat = 200
-//        let confirmButtonWidth:CGFloat = 100
-//        let confirmButtonHeight:CGFloat = 30
-//        datePickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - datePickerHeight - 30 - 80, UIScreen.mainScreen().bounds.width, datePickerHeight + 30))
-//        datePickerContainerView.backgroundColor = UIColor.whiteColor()
-//        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
-//        self.datePicker.datePickerMode = UIDatePickerMode.Date
-//        let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
-//        confirmButton.setTitle("确定", forState: UIControlState.Normal)
-//        confirmButton.setTitleColor(mainColor, forState: UIControlState.Normal)
-//        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
-//        datePickerContainerView.addSubview(self.datePicker)
-//        datePickerContainerView.addSubview(confirmButton)
-//        self.view.addSubview(datePickerContainerView)
-//    }
-//    
-//    func dateChanged(){
-//        dateInserted = datePicker.date
-//        profileSet.setObject(dateInserted?.timeIntervalSince1970, forKey: newTreatmentEnddate)
-//        monthLabel.setTitle(CVDate(date: dateInserted!).globalDescription, forState: UIControlState.Normal)
-//        self.datePickerContainerView.removeFromSuperview()
-//    }
-    
     
     @IBAction func loadPrevious(sender: AnyObject) {
         calendarView.loadPreviousView()
@@ -68,33 +35,29 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
         super.monthLabel = self.currentmonthLabel
         super.viewDidLoad()
         profileSet.removeObjectForKey(newTreatmentEnddate)
-
-//        self.calendarView.calendarAppearanceDelegate = self
-//        
-//        // Animator delegate [Unnecessary]
-//        self.calendarView.animatorDelegate = self
-//        
-//        // Calendar delegate [Required]
-//        self.calendarView.calendarDelegate = self
-//        
-//        // Menu delegate [Required]
-//        self.menuView.menuViewDelegate = self
-//        monthLabel.text = CVDate(date: NSDate()).globalDescription
         monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
 
     }
-
-//    @IBAction func unselectNewTreatmentEndDate(sender: UIButton) {
-//        profileSet.setObject(defaultTreatmentEndDate, forKey: newTreatmentEnddate)
-//        self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
-//
-//    }
     
     @IBAction func submitTreatmentEndDate(sender: UIButton) {
         if profileSet.objectForKey(newTreatmentEnddate) == nil{
             profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentEnddate)
         }
-        self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
+        print(profileSet.objectForKey(newTreatmentEnddate) as! Int)
+        print(profileSet.objectForKey(newTreatmentBegindate) as! Int)
+        if (profileSet.objectForKey(newTreatmentEnddate) as! Int) < (profileSet.objectForKey(newTreatmentBegindate) as! Int) {
+            let alertController = UIAlertController(title: "结束时间必须大于开始时间", message: nil, preferredStyle: .Alert)
+            let ContinueAction = UIAlertAction(title: "返回", style: .Default){ (action)in
+            }
+            alertController.addAction(ContinueAction)
+//            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+
+        }else{
+            self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -112,7 +75,7 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
     override func didSelectDayView(dayView: CVCalendarDayView) {
         let date = dayView.date
         super.didSelectDayView(dayView)
-        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
+        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentEnddate)
     }
 }
 

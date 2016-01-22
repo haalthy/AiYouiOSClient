@@ -15,54 +15,7 @@ class CalenderViewController: UIViewController {
     var menuView: CVCalendarMenuView!
     var calendarView: CVCalendarView!
     
-//    func getProcessingTreatments(){
-//        let getTreatmentListData = haalthyService.getTreatments(username!)
-//        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentListData, options: NSJSONReadingOptions.MutableContainers)
-//        if(jsonResult is NSArray){
-//            self.treatmentList = jsonResult as! NSArray
-//        }
-//    }
-    
     var animationFinished = true
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-//        username = keychainAccess.getPasscode(usernameKeyChain) as! String
-//        profileSet.removeObjectForKey(newTreatmentBegindate)
-//        
-//        // Do any additional setup after loading the view.
-//        self.calendarView.calendarAppearanceDelegate = self
-//        
-//        // Animator delegate [Unnecessary]
-//        self.calendarView.animatorDelegate = self
-//        
-//        // Calendar delegate [Required]
-//        self.calendarView.calendarDelegate = self
-//        
-//        // Menu delegate [Required]
-//        self.menuView.menuViewDelegate = self
-//        monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
-//        getProcessingTreatments()
-//        if treatmentList.count > 0 {
-//            previousTreatment = treatmentList[0] as! NSDictionary
-//            print(previousTreatment.objectForKey("endDate"))
-//            print(NSDate().timeIntervalSince1970)
-//            if (previousTreatment.objectForKey("endDate") as! Double)/1000 > ((NSDate().timeIntervalSince1970) ){
-//                self.performSegueWithIdentifier("showPreviousTreatment", sender: self)
-//            }
-//        }
-//    }
-//    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "showPreviousTreatment"{
-//            let vc = segue.destinationViewController as! UpdatePreviousTreatmentViewController
-//            let controller = vc.popoverPresentationController
-//            if controller != nil{
-//                controller?.delegate = self
-//            }
-//            vc.treatment = previousTreatment
-//        }
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -206,28 +159,6 @@ extension CalenderViewController: CVCalendarViewAppearanceDelegate {
 extension CalenderViewController: CVCalendarMenuViewDelegate {
     // firstWeekday() has been already implemented.
 }
-
-// MARK: - IB Actions
-
-//extension AddNewTreatmentDateViewController {
-//    
-//    @IBAction func todayMonthView() {
-//        calendarView.toggleCurrentDayView()
-//    }
-//    
-//    /// Switch to WeekView mode.
-//    @IBAction func toWeekView(sender: AnyObject) {
-//        calendarView.changeMode(.WeekView)
-//    }
-//    
-//    /// Switch to MonthView mode.
-//    @IBAction func toMonthView(sender: AnyObject) {
-//        calendarView.changeMode(.MonthView)
-//    }
-//    
-//}
-
-// MARK: - Convenience API Demo
 
 extension CalenderViewController {
     func toggleMonthViewWithMonthOffset(offset: Int) {

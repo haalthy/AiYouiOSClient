@@ -1122,7 +1122,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="上一步"/>
                                 <connections>
-                                    <action selector="loadPreviousView:" destination="x4o-H8-fU8" eventType="touchUpInside" id="30C-97-8j4"/>
+                                    <action selector="loadPreviousView:" destination="PTd-7S-cDj" eventType="touchUpInside" id="aID-Zv-jeb"/>
                                 </connections>
                             </button>
                         </barButtonItem>
@@ -1138,10 +1138,11 @@
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4rW-Tt-N9e">
                                 <rect key="frame" x="334" y="7" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="下一步">
+                                <state key="normal" title="提交">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="submitTreatment" destination="PTd-7S-cDj" eventType="touchUpInside" id="agX-SO-r3m"/>
                                     <action selector="submitTreatmentEndDate:" destination="x4o-H8-fU8" eventType="touchUpInside" id="RXH-vk-pIw"/>
                                 </connections>
                             </button>
@@ -1320,7 +1321,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6oU-GH-yqb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10999.5" y="435"/>
+            <point key="canvasLocation" x="11194.5" y="337.5"/>
         </scene>
         <!--Add Status Table View Controller-->
         <scene sceneID="RWU-df-gxX">
