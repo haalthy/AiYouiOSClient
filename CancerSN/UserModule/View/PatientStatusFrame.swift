@@ -1,37 +1,38 @@
 //
-//  PatientStatusTableViewCell.swift
+//  PatientStatusFrame.swift
 //  CancerSN
 //
-//  Created by lily on 9/4/15.
-//  Copyright (c) 2015 lily. All rights reserved.
+//  Created by hui luo on 13/1/2016.
+//  Copyright © 2016 lily. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class PatientStatusTableViewCell: UITableViewCell {
+class PatientStatusFrame: NSObject {
     
-    @IBOutlet weak var patientStatusDetail: UILabel!
-
-    @IBOutlet weak var patientStatusDate: UILabel!
+    var cellHeight: CGFloat!
     
-    var indexPath: NSIndexPath?
-    
-    //自定义变量
-    var cellWidth: CGFloat = CGFloat()
-    
+    var cellWidth: CGFloat?
+//
+//    var dateFrame: CGRect?
+//    
+//    var highlightFrame: CGRect?
+//    
+//    var detailFrame: CGRect?
+//    
     var patientStatus = NSDictionary(){
         didSet{
-            updateUI()
+            getHeight()
         }
     }
     
-    func updateUI(){
-        self.removeAllSubviews()
-        cellWidth = self.frame.width
+    // MARK: - 设置frame
+    
+    func getHeight() {
         var highlightStr: String?
         var detailStr: String?
         var scanDataStr: String?
-
+        
         if ( patientStatus.objectForKey("scanData") != nil ) && ((patientStatus.objectForKey("scanData") is NSNull) == false) && ((patientStatus.objectForKey("scanData") as! String) != ""){
             scanDataStr = patientStatus.objectForKey("scanData") as! String
         }
@@ -54,18 +55,8 @@ class PatientStatusTableViewCell: UITableViewCell {
         }
         var patientstatusX: CGFloat = patientstatusHighlightLeftSpace
         var patientstatusY: CGFloat = patientstatusHighlightTopSpace
-        let patientstatusHighlightMaxW = cellWidth - patientstatusDateW - patientstatusDateRightSpace - patientstatusHighlightLeftSpace - patientstatusHighlightSpaceBetweenItems
-        let patientsDetailMaxW = cellWidth - patientstatusDetailLeftSpace - patientstatusDetailRightSpace
-        
-        let dateLabel = UILabel(frame: CGRect(x: cellWidth - patientstatusDateW - patientstatusDateRightSpace, y: patientstatusY, width: patientstatusDateW, height: patientstatusDateH))
-        let insertedDate = NSDate(timeIntervalSince1970: (patientStatus.objectForKey("insertedDate") as! Double)/1000 as NSTimeInterval)
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
-        let insertedDateStr = dateFormatter.stringFromDate(insertedDate)
-        dateLabel.text = insertedDateStr
-        dateLabel.font = dateFont
-        dateLabel.textColor = dateColor
-        self.addSubview(dateLabel)
+        let patientstatusHighlightMaxW = cellWidth! - patientstatusDateW - patientstatusDateRightSpace - patientstatusHighlightLeftSpace - patientstatusHighlightSpaceBetweenItems
+        let patientsDetailMaxW = cellWidth! - patientstatusDetailLeftSpace - patientstatusDetailRightSpace
         
         if highlightStr != nil && highlightStr != "" {
             let  patientstatusHighlightArr = highlightStr!.componentsSeparatedByString(" ")
@@ -87,11 +78,6 @@ class PatientStatusTableViewCell: UITableViewCell {
                     patientstatusHighlightButton.setTitleColor(patientstatusHighlightColor, forState: UIControlState.Normal)
                     patientstatusHighlightButton.titleLabel?.font = patientstatusHighlightFont
                     patientstatusHighlightButtonX += patientstatusHighlightButtonW + patientstatusHighlightSpaceBetweenItems
-                    patientstatusHighlightButton.layer.borderWidth = patientstatusHighlightBorderWidth
-                    patientstatusHighlightButton.layer.borderColor = patientstatusHighlightBorderColor.CGColor
-                    patientstatusHighlightButton.layer.cornerRadius = letpatientstatusHighlightCorner
-                    patientstatusHighlightButton.layer.masksToBounds = true
-                    self.addSubview(patientstatusHighlightButton)
                 }
             }
             patientstatusY = patientstatusHighlightButtonY + patientstatusHighlightButtonHeight
@@ -102,58 +88,28 @@ class PatientStatusTableViewCell: UITableViewCell {
                 detailWidth = patientstatusHighlightMaxW
             }
             let patientstatusDetailStrSize = detailStr?.sizeWithFont(patientstatusDetailFont, maxSize: CGSize(width: detailWidth, height: CGFloat.max))
-            let patientstatusDetail = UILabel(frame: CGRect(x: patientstatusX, y: patientstatusY, width: detailWidth, height: (patientstatusDetailStrSize?.height)!))
-            patientstatusDetail.text = detailStr
-            patientstatusDetail.font = patientstatusDetailFont
-            patientstatusDetail.textColor = patientstatusDetailColor
+            let patientstatusDetail = UILabel(frame: CGRect(x: patientstatusX, y: patientstatusY, width: (patientstatusDetailStrSize?.width)!, height: (patientstatusDetailStrSize?.height)!))
             patientstatusDetail.numberOfLines = 0
-            self.addSubview(patientstatusDetail)
             patientstatusY += patientstatusDetail.frame.height
         }
-        let seperatorLine:UIView = UIView(frame: CGRect(x: treatmentTitleLeftSpace, y: 0, width: cellWidth - treatmentTitleLeftSpace, height: seperatorLineH))
-        seperatorLine.backgroundColor = seperateLineColor
+        
         if (patientStatus.objectForKey("imageURL") != nil) && ((patientStatus.objectForKey("imageURL") is NSNull) == false) && ((patientStatus.objectForKey("imageURL") as! String) != ""){
             let imageURLStr: String = patientStatus.objectForKey("imageURL") as! String
-            var imageURLArr = imageURLStr.componentsSeparatedByString(";")
-            var imageIndex: Int = 0
-            for imageURL in imageURLArr{
-                let whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-                imageURL.stringByTrimmingCharactersInSet(whitespace)
-                if imageURL == ""{
-                    imageURLArr.removeAtIndex(imageIndex)
-                }
-                imageIndex++
-            }
+            let imageURLArr = imageURLStr.componentsSeparatedByString(";")
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace
-            var feedModel = PostFeedStatus()
+            
+            let feedModel = PostFeedStatus()
             feedModel.imageURL = imageURLStr
 //            feedModel.picArr = imageURLArr
             
             //配图
-            let photosX: CGFloat = patientstatusX
-            let photosY: CGFloat = patientstatusY
             
-            let photosSize: CGSize = FeedPhotosView.layoutForPhotos((imageURLArr.count))
-            let photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
-            
-            let picsView = FeedPhotosView(feedModel: feedModel, frame: photosFrame)
-            picsView.frame = photosFrame
-            picsView.picsUrl = imageURLArr
-            self.addSubview(picsView)
+            let photosSize: CGSize = FeedPhotosView.layoutForPhotos(imageURLArr.count)
+            patientstatusY += photosSize.height + imageTopSpace
         }
-        self.addSubview(seperatorLine)
+        
+        cellHeight = patientstatusY + patientstatusDetailButtomSpace
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

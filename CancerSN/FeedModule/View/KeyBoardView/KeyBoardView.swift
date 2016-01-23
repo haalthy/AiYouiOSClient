@@ -17,17 +17,26 @@ let kKeyBoardTextViewBgColor: UIColor = UIColor.whiteColor()
 // 横向间隔
 let kHorizontalPadding: CGFloat = 8.0
 // 纵向间隔
+<<<<<<< HEAD
 let kVerticalPadding: CGFloat = 7.0
 // text左间隔
 let kTextViewLeftMargin: CGFloat = 14.0
 // text右间隔
 let kTextViewRightMargin: CGFloat = 12.0
+=======
+let kVerticalPadding: CGFloat = 9.0
+// text左间隔
+let kTextViewLeftMargin: CGFloat = 16.0
+// text右间隔
+let kTextViewRightMargin: CGFloat = 16.0
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 
 // viewColor
 let kKeyBoardColor: UIColor = RGB(242, 248, 248)
 // viewBoardColor
 let kKeyBoardWColor: UIColor = RGB(211, 211, 211)
 
+<<<<<<< HEAD
 let kKeyBoardFaceBtnWidth: CGFloat = 30
 
 protocol KeyBoardDelegate {
@@ -45,6 +54,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
 
     // 代理
     var delegate: KeyBoardDelegate?
+=======
+let kKeyBoardFaceBtnWidth: CGFloat = 25
+
+class KeyBoardView: UIView, UITextViewDelegate {
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 
     override init(frame: CGRect) {
         
@@ -53,7 +67,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         
         self.setContentView()
         self.setLayoutView()
+<<<<<<< HEAD
         self.initNaitfication()
+=======
+        
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -65,8 +83,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     override func drawRect(rect: CGRect) {
         // Drawing code
     }
+<<<<<<< HEAD
     
     
+=======
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 
     // MARK - 设置view内容
     
@@ -80,6 +101,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         self.userInteractionEnabled = true
     }
     
+<<<<<<< HEAD
     // MARK: - 初始化通知
     
     func initNaitfication() {
@@ -88,19 +110,30 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     }
     
     // MARK: - 设置键盘布局
+=======
+    // MARK:
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
     
     func setLayoutView() {
     
         // 评论内容textView
+<<<<<<< HEAD
         textView.frame = CGRECT(kTextViewLeftMargin, kVerticalPadding, self.frame.size.width - kTextViewLeftMargin - kTextViewRightMargin - kKeyBoardFaceBtnWidth - 8, kKeyBoardTextViewHeight)
         textView.returnKeyType = UIReturnKeyType.Send
        // textView.scrollEnabled = false
+=======
+        let textView: KBTextView = KBTextView()
+        textView.frame = CGRECT(kTextViewLeftMargin, kVerticalPadding, self.frame.size.width - kTextViewLeftMargin - kTextViewRightMargin - kKeyBoardFaceBtnWidth, kKeyBoardTextViewHeight)
+        textView.returnKeyType = UIReturnKeyType.Send
+        textView.scrollEnabled = false
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
         textView.backgroundColor = kKeyBoardTextViewBgColor
         textView.delegate = self
         self.addSubview(textView)
         
         // 标签按钮
         let faceBtn: UIButton = UIButton(type: UIButtonType.Custom)
+<<<<<<< HEAD
         faceBtn.frame = CGRECT(CGRectGetMaxX(textView.frame) + kTextViewRightMargin, kVerticalPadding + 3, kKeyBoardFaceBtnWidth, kKeyBoardFaceBtnWidth)
         faceBtn.setBackgroundImage(UIImage(named: "btn_emoji"), forState: UIControlState.Normal)
         faceBtn.setBackgroundImage(UIImage(named: "btn_publish_keyboard_a"), forState: UIControlState.Selected)
@@ -118,10 +151,19 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
             self.faceView?.autoresizingMask = UIViewAutoresizing.FlexibleTopMargin
         }
         
+=======
+        faceBtn.frame = CGRECT(CGRectGetMaxX(textView.frame) + kTextViewRightMargin, kVerticalPadding, kKeyBoardFaceBtnWidth, kKeyBoardFaceBtnWidth)
+        faceBtn.setBackgroundImage(UIImage(named: ""), forState: UIControlState.Normal)
+        faceBtn.setBackgroundImage(UIImage(named: ""), forState: UIControlState.Selected)
+        faceBtn.addTarget(self, action: "willShowFaceView:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.addSubview(faceBtn)
+        
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
     }
     
     // MARK: - 功能方法
     
+<<<<<<< HEAD
     // MARK: 展示表情view
     
     func willShowFaceView(btn: UIButton) {
@@ -237,3 +279,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
 
 
+=======
+    func willShowFaceView(btn: UIButton) {
+    
+        
+    }
+
+}
+>>>>>>> 266f95446ed409916b86b69ad9006f88524dc869

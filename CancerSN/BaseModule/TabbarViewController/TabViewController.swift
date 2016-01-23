@@ -60,9 +60,26 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         postBtn.setBackgroundImage(UIImage(named: "btn_post"), forState: UIControlState.Normal )
         self.tabBar .addSubview(postBtn)
         
+        postBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
+        
     }
     
-    // MARK: - set TabBar attributes 
+    func addPost(){
+        let storyboard = UIStoryboard(name: "Add", bundle: nil)
+        let popoverContent = storyboard.instantiateViewControllerWithIdentifier("AddEntry")
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = UIModalPresentationStyle.Popover
+        let popover = nav.popoverPresentationController
+//        popoverContent.preferredContentSize = CGSizeMake(100,100)
+//        popover!.delegate = self
+//        popover!.sourceView = self.view
+//        popover!.sourceRect = CGRectMake(300,0,0,0)
+//        popover?.permittedArrowDirections = UIPopoverArrowDirection.Up
+        
+        self.presentViewController(nav, animated: true, completion: nil)
+    }
+    
+    // MARK: - set TabBar attributes
     
     func setTabBarAttributes() {
     

@@ -10,9 +10,8 @@ import Foundation
 
 //restful service URL setting
 
-
 let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-let haalthyServiceSolrURL : String = "http://localhost:8983/solr/aiyoupost/"
+let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
 
 // MARK: - 智囊圈模块
