@@ -95,7 +95,4 @@ class PostFeedStatus: D3Model {
     // 用户头像
     var portraitURL: String?
     
-    // 用户头像
-    var portraitURL: String?
-    
 }

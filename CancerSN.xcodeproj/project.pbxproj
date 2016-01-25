@@ -13,11 +13,8 @@
 		2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A411BB9E79C00E4272B /* SystemConfiguration.framework */; };
 		2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A431BB9E7A800E4272B /* CoreGraphics.framework */; };
 		2A410A481BB9E7C100E4272B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A471BB9E7C100E4272B /* CoreTelephony.framework */; };
-<<<<<<< HEAD
-=======
 		2A8E43E91C4CAC4C003FAADC /* AddTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43E81C4CAC4C003FAADC /* AddTreatmentDateViewController.swift */; };
 		2A8E43EB1C4CAD4E003FAADC /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */; };
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 		2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264AD1B615D2A001E52E7 /* Main.storyboard */; };
 		2AA2650E1B684D25001E52E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AA2650D1B684D25001E52E7 /* CoreData.framework */; };
 		2ABEFDB11C523FD7004D8EE9 /* AddPatientStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */; };
@@ -737,7 +734,6 @@
 			path = D3Model;
 			sourceTree = "<group>";
 		};
-<<<<<<< HEAD
 		6B3012291C42746400E101BD /* FaceView */ = {
 			isa = PBXGroup;
 			children = (
@@ -746,8 +742,6 @@
 			path = FaceView;
 			sourceTree = "<group>";
 		};
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 		6B7FA2A81C2119A600094FB0 /* SwiftNotice */ = {
 			isa = PBXGroup;
 			children = (
@@ -956,10 +950,7 @@
 				6B93FC621C1E5B9400A81EA9 /* ShowPostDetailTableViewController.swift */,
 				6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */,
 				6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */,
-<<<<<<< HEAD
 				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1036,10 +1027,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				6B84122F1C4F7C9F00BE54B0 /* MBProgressHUD */,
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 				6B2BF6D31C3BA3AB00654A91 /* D3Model */,
 				DDD6A10B1C37C28C00C258D2 /* PNChart */,
 				6BBFD91B1C32785700282573 /* JsonModel */,
@@ -1313,10 +1301,7 @@
 		6BF05DD11C3D0ACF00D7AF99 /* KeyBoardView */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				6B3012291C42746400E101BD /* FaceView */,
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 				6BF05DD21C3D0AEF00D7AF99 /* KeyBoardView.swift */,
 				6BF05DD41C3E0DC400D7AF99 /* KBTextView.swift */,
 			);
@@ -1590,11 +1575,8 @@
 				DDD6A13C1C37C28C00C258D2 /* PNScatterChartData.m in Sources */,
 				6BBFD90E1C3273F900282573 /* UIScrollView+MJRefresh.m in Sources */,
 				6B93FC5B1C1E5A9D00A81EA9 /* UserListTableViewCell.swift in Sources */,
-<<<<<<< HEAD
 				6B93FC391C1E5A4F00A81EA9 /* AddNewTreatmentDateViewController.swift in Sources */,
 				6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */,
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 				6BBFD8FD1C3273F900282573 /* MJRefreshAutoFooter.m in Sources */,
 				6B93FCC91C1E66CA00A81EA9 /* CVCalendarViewDelegate.swift in Sources */,
 				6B93FC4F1C1E5A9D00A81EA9 /* CommentListTableViewController.swift in Sources */,
@@ -1698,10 +1680,7 @@
 				6BBFD9001C3273F900282573 /* MJRefreshFooter.m in Sources */,
 				6B93FCCF1C1E66CA00A81EA9 /* CVRange.swift in Sources */,
 				6B93FCCC1C1E66CA00A81EA9 /* CVCalendarWeekday.swift in Sources */,
-<<<<<<< HEAD
-=======
 				2AE23B621C466B8500B3A86F /* PatientStatus.swift in Sources */,
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
 				6BF05DD71C3E639E00D7AF99 /* FeedDetailViewController.swift in Sources */,
 				DDD6A1311C37C28C00C258D2 /* PNCircleChart.m in Sources */,
 				DDD6A1331C37C28C00C258D2 /* PNGenericChart.m in Sources */,

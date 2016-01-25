@@ -29,21 +29,14 @@ class KBTextView: UITextView {
         
         // 默认字体与颜色
         self.placeHolder = ""
-<<<<<<< HEAD
         self.placeHolderColor = RGB(204, 204, 204)
-=======
-        self.placeHolderColor = UIColor.lightGrayColor()
-        
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
         self.layer.borderColor = kKBTextViewBoardColor.CGColor
         self.layer.borderWidth = kKBTextViewBoardWidth
         self.layer.cornerRadius = 4.0
         
-<<<<<<< HEAD
         self.font = UIFont.systemFontOfSize(18)
         
-=======
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -58,25 +51,18 @@ class KBTextView: UITextView {
         if self.text == "" {
         
             var placeHolderRect: CGRect = CGRECT(0, 0, 0, 0)
-<<<<<<< HEAD
             placeHolderRect.origin.y = 9
-=======
-            placeHolderRect.origin.y = 8
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
+
             placeHolderRect.size.height = CGRectGetHeight(self.frame) - 8
             placeHolderRect.origin.x = 5
             placeHolderRect.size.width = CGRectGetWidth(self.frame) - 5
             
-<<<<<<< HEAD
            // self.placeHolderColor!.set()
            
             let context: CGContextRef = UIGraphicsGetCurrentContext()!
             CGContextSetFillColorWithColor(context, self.placeHolderColor?.CGColor)
 
-=======
-            self.placeHolderColor!.set()
-            
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
+
             // 定义属性
             let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
@@ -86,17 +72,11 @@ class KBTextView: UITextView {
             ]
             self.placeHolder?.drawInRect(placeHolderRect, withAttributes: dict)
             
-<<<<<<< HEAD
 
         }
     }
 
-=======
-        }
-    }
 
-
->>>>>>> 266f95446ed409916b86b69ad9006f88524dc869
     func textChange(noti: NSNotification) {
         
         self.setNeedsDisplay()
