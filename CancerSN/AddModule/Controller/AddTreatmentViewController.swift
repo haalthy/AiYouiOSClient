@@ -89,22 +89,25 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         self.view.addSubview(treatmentHeaderSeperateLine)
         
         //添加底部选择框
-        treatmentBtmSectionView = UIView(frame: CGRect(x: 0, y: UIScreen.mainScreen().bounds.height - buttomSectionHeight, width: screenWidth, height: buttomSectionHeight))
-        let btmSeperateLine = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 0.5))
-        btmSeperateLine.backgroundColor = seperateLineColor
-        treatmentBtmSectionView.addSubview(btmSeperateLine)
-        let checkbox = UIButton(frame: CGRect(x: checkboxLeftSpace, y: checkboxTopSpace, width: checkboxHeight, height: checkboxHeight))
-        checkbox.layer.borderColor = privateLabelColor.CGColor
-        checkbox.layer.borderWidth = checkboxBorderWidth
-        checkbox.layer.cornerRadius = checkboxCornerRadius
-        checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
-        treatmentBtmSectionView.addSubview(checkbox)
-        let privateLbl = UILabel(frame: CGRect(x: privateLabelLeftSpace, y: 0, width: screenWidth - privateLabelLeftSpace, height: buttomSectionHeight))
-        privateLbl.textAlignment = NSTextAlignment.Left
-        privateLbl.textColor = privateLabelColor
-        privateLbl.text = "不发送到我的智囊圈"
-        treatmentBtmSectionView.addSubview(privateLbl)
-        self.view.addSubview(treatmentBtmSectionView)
+//        treatmentBtmSectionView = UIView(frame: CGRect(x: 0, y: UIScreen.mainScreen().bounds.height - buttomSectionHeight, width: screenWidth, height: buttomSectionHeight))
+//        let btmSeperateLine = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 0.5))
+//        btmSeperateLine.backgroundColor = seperateLineColor
+//        treatmentBtmSectionView.addSubview(btmSeperateLine)
+//        let checkbox = UIButton(frame: CGRect(x: checkboxLeftSpace, y: checkboxTopSpace, width: checkboxHeight, height: checkboxHeight))
+//        checkbox.layer.borderColor = privateLabelColor.CGColor
+//        checkbox.layer.borderWidth = checkboxBorderWidth
+//        checkbox.layer.cornerRadius = checkboxCornerRadius
+//        checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
+//        treatmentBtmSectionView.addSubview(checkbox)
+//        let privateLbl = UILabel(frame: CGRect(x: privateLabelLeftSpace, y: 0, width: screenWidth - privateLabelLeftSpace, height: buttomSectionHeight))
+//        privateLbl.textAlignment = NSTextAlignment.Left
+//        privateLbl.textColor = privateLabelColor
+//        privateLbl.text = "不发送到我的智囊圈"
+//        treatmentBtmSectionView.addSubview(privateLbl)
+        let privateCheckUIView = PrivateCheckUIView()
+        treatmentBtmSectionView = privateCheckUIView.createCheckedSection()
+        privateCheckUIView.checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(privateCheckUIView)
     }
     
     func selectedTreatmentType(sender: UIButton){
