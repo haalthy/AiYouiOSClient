@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
     
     //global variable
     var headerHeight: CGFloat = CGFloat()
@@ -17,7 +17,12 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var patientStatusFormatList = NSArray()
     var clinicReportFormatList = NSArray()
     var keyboardheight:CGFloat = 0
-    
+    var patientStatusDetail: String = String()
+//    var cinicReportIndex = 0
+    var clinicRowsCount:Int = 0
+    var defaultClinicRowsName = NSMutableArray()
+    var selfDefinedCilnicRowName = NSMutableArray()
+
     //date section
     var dateSection = UIView()
     var scrollView = UIScrollView()
@@ -25,6 +30,11 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var symptomDesp = UITextView()
     var reportView = UIView()
     var checkedView = UIView()
+    var clinicReportViewList = UIView()
+    let reportTextInput = UITextField()
+    let scanReportText = UITextView()
+    var clinicTableView = UITableView()
+    
     var dateInserted: NSDate?
     var isPosted: Int = 1
     
@@ -33,6 +43,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         initContentView()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
+        clinicTableView.delegate = self
+        clinicTableView.dataSource = self
     }
     
     func initVariables(){
@@ -97,6 +109,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             symptomBtn.layer.borderWidth = 1
             symptomBtn.layer.cornerRadius = 2
             symptomBtn.layer.masksToBounds = true
+            symptomBtn.addTarget(self, action: "selectSymptom:", forControlEvents: UIControlEvents.TouchUpInside)
             symptomsSection.addSubview(symptomBtn)
             symptomBtnsX += symptomBtn.frame.width + 11
         }
@@ -137,6 +150,16 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         privateCheckUIView.checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
     }
     
+    func selectSymptom(sender: UIButton){
+        if sender.backgroundColor == UIColor.whiteColor(){
+            sender.backgroundColor = headerColor
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        }else{
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
+        }
+    }
+    
     func addReport(sender: UIButton){
         sender.removeFromSuperview()
         getClinicReportFormat()
@@ -159,36 +182,51 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         reportListView.addSubview(reportListTitle)
         
         //add report list
-        var cinicReportIndex = 0
+//        clinicRowsCount = self.clinicReportFormatList.count
         let clinicReportLblW:CGFloat = 80
+//        for clinicReportFormat in clinicReportFormatList {
+//            let clinicReportView = UIView(frame: CGRect(x: 0, y: CGFloat(cinicReportIndex)*clinicReportTitleListHeight, width: reportListViewW, height: clinicReportTitleListHeight))
+//            let clinicReportLbl = UILabel(frame: CGRect(x: 0, y: 0, width: clinicReportLblW, height: clinicReportTitleListHeight))
+//            clinicReportLbl.text = ((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String) + ":"
+//            clinicReportLbl.font = reportListTitleFont
+//            clinicReportLbl.textColor = reportListItemColor
+//            clinicReportView.addSubview(clinicReportLbl)
+//            let clinicReportItemTextField: UITextField = UITextField(frame: CGRect(x: clinicReportLblW, y: 0, width: clinicReportView.frame.width - clinicReportLblW, height: clinicReportTitleListHeight))
+//            clinicReportItemTextField.textColor = reportListItemColor
+//            clinicReportItemTextField.font = reportListTitleFont
+//            clinicReportItemTextField.placeholder = "0.0"
+//            clinicReportView.addSubview(clinicReportItemTextField)
+//            let seperateLine = UIView(frame: CGRect(x: 0, y: clinicReportTitleListHeight - 0.5, width: reportListViewW, height: 0.5))
+//            seperateLine.backgroundColor = seperateLineColor
+//            clinicReportView.addSubview(seperateLine)
+//            clinicReportViewList.addSubview(clinicReportView)
+//            cinicReportIndex++
+//        }
+//        clinicReportViewList.frame = CGRECT(0, clinicReportTitleListHeight, reportListViewW, CGFloat(clinicReportFormatList.count)*clinicReportTitleListHeight)
+        clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, reportListViewW, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
         for clinicReportFormat in clinicReportFormatList {
-            let clinicReportListView = UIView(frame: CGRect(x: 0, y: CGFloat(cinicReportIndex + 1)*clinicReportTitleListHeight, width: reportListViewW, height: reportListViewH))
-            let clinicReportLbl = UILabel(frame: CGRect(x: 0, y: 0, width: clinicReportLblW, height: reportListViewH))
-            clinicReportLbl.text = ((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String) + ":"
-            clinicReportLbl.font = reportListTitleFont
-            clinicReportLbl.textColor = reportListItemColor
-            clinicReportListView.addSubview(clinicReportLbl)
-            let clinicReportItemTextField: UITextField = UITextField(frame: CGRect(x: clinicReportLblW, y: reportListViewH, width: clinicReportListView.frame.width - clinicReportLblW, height: reportListViewH))
-            clinicReportItemTextField.textColor = reportListItemColor
-            clinicReportItemTextField.font = reportListTitleFont
-            clinicReportListView.addSubview(clinicReportItemTextField)
-            let seperateLine = UIView(frame: CGRect(x: 0, y: clinicReportTitleListHeight - 0.5, width: reportListViewW, height: 0.5))
-            seperateLine.backgroundColor = seperateLineColor
-            clinicReportListView.addSubview(seperateLine)
-            reportListView.addSubview(clinicReportListView)
+            defaultClinicRowsName.addObject((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String)
         }
+        clinicRowsCount = defaultClinicRowsName.count
+//        clinicTableView.setEditing(true, animated: true)
+        reportListView.addSubview(clinicTableView)
         //add report text
-        let reportTextInput: UITextField = UITextField(frame: CGRect(x: 0, y: CGFloat(cinicReportIndex + 1)*clinicReportTitleListHeight, width: reportListViewW, height: clinicReportTitleListHeight))
-        reportTextInput.placeholder = reportTextInputStr
-        reportTextInput.font = reportListTitleFont
-        reportTextInput.delegate = self
-        let seperateTextInputLine = UIView(frame: CGRect(x: 0, y: clinicReportTitleListHeight - 0.5, width: reportListViewW, height: 0.5))
-        seperateTextInputLine.backgroundColor = seperateLineColor
-        reportTextInput.addSubview(seperateTextInputLine)
-        reportListView.addSubview(reportTextInput)
+//        reportTextInput.frame = CGRect(x: 0, y: CGFloat(cinicReportIndex + 1)*clinicReportTitleListHeight, width: reportListViewW, height: clinicReportTitleListHeight)
+//        reportTextInput.placeholder = reportTextInputStr
+//        reportTextInput.font = reportListTitleFont
+//        reportTextInput.delegate = self
+//        let seperateTextInputLine = UIView(frame: CGRect(x: 0, y: clinicReportTitleListHeight - 0.5, width: reportListViewW, height: 0.5))
+//        seperateTextInputLine.backgroundColor = seperateLineColor
+//        reportTextInput.addSubview(seperateTextInputLine)
+//        reportListView.addSubview(reportTextInput)
+        
+//        let  addMoreClinicDataBtn = UIButton(frame: CGRect(x: 10, y: CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight, width: reportListViewW - 50, height: clinicReportTitleListHeight-20))
+//        addMoreClinicDataBtn.backgroundColor = headerColor
+//        addMoreClinicDataBtn.addTarget(self, action: "addClinicData:", forControlEvents: UIControlEvents.TouchUpInside)
+//        reportListView.addSubview(addMoreClinicDataBtn)
         self.scrollView.addSubview(reportListView)
         
-        let scanReportText: UITextView = UITextView(frame: CGRECT(10, reportListViewY + reportListView.frame.height, reportListViewW, scanReportHeight))
+        scanReportText.frame = CGRECT(10, reportListViewY + reportListView.frame.height, reportListViewW, scanReportHeight)
         scanReportText.text = scanReportDespStr
         scanReportText.textColor = textInputViewPlaceholderColor
         scanReportText.delegate = self
@@ -199,6 +237,38 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         scrollView.contentSize = CGSize(width: screenWidth, height: scrollView.frame.height + reportListViewY)
         self.scrollView.contentOffset = CGPoint(x: 0, y: symptomDespTextTopSpace + symptomsSection.frame.height + symptomDesp.frame.height)
         self.scrollView.scrollEnabled = true
+    }
+    
+    func addClinicData(sender: UIButton){
+//        let clinicReportView = UIView(frame: CGRect(x: 0, y: CGFloat(cinicReportIndex)*clinicReportTitleListHeight, width: screenWidth - clinicReportListLeftSpace * 2, height: clinicReportTitleListHeight))
+//        clinicReportViewList.addSubview(clinicReportView)
+//        clinicReportViewList.frame = CGRECT(clinicReportViewList.frame.origin.x, clinicReportViewList.frame.origin.y, clinicReportViewList.frame.width, clinicReportViewList.frame.height + clinicReportTitleListHeight)
+        self.clinicTableView.beginUpdates()
+        var indexPath = NSIndexPath(forRow: clinicRowsCount, inSection: 0)
+        clinicRowsCount++
+//        clinicRowsName.addObject("hello")
+        self.clinicTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.clinicTableView.endUpdates()
+        
+        self.clinicTableView.frame = CGRECT(clinicTableView.frame.origin.x, clinicTableView.frame.origin.y, clinicTableView.frame.width, clinicTableView.frame.height + clinicReportTitleListHeight)
+        let reportListView = clinicTableView.superview!
+        reportListView.frame = CGRECT(reportListView.frame.origin.x, reportListView.frame.origin.y, reportListView.frame.width, reportListView.frame.height + clinicReportTitleListHeight)
+        scanReportText.center = CGPoint(x: scanReportText.center.x, y: scanReportText.center.y + clinicReportTitleListHeight)
+        sender.center = CGPoint(x: sender.center.x, y: sender.center.y + clinicReportTitleListHeight)
+        scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + clinicReportTitleListHeight)
+//        cinicReportIndex++
+    }
+    
+    func deleteClinicData(sender: UIButton){
+        var indexPath = self.clinicTableView.indexPathForCell(sender.superview as! UITableViewCell)
+        clinicRowsCount--
+        if indexPath?.row < defaultClinicRowsName.count {
+            defaultClinicRowsName.removeObjectAtIndex((indexPath?.row)!)
+        }
+//        self.clinicRowsName.removeObjectAtIndex((indexPath?.row)!)
+        self.clinicTableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.clinicTableView.frame = CGRECT(clinicTableView.frame.origin.x, clinicTableView.frame.origin.y, clinicTableView.frame.width, clinicTableView.frame.height - clinicReportTitleListHeight)
+        
     }
     
     func checkedPrivate(sender: UIButton){
@@ -239,16 +309,18 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-//    @IBAction func submitStatus(sender: UIButton){
-//        for symptonButton in symptonContainerView.subviews {
-//            if symptonButton is UIButton && symptonButton.backgroundColor == mainColor{
-//                patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + "*"
-//            }
-//        }
-//        if textView.textColor == UIColor.blackColor(){
-//            patientStatusDetail += "**" + textView.text
-//        }
-//        
+    @IBAction func submitStatus(sender: UIButton){
+        
+        for symptonButton in symptomsSection.subviews {
+            if symptonButton is UIButton && symptonButton.backgroundColor == mainColor{
+                patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + " "
+            }
+        }
+        if symptomDesp.textColor == UIColor.blackColor(){
+            patientStatusDetail += "::" + symptomDesp.text
+        }
+        
+//
 //        let clinicItemList = NSMutableArray()
 //        var index = 0
 //        for index = 0; index < clinicReportFormatList.count; index++ {
@@ -284,7 +356,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
 //        patientStatus.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "insertedDate")
 //        
 //        haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
-//    }
+    }
 
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -328,5 +400,46 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         
         self.checkedView.center = CGPoint(x: self.checkedView.center.x, y: self.checkedView.center.y + keyboardheight)
     }
+    
+    // MARK: - Table view data source
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Potentially incomplete method implementation.
+        // Return the number of sections.
+        return 2
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0{
+            return clinicRowsCount
+        }else{
+            return 1
+        }
+    }
+    
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellIdentifier:String = "cell"
+        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: cellIdentifier)
+        if indexPath.section == 0{
+            if indexPath.row < defaultClinicRowsName.count {
+                cell.textLabel?.text =  (clinicReportFormatList.objectAtIndex(indexPath.row) as! NSDictionary).objectForKey("clinicItem") as! String
+                //            cell.textLabel?.text = self.clinicRowsName.objectAtIndex(indexPath.row) as! String
+                let deleteBtn = UIButton(frame: CGRect(x: 200, y: 5, width: 50, height: 30))
+                deleteBtn.backgroundColor = headerColor
+                deleteBtn.addTarget(self, action: "deleteClinicData:", forControlEvents: UIControlEvents.TouchUpInside)
+                cell.addSubview(deleteBtn)
+            }else{
+                cell.textLabel?.text =  "其他指标"
+            }
+        }else{
+            let  addMoreClinicDataBtn = UIButton(frame: CGRect(x: 10, y: 5, width:  100, height: clinicReportTitleListHeight-20))
+            addMoreClinicDataBtn.backgroundColor = headerColor
+            addMoreClinicDataBtn.addTarget(self, action: "addClinicData:", forControlEvents: UIControlEvents.TouchUpInside)
+            cell.addSubview(addMoreClinicDataBtn)
+        }
+        return cell
+    }
+    
 }
 
