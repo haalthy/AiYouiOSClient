@@ -41,6 +41,9 @@ class ChartSummaryTableViewCell: UITableViewCell {
     }
     
     func updateUI(){
+        self.chartScrollView.removeAllSubviews()
+        dataPointsXArr.removeAllObjects()
+        dataPointsYArr.removeAllObjects()
         initContentView()
         initVariable()
         selectedItemIndex(buttonIndexPair.objectForKey(0) as! String, index: 0)

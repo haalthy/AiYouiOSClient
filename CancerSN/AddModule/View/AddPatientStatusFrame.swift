@@ -48,6 +48,7 @@ let reportListTitleStr: String = String("请在此输入病人的实验室资料
 let reportListTitleColor: UIColor = UIColor(red: 153 / 255, green: 153 / 255, blue: 153 / 255, alpha: 1)
 let reportListTitleFont: UIFont = UIFont.systemFontOfSize(13)
 let reportListItemColor: UIColor = UIColor(red: 102 / 255, green: 102 / 255, blue: 102 / 255, alpha: 1)
+let reportListItemPlaceholder: String = "0.0"
 let clinicReportLblW:CGFloat = CGFloat(90)
 let clinicReportDelBtnRightSpace: CGFloat = CGFloat(15)
 let clinicReportDelBtnWidth:CGFloat = CGFloat(12)

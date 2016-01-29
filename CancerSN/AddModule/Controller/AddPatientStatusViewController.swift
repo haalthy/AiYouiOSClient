@@ -11,6 +11,9 @@ import UIKit
 class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
     
     //global variable
+    let getAccessToken = GetAccessToken()
+    let keychainAccess = KeychainAccess()
+    
     var headerHeight: CGFloat = CGFloat()
     var screenWidth = UIScreen.mainScreen().bounds.width
     var haalthyService = HaalthyService()
@@ -21,6 +24,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var clinicRowsCount:Int = 0
     var defaultClinicRowsName = NSMutableArray()
     var selfDefinedCilnicRowName = NSMutableArray()
+    var clinicDataList = NSMutableArray()
 
     //date section
     var dateSection = UIView()
@@ -33,6 +37,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     let reportTextInput = UITextField()
     let scanReportText = UITextView()
     var clinicTableView = UITableView()
+    let dateBtn = UIButton()
     
     var dateInserted: NSDate?
     var isPosted: Int = 1
@@ -65,7 +70,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         dateFormatter.dateFormat = "YYYY/MM/dd" // superset of OP's format
         let dateStr = dateFormatter.stringFromDate(dateInserted!)
         let dateBtnTextSize = dateStr.sizeWithFont(patientStatusDateBtnFont, maxSize: CGSize(width: screenWidth, height: CGFloat.max))
-        let dateBtn = UIButton(frame: CGRect(x: patientStatusDateLabelLeftSpace + 39, y: 0, width: dateBtnTextSize.width + patientStatusDropdownLeftSpace + patientStatusDropdownW, height: patientStatusDateSectionHeight))
+        dateBtn.frame = CGRect(x: patientStatusDateLabelLeftSpace + 39, y: 0, width: dateBtnTextSize.width + patientStatusDropdownLeftSpace + patientStatusDropdownW, height: patientStatusDateSectionHeight)
         dateBtn.setTitle(dateStr, forState: UIControlState.Normal)
         dateBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
         dateBtn.titleLabel?.font = patientStatusDateBtnFont
@@ -150,7 +155,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     }
     
     func selectSymptom(sender: UIButton){
-        if sender.backgroundColor == UIColor.whiteColor(){
+        print(sender.backgroundColor)
+        if (sender.backgroundColor == nil) || (sender.backgroundColor == UIColor.whiteColor()){
             sender.backgroundColor = headerColor
             sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         }else{
@@ -274,52 +280,71 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     @IBAction func submitStatus(sender: UIButton){
         
         for symptonButton in symptomsSection.subviews {
-            if symptonButton is UIButton && symptonButton.backgroundColor == mainColor{
+            if symptonButton is UIButton && symptonButton.backgroundColor == headerColor{
                 patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + " "
             }
         }
-        if symptomDesp.textColor == UIColor.blackColor(){
+        if symptomDesp.textColor != textInputViewPlaceholderColor{
             patientStatusDetail += "::" + symptomDesp.text
         }
         
-//
-//        let clinicItemList = NSMutableArray()
-//        var index = 0
-//        for index = 0; index < clinicReportFormatList.count; index++ {
-//            let indexPath = NSIndexPath(forRow: index, inSection: 3)
-//            let clinicItem = NSMutableDictionary()
-//            let cell = self.tableView.cellForRowAtIndexPath(indexPath)
-//            for clinicItemView in cell!.subviews {
-//                if clinicItemView is UILabel{
-//                    clinicItem.setObject((clinicItemView as! UILabel).text!, forKey: "clinicItemName")
-//                }
-//                if (clinicItemView is UITextField) && ((clinicItemView as! UITextField).text != nil) && ((clinicItemView as! UITextField).text != ""){
-//                    clinicItem.setObject((clinicItemView as! UITextField).text!, forKey: "clinicItemDesc")
-//                }
-//            }
-//            if (clinicItem.objectForKey("clinicItemDesc") != nil) && ((clinicItem.objectForKey("clinicItemDesc") as! String) != ""){
-//                clinicItemList.addObject(clinicItem)
-//            }
-//        }
-//        
-//        for clinicItem in clinicItemList{
-//            if ((clinicItem as! NSDictionary).objectForKey("clinicItemDesc") as! NSString).length > 0{
-//                clinicReportDetail += ((clinicItem as! NSDictionary).objectForKey("clinicItemName") as! String) + "*" + ((clinicItem as! NSDictionary).objectForKey("clinicItemDesc") as! String) + "**"
-//            }
-//        }
-//        
-//        let clinicReport = NSMutableDictionary()
-//        clinicReport.setValue(clinicReportDetail, forKey: "clinicReport")
-//        clinicReport.setValue(isPublic, forKey: "isPosted")
-//        clinicReport.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "dateInserted")
-//        let patientStatus = NSMutableDictionary()
-//        patientStatus.setValue(patientStatusDetail, forKey: "statusDesc")
-//        patientStatus.setValue(isPublic, forKey: "isPosted")
-//        patientStatus.setValue(Int(self.datePicker.date.timeIntervalSince1970 * 1000), forKey: "insertedDate")
-//        
-//        haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        let date:NSDate = dateFormatter.dateFromString((dateBtn.titleLabel?.text)!)!
+        
+        var scanReportStr: String = ""
+        if self.scanReportText.textColor != textInputViewPlaceholderColor {
+            scanReportStr = self.scanReportText.text
+        }
+        
+        let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
+        
+        var clinicReportStr: String = ""
+        for clinicData in clinicDataList {
+            let clinicDataDic = clinicData as! NSMutableDictionary
+            clinicReportStr += "[" + ((clinicDataDic.allKeys as NSArray).objectAtIndex(0)as! String) + ":" + ((clinicDataDic.allValues as NSArray).objectAtIndex(0)as! String) + "]"
+        }
+        let clinicReportDic = NSDictionary(objects: [clinicReportStr, self.isPosted], forKeys: [ "clinicReport", "isPosted"])
+        
+        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken == nil {
+            getAccessToken.getAccessToken()
+            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        }
+        let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
+        let url : NSURL = NSURL(string: urlPath)!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
+        let requestBody = NSMutableDictionary()
+        requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
+        requestBody.setValue(clinicReportDic, forKey: "clinicReport")
+        requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
+        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
+            
+            success: { (content , message) -> Void in
+                
+                //                self.tableView.mj_header.endRefreshing()
+                print(content)
+                
+            }) { (content, message) -> Void in
+                
+                //                self.tableView.mj_header.endRefreshing()
+                
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+        }
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
+    func netRequest(){
+        
+
+    }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if text == "\n"{
@@ -362,6 +387,41 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         
         self.checkedView.center = CGPoint(x: self.checkedView.center.x, y: self.checkedView.center.y + keyboardheight)
     }
+    //UITextField
+    func textFieldDidEndEditing(textField: UITextField) {
+        if textField.superview  is UITableViewCell{
+            let clinicData = NSMutableDictionary()
+            var clinicDataName: String = ""
+            let cell = textField.superview as! UITableViewCell
+            if textField.placeholder == reportListItemPlaceholder {
+                if (cell.textLabel != nil) && (cell.textLabel?.text != nil) && (cell.textLabel?.text != ""){
+                    clinicDataName = (cell.textLabel?.text)!
+                }else{
+                    for subView in cell.subviews {
+                        if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+                            clinicDataName = (subView as! UITextField).text!
+                        }
+                    }
+                }
+                if (textField.text != "")&&(clinicDataName != "") {
+                    clinicData.setObject(textField.text!, forKey: clinicDataName)
+                    self.clinicDataList.addObject(clinicData)
+                }
+            }else{
+                if (textField.text != "") {
+                    for subView in cell.subviews {
+                        if (subView is UITextField) && (subView as! UITextField).placeholder == reportListItemPlaceholder {
+                            let clinicDataValue = (subView as! UITextField).text!
+                            if clinicDataValue != "" {
+                                clinicData.setObject(clinicDataValue, forKey: textField.text!)
+                                self.clinicDataList.addObject(clinicData)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     // MARK: - Table view data source
     
@@ -379,37 +439,66 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        var heightForRow: CGFloat = 0
+        switch indexPath.section {
+        case 0:
+            heightForRow = clinicReportTitleListHeight
+            break
+        case 1:
+            heightForRow = 90
+            break
+        default:
+            break
+        }
+        return heightForRow
+    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier:String = "cell"
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: cellIdentifier)
         if indexPath.section == 0{
             if indexPath.row < defaultClinicRowsName.count {
-                cell.textLabel?.text =  defaultClinicRowsName.objectAtIndex(indexPath.row) as! String + ":"
+                cell.textLabel?.text =  defaultClinicRowsName.objectAtIndex(indexPath.row) as! String
                 cell.textLabel?.font = reportListTitleFont
                 cell.textLabel?.textColor = reportListItemColor
 
             }else{
-                let clinicItemValueTextField = UITextField(frame: CGRect(x: 15, y: 0, width: clinicReportLblW - 10, height: clinicReportTitleListHeight))
-                clinicItemValueTextField.placeholder = "其他指标:"
-                clinicItemValueTextField.font = reportListTitleFont
-                cell.addSubview(clinicItemValueTextField)
+                let clinicItemNameTextField = UITextField(frame: CGRect(x: 15, y: 0, width: clinicReportLblW - 10, height: clinicReportTitleListHeight))
+                clinicItemNameTextField.placeholder = "其他指标:"
+                clinicItemNameTextField.font = reportListTitleFont
+                clinicItemNameTextField.delegate = self
+                cell.addSubview(clinicItemNameTextField)
             }
             //textField
             let clinicItemValueTextField = UITextField(frame: CGRect(x: clinicReportLblW, y: 0, width: cell.frame.width - clinicReportLblW - clinicReportDelBtnRightSpace - clinicReportDelBtnWidth, height: clinicReportTitleListHeight))
-            clinicItemValueTextField.placeholder = "0.0"
+            clinicItemValueTextField.placeholder = reportListItemPlaceholder
             clinicItemValueTextField.font = reportListTitleFont
+            clinicItemValueTextField.delegate = self
             cell.addSubview(clinicItemValueTextField)
             //delete button
             print(cell.frame.width)
             let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
-            deleteBtn.backgroundColor = headerColor
+//            deleteBtn.backgroundColor = headerColor
+            let btnImageView = UIImageView(frame: CGRECT(0, 0, clinicReportDelBtnWidth, clinicReportDelBtnWidth))
+            btnImageView.image = UIImage(named: "btn_deleteClinicData")
+            deleteBtn.addSubview(btnImageView)
+            deleteBtn.layer.cornerRadius = clinicReportDelBtnWidth/2
+            deleteBtn.layer.masksToBounds = true
             deleteBtn.addTarget(self, action: "deleteClinicData:", forControlEvents: UIControlEvents.TouchUpInside)
             cell.addSubview(deleteBtn)
         }else{
-            let  addMoreClinicDataBtn = UIButton(frame: CGRect(x: 10, y: 5, width:  100, height: clinicReportTitleListHeight-20))
-            addMoreClinicDataBtn.backgroundColor = headerColor
+            let addMoreClinicDataBtnW:CGFloat = cell.frame.size.width - 12
+            let addMoreClinicDataBtnH:CGFloat = 30
+            let addMoreClinicDataBtn = UIButton(frame: CGRect(x: 12, y: 12, width: addMoreClinicDataBtnW, height: addMoreClinicDataBtnH))
+            let addReportImgView = UIImageView(frame: CGRECT(0, 0, addMoreClinicDataBtnW, addMoreClinicDataBtnH))
+            addReportImgView.image = UIImage(named: "btn_addReport")
+            addMoreClinicDataBtn.addSubview(addReportImgView)
+            addMoreClinicDataBtn.setTitle("添加更多指标", forState: UIControlState.Normal)
+            addMoreClinicDataBtn.setTitleColor(addReportButtonTextColor, forState: UIControlState.Normal)
+            addMoreClinicDataBtn.titleLabel?.font = addReportButtonFont
             addMoreClinicDataBtn.addTarget(self, action: "addClinicData:", forControlEvents: UIControlEvents.TouchUpInside)
+
             cell.addSubview(addMoreClinicDataBtn)
         }
         return cell

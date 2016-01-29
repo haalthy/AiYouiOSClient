@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,178 +18,17 @@
                     <view key="view" contentMode="scaleToFill" id="ro5-Al-yA9">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hwK-9V-9PV">
-                                <rect key="frame" x="33" y="48" width="535" height="30"/>
-                                <color key="backgroundColor" red="0.1176470588" green="0.66666666669999997" blue="0.78039215689999997" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="病人状态">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="33" y="48" width="335" height="30"/>
-                                </variation>
-                                <connections>
-                                    <action selector="addPatientStatusSegue:" destination="fi6-EX-be1" eventType="touchUpInside" id="VBo-pD-l2i"/>
-                                    <segue destination="K7a-5y-dcS" kind="presentation" id="MFn-b1-rIn"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VY6-n4-dgt">
-                                <rect key="frame" x="33" y="86" width="535" height="30"/>
-                                <color key="backgroundColor" red="0.1176470588" green="0.66666666669999997" blue="0.78039215689999997" alpha="0.17999999999999999" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="K5T-mB-PTq"/>
-                                </constraints>
-                                <state key="normal" title="我要提问">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="K5T-mB-PTq"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="33" y="86" width="335" height="30"/>
-                                    <mask key="constraints">
-                                        <exclude reference="K5T-mB-PTq"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="addBroadcast:" destination="fi6-EX-be1" eventType="touchUpInside" id="y0S-zW-INU"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="07L-t4-mSN">
-                                <rect key="frame" x="33" y="10" width="535" height="30"/>
-                                <color key="backgroundColor" red="0.1176470588" green="0.66666666669999997" blue="0.78039215689999997" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="148" id="fJF-D6-OKO"/>
-                                </constraints>
-                                <color key="tintColor" red="0.1176470588" green="0.66666666669999997" blue="0.78178967929999998" alpha="0.79000000000000004" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="治疗方案">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="fJF-D6-OKO"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="33" y="10" width="335" height="30"/>
-                                    <mask key="constraints">
-                                        <exclude reference="fJF-D6-OKO"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="addTreatmentSegue:" destination="fi6-EX-be1" eventType="touchUpInside" id="lK0-vP-M6o"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Keb-IE-A1H">
-                                <rect key="frame" x="33" y="124" width="535" height="36"/>
-                                <color key="backgroundColor" red="0.1176470588" green="0.66666666669999997" blue="0.78039215689999997" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="147" id="rDD-h5-b6j"/>
-                                </constraints>
-                                <state key="normal" title="我的心情">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="rDD-h5-b6j"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="33" y="124" width="335" height="36"/>
-                                    <mask key="constraints">
-                                        <exclude reference="rDD-h5-b6j"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="addPrivatePost:" destination="fi6-EX-be1" eventType="touchUpInside" id="GcJ-vz-wTw"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.1176470588" green="0.66666666669999997" blue="0.78039215689999997" alpha="0.73999999999999999" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="VY6-n4-dgt" secondAttribute="trailing" constant="12" id="1QP-MY-23K"/>
-                            <constraint firstItem="Z7F-Gd-R2M" firstAttribute="top" secondItem="Keb-IE-A1H" secondAttribute="bottom" constant="20" id="2VX-y8-5uk">
-                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
-                            </constraint>
-                            <constraint firstItem="Keb-IE-A1H" firstAttribute="top" secondItem="VY6-n4-dgt" secondAttribute="bottom" constant="8" id="94P-z1-5jL"/>
-                            <constraint firstItem="Keb-IE-A1H" firstAttribute="top" secondItem="VY6-n4-dgt" secondAttribute="bottom" constant="8" id="BDy-Th-NYN"/>
-                            <constraint firstItem="VY6-n4-dgt" firstAttribute="top" secondItem="hwK-9V-9PV" secondAttribute="bottom" constant="8" id="Df8-v0-By0"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="07L-t4-mSN" secondAttribute="trailing" constant="12" id="FIB-Ru-TJB"/>
-                            <constraint firstItem="VY6-n4-dgt" firstAttribute="leading" secondItem="ro5-Al-yA9" secondAttribute="leadingMargin" constant="13" id="Jng-GO-wDY"/>
-                            <constraint firstItem="hwK-9V-9PV" firstAttribute="leading" secondItem="ro5-Al-yA9" secondAttribute="leadingMargin" constant="13" id="LJC-gn-PNd"/>
-                            <constraint firstItem="07L-t4-mSN" firstAttribute="top" secondItem="b9I-4n-Dnd" secondAttribute="bottom" constant="-10" id="Mdj-NJ-CQh">
-                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
-                            </constraint>
-                            <constraint firstAttribute="trailingMargin" secondItem="Keb-IE-A1H" secondAttribute="trailing" constant="1" id="QbF-iq-7iW"/>
-                            <constraint firstItem="Z7F-Gd-R2M" firstAttribute="top" secondItem="Keb-IE-A1H" secondAttribute="bottom" constant="16" id="XJm-Ka-xnb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="hwK-9V-9PV" secondAttribute="trailing" constant="12" id="YZ0-iQ-926"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Keb-IE-A1H" secondAttribute="trailing" constant="12" id="bkf-4a-Uzq"/>
-                            <constraint firstItem="VY6-n4-dgt" firstAttribute="trailing" secondItem="ro5-Al-yA9" secondAttribute="trailingMargin" id="jrq-Et-LQj"/>
-                            <constraint firstItem="07L-t4-mSN" firstAttribute="leading" secondItem="ro5-Al-yA9" secondAttribute="leadingMargin" constant="13" id="jwo-wJ-Aa5"/>
-                            <constraint firstItem="Keb-IE-A1H" firstAttribute="leading" secondItem="ro5-Al-yA9" secondAttribute="leadingMargin" constant="13" id="nbU-6V-0bg"/>
-                            <constraint firstItem="hwK-9V-9PV" firstAttribute="top" secondItem="07L-t4-mSN" secondAttribute="bottom" constant="8" id="rTT-DK-3B7"/>
-                            <constraint firstItem="Keb-IE-A1H" firstAttribute="leading" secondItem="ro5-Al-yA9" secondAttribute="leadingMargin" id="xFK-2F-SVo"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="FIB-Ru-TJB"/>
-                                <exclude reference="Mdj-NJ-CQh"/>
-                                <exclude reference="jwo-wJ-Aa5"/>
-                                <exclude reference="LJC-gn-PNd"/>
-                                <exclude reference="YZ0-iQ-926"/>
-                                <exclude reference="rTT-DK-3B7"/>
-                                <exclude reference="1QP-MY-23K"/>
-                                <exclude reference="Df8-v0-By0"/>
-                                <exclude reference="Jng-GO-wDY"/>
-                                <exclude reference="jrq-Et-LQj"/>
-                                <exclude reference="94P-z1-5jL"/>
-                                <exclude reference="BDy-Th-NYN"/>
-                                <exclude reference="QbF-iq-7iW"/>
-                                <exclude reference="bkf-4a-Uzq"/>
-                                <exclude reference="nbU-6V-0bg"/>
-                                <exclude reference="xFK-2F-SVo"/>
-                                <exclude reference="2VX-y8-5uk"/>
-                                <exclude reference="XJm-Ka-xnb"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
-                            <mask key="constraints">
-                                <include reference="FIB-Ru-TJB"/>
-                                <include reference="Mdj-NJ-CQh"/>
-                                <include reference="jwo-wJ-Aa5"/>
-                                <include reference="LJC-gn-PNd"/>
-                                <include reference="YZ0-iQ-926"/>
-                                <include reference="rTT-DK-3B7"/>
-                                <include reference="1QP-MY-23K"/>
-                                <include reference="Df8-v0-By0"/>
-                                <include reference="Jng-GO-wDY"/>
-                                <exclude reference="jrq-Et-LQj"/>
-                                <include reference="94P-z1-5jL"/>
-                                <exclude reference="BDy-Th-NYN"/>
-                                <exclude reference="QbF-iq-7iW"/>
-                                <include reference="bkf-4a-Uzq"/>
-                                <include reference="nbU-6V-0bg"/>
-                                <exclude reference="xFK-2F-SVo"/>
-                                <include reference="2VX-y8-5uk"/>
-                                <exclude reference="XJm-Ka-xnb"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="KCw-dK-qAq"/>
                     <connections>
                         <segue destination="KCq-mh-Lm4" kind="presentation" identifier="addTreatmentSegue" id="w2b-dx-LTe"/>
                         <segue destination="Ujx-3C-I8k" kind="presentation" identifier="addPostSegue" id="T5W-IB-zEt"/>
+                        <segue destination="K7a-5y-dcS" kind="presentation" id="wUm-ZS-YPi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P74-20-AXf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8241" y="173"/>
+            <point key="canvasLocation" x="8031" y="-38"/>
         </scene>
         <!--Add Post View Controller-->
         <scene sceneID="9vX-Zw-9En">
@@ -1058,7 +897,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" style="plain" id="ztr-8H-gdq">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="IqP-cr-OBB">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <rect key="frame" x="20" y="7" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="上一步"/>
                                 <connections>
@@ -1067,7 +906,7 @@
                             </button>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="IWt-Ej-kDh">
-                            <rect key="frame" x="140" y="7" width="120" height="30"/>
+                            <rect key="frame" x="128" y="7" width="144" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <state key="normal" title="添加新的治疗方案">
@@ -1579,6 +1418,7 @@
                                 </state>
                                 <connections>
                                     <action selector="submitNewTreatmentBeginDate:" destination="jRT-9H-PZ0" eventType="touchUpInside" id="rjb-AA-MeM"/>
+                                    <action selector="submitStatus:" destination="eIU-WN-uXC" eventType="touchUpInside" id="poz-4B-MgW"/>
                                 </connections>
                             </button>
                         </barButtonItem>
