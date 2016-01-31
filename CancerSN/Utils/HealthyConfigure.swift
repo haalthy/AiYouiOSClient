@@ -101,6 +101,9 @@ let tabBarColor : UIColor = UIColor.init(red:244 / 255.0, green:251 / 255.0, blu
 
 let tabBarItemNormalColor : UIColor = UIColor.init(red: 141 / 255.0, green: 162 / 255.0, blue: 164 / 255.0, alpha: 1)
 
+let textInputViewPlaceholderColor: UIColor = UIColor(red: 221 / 255, green: 221 / 255, blue: 224 / 255, alpha: 1)
+
+
 let highlightColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:1)
 let textColor : UIColor = UIColor.init(red:0.28, green:0.75, blue:0.85, alpha:1)
 let lightBackgroundColor : UIColor = UIColor.init(red:0.15, green:0.75, blue:0.85, alpha:0.4)

@@ -218,7 +218,7 @@ class AddStatusTableViewController: UITableViewController, UITextViewDelegate {
 //        
 //        haalthyService.addPatientStatus(patientStatus as NSDictionary, clinicReport: clinicReport as NSDictionary)
 //    }
-//    
+//
 //    func shareToFriend(){
 //        self.submitStatus(1)
 //        self.dismissViewControllerAnimated(false, completion: nil)

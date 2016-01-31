@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A112AB11C562FF9007545F8 /* PrivateCheckUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */; };
 		2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */; };
 		2A1E69F61C3CE85300C882B7 /* UserProfileFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */; };
 		2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A3D1BB9E78100E4272B /* Security.framework */; };
@@ -261,6 +262,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateCheckUIView.swift; sourceTree = "<group>"; };
 		2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileFrame.swift; sourceTree = "<group>"; };
 		2A410A3D1BB9E78100E4272B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -887,6 +889,7 @@
 			children = (
 				2AC529581C4F85D100076368 /* AddFrame */,
 				6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */,
+				2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1575,7 +1578,6 @@
 				DDD6A13C1C37C28C00C258D2 /* PNScatterChartData.m in Sources */,
 				6BBFD90E1C3273F900282573 /* UIScrollView+MJRefresh.m in Sources */,
 				6B93FC5B1C1E5A9D00A81EA9 /* UserListTableViewCell.swift in Sources */,
-				6B93FC391C1E5A4F00A81EA9 /* AddNewTreatmentDateViewController.swift in Sources */,
 				6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */,
 				6BBFD8FD1C3273F900282573 /* MJRefreshAutoFooter.m in Sources */,
 				6B93FCC91C1E66CA00A81EA9 /* CVCalendarViewDelegate.swift in Sources */,
@@ -1620,6 +1622,7 @@
 				DDD6A1341C37C28C00C258D2 /* PNLineChart.m in Sources */,
 				6B93FCBC1C1E66CA00A81EA9 /* CVCalendarDayView.swift in Sources */,
 				6B9B99301C2D092800E377EA /* UserModel.swift in Sources */,
+				2A112AB11C562FF9007545F8 /* PrivateCheckUIView.swift in Sources */,
 				6BA46E321C30D27600DCBD11 /* PostFeedToolBar.swift in Sources */,
 				6B93FC6F1C1E5B9400A81EA9 /* CommentListTableViewCell.swift in Sources */,
 				6BBFD9031C3273F900282573 /* MJRefreshAutoNormalFooter.m in Sources */,
