@@ -12,20 +12,7 @@ import UIKit
 
 class PostFeedStatus: D3Model {
     
-    // 创建时间
-    var createdDate: String?
     
-    // Feed id
-    var postID: Int = 0
-    
-    // 用户标识
-    var insertUsername: String?
-    
-    // Feed 内容
-    var body: String?
-
-    // 内容下面的标签
-    var tags: String?
     
     // 评论数
     var countComments : Int = 0
@@ -46,7 +33,7 @@ class PostFeedStatus: D3Model {
     var dateInserted: Int64 = 0
     
     // 更新时间
-    var dateUpdated: Int64 = 0
+    //var dateUpdated: Int64 = 0
     
     // 
     var isActive: Int = 0
@@ -61,19 +48,19 @@ class PostFeedStatus: D3Model {
     var patientStatusID: Int = 0
     
     // 性别
-    var gender: String?
+    var gender: String = ""
     
     // 病理类型
-    var pathological: String?
+    var pathological: String = ""
     
     // 年龄
     var age: Int = 0
     
     // 癌症类型
-    var cancerType: String?
+    var cancerType: String = ""
     
     // 转移
-    var metastasis: String?
+    var metastasis: String = ""
     
     // 初诊分期
     var stage: Int = 0
@@ -82,18 +69,31 @@ class PostFeedStatus: D3Model {
     var hasImage: Int = 0
     
     // 用户昵称
-    var displayname: String?
+    var displayname: String = ""
     
     // 类似 “特罗凯” “中药”这个部分,内容上部标签
-    var highlight: String?
+    var highlight: String = ""
     
     // clinicReport
-    var clinicReport: String?
+    var clinicReport: String = ""
     
     // 图片信息
-    var imageURL: String?
+    var imageURL: String = ""
     
     // 用户头像
-    var portraitURL: String?
+    var portraitURL: String = ""
+    
+    // Feed 内容
+    var body: String = ""
+    
+    // 内容下面的标签
+    var tags: String = ""
+
+    // Feed id
+    var postID: Int = 0
+    
+    // 用户标识
+    var insertUsername: String = ""
+
     
 }

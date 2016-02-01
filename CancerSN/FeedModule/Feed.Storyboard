@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="uc4-Du-xUb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="uc4-Du-xUb">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -235,41 +235,67 @@
         <!--搜索-->
         <scene sceneID="7dX-CA-qmN">
             <objects>
-                <viewController id="U8h-Mn-B3t" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="U8h-Mn-B3t" customClass="SearchViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LZP-nU-Bs1"/>
                         <viewControllerLayoutGuide type="bottom" id="Hft-y4-JE2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="UcT-2K-TDO">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="IRU-yt-D36">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="64" width="400" height="44"/>
-                                </variation>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GOe-ic-83C">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="IRU-yt-D36">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="U8h-Mn-B3t" id="lis-1y-jRE"/>
+                                    </connections>
+                                </searchBar>
                                 <connections>
-                                    <outlet property="delegate" destination="U8h-Mn-B3t" id="IuS-pm-6MW"/>
+                                    <outlet property="dataSource" destination="U8h-Mn-B3t" id="rSu-6a-SAF"/>
+                                    <outlet property="delegate" destination="U8h-Mn-B3t" id="B1h-mF-4qb"/>
                                 </connections>
-                            </searchBar>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="GOe-ic-83C" firstAttribute="top" secondItem="UcT-2K-TDO" secondAttribute="top" id="7Of-48-mMz"/>
+                            <constraint firstItem="Hft-y4-JE2" firstAttribute="top" secondItem="GOe-ic-83C" secondAttribute="bottom" id="9nH-Ud-Rps"/>
+                            <constraint firstItem="GOe-ic-83C" firstAttribute="leading" secondItem="UcT-2K-TDO" secondAttribute="leading" id="Koj-0l-eUv"/>
+                            <constraint firstAttribute="trailing" secondItem="GOe-ic-83C" secondAttribute="trailing" id="qUO-yU-YNe"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="IRU-yt-D36"/>
+                                <exclude reference="GOe-ic-83C"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="9nH-Ud-Rps"/>
+                                <exclude reference="7Of-48-mMz"/>
+                                <exclude reference="Koj-0l-eUv"/>
+                                <exclude reference="qUO-yU-YNe"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
-                                <include reference="IRU-yt-D36"/>
+                                <include reference="GOe-ic-83C"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="9nH-Ud-Rps"/>
+                                <include reference="7Of-48-mMz"/>
+                                <include reference="Koj-0l-eUv"/>
+                                <include reference="qUO-yU-YNe"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="搜索" id="QFW-Ab-F7x"/>
                     <connections>
+                        <outlet property="searchBar" destination="IRU-yt-D36" id="Bsm-OB-6pZ"/>
                         <outlet property="searchDisplayController" destination="30y-jS-SgH" id="2pR-gl-h67"/>
+                        <outlet property="tableView" destination="GOe-ic-83C" id="cXr-e3-JVb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gkt-Pm-nSK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -524,8 +550,7 @@
                                         <exclude reference="mrD-Wc-W7Q"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="4" y="152" width="392" height="648"/>
+                                <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="mrD-Wc-W7Q"/>
                                     </mask>
@@ -539,9 +564,6 @@
                                     <segment title="查找治疗方案"/>
                                 </segments>
                                 <color key="tintColor" red="0.1192146986" green="0.66784882140000001" blue="0.78261204780000004" alpha="1" colorSpace="calibratedRGB"/>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="12" y="114" width="377" height="29"/>
-                                </variation>
                                 <connections>
                                     <action selector="indexChanged:" destination="87n-XM-dTI" eventType="valueChanged" id="qee-VW-xTJ"/>
                                 </connections>
@@ -552,9 +574,6 @@
                                 <color key="tintColor" red="0.1192146986" green="0.66784882140000001" blue="0.78261204780000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="0.1176470588" green="0.66666666669999997" blue="0.78178967929999998" alpha="0.73999999999999999" colorSpace="calibratedRGB"/>
                                 <textInputTraits key="textInputTraits"/>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="4" y="64" width="392" height="44"/>
-                                </variation>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -741,6 +760,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="65" y="64" width="155" height="21"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>
