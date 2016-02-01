@@ -16,7 +16,7 @@ class PostFeedStatus: D3Model {
     var createdDate: String?
     
     // Feed id
-    var postID: Int = 0
+    var postID: Int?
     
     // 用户标识
     var insertUsername: String?
@@ -87,12 +87,11 @@ class PostFeedStatus: D3Model {
     // 类似 “特罗凯” “中药”这个部分,内容上部标签
     var highlight: String?
     
-    // clinicReport
     var clinicReport: String?
     
     // 图片信息
     var imageURL: String?
-    
+   
     // 用户头像
     var portraitURL: String?
     

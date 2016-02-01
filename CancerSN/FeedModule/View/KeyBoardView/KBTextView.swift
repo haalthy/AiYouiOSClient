@@ -36,6 +36,7 @@ class KBTextView: UITextView {
         
         self.font = UIFont.systemFontOfSize(18)
         
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -51,6 +52,7 @@ class KBTextView: UITextView {
         
             var placeHolderRect: CGRect = CGRECT(0, 0, 0, 0)
             placeHolderRect.origin.y = 9
+
             placeHolderRect.size.height = CGRectGetHeight(self.frame) - 8
             placeHolderRect.origin.x = 5
             placeHolderRect.size.width = CGRectGetWidth(self.frame) - 5
@@ -59,6 +61,7 @@ class KBTextView: UITextView {
            
             let context: CGContextRef = UIGraphicsGetCurrentContext()!
             CGContextSetFillColorWithColor(context, self.placeHolderColor?.CGColor)
+
 
             // 定义属性
             let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
@@ -72,6 +75,7 @@ class KBTextView: UITextView {
 
         }
     }
+
 
     func textChange(noti: NSNotification) {
         

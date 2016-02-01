@@ -60,6 +60,53 @@ class NetRequest: NSObject {
 
     }
     
+    //同步POST请求
+    // MARK: 同步GET请求, 带参数
+//    
+    func POST_A(url: String,  parameters: Dictionary<String, AnyObject>)-> NSDictionary {
+        
+        var session: NSURLSession = NSURLSession()
+        var request: NSMutableURLRequest = NSMutableURLRequest()
+        var task: NSURLSessionTask!
+        var json: NSDictionary = NSDictionary()
+
+        let semaphore = dispatch_semaphore_create(0)
+        request = NSMutableURLRequest(URL: NSURL(string: url)!)
+        request.HTTPMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(parameters, options: NSJSONWritingOptions())
+        // 网络配置
+        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        // 设置请求超时时间
+        config.timeoutIntervalForRequest = 30
+        
+        session = NSURLSession(configuration: config)
+
+        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            
+            // 返回任务结果
+            if error == nil {
+                
+                // 解析json
+                json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+//                self.callbackWithResult(json, success: success, failed: failed)
+                
+            }
+            else {
+                
+//                failed(content: ["": ""], message: "网络异常")
+            }
+            
+            dispatch_semaphore_signal(semaphore)
+        })
+        // 任务结束
+        task.resume()
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        return json
+    }
+//
     // MARK: - GET请求
     
     // MARK: include Params
@@ -86,6 +133,58 @@ class NetRequest: NSObject {
         }
         manager.netWorkFire()
         
+    }
+    
+    //    MARK: 同步GET请求, by lily
+    
+    func GET_A(url: String,  parameters: Dictionary<String, AnyObject>) -> NSDictionary{
+        
+        
+        var session: NSURLSession = NSURLSession()
+        var request: NSMutableURLRequest = NSMutableURLRequest()
+        var task: NSURLSessionTask!
+        
+        var json: NSDictionary = NSDictionary()
+        
+        let semaphore = dispatch_semaphore_create(0)
+        if parameters.count > 0 {
+            request = NSMutableURLRequest(URL: NSURL(string: url + "?" + self.buildParameters(parameters))!)
+        }else{
+            request = NSMutableURLRequest(URL: NSURL(string: url)!)
+        }
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        // 网络配置
+        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        // 设置请求超时时间
+        config.timeoutIntervalForRequest = 30
+        
+        session = NSURLSession(configuration: config)
+        
+        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            
+            // 返回任务结果
+            if error == nil {
+                
+                // 解析json
+                json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+//                self.callbackWithResult(json, success: success, failed: failed)
+                
+            }
+            else {
+                print("网络异常")
+//                HudProgressManager.sharedInstance.sh
+//                failed(content: ["": ""], message: "网络异常")
+            }
+            
+            dispatch_semaphore_signal(semaphore)
+        })
+        // 任务结束
+        task.resume()
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        return json
     }
     
     // MARK: 同步GET请求, 带参数

@@ -28,6 +28,11 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initContentView()
         initRefresh()
        // self .getFeedListFromServer()
+        var keychainAccess = KeychainAccess()
+        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
+        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
+
+        
         }
 
     // MARK: - Init Variables
@@ -105,7 +110,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func getFeedListFromServer() {
         
         
-        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=74367639-ab0b-4c5a-a036-69d2f619ec9e", parameters:["begin":0,"end":1456803188202,"username":"AY1449549912985.679"],
+        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=22ce78c7-061f-48cb-9088-5a90a0ee39ad", parameters:["begin":0,"end":1456803188202,"username":"AY1449549912985.679"],
             
             success: { (content , message) -> Void in
             

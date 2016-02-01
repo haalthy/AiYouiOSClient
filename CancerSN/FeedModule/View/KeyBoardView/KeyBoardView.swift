@@ -65,8 +65,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     override func drawRect(rect: CGRect) {
         // Drawing code
     }
-    
-    
+
 
     // MARK - 设置view内容
     
@@ -95,6 +94,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         textView.frame = CGRECT(kTextViewLeftMargin, kVerticalPadding, self.frame.size.width - kTextViewLeftMargin - kTextViewRightMargin - kKeyBoardFaceBtnWidth - 8, kKeyBoardTextViewHeight)
         textView.returnKeyType = UIReturnKeyType.Send
        // textView.scrollEnabled = false
+
         textView.backgroundColor = kKeyBoardTextViewBgColor
         textView.delegate = self
         self.addSubview(textView)
@@ -118,6 +118,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
             self.faceView?.autoresizingMask = UIViewAutoresizing.FlexibleTopMargin
         }
         
+
     }
     
     // MARK: - 功能方法
@@ -234,6 +235,4 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         return true
     }
 }
-    
-
 
