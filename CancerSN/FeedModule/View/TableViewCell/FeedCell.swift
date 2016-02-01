@@ -279,8 +279,11 @@ class FeedCell: UITableViewCell {
         toolsView.initVariables(feedModel!)
         toolsView.layoutWithContent()
         self.addSubview(toolsView)
-
         
+        // 10.分割线
+        let cellSeparateView: UIView = UIView(frame: CGRect(x: 0, y: CGRectGetMaxY(toolsView.frame) + 9, width: SCREEN_WIDTH, height: 0.8))
+        cellSeparateView.backgroundColor = RGB(221, 221, 224)
+        self.addSubview(cellSeparateView)
     }
 
     // MARK: - 功能方法

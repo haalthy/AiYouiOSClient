@@ -6,14 +6,24 @@
 //  Copyright © 2015年 lily. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 @objc(PostFeedStatus)
 
 class PostFeedStatus: D3Model {
     
     
+    // 更新时间
+    var dateUpdated: String = ""
     
+    //
+    var isActive: Int = 0
+
+    
+    // 治疗ID
+    var treatmentID: Int = 0
+
+
     // 评论数
     var countComments : Int = 0
     
@@ -31,18 +41,11 @@ class PostFeedStatus: D3Model {
     
     // 插入时间
     var dateInserted: Int64 = 0
-    
-    // 更新时间
-    //var dateUpdated: Int64 = 0
-    
-    // 
-    var isActive: Int = 0
+
     
     //
     var type: Int = 0
     
-    // 治疗ID
-    var treatmentID: Int = 0
     
     // 
     var patientStatusID: Int = 0
