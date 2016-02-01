@@ -10,7 +10,7 @@ import UIKit
 
 class AddTreatmentDateViewController: CalenderViewController {
     
-    var haalthyService = HaalthyService()
+//    var haalthyService = HaalthyService()
     var keychainAccess = KeychainAccess()
     var username:String?
     let profileSet = NSUserDefaults.standardUserDefaults()
@@ -28,7 +28,7 @@ class AddTreatmentDateViewController: CalenderViewController {
         super.monthLabel = self.currentmonthLabel
         super.viewDidLoad()
 
-        username = keychainAccess.getPasscode(usernameKeyChain) as! String
+        username = keychainAccess.getPasscode(usernameKeyChain) as? String
         profileSet.removeObjectForKey(newTreatmentBegindate)
     }
     

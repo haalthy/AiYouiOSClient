@@ -10,7 +10,9 @@ import Foundation
 
 //restful service URL setting
 
-let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+//let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
+
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
 
@@ -21,7 +23,7 @@ let getSuggestUserByTagsURL = haalthyServiceRestfulURL + "open/user/suggesteduse
 // 获取所有tag
 let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
-let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token?client_id=my-trusted-client&grant_type=password&"
+let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
 let getUserFavTagsURL = haalthyServiceRestfulURL + "security/user/tags"
 let getBroadcastsByTagsURL = haalthyServiceRestfulURL + "open/post/tags"

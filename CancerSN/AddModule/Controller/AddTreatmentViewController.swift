@@ -11,9 +11,11 @@ import UIKit
 class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     
     //global variable
+    let getAccessToken = GetAccessToken()
+    let keychainAccess = KeychainAccess()
     var treatmentTypeCount: Int = Int()
     var treatmentFormatList = NSArray()
-    var haalthyService = HaalthyService()
+//    var haalthyService = HaalthyService()
     var treatmentFormatOfTKI = NSMutableArray()
     var treatmentFormatOfChemo = NSMutableArray()
     var treatmentTypeArr: NSArray = ["靶向", "化疗", "放疗", "手术", "其他"]
@@ -43,14 +45,13 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
     }
     
-    
-    func initVariables(){
-        screenWidth = UIScreen.mainScreen().bounds.width
-        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
-        let getTreatmentFormatData = haalthyService.getTreatmentFormat()
-        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTreatmentFormatData, options: NSJSONReadingOptions.MutableContainers)
-        if (jsonResult is NSDictionary) && (jsonResult!.objectForKey("content") != nil) && (jsonResult!.objectForKey("content") is NSArray){
-            treatmentFormatList = jsonResult!.objectForKey("content") as! NSArray
+    func getTreatmentFormatList(){
+        let parameters = NSDictionary()
+        let hudProcess = HudProgressManager.sharedInstance
+        //        hudProcess.showHudProgress(self, title: "loading")
+        let jsonResult = NetRequest.sharedInstance.GET_A(getTreatmentformatURL, parameters: parameters as! Dictionary<String, AnyObject>)
+        if (jsonResult.objectForKey("content") != nil){
+            treatmentFormatList = jsonResult.objectForKey("content") as! NSArray
             for treatment in treatmentFormatList {
                 if ((treatment as! NSDictionary).objectForKey("type") as! String) == "TKI" {
                     treatmentFormatOfTKI.addObject(treatment)
@@ -59,7 +60,18 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                     treatmentFormatOfChemo.addObject(treatment)
                 }
             }
+        }else{
+            hudProcess.dismissHud()
+            
+            hudProcess.showOnlyTextHudProgress(self, title: "fail")
+            //            hudProcess.showSuccessHudProgress(self, title: )
         }
+    }
+    
+    func initVariables(){
+        screenWidth = UIScreen.mainScreen().bounds.width
+        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
+        getTreatmentFormatList()
         treatmentTextInput.delegate = self
     }
     
@@ -89,25 +101,10 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         self.view.addSubview(treatmentHeaderSeperateLine)
         
         //添加底部选择框
-//        treatmentBtmSectionView = UIView(frame: CGRect(x: 0, y: UIScreen.mainScreen().bounds.height - buttomSectionHeight, width: screenWidth, height: buttomSectionHeight))
-//        let btmSeperateLine = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 0.5))
-//        btmSeperateLine.backgroundColor = seperateLineColor
-//        treatmentBtmSectionView.addSubview(btmSeperateLine)
-//        let checkbox = UIButton(frame: CGRect(x: checkboxLeftSpace, y: checkboxTopSpace, width: checkboxHeight, height: checkboxHeight))
-//        checkbox.layer.borderColor = privateLabelColor.CGColor
-//        checkbox.layer.borderWidth = checkboxBorderWidth
-//        checkbox.layer.cornerRadius = checkboxCornerRadius
-//        checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
-//        treatmentBtmSectionView.addSubview(checkbox)
-//        let privateLbl = UILabel(frame: CGRect(x: privateLabelLeftSpace, y: 0, width: screenWidth - privateLabelLeftSpace, height: buttomSectionHeight))
-//        privateLbl.textAlignment = NSTextAlignment.Left
-//        privateLbl.textColor = privateLabelColor
-//        privateLbl.text = "不发送到我的智囊圈"
-//        treatmentBtmSectionView.addSubview(privateLbl)
         let privateCheckUIView = PrivateCheckUIView()
         treatmentBtmSectionView = privateCheckUIView.createCheckedSection()
         privateCheckUIView.checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(privateCheckUIView)
+        self.view.addSubview(treatmentBtmSectionView)
     }
     
     func selectedTreatmentType(sender: UIButton){
@@ -152,13 +149,15 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     }
     
     func keyboardWillAppear(notification: NSNotification) {
-        
-        // 获取键盘信息
-        let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
-        
-        keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
-        
-        self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y - keyboardheight)
+        if self.treatmentBtmSectionView.center.y > UIScreen.mainScreen().bounds.height - 50{
+            
+            // 获取键盘信息
+            let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
+            
+            keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
+            
+            self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y - keyboardheight)
+        }
     }
     
     func keyboardWillDisappear(notification:NSNotification){
@@ -286,8 +285,36 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                     treatment.setObject((profileSet.objectForKey(newTreatmentEnddate) as! Int)*1000, forKey: "endDate")
                 }
             }
-            haalthyService.addTreatment(treatmentList)
+            addTreatment(treatmentList)
         }
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func addTreatment(treatmentList: NSArray){
+        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken == nil {
+            getAccessToken.getAccessToken()
+            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        }
+        let urlPath:String = (addTreatmentURL as String) + "?access_token=" + (accessToken as! String);
+        let url : NSURL = NSURL(string: urlPath)!
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "POST"
+        let requestBody = NSMutableDictionary()
+        requestBody.setObject(treatmentList, forKey: "treatments")
+        requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
+        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
+            
+            success: { (content , message) -> Void in
+                print(content)
+                
+            }) { (content, message) -> Void in
+                
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+        }
     }
 }
