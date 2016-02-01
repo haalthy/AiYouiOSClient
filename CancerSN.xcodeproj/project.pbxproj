@@ -14,7 +14,7 @@
 		2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A411BB9E79C00E4272B /* SystemConfiguration.framework */; };
 		2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A431BB9E7A800E4272B /* CoreGraphics.framework */; };
 		2A410A481BB9E7C100E4272B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A471BB9E7C100E4272B /* CoreTelephony.framework */; };
-		2A6836DE1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2A6836DE1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */; };
 		2A7FB6A41C5B5971007030DC /* tabbarAddFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7FB6A31C5B5971007030DC /* tabbarAddFrame.swift */; };
 		2A8E43E91C4CAC4C003FAADC /* AddTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43E81C4CAC4C003FAADC /* AddTreatmentDateViewController.swift */; };
 		2A8E43EB1C4CAD4E003FAADC /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */; };
@@ -109,7 +109,6 @@
 		6B93FC571C1E5A9D00A81EA9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC491C1E5A9D00A81EA9 /* UserProfileViewController.swift */; };
 		6B93FC581C1E5A9D00A81EA9 /* User.Storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B93FC4A1C1E5A9D00A81EA9 /* User.Storyboard */; };
 		6B93FC591C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC4C1C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift */; };
-		6B93FC5A1C1E5A9D00A81EA9 /* TreatmentSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC4D1C1E5A9D00A81EA9 /* TreatmentSummaryTableViewCell.swift */; };
 		6B93FC5B1C1E5A9D00A81EA9 /* UserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC4E1C1E5A9D00A81EA9 /* UserListTableViewCell.swift */; };
 		6B93FC691C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC5E1C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift */; };
 		6B93FC6A1C1E5B9400A81EA9 /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC5F1C1E5B9400A81EA9 /* DiscoverTableViewController.swift */; };
@@ -370,7 +369,6 @@
 		6B93FC491C1E5A9D00A81EA9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		6B93FC4A1C1E5A9D00A81EA9 /* User.Storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = User.Storyboard; sourceTree = "<group>"; };
 		6B93FC4C1C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatusTableViewCell.swift; sourceTree = "<group>"; };
-		6B93FC4D1C1E5A9D00A81EA9 /* TreatmentSummaryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreatmentSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		6B93FC4E1C1E5A9D00A81EA9 /* UserListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListTableViewCell.swift; sourceTree = "<group>"; };
 		6B93FC5E1C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicTrailTableViewController.swift; sourceTree = "<group>"; };
 		6B93FC5F1C1E5B9400A81EA9 /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
@@ -935,7 +933,6 @@
 				2A1E69F11C3CE7BF00C882B7 /* UserFrame */,
 				2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */,
 				6B93FC4C1C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift */,
-				6B93FC4D1C1E5A9D00A81EA9 /* TreatmentSummaryTableViewCell.swift */,
 				6B93FC4E1C1E5A9D00A81EA9 /* UserListTableViewCell.swift */,
 			);
 			path = View;
@@ -1656,7 +1653,6 @@
 				6BBFD8B51C326FBF00282573 /* UIImage+GIF.m in Sources */,
 				DDD6A1361C37C28C00C258D2 /* PNLineChartDataItem.m in Sources */,
 				6BBFD8BA1C326FBF00282573 /* UIView+WebCacheOperation.m in Sources */,
-				6B93FC5A1C1E5A9D00A81EA9 /* TreatmentSummaryTableViewCell.swift in Sources */,
 				6BBFD8AC1C326FBF00282573 /* NSData+ImageContentType.m in Sources */,
 				6B93FCBF1C1E66CA00A81EA9 /* CVCalendarMenuView.swift in Sources */,
 				2AC529571C4F85AE00076368 /* AddTreatmentFrame.swift in Sources */,
