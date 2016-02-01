@@ -33,7 +33,7 @@ let userProfileChartHeaderFontSize: UIFont = UIFont.systemFontOfSize(12)
 //chart header左距离
 let chartHeaderLeftSpace: CGFloat = CGFloat(30)
 //chart header item间距
-let chartHeaderSpaceBetweenItems: CGFloat = CGFloat(34)
+let chartHeaderSpaceBetweenItems: CGFloat = CGFloat(17)
 //chart header top space
 let chartHeaderTopSpace: CGFloat = CGFloat(7)
 
@@ -117,7 +117,6 @@ let imageWidth: CGFloat = CGFloat(80)
 let patientstatusSeperateStr: String = String("::")
 
 //与我相关
-let relatedToMe: NSArray = ["我的信息列表", "@我的", "关注", "基本资料"]
 let cellHeight: CGFloat = CGFloat(49)
 let cellTextColor: UIColor = UIColor.init(red: 51 / 255.0, green: 51 / 255.0, blue: 51 / 255.0, alpha: 1)
 let cellTextFont: UIFont = UIFont.systemFontOfSize(15)

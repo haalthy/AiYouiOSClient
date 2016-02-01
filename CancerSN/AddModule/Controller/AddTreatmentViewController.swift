@@ -15,7 +15,6 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     let keychainAccess = KeychainAccess()
     var treatmentTypeCount: Int = Int()
     var treatmentFormatList = NSArray()
-//    var haalthyService = HaalthyService()
     var treatmentFormatOfTKI = NSMutableArray()
     var treatmentFormatOfChemo = NSMutableArray()
     var treatmentTypeArr: NSArray = ["靶向", "化疗", "放疗", "手术", "其他"]

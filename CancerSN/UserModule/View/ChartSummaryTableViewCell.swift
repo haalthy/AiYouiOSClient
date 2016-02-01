@@ -13,7 +13,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
     @IBOutlet weak var chartHearderScrollView: UIScrollView!
     @IBOutlet weak var chartScrollView: UIScrollView!
     var treatmentList = NSArray()
-    
+    var chartHeaderCoordinateX = NSMutableArray()
+    var chartWidth = CGFloat()
     //初始化变量
     let screenWidth: CGFloat = UIScreen.mainScreen().bounds.width
     let buttonIndexPair: NSMutableDictionary = NSMutableDictionary()
@@ -37,7 +38,6 @@ class ChartSummaryTableViewCell: UITableViewCell {
         chartHearderScrollView.backgroundColor = chartBackgroundColor
         chartScrollView.backgroundColor = chartBackgroundColor
         chartHearderScrollView.addSubview(seperateLine)
-//        chartPathView.frame = CGRECT(0, 0, chartScrollView.frame.width, chartScrollView.frame.height)
     }
     
     func updateUI(){
@@ -52,6 +52,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
     
     func initVariable(){
         var index: Int = 0
+        chartHeaderCoordinateX.addObject(chartHeaderLeftSpace)
         for clinicReportItem in clinicReportList {
             buttonIndexPair.setObject((clinicReportItem as! NSDictionary).objectForKey("clinicItemName")!, forKey: index)
             createHeaderBtn((clinicReportItem as! NSDictionary).objectForKey("clinicItemName") as! String, index: index)
@@ -61,7 +62,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
     
     func createHeaderBtn(btnText: String, index: Int){
         let headerItemW: CGFloat = btnText.sizeWithFont(userProfileChartHeaderFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
-        let chartHeaderBtn = UIButton(frame: CGRect(x: chartHeaderLeftSpace + CGFloat(index) * chartHeaderSpaceBetweenItems, y: chartHeaderTopSpace, width: headerItemW, height: 37))
+        let chartHeaderBtn = UIButton(frame: CGRect(x: (chartHeaderCoordinateX[index] as! CGFloat), y: chartHeaderTopSpace, width: headerItemW, height: 37))
+        chartHeaderCoordinateX.addObject(headerItemW + (chartHeaderCoordinateX[index] as! CGFloat) + chartHeaderSpaceBetweenItems)
         chartHeaderBtn.setTitle(btnText, forState: UIControlState.Normal)
         chartHeaderBtn.titleLabel?.font = userProfileChartHeaderFontSize
         chartHeaderBtn.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
@@ -80,7 +82,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
     
     func selectedItemIndex(btnText: String, index: Int){
         let headerItemW: CGFloat = btnText.sizeWithFont(userProfileChartHeaderFontSize, maxSize: CGSize(width: CGFloat.max, height: 15)).width
-        chartItemBottomLine.frame = CGRect(x: chartHeaderLeftSpace + CGFloat(index) * chartHeaderSpaceBetweenItems, y: 41, width: headerItemW, height: 2)
+        chartItemBottomLine.frame = CGRect(x: (chartHeaderCoordinateX[index] as! CGFloat), y: 41, width: headerItemW, height: 2)
         chartItemBottomLine.backgroundColor = headerColor
         chartHearderScrollView.addSubview(chartItemBottomLine)
     }
@@ -91,8 +93,9 @@ class ChartSummaryTableViewCell: UITableViewCell {
         dataPointsYArr.removeAllObjects()
         let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Int
         let endDate = clinicDataList[0].objectForKey("insertDate") as! Int
-        var chartWidth:CGFloat = 0
+        chartWidth = 0
         let maxItemsInScreen: Int = Int(self.frame.width/spaceBetweenClinicItems)
+        
         if clinicDataList.count <= maxItemsInScreen{
             chartWidth = self.frame.width - chartLeftSpace
         }else{
@@ -124,7 +127,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dateFormatter.dateFormat = "MM/dd" // superset of OP's format
                     let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
                     
-                    var coordinateX: CGFloat = CGFloat(Int(chartWidth) * ((clinicData.objectForKey("insertDate") as! Int) - beginDate)/(endDate - beginDate) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2))
+                    var coordinateX: CGFloat = CGFloat(Int(chartWidth - chartDateLabelWidth * 2) * ((clinicData.objectForKey("insertDate") as! Int) - beginDate)/(endDate - beginDate) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2))
                     if (clinicDataList.count == 2) && (index == 0) {
                         coordinateX = chartWidth/2 + chartLeftSpace
                     }
@@ -159,58 +162,90 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dataPointsXArr.addObject(dataPoint.x)
                     dataPointsYArr.addObject(dataPoint.y)
                 }
+            }else{
+                let clinicData = clinicDataList[0]
+                let insertedDate = NSDate(timeIntervalSince1970: (clinicData.objectForKey("insertDate") as! Double)/1000 as NSTimeInterval)
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "MM/dd" // superset of OP's format
+                let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
+                
+                let coordinateX: CGFloat = 50
+                let dateLabel = UILabel(frame: CGRectMake(CGFloat(coordinateX - chartDateLabelWidth/2), chartButtomLineTopSpace + chartDateTopSpace, chartDateLabelWidth, chartDateLabelHeight))
+                dateLabel.text = insertedDayStr
+                dateLabel.font = chartDateFont
+                self.chartScrollView.addSubview(dateLabel)
+                
+                let dataValue = clinicData.objectForKey("clinicItemValue") as! Float
+                let coordinateY:CGFloat = 100
+                
+                let dataMarkView = UIButton(frame: CGRectMake(CGFloat(coordinateX), CGFloat(coordinateY), dataMarkWidth, dataMarkWidth))
+                dataMarkView.layer.borderColor = headerColor.CGColor
+                dataMarkView.layer.borderWidth = dataMarkBorderWidth
+                dataMarkView.layer.cornerRadius = dataMarkWidth/2
+                dataMarkView.layer.masksToBounds = true
+                let dataMarkLbl = UIButton(frame: CGRectMake(CGFloat(coordinateX - chartDateLabelWidth/2)+7, CGFloat(coordinateY - dataValueLblH - dataValueSpace), dataValueLblW, dataValueLblH))
+                dataMarkLbl.setBackgroundImage(UIImage(named: "chartDataMarkLbl"), forState: UIControlState.Normal)
+                dataMarkLbl.setTitleColor(headerColor, forState: UIControlState.Normal)
+                dataMarkLbl.setTitle(String(stringInterpolationSegment: dataValue), forState: UIControlState.Normal)
+                dataMarkLbl.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
+                dataMarkLbl.titleLabel!.textAlignment = NSTextAlignment.Left
+                self.chartScrollView.addSubview(dataMarkLbl)
+                self.chartScrollView.addSubview(dataMarkView)
+                let dataPoint: CGPoint = dataMarkView.center
+                dataPointsXArr.addObject(dataPoint.x)
+                dataPointsYArr.addObject(dataPoint.y)
             }
         }
-//        if beginDate != endDate {
-//            var ceaTreatmentCount = 0
-//            for treatment in treatmentList {
-//                let treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Int
-//                let treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Int
-//                var ceaTreatmentBeginDate = 0
-//                var ceaTreatmentEndDate = 0
-//                if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
-//                    ceaTreatmentBeginDate = treatmentBeginDate
-//                    ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
-//                }
-//                if (treatmentEndDate < endDate)&&(treatmentEndDate > beginDate) {
-//                    ceaTreatmentBeginDate = (treatmentBeginDate < beginDate) ? beginDate : treatmentBeginDate
-//                    ceaTreatmentEndDate = treatmentEndDate
-//                }
-//                if (treatmentEndDate >= endDate) && (treatmentBeginDate <= beginDate) {
-//                    ceaTreatmentBeginDate = beginDate
-//                    ceaTreatmentEndDate = endDate
-//                }
-//                let coordinateBeginX = (Int(width)-80) * (ceaTreatmentBeginDate - beginDate)/(endDate - beginDate) + 10
-//                let coordinateEndX = (Int(width)-80) * (ceaTreatmentEndDate - beginDate)/(endDate - beginDate) + 50
-//                
-//                let coordinateY = Int(chartVerticalHeight) - 5
-//                let treatmentMarkView = UIView(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY), CGFloat(coordinateEndX - coordinateBeginX), 5))
-//                var treatmentColor = UIColor()
-//                switch ceaTreatmentCount{
-//                case 0: treatmentColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
-//                    break
-//                case 1: treatmentColor = UIColor.orangeColor().colorWithAlphaComponent(0.5)
-//                    break
-//                case 2: treatmentColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
-//                    break
-//                case 3: treatmentColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-//                    break
-//                default: treatmentColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
-//                    break
-//                }
-//                treatmentMarkView.backgroundColor = treatmentColor
-//                ceaTreatmentCount++
-//                self.chartScrollView.addSubview(treatmentMarkView)
-//                
-//                //add treatmentLabel
-//                let treatmentLabel = UILabel(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY - 10), 70, 10))
-//                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
-//                treatmentLabel.font = UIFont(name: "Helvetica", size: 11.0)
-//                treatmentLabel.backgroundColor = UIColor.whiteColor()
-//                treatmentLabel.alpha = 1
-//                self.chartScrollView.addSubview(treatmentLabel)
-//            }
-//        }
+        if beginDate != endDate {
+            var ceaTreatmentCount = 0
+            for treatment in treatmentList {
+                let treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Int
+                let treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Int
+                var ceaTreatmentBeginDate = 0
+                var ceaTreatmentEndDate = 0
+                if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
+                    ceaTreatmentBeginDate = treatmentBeginDate
+                    ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
+                }
+                if (treatmentEndDate < endDate)&&(treatmentEndDate > beginDate) {
+                    ceaTreatmentBeginDate = (treatmentBeginDate < beginDate) ? beginDate : treatmentBeginDate
+                    ceaTreatmentEndDate = treatmentEndDate
+                }
+                if (treatmentEndDate >= endDate) && (treatmentBeginDate <= beginDate) {
+                    ceaTreatmentBeginDate = beginDate
+                    ceaTreatmentEndDate = endDate
+                }
+                let coordinateBeginX = (Int(chartWidth)-80) * (ceaTreatmentBeginDate - beginDate)/(endDate - beginDate) + 10
+                let coordinateEndX = (Int(chartWidth)-80) * (ceaTreatmentEndDate - beginDate)/(endDate - beginDate) + 50
+                
+                let coordinateY = Int(self.chartScrollView.frame.height) - 37
+                let treatmentMarkView = UIView(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY), CGFloat(coordinateEndX - coordinateBeginX), 5))
+                var treatmentColor = UIColor()
+                switch ceaTreatmentCount{
+                case 0: treatmentColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+                    break
+                case 1: treatmentColor = UIColor.orangeColor().colorWithAlphaComponent(0.5)
+                    break
+                case 2: treatmentColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
+                    break
+                case 3: treatmentColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+                    break
+                default: treatmentColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
+                    break
+                }
+                treatmentMarkView.backgroundColor = treatmentColor
+                ceaTreatmentCount++
+                self.chartScrollView.addSubview(treatmentMarkView)
+                
+                //add treatmentLabel
+                let treatmentLabel = UILabel(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY - 10), 60, 10))
+                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
+                treatmentLabel.font = UIFont(name: "Helvetica", size: 11.0)
+                treatmentLabel.backgroundColor = UIColor.whiteColor()
+                treatmentLabel.alpha = 1
+                self.chartScrollView.addSubview(treatmentLabel)
+            }
+        }
         self.drawRect(CGRECT(0, 0, self.chartScrollView.frame.width, self.chartScrollView.frame.height))
     }
     
@@ -229,11 +264,9 @@ class ChartSummaryTableViewCell: UITableViewCell {
 
         if dataPointsXArr.count > 0{
             CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[0] as! CGFloat - 2, dataPointsYArr[0] as! CGFloat)
-//            var pointIndex: Int = 1
-//            for pointIndex; pointIndex < dataPointsXArr.count; pointIndex++ {
             for pointIndex in 1...dataPointsXArr.count - 1{
                 CGContextAddLineToPoint(UIGraphicsGetCurrentContext(),  dataPointsXArr[pointIndex] as! CGFloat + 2, dataPointsYArr[pointIndex] as! CGFloat)
-                CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[0] as! CGFloat - 2, dataPointsYArr[0] as! CGFloat)
+                CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[pointIndex] as! CGFloat - 2, dataPointsYArr[pointIndex] as! CGFloat)
             }
         }
         CGContextStrokePath(UIGraphicsGetCurrentContext())
