@@ -17,7 +17,7 @@ class CVCalendarDayView: UIView {
     var dayLabel: UILabel!
     
     var circleView: CVAuxiliaryView?
-    var topMarker: CALayer?
+//    var topMarker: CALayer?
     var dotMarkers = [CVAuxiliaryView?]()
     
     var isOut = false
@@ -49,7 +49,7 @@ class CVCalendarDayView: UIView {
         didSet {
             if oldValue != frame {
                 circleView?.setNeedsDisplay()
-                topMarkerSetup()
+//                topMarkerSetup()
                 preliminarySetup()
                 supplementarySetup()
             }
@@ -80,7 +80,7 @@ class CVCalendarDayView: UIView {
         
         labelSetup()
         setupDotMarker()
-        topMarkerSetup()
+//        topMarkerSetup()
         
         if (frame.width > 0) {
             preliminarySetup()
@@ -206,39 +206,39 @@ extension CVCalendarDayView {
     }
     
     // TODO: Make this widget customizable
-    func topMarkerSetup() {
-        safeExecuteBlock({
-            func createMarker() {
-                let height = CGFloat(0.5)
-                let layer = CALayer()
-                layer.borderColor = UIColor.grayColor().CGColor
-                layer.borderWidth = height
-                layer.frame = CGRectMake(0, 1, CGRectGetWidth(self.frame), height)
-                
-                self.topMarker = layer
-                self.layer.addSublayer(self.topMarker!)
-            }
-            
-            if let delegate = self.calendarView.delegate {
-                if self.topMarker != nil {
-                    self.topMarker?.removeFromSuperlayer()
-                    self.topMarker = nil
-                }
-                
-                if let shouldDisplay = delegate.topMarker?(shouldDisplayOnDayView: self) where shouldDisplay {
-                    createMarker()
-                }
-            } else {
-                if self.topMarker == nil {
-                    createMarker()
-                } else {
-                    self.topMarker?.removeFromSuperlayer()
-                    self.topMarker = nil
-                    createMarker()
-                }
-            }
-            }, collapsingOnNil: false, withObjects: weekView, weekView.monthView, weekView.monthView)
-    }
+//    func topMarkerSetup() {
+//        safeExecuteBlock({
+//            func createMarker() {
+//                let height = CGFloat(0.5)
+//                let layer = CALayer()
+//                layer.borderColor = UIColor.grayColor().CGColor
+//                layer.borderWidth = height
+//                layer.frame = CGRectMake(0, 1, CGRectGetWidth(self.frame), height)
+//                
+//                self.topMarker = layer
+//                self.layer.addSublayer(self.topMarker!)
+//            }
+//            
+//            if let delegate = self.calendarView.delegate {
+//                if self.topMarker != nil {
+//                    self.topMarker?.removeFromSuperlayer()
+//                    self.topMarker = nil
+//                }
+//                
+//                if let shouldDisplay = delegate.topMarker?(shouldDisplayOnDayView: self) where shouldDisplay {
+//                    createMarker()
+//                }
+//            } else {
+//                if self.topMarker == nil {
+//                    createMarker()
+//                } else {
+//                    self.topMarker?.removeFromSuperlayer()
+//                    self.topMarker = nil
+//                    createMarker()
+//                }
+//            }
+//            }, collapsingOnNil: false, withObjects: weekView, weekView.monthView, weekView.monthView)
+//    }
     
     func setupDotMarker() {
         for (index, dotMarker) in dotMarkers.enumerate() {

@@ -163,5 +163,85 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CancerSN/NetRequest/NetRequest.swift"
+            timestampString = "475985165.906744"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "GET_A(_:parameters:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CancerSN.NetRequest.GET_A (CancerSN.NetRequest)(Swift.String, parameters : Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;) -&gt; ObjectiveC.NSDictionary"
+                  moduleName = "CancerSN"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lily/code/AiYou/AiYouiOSClient/CancerSN/NetRequest/NetRequest.swift"
+                  timestampString = "475987888.962194"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165"
+                  offsetFromSymbolStart = "1642">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CancerSN.NetRequest.(GET_A (CancerSN.NetRequest) -&gt; (Swift.String, parameters : Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;) -&gt; ObjectiveC.NSDictionary).(closure #1)"
+                  moduleName = "CancerSN"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lily/code/AiYou/AiYouiOSClient/CancerSN/NetRequest/NetRequest.swift"
+                  timestampString = "475987888.96391"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "168"
+                  endingLineNumber = "168"
+                  offsetFromSymbolStart = "31">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CancerSN/NetRequest/NetRequest.swift"
+            timestampString = "475985174.275761"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "GET_A(_:parameters:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CancerSN/NetRequest/NetRequest.swift"
+            timestampString = "475985177.237609"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "GET_A(_:parameters:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

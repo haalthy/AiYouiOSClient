@@ -28,6 +28,11 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initRefresh()
         initContentView()
        // self .getFeedListFromServer()
+        var keychainAccess = KeychainAccess()
+        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
+        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
+
+        
         }
 
     // MARK: - Init Variables
