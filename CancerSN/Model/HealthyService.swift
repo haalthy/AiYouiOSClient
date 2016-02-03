@@ -757,26 +757,22 @@ class HaalthyService:NSObject{
         return getPostByIdRespData!
     }
     
-    func getUsernameByEmail(username:String)->NSData{
-//        getAccessToken.getAccessToken()
+    func getUsername(email:String)-> String{
+        var username: String = ""
+        getAccessToken.getAccessToken()
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil{
             getAccessToken.getAccessToken()
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        }else{
+            let urlPath: String = getUsernameURL + "?access_token=" + (accessToken as! String)
+            let parameters = NSDictionary(object: email, forKey: "username")
+            let jsonResult: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: parameters as! Dictionary<String, AnyObject>)
+            if (jsonResult.objectForKey("result") != nil) && (jsonResult.objectForKey("result") as! Int == 1) && (jsonResult.objectForKey("content") != nil) {
+                username = ((jsonResult ).objectForKey("content") as! NSDictionary).objectForKey("result") as! String
+            }
         }
-        let urlPath: String = getUsernameByEmailURL + "?access_token=" + (accessToken as! String)
-        let url: NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        let requestBody = NSMutableDictionary()
-        requestBody.setValue(username, forKey: "username")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions())
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        let getUsernameRespData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
-        let str: NSString = NSString(data: getUsernameRespData!, encoding: NSUTF8StringEncoding)!
-        return getUsernameRespData!
+        return username
     }
 
     func queryPostBody(query:String)->NSData?{

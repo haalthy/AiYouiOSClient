@@ -120,3 +120,8 @@ let defaultTreatmentEndDate: NSTimeInterval = 1767225600
 //默认图片背景色（当图片加载错误时）edeeee
 let imageViewBackgroundColor: UIColor = UIColor.init(red:237 / 255.0, green:238 / 255.0, blue:238 / 255.0, alpha:1)
 
+//屏幕宽 高
+var screenWidth = CGFloat()
+var screenHeight = CGFloat()
+
+

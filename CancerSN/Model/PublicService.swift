@@ -175,4 +175,47 @@ class PublicService:NSObject{
             return false
         }
     }
+    
+    func checkIsPhoneNumber(str: String) -> Bool {
+        do {
+            // - 1、创建规则
+            let pattern = "[1-9][0-9]{8,14}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+            // 输出结果
+            if res.count > 0{
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        catch {
+            return false
+        }
+    }
+    
+    func checkIsEmail(str: String)->Bool{
+        do {
+            //([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+            // - 1、创建规则
+            let pattern = "[a-zA-Z0-9_-]{1,20}@[a-zA-Z0-9_-]{1,20}.[a-zA-Z0-9_-]{1,20}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+            // 输出结果
+            if res.count > 0{
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        catch {
+            return false
+        }
+    }
 }

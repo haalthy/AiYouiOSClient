@@ -17,8 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
-        
         let tabViewController : TabViewController = TabViewController()
         self.window!.rootViewController = tabViewController
         
@@ -26,6 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.initNavigationBar()
         
         self.window!.makeKeyAndVisible()
+        checkUserStatus()
+        screenHeight = (self.window?.bounds.height)!
+        screenWidth = (self.window?.bounds.width)!
+
         return true
     }
     
@@ -45,9 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - 是否进入到主页界面
     
     func checkUserStatus() {
-        
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
             let keychainAccess = KeychainAccess()
+            keychainAccess.deletePasscode(usernameKeyChain)
+            keychainAccess.deletePasscode(passwordKeyChain)
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! LoginViewController
