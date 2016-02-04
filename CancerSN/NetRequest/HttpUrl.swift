@@ -62,5 +62,9 @@ let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentione
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
 let getUsernameURL = haalthyServiceRestfulURL + "security/user/getusername"
 let getUsersByDisplaynameURL = haalthyServiceRestfulURL + "security/user/getusersbydisplayname"
+let getEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailsend"
+let getPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smssend"
+let checkEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailcheck"
+let checkPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smscheck"
 
 

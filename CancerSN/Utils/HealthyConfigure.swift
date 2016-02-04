@@ -69,6 +69,7 @@ let smokingNSUserData = "haalthyUserSmoking"
 let metastasisNSUserData = "haalthyUserMetastasis"
 let geneticMutationNSUserData = "haalthyUserGeneticMutation"
 let emailNSUserData = "haalthyUserEmail"
+let phoneNSUserData = "haalthyUserPhone"
 let accessNSUserData = "haalthyUserAccessToken"
 let refreshNSUserData = "haalthyUserRefreshToken"
 let imageNSUserData = "haalthyUserImageToken"
@@ -124,4 +125,4 @@ let imageViewBackgroundColor: UIColor = UIColor.init(red:237 / 255.0, green:238 
 var screenWidth = CGFloat()
 var screenHeight = CGFloat()
 
-
+let qqAppID: String = "1104886596"

@@ -122,7 +122,8 @@ let buttonTitleLabelFont: UIFont = UIFont.systemFontOfSize(13)
 let pieChartDarkGrayColor: UIColor = UIColor.init(red: 193/255, green: 193/255, blue: 193/255, alpha: 1)
 let pieChartLightGrayColor: UIColor = UIColor.init(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
 
-
+//sign up
+let getAuthCodeBtnFont: UIFont = UIFont.systemFontOfSize(13)
 
 
 

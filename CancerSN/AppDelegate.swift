@@ -52,11 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             keychainAccess.deletePasscode(usernameKeyChain)
             keychainAccess.deletePasscode(passwordKeyChain)
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! LoginViewController
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
                 if self.window != nil {
                     self.window!.rootViewController = rootController
-                    rootController.isRootViewController = true
+//                    rootController.isRootViewController = true
                 }
 
             }

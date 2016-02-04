@@ -78,13 +78,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Nci-f2-8mi"/>
-                    <connections>
-                        <segue destination="gNw-hR-BVy" kind="showDetail" identifier="homeSegue" id="o4i-W5-3t9"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lq2-dG-GRP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1459.5" y="151.5"/>
+            <point key="canvasLocation" x="-1321" y="-10"/>
         </scene>
     </scenes>
 </document>

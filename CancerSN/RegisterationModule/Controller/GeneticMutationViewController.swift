@@ -20,8 +20,10 @@ class GeneticMutationViewController: UIViewController {
     let buttonSection = UIView()
     let pieChartCenterLabel = UILabel()
     var pieChartOuter = PNPieChart()
+    var descriptionLabel = UILabel()
     
-    var publicService = PublicService()
+    var haalthyService = HaalthyService()
+    
     let profileSet = NSUserDefaults.standardUserDefaults()
 
     var selectGeneticMutationStr = String()
@@ -128,6 +130,12 @@ class GeneticMutationViewController: UIViewController {
         pieChartCenterLabel.backgroundColor = UIColor.clearColor()
         self.view.addSubview(pieChartCenterLabel)
 
+        //description label
+        descriptionLabel.frame = CGRECT(0, pieChartOuter.frame.origin.y + pieChartOuter.frame.width + 21, screenWidth, 12)
+        descriptionLabel.textColor = signUpTitleTextColor
+        descriptionLabel.font = UIFont.systemFontOfSize(12)
+        descriptionLabel.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(descriptionLabel)
     }
     
     func previousView(sender: UIButton){
@@ -155,94 +163,31 @@ class GeneticMutationViewController: UIViewController {
 
         let newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
         newPieChartOuter.duration = 0
-        pieChartCenterLabel.text = String(value2)
+        pieChartCenterLabel.text = String(value2) + "%"
         self.view.addSubview(newPieChartOuter)
+        descriptionLabel.text = String(value2) + "%的患者为" + (sender.titleLabel?.text)! + "基因变异"
     }
 
     func PieChart(){
-        
-//        let items = [PNPieChartDataItem(value: 10, color: UIColor.blueColor(), description: ""),PNPieChartDataItem(value: 35, color: UIColor.redColor(), description: ""),PNPieChartDataItem(value: 15, color: UIColor.orangeColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.greenColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.yellowColor(), description: "")]
         let outerItems = [PNPieChartDataItem(value: 100, color: pieChartLightGrayColor)]
         let pieChartW: CGFloat = 219
         pieChartOuter = PNPieChart(frame: CGRectMake((screenWidth - pieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height, pieChartW, pieChartW), items: outerItems)
         self.view.addSubview(pieChartOuter)
-//        pieChartOuter.outerCircleRadius = 219/2
-//        pieChartOuter.innerCircleRadius = 10
-//        pieChartOuter.descriptionTextFont = UIFont.boldSystemFontOfSize(13)
-//        pieChartOuter.strokeChart()
-//        let innerItems = [PNPieChartDataItem(value: 100, color: pieChartDarkGrayColor)]
-//        let innerPieChartW: CGFloat = 144
-//        let pieChartInner = PNPieChart(frame: CGRectMake((screenWidth - innerPieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height + 37.5, innerPieChartW, innerPieChartW), items: innerItems)
-//        pieChartInner.innerCircleRadius = 40
-//        print(pieChartInner.innerCircleRadius)
-//        pieChartOuter.outerCircleRadius = 219/2
-//        pieChartOuter.innerCircleRadius = 10
-//        let items = [PNPieChartDataItem(value: 100, color: UIColor.redColor())]
-//        let whietPieChartW: CGFloat = 124
-//        let whitePieChartInner = PNPieChart(frame: CGRectMake((screenWidth - whietPieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height + 47.5, whietPieChartW, whietPieChartW), items: items)
-//        self.view.addSubview(whitePieChartInner)
-//        self.view.addSubview(pieChartInner)
-        
-        //        pieChart.legendStyle = PNLegendItemStyle.Stacked
-        //        let legend = pieChart.getLegendWithMaxWidth(200)
-        //        legend.frame = CGRectMake(150,550, legend.frame.size.width, legend.frame.size.height)
-        //        self.view.addSubview(legend)
     }
 
-    
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-//    
-//
-//
-//    @IBAction func selectGenetic(sender: UIButton) {
-//        selectGeneticMutationStr = geneticMutationMapping.objectForKey((sender.titleLabel?.text)!) as! String
-//        switch sender{
-//        case krasBtn:
-//            publicService.selectedBtnFormat(krasBtn)
-//            publicService.unselectBtnFormat(egfrBtn)
-//            publicService.unselectBtnFormat(alkBtn)
-//            publicService.unselectBtnFormat(otherMutationBtn)
-//            publicService.unselectBtnFormat(noMutationBtn)
-//        case egfrBtn:
-//            publicService.selectedBtnFormat(egfrBtn)
-//            publicService.unselectBtnFormat(krasBtn)
-//            publicService.unselectBtnFormat(alkBtn)
-//            publicService.unselectBtnFormat(otherMutationBtn)
-//            publicService.unselectBtnFormat(noMutationBtn)
-//        case alkBtn:
-//            publicService.selectedBtnFormat(alkBtn)
-//            publicService.unselectBtnFormat(krasBtn)
-//            publicService.unselectBtnFormat(egfrBtn)
-//            publicService.unselectBtnFormat(otherMutationBtn)
-//            publicService.unselectBtnFormat(noMutationBtn)
-//        case otherMutationBtn:
-//            publicService.selectedBtnFormat(otherMutationBtn)
-//            publicService.unselectBtnFormat(krasBtn)
-//            publicService.unselectBtnFormat(egfrBtn)
-//            publicService.unselectBtnFormat(alkBtn)
-//            publicService.unselectBtnFormat(noMutationBtn)
-//        case noMutationBtn:
-//            publicService.selectedBtnFormat(noMutationBtn)
-//            publicService.unselectBtnFormat(krasBtn)
-//            publicService.unselectBtnFormat(egfrBtn)
-//            publicService.unselectBtnFormat(otherMutationBtn)
-//            publicService.unselectBtnFormat(alkBtn)
-//        default:
-//            break
-//        }
-//        
-//    }
-//    
-//    @IBAction func confirm(sender: UIButton) {
-//        if isUpdate{
-//            geneticMutationVCDelegate?.updateGeneticMutation(selectGeneticMutationStr)
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }else{
-//            profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
-//            self.performSegueWithIdentifier("stageAndMetastasisSegue", sender: self)
-//        }
-//    }
+    func selectedNextView(sender: UIButton){
+        for geneticBtn in buttonSection.subviews {
+            if  (geneticBtn is UIButton) && (geneticBtn.backgroundColor == headerColor) {
+                selectGeneticMutationStr += ((geneticBtn as! UIButton).titleLabel?.text)!
+            }
+        }
+        profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
+        if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+            let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+            if (result.objectForKey("result") as! Int) != 1 {
+                HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+            }
+        }
+        self.performSegueWithIdentifier("selectTagSegue", sender: self)
+    }
 }

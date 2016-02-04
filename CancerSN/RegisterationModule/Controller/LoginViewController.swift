@@ -13,9 +13,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     //global variable
     var screenWidth: CGFloat = 0
     var screenHeight: CGFloat = 0
-    
-//    @IBOutlet weak var cancelBtn: UIButton!
-//    @IBOutlet weak var portrait: UIImageView!
+
     var password = UITextField()
     var username = UITextField()
     
@@ -98,6 +96,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         forgetPwdBtn.setTitle("忘记密码", forState: UIControlState.Normal)
         forgetPwdBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         forgetPwdBtn.titleLabel?.font = forgetBtnFont
+        forgetPwdBtn.addTarget(self, action: "resetPassword", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(forgetPwdBtn)
         
         //seperate Line
@@ -121,6 +120,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let qqLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
         qqLoginImgView.image = UIImage(named: "btn_qq")
         qqLoginBtn.addSubview(qqLoginImgView)
+        qqLoginBtn.addTarget(self, action: "loginViaQQ:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(qqLoginBtn)
         
         //look around
@@ -132,8 +132,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(lookaroundBtn)
     }
     
+    func resetPassword(){
+        self.performSegueWithIdentifier("resetPwdSegue", sender: self)
+    }
+    
     @IBAction func loginViaQQ(sender: UIButton) {
-        self.tencentOAuth = TencentOAuth(appId: "1104886596", andDelegate: self)
+        self.tencentOAuth = TencentOAuth(appId: qqAppID, andDelegate: self)
         let permissions = [kOPEN_PERMISSION_GET_INFO,kOPEN_PERMISSION_GET_USER_INFO,kOPEN_PERMISSION_GET_SIMPLE_USER_INFO]
         tencentOAuth!.authorize(permissions, inSafari: false)
     }
@@ -144,9 +148,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
-        self.presentViewController(controller, animated: true, completion: nil)
+//        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+//        let controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
+//        self.presentViewController(controller, animated: true, completion: nil)
+        self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
     }
     
     func tencentDidLogin(){
@@ -162,33 +167,55 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         print("没有网络")
     }
     
+    func getQQImage(urlPath: String){
+//        let request = NSURLRequest(URL: NSURL(string: urlPath)!)
+        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: urlPath)!, completionHandler: {(data, response, error) -> Void in
+            // 返回任务结果
+            if (error == nil) && (data != nil) {
+                let imageDataStr = data!.base64EncodedStringWithOptions([])
+                
+                self.profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+            }
+        }).resume()
+//        let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+//            // 返回任务结果
+//            if (error == nil) && (data != nil) {
+//                let imageDataStr = data!.base64EncodedStringWithOptions([])
+//                
+//                self.profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+//            }
+//        })
+        // 任务结束
+//        task.resume()
+    }
+    
     func getUserInfoResponse(response: APIResponse!) {
-        let accessToken = tencentOAuth!.accessToken
         let openId = tencentOAuth!.openId
-        let expirationDate = tencentOAuth!.expirationDate.timeIntervalSince1970
         let resp: NSDictionary = response.jsonResponse
         
         print(resp.objectForKey("nickname"))
-        if userLogin(openId, passwordStr: openId) == false {
+        print(resp.objectForKey("figureurl_2"))
+        keychainAccess.setPasscode(usernameKeyChain, passcode: openId)
+        keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
+        getAccessToken.getAccessToken()
+        if profileSet.objectForKey(accessNSUserData) == nil {
+//        if userLogin(openId, passwordStr: openId) == false {
             //store username, password, email in NSUserData
             profileSet.setObject("", forKey: emailNSUserData)
-            let qqImage = UIImage(named: "Tencent_QQ.png")
-            let imageData: NSData = UIImagePNGRepresentation(qqImage!)!
-            
-            let imageDataStr = imageData.base64EncodedStringWithOptions([])
-            
-            profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+            getQQImage(resp.objectForKey("figureurl_2") as! String)
             profileSet.setObject(resp.objectForKey("nickname"), forKey: displaynameUserData)
             profileSet.setObject(qqUserType, forKey: userTypeUserData)
             let keychainAccess = KeychainAccess()
             keychainAccess.setPasscode(usernameKeyChain, passcode: openId)
             keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
-            self.performSegueWithIdentifier("fillInfoSegue", sender: self)
+            self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
         }else{
-            var storyboard = UIStoryboard(name: "Main", bundle: nil)
-            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
-            
-            self.presentViewController(controller, animated: true, completion: nil)
+//            var storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
+//            
+//            self.presentViewController(controller, animated: true, completion: nil)
+            let tabViewController : TabViewController = TabViewController()
+            self.presentViewController(tabViewController, animated: true, completion: nil)
         }
     }
     
@@ -294,6 +321,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
 //            cancelBtn.hidden = false
 //        }
 //    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = true
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = false
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
