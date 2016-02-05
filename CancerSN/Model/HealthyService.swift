@@ -11,6 +11,7 @@ import Foundation
 class HaalthyService:NSObject{
     let getAccessToken = GetAccessToken()
     let keychainAccess = KeychainAccess()
+    let publicService = PublicService()
 
     func addPost(post : NSDictionary)->NSData{
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
@@ -35,7 +36,7 @@ class HaalthyService:NSObject{
         let keychainAccess = KeychainAccess()
         let profileSet = NSUserDefaults.standardUserDefaults()
         
-        var email    = String()
+        var email: String?
         var username = String()
         var password = String()
         var displayname = String()
@@ -49,7 +50,7 @@ class HaalthyService:NSObject{
 //        var image       = String()
         var imageInfo = NSMutableDictionary()
         var geneticMutation = String()
-        var phone = String()
+        var phone: String?
         if profileSet.objectForKey(emailNSUserData) != nil{
             email = (profileSet.objectForKey(emailNSUserData))! as! String
         }
@@ -89,16 +90,15 @@ class HaalthyService:NSObject{
             metastasis = (profileSet.objectForKey(metastasisNSUserData))! as! String
         }
         if profileSet.objectForKey(imageNSUserData) != nil{
-            imageInfo.setObject(imageNSUserData, forKey: "data")
+            imageInfo.setObject(profileSet.objectForKey(imageNSUserData)!, forKey: "data")
             imageInfo.setObject("jpg", forKey: "type")
 //            image = (profileSet.objectForKey(imageNSUserData))! as! String
         }
         if profileSet.objectForKey(geneticMutationNSUserData) != nil{
             geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String
         }
-        let publicService = PublicService()
         let passwordStr = publicService.passwordEncode(password)
-        let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone"])
+        let addUserBody = NSDictionary(objects: [email!, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone!], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone"])
         let addUserUrl = NSURL(string: addNewUserURL)
         let request: NSMutableURLRequest = NSMutableURLRequest(URL: addUserUrl!)
         request.HTTPMethod = "POST"
@@ -109,13 +109,14 @@ class HaalthyService:NSObject{
     }
     
     func getAuthCode(id: String)->Bool{
-        let publicService = PublicService()
-        let requestBody = NSDictionary(object: "id", forKey: "eMail")
+        let requestBody = NSDictionary(object: id, forKey: "eMail")
         var result: NSDictionary?
         if publicService.checkIsEmail(id) {
             result = NetRequest.sharedInstance.POST_A(getEmailAuthCodeURL, parameters: requestBody as! Dictionary<String, AnyObject>)
+            print("请查收邮箱")
         }else if publicService.checkIsPhoneNumber(id){
             result = NetRequest.sharedInstance.POST_A(getPhoneAuthCodeURL, parameters: requestBody as! Dictionary<String, AnyObject>)
+            print("请查收手机短信")
         }else{
             return false
         }
@@ -125,9 +126,21 @@ class HaalthyService:NSObject{
         return true
     }
     
-//    func checkAuthCode(id: String)->Bool{
-//        
-//    }
+    func checkAuthCode(checkAuthRequest: NSDictionary)->Bool{
+        var result: NSDictionary?
+        let id: String = checkAuthRequest.objectForKey("eMail") as! String
+        if publicService.checkIsEmail(id) {
+            result = NetRequest.sharedInstance.POST_A(checkEmailAuthCodeURL, parameters: checkAuthRequest as! Dictionary<String, AnyObject>)
+        }else if publicService.checkIsPhoneNumber(id){
+            result = NetRequest.sharedInstance.POST_A(checkPhoneAuthCodeURL, parameters: checkAuthRequest as! Dictionary<String, AnyObject>)
+        }else{
+            return false
+        }
+        if (result!.objectForKey("result") as! Int) != 1 {
+            return false
+        }
+        return true
+    }
     
     func getFeeds(latestFetchTimestamp: Int)->NSData?{
         getAccessToken.getAccessToken()

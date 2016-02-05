@@ -15,6 +15,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     let getAuthCodeBtnW: CGFloat = 94
     let textFieldLeftSpace: CGFloat = 15
     
+    var portraitImgStr = String()
+    let appIconImageView = UIImageView()
+    let portraitBtn = UIButton()
     let id: UITextField = UITextField()
     let authCode: UITextField = UITextField()
     let nick: UITextField = UITextField()
@@ -26,27 +29,70 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     let publicService = PublicService()
     let profileSet = NSUserDefaults.standardUserDefaults()
     
+    var imagePicker = UIImagePickerController()
+    
+    func cropToSquare(image originalImage: UIImage) -> UIImage {
+        // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
+        let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage!)
+        
+        // Get the size of the contextImage
+        let contextSize: CGSize = contextImage.size
+        
+        let posX: CGFloat
+        let posY: CGFloat
+        let width: CGFloat
+        let height: CGFloat
+        
+        // Check to see which length is the longest and create the offset based on that length, then set the width and height of our rect
+        if contextSize.width > contextSize.height {
+            posX = ((contextSize.width - contextSize.height) / 2)
+            posY = 0
+            width = contextSize.height
+            height = contextSize.height
+        } else {
+            posX = 0
+            posY = ((contextSize.height - contextSize.width) / 2)
+            width = contextSize.width
+            height = contextSize.width
+        }
+        
+        let rect: CGRect = CGRectMake(posX, posY, width, height)
+        
+        // Create bitmap image from context using the rect
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)!
+        
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)
+        
+        return image
+    }
+    
     override func viewDidLoad() {
         initVariables()
         initContentView()
     }
     
     func initVariables(){
-    
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true //2
+        imagePicker.sourceType = .PhotoLibrary //
     }
     
     func initContentView(){
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")
         self.view.addSubview(backgroudImgView)
-        //app icon view
+        //portrait view
         let appIconLeftSpace: CGFloat = (screenWidth - appIconLength)/2
-        let appIconImageView = UIImageView(frame: CGRECT(appIconLeftSpace, appIconTopSpace, appIconLength, appIconLength))
+        appIconImageView.frame = CGRECT(0, 0, appIconLength, appIconLength)
         appIconImageView.image = UIImage(named: "img_appIcon")
-        appIconImageView.backgroundColor = UIColor.clearColor()
-        appIconImageView.layer.cornerRadius = 16
-        appIconImageView.layer.masksToBounds = true
-        self.view.addSubview(appIconImageView)
+        portraitBtn.backgroundColor = UIColor.clearColor()
+        portraitBtn.layer.cornerRadius = 16
+        portraitBtn.layer.masksToBounds = true
+        portraitBtn.frame = CGRECT(appIconLeftSpace, appIconTopSpace, appIconLength, appIconLength)
+        portraitBtn.addTarget(self, action: "selectImage:", forControlEvents: UIControlEvents.TouchUpInside)
+        portraitBtn.addSubview(appIconImageView)
+        self.view.addSubview(portraitBtn)
         //textInputView
         let textInputView: UIView = UIView(frame: CGRect(x: inputViewMargin, y: inputViewTopSpace, width: screenWidth - inputViewMargin * 2, height: textFieldHeight * CGFloat(textFieldLineCount) + 4))
         textInputView.layer.cornerRadius = 4
@@ -116,6 +162,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         signUpBtn.layer.cornerRadius = 4
         signUpBtn.layer.masksToBounds = true
         signUpBtn.addTarget(self, action: "signUp:", forControlEvents: UIControlEvents.TouchUpInside)
+
         self.view.addSubview(signUpBtn)
         
         //login btn
@@ -129,24 +176,67 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
     }
     
+    func selectImage(sender: UIButton){
+        presentViewController(imagePicker, animated: true, completion: nil)//4
+        //MARK: Delegates
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+
+        var selectedImage = UIImage()
+        selectedImage = cropToSquare(image: chosenImage)
+        
+        let newSize = CGSizeMake(1000, 100)
+        UIGraphicsBeginImageContext(newSize)
+        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        appIconImageView.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        dismissViewControllerAnimated(true, completion: nil) //5
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        textField.resignFirstResponder()
+        return true
+    }
     func getAuthCode(sender: UIButton){
-        if haalthyService.getAuthCode(id.text!) == false {
+        let idStr: String = id.text!
+        if haalthyService.getAuthCode(idStr) == false {
             print("获取验证码错误")
         }
     }
     
     func login(sender: UIButton){
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let loginViewController = storyboard.instantiateViewControllerWithIdentifier("Login")
+        self.presentViewController(loginViewController, animated: true, completion: nil)
+    }
+    
+    func signUp(sender: UIButton){
         if publicService.checkIsEmail(id.text!) {
             profileSet.setObject(id.text!, forKey: emailNSUserData)
         }else if publicService.checkIsPhoneNumber(id.text!){
             profileSet.setObject(id.text!, forKey: phoneNSUserData)
         }
-        
-    }
-    
-    func signUp(sender: UIButton){
-        
-        self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
+        let getAuthRequest = NSDictionary(objects: [id.text!, authCode.text!], forKeys: ["eMail", "authCode"])
+        if haalthyService.checkAuthCode(getAuthRequest) {
+            profileSet.setObject(nick.text!, forKey: displaynameUserData)
+            keychainAccess.setPasscode(password.text!, passcode: passwordKeyChain)
+            let selectedImageData: NSData = UIImagePNGRepresentation(appIconImageView.image!)!
+            portraitImgStr = selectedImageData.base64EncodedStringWithOptions([])
+            profileSet.setObject(portraitImgStr, forKey: imageNSUserData)
+            let result = haalthyService.addUser("AY")
+            if (result.count > 0) && (result.objectForKey("result") as! Int) == 1 {
+                self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
+            }
+        }else{
+            print("验证码输入错误")
+        }
     }
     
 //    @IBOutlet weak var portrait: UIImageView!

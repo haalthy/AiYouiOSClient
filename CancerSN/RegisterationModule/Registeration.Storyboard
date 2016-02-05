@@ -106,10 +106,10 @@
             </objects>
             <point key="canvasLocation" x="7313" y="-424"/>
         </scene>
-        <!--View Controller-->
+        <!--Sign Up Sucessful View Controller-->
         <scene sceneID="LIt-ov-PFV">
             <objects>
-                <viewController id="OdG-oN-WTh" sceneMemberID="viewController">
+                <viewController id="OdG-oN-WTh" customClass="SignUpSucessfulViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="GKQ-fT-c0a"/>
                         <viewControllerLayoutGuide type="bottom" id="ewG-t2-1Bg"/>
@@ -613,7 +613,7 @@
         <!--Login View Controller-->
         <scene sceneID="Ooq-1w-hw2">
             <objects>
-                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="l33-ym-PeX" customClass="LoginViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Login" useStoryboardIdentifierAsRestorationIdentifier="YES" id="l33-ym-PeX" customClass="LoginViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="en8-Sz-UZu"/>
                         <viewControllerLayoutGuide type="bottom" id="cuH-lg-QzR"/>
