@@ -29,24 +29,27 @@ class PublicService:NSObject{
             age = (user["age"] as! NSNumber).stringValue
         }
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
-            if stages.count > 0 {
-                stage = stages[0] as! String
-            }
+//            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
+//            if stages.count > 0 {
+//                stage = stages[0] as! String
+//            }
+            stage = user["stage"] as! String
         }
         
         if (user["cancerType"] != nil) && !(user["cancerType"] is NSNull) {
-            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
-            if cancerKeysForObject.count > 0 {
-                cancerType = (cancerKeysForObject)[0] as! String
-            }
+//            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
+//            if cancerKeysForObject.count > 0 {
+//                cancerType = (cancerKeysForObject)[0] as! String
+//            }
+            cancerType = user["cancerType"] as! String
         }
         
         if user["pathological"] != nil && !(user["pathological"] is NSNull){
-            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
-            if pathologicalKeysForObject.count > 0 {
-                pathological = pathologicalKeysForObject[0] as! String
-            }
+//            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
+//            if pathologicalKeysForObject.count > 0 {
+//                pathological = pathologicalKeysForObject[0] as! String
+//            }
+            pathological = user["pathological"] as! String
         }
         
         userProfileStr = displayGender + " " + age + "岁 " + cancerType + " " + pathological + " " + stage + "期"

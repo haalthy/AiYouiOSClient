@@ -149,9 +149,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-//        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-//        let controller = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as UIViewController
-//        self.presentViewController(controller, animated: true, completion: nil)
         self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
     }
     
@@ -169,7 +166,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     func getQQImage(urlPath: String){
-//        let request = NSURLRequest(URL: NSURL(string: urlPath)!)
         NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: urlPath)!, completionHandler: {(data, response, error) -> Void in
             // 返回任务结果
             if (error == nil) && (data != nil) {
@@ -178,16 +174,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
                 self.profileSet.setObject(imageDataStr, forKey: imageNSUserData)
             }
         }).resume()
-//        let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-//            // 返回任务结果
-//            if (error == nil) && (data != nil) {
-//                let imageDataStr = data!.base64EncodedStringWithOptions([])
-//                
-//                self.profileSet.setObject(imageDataStr, forKey: imageNSUserData)
-//            }
-//        })
-        // 任务结束
-//        task.resume()
     }
     
     func getUserInfoResponse(response: APIResponse!) {
@@ -200,8 +186,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
         getAccessToken.getAccessToken()
         if profileSet.objectForKey(accessNSUserData) == nil {
-//        if userLogin(openId, passwordStr: openId) == false {
-            //store username, password, email in NSUserData
             profileSet.setObject("", forKey: emailNSUserData)
             getQQImage(resp.objectForKey("figureurl_2") as! String)
             profileSet.setObject(resp.objectForKey("nickname"), forKey: displaynameUserData)
@@ -211,10 +195,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
             self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
         }else{
-//            var storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            var controller = storyboard.instantiateViewControllerWithIdentifier("FeedEntry") as UIViewController
-//            
-//            self.presentViewController(controller, animated: true, completion: nil)
             let tabViewController : TabViewController = TabViewController()
             self.presentViewController(tabViewController, animated: true, completion: nil)
         }
@@ -273,9 +253,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         
         let loginSucessful = userLogin(usernameStr!, passwordStr: passwordStr!)
         if isRootViewController && loginSucessful{
-//            self.performSegueWithIdentifier("homeSegue", sender: self)
             let tabViewController : TabViewController = TabViewController()
-//            self.window!.rootViewController = tabViewController
             self.presentViewController(tabViewController, animated: true, completion: nil)
         }else{
             self.dismissViewControllerAnimated(true, completion: nil)
@@ -296,32 +274,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     func cancel(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-//        
-//        let imageFilePath = "\(paths)/" + imageFileName
-//        portrait.image = UIImage(contentsOfFile: imageFilePath)
-//        password.delegate = self
-//        username.delegate = self
-//        
-//    }
-//    
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let keychainAccess = KeychainAccess()
-//        let username = keychainAccess.getPasscode(usernameKeyChain)
-//        let password = keychainAccess.getPasscode(passwordKeyChain)
-//        if ( username != nil) && ( password != nil) && userLogin(username! as String, passwordStr: password! as String) {
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }
-//        if isRootViewController {
-//            cancelBtn.hidden = true
-//        }else{
-//            cancelBtn.hidden = false
-//        }
-//    }
     
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBar.hidden = true

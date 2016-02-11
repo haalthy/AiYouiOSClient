@@ -14,7 +14,6 @@ protocol GeneticMutationVCDelegate{
 
 class GeneticMutationViewController: UIViewController {
 
-//    let geneticDictionary = NSDictionary(objects: [25, 10, 30, 20, 15], forKeys: ["ALK","KARS", "EGFR", "其他", "无突变"])
     let geneticList: NSArray = ["ALK","KARS", "EGFR", "其他", "无突变"]
     let geneticValueList: NSArray = [25, 10, 30, 20, 15]
     let buttonSection = UIView()

@@ -111,16 +111,24 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 cell.detailTextLabel?.text = subTitleStr
                 break
             case 2:
-                cell.textLabel?.text = "邮件"
-                let subTitleStr: String = (self.userProfile?.email)!
+                var subTitleStr: String = ""
+                if self.userProfile?.email != nil {
+                    cell.textLabel?.text = "邮件"
+                    subTitleStr = (self.userProfile?.email)!
+                }else if self.userProfile?.phone != nil {
+                    cell.textLabel?.text = "电话"
+                    subTitleStr = (self.userProfile?.phone)!
+                }
                 cell.accessoryType = UITableViewCellAccessoryType.None
                 cell.detailTextLabel?.text = subTitleStr
                 break
             case 3:
                 cell.textLabel?.text = "昵称"
                 cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-                let subTitleStr: String = (self.userProfile?.nick)!
-                cell.detailTextLabel?.text = subTitleStr
+                if self.userProfile?.nick != nil {
+                    let subTitleStr: String = (self.userProfile?.nick)!
+                    cell.detailTextLabel?.text = subTitleStr
+                }
                 break
             case 4:
                 cell.textLabel?.text = "重置密码"
