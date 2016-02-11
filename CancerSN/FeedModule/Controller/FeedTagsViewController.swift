@@ -54,20 +54,20 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func getAllTagsFromServer() {
     
-        self.pleaseWait()
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
             
             let dict: NSArray = content as! NSArray
             let tagArr = TagModel.jsonToModelList(dict as Array) as! Array<TagModel>
             self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
             self.tableView.reloadData()
-            self.clearAllNotice()
-            self.notice("获取成功", type: NoticeType.success, autoClear: true, autoClearTime: 1)
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "获取成功")
             }) { (content, message) -> Void in
                
-                self.clearAllNotice()
-                self.notice(message, type: NoticeType.info, autoClear: true, autoClearTime: 2)
-   
+                HudProgressManager.sharedInstance.dismissHud()
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            
         }
     }
     

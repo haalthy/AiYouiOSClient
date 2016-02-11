@@ -134,6 +134,7 @@ class FeedCell: UITableViewCell {
     
         didSet {
         
+            self.removeAllSubviews()
             // 添加feed内容
             self.setContentView()
 
@@ -164,6 +165,9 @@ class FeedCell: UITableViewCell {
         portraitView.addImageCache((feedModel?.portraitURL)!, placeHolder: "icon_profile")
         portraitView.frame = (feedOriginFrame?.portraitFrame)!
         portraitView.backgroundColor = UIColor.greenColor()
+        
+        portraitView.layer.cornerRadius = portraitView.bounds.size.height / 2
+        portraitView.clipsToBounds = true
         self.addSubview(portraitView)
         
         // 2.昵称
@@ -184,7 +188,14 @@ class FeedCell: UITableViewCell {
         
         // 4.性别
         let genderLabel = UILabel()
-        genderLabel.text = feedModel?.gender
+        if feedModel?.gender == "F" {
+        
+            genderLabel.text = "女"
+        }
+        else {
+        
+            genderLabel.text = "男"
+        }
         genderLabel.frame = (self.feedOriginFrame?.genderFrame)!
         genderLabel.textColor = kGenderColor
         self.addSubview(genderLabel)
@@ -199,12 +210,13 @@ class FeedCell: UITableViewCell {
         
         // 6.病人状态
         let statusLabel = UILabel()
-        statusLabel.text = "\(getPatientLocation((feedModel?.cancerType)!)) \(getPathological((feedModel?.pathological)!)) \(getPatientNum(feedModel!.stage))"
+        
+        statusLabel.text = (feedModel?.cancerType)! + " " + (feedModel?.pathological)! + " " + getPatientNum((feedModel?.stage)!)
         statusLabel.frame = (self.feedOriginFrame?.userStatusFrame)!
         statusLabel.textColor = kAgeColor
         self.addSubview(statusLabel)
         
-        if feedModel?.highlight != nil {
+        if feedModel?.highlight != "" {
             
             // 6.标签
             var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
@@ -216,12 +228,13 @@ class FeedCell: UITableViewCell {
         }
         
         // 7.clinic
-        if feedModel?.clinicReport != nil {
+        if feedModel?.clinicReport != "" {
             
             let clinicLabel: UILabel = UILabel()
             clinicLabel.text = feedModel?.clinicReport
             clinicLabel.frame = (self.feedOriginFrame?.clinicFrame)!
             clinicLabel.textColor = kClinicColor
+            clinicLabel.font = UIFont.systemFontOfSize(16)
             self.addSubview(clinicLabel)
         }
         
@@ -242,13 +255,13 @@ class FeedCell: UITableViewCell {
                         
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
-            let picArr: Array<String> = ((feedModel!.imageURL)?.componentsSeparatedByString(";"))!
+            let picArr: Array<String> = ((feedModel!.imageURL).componentsSeparatedByString(","))
             picsView.picsUrl = picArr;
             self.addSubview(picsView)
         }
         
         // 8.tags
-        if feedModel?.tags != nil {
+        if feedModel?.tags != "" && feedModel?.tags != "<null>" {
             
             let tagsLabel = UILabel()
             tagsLabel.frame = (self.feedOriginFrame?.tagFrame)!
@@ -266,8 +279,11 @@ class FeedCell: UITableViewCell {
         toolsView.initVariables(feedModel!)
         toolsView.layoutWithContent()
         self.addSubview(toolsView)
-
         
+        // 10.分割线
+        let cellSeparateView: UIView = UIView(frame: CGRect(x: 0, y: CGRectGetMaxY(toolsView.frame) + 9, width: SCREEN_WIDTH, height: 0.8))
+        cellSeparateView.backgroundColor = RGB(221, 221, 224)
+        self.addSubview(cellSeparateView)
     }
 
     // MARK: - 功能方法

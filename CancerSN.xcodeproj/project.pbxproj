@@ -173,6 +173,7 @@
 		6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */; };
 		6BA14E811C4CB37100B6FDD1 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E801C4CB37100B6FDD1 /* TagModel.swift */; };
 		6BA14E831C4CB38200B6FDD1 /* SubTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E821C4CB38200B6FDD1 /* SubTagModel.swift */; };
+		6BA3AC4E1C538BB5006B9FF1 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */; };
 		6BA46E321C30D27600DCBD11 /* PostFeedToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA46E311C30D27600DCBD11 /* PostFeedToolBar.swift */; };
 		6BA46E341C30D70800DCBD11 /* FeedOriginalFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA46E331C30D70800DCBD11 /* FeedOriginalFrame.swift */; };
 		6BA46E371C31148A00DCBD11 /* UtilsFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA46E361C31148A00DCBD11 /* UtilsFunction.swift */; };
@@ -434,6 +435,7 @@
 		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTagsViewController.swift; sourceTree = "<group>"; };
 		6BA14E801C4CB37100B6FDD1 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
 		6BA14E821C4CB38200B6FDD1 /* SubTagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTagModel.swift; sourceTree = "<group>"; };
+		6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		6BA46E311C30D27600DCBD11 /* PostFeedToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostFeedToolBar.swift; sourceTree = "<group>"; };
 		6BA46E331C30D70800DCBD11 /* FeedOriginalFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedOriginalFrame.swift; sourceTree = "<group>"; };
 		6BA46E361C31148A00DCBD11 /* UtilsFunction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsFunction.swift; sourceTree = "<group>"; };
@@ -959,6 +961,7 @@
 				6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */,
 				6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */,
 				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
+				6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1621,6 +1624,7 @@
 				6BA14E811C4CB37100B6FDD1 /* TagModel.swift in Sources */,
 				6B93FC691C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift in Sources */,
 				6BBD5EEF1C34FF3D00588799 /* PostFeedFrame.swift in Sources */,
+				6BA3AC4E1C538BB5006B9FF1 /* SearchViewController.swift in Sources */,
 				6BF05DD51C3E0DC400D7AF99 /* KBTextView.swift in Sources */,
 				6B93FCD01C1E66CA00A81EA9 /* CVScrollDirection.swift in Sources */,
 				6B93FC701C1E5B9400A81EA9 /* FeedTableViewCell.swift in Sources */,

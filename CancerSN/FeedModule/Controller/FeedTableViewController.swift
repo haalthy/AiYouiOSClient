@@ -25,8 +25,8 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
 
         initVariables()
-        initContentView()
         initRefresh()
+        initContentView()
        // self .getFeedListFromServer()
         var keychainAccess = KeychainAccess()
         keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
@@ -41,50 +41,12 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         dataArr = NSMutableArray()
         
-//        // 假数据
-//        let feedModel: PostFeedStatus = PostFeedStatus()
-//        feedModel.displayname = "王磊"
-//        feedModel.gender = "男"
-//        feedModel.age = 25
-//        feedModel.postID = 22
-//        feedModel.createdDate = "2015-22-22"
-//        feedModel.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
-//        feedModel.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
-//        feedModel.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
-//        feedModel.hasImage = 2
-//        feedModel.tags = "易瑞沙**阿西替尼**"
-//        feedModel.highlight = "易瑞沙 阿西替尼 "
-//        feedModel.dateUpdated = 1452033200
-//        feedModel.countComments = 200
-//        let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedModel)
-//        
-//        dataArr.addObject(feedFrame)
-//        
-//        let feedModel1: PostFeedStatus = PostFeedStatus()
-//        feedModel1.displayname = "王磊"
-//        feedModel1.gender = "男"
-//        feedModel1.age = 25
-//        feedModel1.postID = 22
-//        feedModel1.createdDate = "2015-22-22"
-//        feedModel1.portraitURL = "http://haalthy.oss-cn-beijing.aliyuncs.com/user/20151231190006778.png"
-//        feedModel1.body = "阿萨德浪费空间阿萨德了罚款就爱上了对方看见爱上了对方科技阿斯顿分老卡机是地方莱卡的说法徕卡的房间阿里SD卡放假"
-//        feedModel1.imageURL = "http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg,http://pic.qiantucdn.com/58pic/16/13/59/31Q58PICAS2_1024.jpg"
-//        feedModel1.hasImage = 4
-//        feedModel1.tags = "易瑞沙**阿西替尼**"
-//        feedModel1.dateUpdated = 1452033200
-//        feedModel1.countComments = 20000
-//        let feedFrame1: PostFeedFrame = PostFeedFrame(feedModel: feedModel1)
-//        
-//        dataArr.addObject(feedFrame1)
-//
-
     }
     
     // MARK: - Init Related ContentView
     
     func initContentView() {
     
-        //self.tableView.tableHeaderView?.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 45)
         
         // headerView样式
         headerView.layer.borderWidth = 0.7
@@ -92,6 +54,8 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         // tableView 注册
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
+        
+        self.tableView.mj_header.beginRefreshing()
     }
     
     // MARK: - Init Refresh
@@ -103,19 +67,34 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
             self.getFeedListFromServer()
             
         })
+        
+        self.tableView.mj_footer = MJRefreshAutoNormalFooter.init(refreshingBlock: { () -> Void in
+            self.getMoreFeedListFromServer()
+        })
+        
     }
     
     // MARK: - Net Request
     
     func getFeedListFromServer() {
         
-        
-        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=22ce78c7-061f-48cb-9088-5a90a0ee39ad", parameters:["begin":0,"end":1456803188202,"username":"AY1449549912985.679"],
+        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=55d9bdd5-f4af-4012-baaa-ace83b05d77e", parameters:["since_id":0,
+            "max_id":1000,
+            "count": 5,
+            "page": 0,"username":"AY1449549912985.679"],
             
             success: { (content , message) -> Void in
             
                 self.tableView.mj_header.endRefreshing()
             
+                self.dataArr.removeAllObjects()
+                let dict: NSArray = content as! NSArray
+                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+                
+                self.changeDataToFrame(homeData)
+                self.tableView.reloadData()
+                
+                
             }) { (content, message) -> Void in
                 
                 self.tableView.mj_header.endRefreshing()
@@ -126,7 +105,43 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
     }
     
+    func getMoreFeedListFromServer() {
+        
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=74367639-ab0b-4c5a-a036-69d2f619ec9e", parameters:["since_id":0,
+            "max_id":1000,
+            "count": 5,
+            "page": 0,"username":"AY1449549912985.679"],
+            
+            success: { (content , message) -> Void in
+                
+                self.tableView.mj_header.endRefreshing()
+                
+                
+            }) { (content, message) -> Void in
+                
+                self.tableView.mj_header.endRefreshing()
+                
+                HudProgressManager.sharedInstance.dismissHud()
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+        }
+        
+        
+    }
+
+    
     // MARK: - Function
+    
+    // 处理数据
+    
+    func changeDataToFrame(dataArr: Array<PostFeedStatus>)  {
+    
+        for feedData in dataArr {
+        
+            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData)
+            self.dataArr.addObject(feedFrame)
+        }
+    }
     
     // 进入到查看临床数据
     
@@ -162,7 +177,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier)! as! FeedCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
         
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame

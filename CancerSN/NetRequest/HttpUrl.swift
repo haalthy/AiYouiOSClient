@@ -22,11 +22,15 @@ let getSuggestUserByTagsURL = haalthyServiceRestfulURL + "open/user/suggesteduse
 
 // 获取所有tag
 let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"
+
+// 用户未登录时，获取首页列表接口
+let getBroadcastsByTagsURL = haalthyServiceRestfulURL + "open/post/tags"
+
+
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
 let getUserFavTagsURL = haalthyServiceRestfulURL + "security/user/tags"
-let getBroadcastsByTagsURL = haalthyServiceRestfulURL + "open/post/tags"
 let updateFavTagsURL = haalthyServiceRestfulURL + "security/user/tag/update"
 let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
 let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
