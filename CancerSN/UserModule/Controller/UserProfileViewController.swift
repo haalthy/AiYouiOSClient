@@ -54,7 +54,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var treatmentBtnLine = UIView()
     var postBtnLine = UIView()
     var segmentSectionBtnHeight = CGFloat()
-
+    
     //
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +67,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }else{
             
         }
+        print("start loading")
         getTreatmentsData()
         if self.userProfile.count == 0 {
             let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
@@ -199,6 +200,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     self.userProfileHeaderView.addSubview(followBtn)
                 }
             }) { (content, message) -> Void in
+                HudProgressManager.sharedInstance.dismissHud()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
     }

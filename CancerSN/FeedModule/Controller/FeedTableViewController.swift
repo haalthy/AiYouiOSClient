@@ -78,7 +78,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListFromServer() {
         
-        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=55d9bdd5-f4af-4012-baaa-ace83b05d77e", parameters:["since_id":0,
+        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
             "max_id":1000,
             "count": 5,
             "page": 0,"username":"AY1449549912985.679"],
@@ -108,7 +108,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func getMoreFeedListFromServer() {
         
         HudProgressManager.sharedInstance.showHudProgress(self, title: "")
-        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=74367639-ab0b-4c5a-a036-69d2f619ec9e", parameters:["since_id":0,
+        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
             "max_id":1000,
             "count": 5,
             "page": 0,"username":"AY1449549912985.679"],
