@@ -49,8 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func checkUserStatus() {
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
             let keychainAccess = KeychainAccess()
-            keychainAccess.deletePasscode(usernameKeyChain)
-            keychainAccess.deletePasscode(passwordKeyChain)
+//            keychainAccess.deletePasscode(usernameKeyChain)
+//            keychainAccess.deletePasscode(passwordKeyChain)
             if keychainAccess.getPasscode(usernameKeyChain) == nil {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController

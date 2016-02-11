@@ -40,7 +40,8 @@ class SignUpSucessfulViewController: UIViewController {
     }
     
     func start(sender: UIButton){
-    
+        let tabViewController : TabViewController = TabViewController()
+        self.presentViewController(tabViewController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

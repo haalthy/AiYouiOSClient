@@ -111,6 +111,7 @@ class HaalthyService:NSObject{
     func getAuthCode(id: String)->Bool{
         let requestBody = NSDictionary(object: id, forKey: "eMail")
         var result: NSDictionary?
+
         if publicService.checkIsEmail(id) {
             result = NetRequest.sharedInstance.POST_A(getEmailAuthCodeURL, parameters: requestBody as! Dictionary<String, AnyObject>)
             print("请查收邮箱")
@@ -120,7 +121,7 @@ class HaalthyService:NSObject{
         }else{
             return false
         }
-        if (result!.objectForKey("result") as! Int) != 1 {
+        if (result?.count == 0) || (result!.objectForKey("result") as! Int) != 1 {
             return false
         }
         return true
@@ -421,19 +422,26 @@ class HaalthyService:NSObject{
         return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: nil)
     }
     
-    func resetPassword(newPassword: String)->NSData?{
+    func resetPassword(newPassword: String)->Bool{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
         let urlPath:String = resetPasswordURL + "?access_token=" + accessToken
-        let url:NSURL = NSURL(string: urlPath)!
-        var requestBody = NSMutableDictionary()
-        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-        requestBody.setValue(newPassword, forKey: "password")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody, options: NSJSONWritingOptions())
-        request.HTTPMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        return try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil)
+        let requestBody = NSDictionary(object: newPassword, forKey: "password")
+//        requestBody.setValue(newPassword, forKey: "password")
+        let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
+        if (result.count == 0) || (result.objectForKey("result") as! Int) != 1 {
+            return false
+        }
+        return true
+    }
+    
+    func resetPasswordWithCode(requestBody: NSDictionary)->Bool{
+        let urlPath:String = resetPasswordWithCodeURL
+        let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
+        if (result.count == 0) || (result.objectForKey("result") as! Int) != 1 {
+            return false
+        }
+        return true
     }
     
     func getFollowingUsers(username: String)->NSData?{
@@ -800,11 +808,11 @@ class HaalthyService:NSObject{
     func getUsername(email:String)-> String{
         var username: String = ""
         getAccessToken.getAccessToken()
-        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        if accessToken == nil{
-            getAccessToken.getAccessToken()
-            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        }else{
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken != nil{
+//            getAccessToken.getAccessToken()
+//            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+//        }else{
             let urlPath: String = getUsernameURL + "?access_token=" + (accessToken as! String)
             let parameters = NSDictionary(object: email, forKey: "username")
             let jsonResult: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: parameters as! Dictionary<String, AnyObject>)

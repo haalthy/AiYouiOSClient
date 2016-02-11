@@ -24,6 +24,8 @@ class GeneticMutationViewController: UIViewController {
     
     var haalthyService = HaalthyService()
     
+    let offsetHeightForNavigation : CGFloat = 30
+    
     let profileSet = NSUserDefaults.standardUserDefaults()
 
     var selectGeneticMutationStr = String()
@@ -50,7 +52,7 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的基因信息"
@@ -58,7 +60,7 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
-        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace, width: screenWidth, height: signUpSubTitleHeight))
+        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
         signUpSubTitle.text = "靶向治疗方案的选择与病人的基因变异信息息息相关"
@@ -66,7 +68,7 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(signUpSubTitle)
         
         //top Item Name
-        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace, width: screenWidth, height: signUpItemNameHeight))
+        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "基因信息"
@@ -74,15 +76,17 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(topItemNameLbl)
         
         //next view button
+        if isUpdate == false {
         let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
         nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
         nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
         nextViewBtn.titleLabel?.font = nextViewBtnFont
         nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(nextViewBtn)
+        }
         
         //genetic button section
-        buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
+        buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace + offsetHeightForNavigation, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
         var buttonX: CGFloat = 0
         var buttonY: CGFloat = 0
         let buttonHeight: CGFloat = CGFloat(29)
@@ -175,19 +179,24 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(pieChartOuter)
     }
 
-    func selectedNextView(sender: UIButton){
+    @IBAction func selectedNextView(sender: UIButton){
         for geneticBtn in buttonSection.subviews {
             if  (geneticBtn is UIButton) && (geneticBtn.backgroundColor == headerColor) {
                 selectGeneticMutationStr += ((geneticBtn as! UIButton).titleLabel?.text)!
             }
         }
-        profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
-        if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-            let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-            if (result.objectForKey("result") as! Int) != 1 {
-                HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+        if isUpdate {
+            geneticMutationVCDelegate?.updateGeneticMutation(selectGeneticMutationStr)
+            self.navigationController?.popViewControllerAnimated(true)
+        }else{
+            profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
+            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                if (result.objectForKey("result") as! Int) != 1 {
+                    HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+                }
             }
+            self.performSegueWithIdentifier("selectTagSegue", sender: self)
         }
-        self.performSegueWithIdentifier("selectTagSegue", sender: self)
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -10,7 +10,7 @@
         <!--Gender Setting View Controller-->
         <scene sceneID="9zN-jQ-u6p">
             <objects>
-                <viewController id="1lg-je-Tsa" customClass="GenderSettingViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="genderSetting" id="1lg-je-Tsa" customClass="GenderSettingViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fcL-41-d86"/>
                         <viewControllerLayoutGuide type="bottom" id="pxK-EY-HSQ"/>
@@ -20,7 +20,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="AuY-Mj-1Ys"/>
+                    <navigationItem key="navigationItem" id="AuY-Mj-1Ys">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="pdh-Q7-ljM">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="me8-i0-zhe">
+                                <rect key="frame" x="447" y="7" width="133" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="selectedNextView:" destination="1lg-je-Tsa" eventType="touchUpInside" id="3AW-fF-kNy"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="JgH-GH-B0w" kind="show" identifier="cancerTypeSegue" id="DfN-9n-oj4">
                             <nil key="action"/>
@@ -34,7 +45,7 @@
         <!--Cancer Type Setting View Controller-->
         <scene sceneID="hiC-Fs-3N4">
             <objects>
-                <viewController id="JgH-GH-B0w" customClass="CancerTypeSettingViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="cancerTypeSetting" id="JgH-GH-B0w" customClass="CancerTypeSettingViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vWB-e4-Phn"/>
                         <viewControllerLayoutGuide type="bottom" id="TxZ-hp-he4"/>
@@ -44,7 +55,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="ckk-uK-0x5"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="ckk-uK-0x5">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="JSi-fs-L3E">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Fvr-qX-NOG">
+                                <rect key="frame" x="447" y="7" width="133" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="selectedNextView:" destination="JgH-GH-B0w" eventType="touchUpInside" id="VCi-n0-kjk"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="MtB-lo-IZ8" kind="show" identifier="selectTagSegue" id="lhV-lk-CCi"/>
                         <segue destination="v8f-hm-aMF" kind="show" identifier="stageSegue" id="law-49-Jlp"/>
@@ -57,7 +81,7 @@
         <!--Genetic Mutation View Controller-->
         <scene sceneID="CGl-ro-SxR">
             <objects>
-                <viewController id="spB-Rs-9IN" customClass="GeneticMutationViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="geneticMutationSetting" id="spB-Rs-9IN" customClass="GeneticMutationViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="W0V-IZ-qK7"/>
                         <viewControllerLayoutGuide type="bottom" id="RvD-eI-TQA"/>
@@ -67,6 +91,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="0OF-gV-HVV">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="JLe-Fa-IL2">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ala-Qp-Pq6">
+                                <rect key="frame" x="447" y="7" width="133" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="selectedNextView:" destination="JgH-GH-B0w" eventType="touchUpInside" id="MWu-7J-zJR"/>
+                                    <action selector="selectedNextView:" destination="spB-Rs-9IN" eventType="touchUpInside" id="ZMU-2j-0y2"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="MtB-lo-IZ8" kind="show" identifier="selectTagSegue" id="luz-cD-y8D"/>
                     </connections>
@@ -384,7 +422,7 @@
         <!--Stage View Controller-->
         <scene sceneID="rS5-Os-Cxp">
             <objects>
-                <viewController id="v8f-hm-aMF" customClass="StageViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="stageSetting" id="v8f-hm-aMF" customClass="StageViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wSd-gD-Wjl"/>
                         <viewControllerLayoutGuide type="bottom" id="k5T-an-lHF"/>
@@ -394,7 +432,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="M43-Ju-sMG"/>
+                    <navigationItem key="navigationItem" id="M43-Ju-sMG">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="d52-ja-lj7">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YQm-oz-2TD">
+                                <rect key="frame" x="510" y="7" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="selectedNextView:" destination="v8f-hm-aMF" eventType="touchUpInside" id="zEz-9q-vVf"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="gEG-Dm-8wa" kind="show" identifier="metasticSegue" id="gD6-ff-8cg"/>
                         <segue destination="spB-Rs-9IN" kind="show" identifier="geneticMutationSegue" id="ioc-dO-eJT"/>
@@ -407,7 +456,7 @@
         <!--Metastic View Controller-->
         <scene sceneID="ADg-Aw-NTl">
             <objects>
-                <viewController id="gEG-Dm-8wa" customClass="MetasticViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MetasticsSetting" id="gEG-Dm-8wa" customClass="MetasticViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="B4k-rT-J3H"/>
                         <viewControllerLayoutGuide type="bottom" id="vML-5X-CRG"/>
@@ -417,6 +466,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="kQ1-Pw-eNU">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="lpD-Ar-T5h">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yK3-5G-dae">
+                                <rect key="frame" x="510" y="7" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="selectedNextView:" destination="gEG-Dm-8wa" eventType="touchUpInside" id="qrV-Xh-Lw3"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="spB-Rs-9IN" kind="show" identifier="geneticMutationSegue" id="xic-s1-e3M"/>
                     </connections>
@@ -672,10 +733,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="law-49-Jlp"/>
         <segue reference="DfN-9n-oj4"/>
         <segue reference="AIv-QP-mEd"/>
-        <segue reference="lhV-lk-CCi"/>
-        <segue reference="law-49-Jlp"/>
         <segue reference="xic-s1-e3M"/>
+        <segue reference="luz-cD-y8D"/>
     </inferredMetricsTieBreakers>
 </document>

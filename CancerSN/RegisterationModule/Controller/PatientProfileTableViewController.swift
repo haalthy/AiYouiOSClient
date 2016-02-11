@@ -295,7 +295,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
             let destinationVC = segue.destinationViewController  as! StageViewController
             destinationVC.isUpdate = true
             destinationVC.stageSettingVCDelegate = self
-            destinationVC.metastasisSettingVCDelegate = self
+//            destinationVC.metastasisSettingVCDelegate = self
         }
         if segue.identifier == "geneticMutationSegue" {
             let destinationVC = segue.destinationViewController as! GeneticMutationViewController
@@ -324,7 +324,7 @@ class PatientProfileTableViewController: UITableViewController, UIImagePickerCon
         userProfile.setObject(pathological, forKey: "pathological")
     }
     
-    func updateStage(stage: Int) {
+    func updateStage(stage: String) {
         userProfile.setObject(stage, forKey: "stage")
     }
     

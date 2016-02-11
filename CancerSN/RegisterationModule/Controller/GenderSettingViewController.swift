@@ -27,6 +27,8 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     var femaleBtn = UIButton()
     var gender: String?
     
+    let offsetHeightForNavigation : CGFloat = 30
+    
     override func viewDidLoad() {
         initVariables()
         initContentView()
@@ -34,16 +36,18 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.hidden = true
+        if isUpdate == false {
+            self.navigationController?.navigationBar.hidden = true
+        }
     }
 
     func initVariables(){
-    
+        
     }
     
     func initContentView(){
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: 0, y: signUpTitleTopSpace, width: screenWidth, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: 0, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的性别和年龄"
@@ -51,7 +55,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
-        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace, width: screenWidth, height: signUpSubTitleHeight))
+        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
         signUpSubTitle.text = "你知道吗？一些治疗药物的剂量需要根据性别和年龄进行调整"
@@ -59,14 +63,14 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         self.view.addSubview(signUpSubTitle)
         
         //male 
-        maleBtn.frame = CGRect(x: maleLeftSpace, y: genderBtnTopSpace, width: maleWidth, height: genderBtnHeight)
+        maleBtn.frame = CGRect(x: maleLeftSpace, y: genderBtnTopSpace + offsetHeightForNavigation, width: maleWidth, height: genderBtnHeight)
         let maleImageView = UIImageView(frame: CGRECT(0, 0, maleWidth, genderBtnHeight))
         maleImageView.image = UIImage(named: "btn_maleUnselected")
         maleBtn.addSubview(maleImageView)
         maleBtn.addTarget(self, action: "selectGender:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(maleBtn)
         //female
-        femaleBtn.frame = CGRect(x: screenWidth - femaleWidth - femaleRightSpace, y: genderBtnTopSpace, width: femaleWidth, height: genderBtnHeight)
+        femaleBtn.frame = CGRect(x: screenWidth - femaleWidth - femaleRightSpace, y: genderBtnTopSpace + offsetHeightForNavigation, width: femaleWidth, height: genderBtnHeight)
         let femaleImageView = UIImageView(frame: CGRECT(0, 0, femaleWidth, genderBtnHeight))
         femaleImageView.image = UIImage(named: "btn_femaleUnselected")
         femaleBtn.addSubview(femaleImageView)
@@ -74,7 +78,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         self.view.addSubview(femaleBtn)
         
         //top Item Name
-        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace, width: screenWidth, height: signUpItemNameHeight))
+        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace  + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "性别"
@@ -105,12 +109,14 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         self.view.addSubview(agePickerView)
         
         //next view button
-        let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
-        nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-        nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
-        nextViewBtn.titleLabel?.font = nextViewBtnFont
-        nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(nextViewBtn)
+        if isUpdate == false {
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
+            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.titleLabel?.font = nextViewBtnFont
+            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(nextViewBtn)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -137,7 +143,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         }
     }
 //
-    func selectedNextView(sender: UIButton) {
+   @IBAction func selectedNextView(sender: UIButton) {
         let selectedAge: Int = Int(pickerDataSource[agePickerView.selectedRowInComponent(0)])!
         if gender == nil{
             let alert = UIAlertController(title: "提示", message: "请您选择病人性别。", preferredStyle: UIAlertControllerStyle.Alert)
@@ -147,7 +153,8 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
             if isUpdate{
                 genderSettingVCDelegate?.updateGender(gender!)
                 ageSettingVCDelegate?.updateAge(selectedAge)
-                self.dismissViewControllerAnimated(true, completion: nil)
+//                self.dismissViewControllerAnimated(true, completion: nil)
+                self.navigationController?.popViewControllerAnimated(true)
             }else{
                 let profileSet = NSUserDefaults.standardUserDefaults()
                 profileSet.setObject(gender, forKey: genderNSUserData)

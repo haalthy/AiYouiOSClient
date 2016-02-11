@@ -57,8 +57,6 @@ class PublicService:NSObject{
         let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
-        print(keychain.getPasscode(usernameKeyChain))
-        print(keychain.getPasscode(passwordKeyChain))
         let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)
@@ -72,6 +70,8 @@ class PublicService:NSObject{
         profileSet.removeObjectForKey(accessNSUserData)
         profileSet.removeObjectForKey(refreshNSUserData)
         profileSet.removeObjectForKey(userTypeUserData)
+        profileSet.removeObjectForKey(geneticMutationNSUserData)
+
     }
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {

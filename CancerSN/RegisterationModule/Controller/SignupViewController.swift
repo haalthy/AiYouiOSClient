@@ -123,6 +123,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         seperateLine2.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine2)
         
+        let seperateLineVertical = UIView(frame: CGRect(x: textInputView.frame.width - getAuthCodeBtnW, y: textFieldHeight + 1, width: 1, height: textFieldHeight))
+        seperateLineVertical.backgroundColor = seperateLineColor
+        textInputView.addSubview(seperateLineVertical)
+        
         //NICK name
         nick.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*2, width: textInputView.frame.width, height: textFieldHeight )
         nick.font = inputViewFont

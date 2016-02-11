@@ -29,24 +29,35 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     
     let haalthyService = HaalthyService()
     
-    func selectedNextView(sender: UIButton) {
+    let offsetHeightForNavigation : CGFloat = 30
+    
+    @IBAction func selectedNextView(sender: UIButton) {
         let cancerType: String = cancerTypePickerDataSource[topPickerView.selectedRowInComponent(0)]
         var pathological: String = ""
-        if(cancerType == "肺部") && (buttomSection.hidden == false){
-            profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
-            profileSet.setObject(pathological, forKey: pathologicalNSUserData)
-            self.performSegueWithIdentifier("stageSegue", sender: nil)
-        }else{
-            profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
-            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-                let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-                if (result.objectForKey("result") as! Int) != 1 {
-                    HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
-                }
+        if isUpdate {
+            cancerTypeSettingVCDelegate?.updateCancerType(cancerType)
+            if cancerType == "肺部" {
+                pathological = pathologicaPickerDataSource[buttomPickerView.selectedRowInComponent(0)]
             }
-            self.performSegueWithIdentifier("selectTagSegue", sender: self)
+            pathologicalSettingVCDelegate?.updatePathological(pathological)
+            self.navigationController?.popViewControllerAnimated(true)
+        }else {
+            if(cancerType == "肺部") && (buttomSection.hidden == false){
+                pathological = pathologicaPickerDataSource[buttomPickerView.selectedRowInComponent(0)]
+                profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
+                profileSet.setObject(pathological, forKey: pathologicalNSUserData)
+                self.performSegueWithIdentifier("stageSegue", sender: nil)
+            }else{
+                profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
+                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                    let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                    if (result.objectForKey("result") as! Int) != 1 {
+                        HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+                    }
+                }
+                self.performSegueWithIdentifier("selectTagSegue", sender: self)
+            }
         }
-        
 //        else if(cancerType != "肺部"){
 //            if isUpdate {
 //                cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
@@ -107,7 +118,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的诊断结果"
@@ -115,7 +126,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
-        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace, width: screenWidth, height: signUpSubTitleHeight))
+        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
         signUpSubTitle.text = "不同类型原发的治疗效果是不一样的"
@@ -123,7 +134,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(signUpSubTitle)
         
         //top Item Name
-        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace, width: screenWidth, height: signUpItemNameHeight))
+        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "部位"
@@ -131,7 +142,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(topItemNameLbl)
         
         //top pickerView
-        topPickerView.frame = CGRect(x: pickerMargin, y: topPickerTopSpace, width: screenWidth - pickerMargin * 2, height: screenHeight - topPickerTopSpace - topPickerButtomSpace)
+        topPickerView.frame = CGRect(x: pickerMargin, y: topPickerTopSpace + offsetHeightForNavigation, width: screenWidth - pickerMargin * 2, height: screenHeight - topPickerTopSpace - topPickerButtomSpace)
         topPickerView.delegate = self
         topPickerView.dataSource = self
         self.view.addSubview(topPickerView)
@@ -157,12 +168,14 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(buttomSection)
         
         //next view button
-        let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
-        nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-        nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
-        nextViewBtn.titleLabel?.font = nextViewBtnFont
-        nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(nextViewBtn)
+        if isUpdate == false {
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
+            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.titleLabel?.font = nextViewBtnFont
+            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(nextViewBtn)
+        }
     }
     
     func previousView(sender: UIButton){

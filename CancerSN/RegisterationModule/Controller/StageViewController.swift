@@ -8,19 +8,18 @@
 
 import UIKit
 protocol StageSettingVCDelegate{
-    func updateStage(stage: Int)
+    func updateStage(stage: String)
 }
-protocol MetastasisSettingVCDelegate{
-    func updateMetastasis(metastasis: String)
-}
+
 //class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
 class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerViewDelegate{
 
     var isUpdate = false
     var stageSettingVCDelegate: StageSettingVCDelegate?
-    var metastasisSettingVCDelegate: MetastasisSettingVCDelegate?
     let topPickerView = UIPickerView()
     var stagePickerDataSource = [String]()
+    
+    let offsetHeightForNavigation : CGFloat = 30
     
     override func viewDidLoad() {
         initVariables()
@@ -42,42 +41,43 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
-        signUpTitle.text = "请选择病人的诊断结果"
+        signUpTitle.text = "请选择病人的初诊分期"
         signUpTitle.textAlignment = NSTextAlignment.Center
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
-        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace, width: screenWidth, height: signUpSubTitleHeight))
+        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
-        signUpSubTitle.text = "不同类型原发的治疗效果是不一样的"
+        signUpSubTitle.text = ""
         signUpSubTitle.textAlignment = NSTextAlignment.Center
         self.view.addSubview(signUpSubTitle)
         
         //top Item Name
-        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace, width: screenWidth, height: signUpItemNameHeight))
+        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
-        topItemNameLbl.text = "部位"
+        topItemNameLbl.text = "分期"
         topItemNameLbl.textAlignment = NSTextAlignment.Center
         self.view.addSubview(topItemNameLbl)
         
         //top pickerView
-        topPickerView.frame = CGRect(x: pickerMargin, y: topPickerTopSpace, width: screenWidth - pickerMargin * 2, height: screenHeight - topPickerTopSpace - topPickerButtomSpace)
+        topPickerView.frame = CGRect(x: pickerMargin, y: topPickerTopSpace + offsetHeightForNavigation, width: screenWidth - pickerMargin * 2, height: screenHeight - topPickerTopSpace - topPickerButtomSpace)
         topPickerView.delegate = self
         topPickerView.dataSource = self
         self.view.addSubview(topPickerView)
-        
-        //next view button
-        let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
-        nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-        nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
-        nextViewBtn.titleLabel?.font = nextViewBtnFont
-        nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(nextViewBtn)
+        if isUpdate == false {
+            //next view button
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
+            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.titleLabel?.font = nextViewBtnFont
+            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(nextViewBtn)
+        }
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
@@ -120,14 +120,19 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func selectedNextView(sender: UIButton){
+    @IBAction func selectedNextView(sender: UIButton){
         let profileSet = NSUserDefaults.standardUserDefaults()
         let stage = stagePickerDataSource[topPickerView.selectedRowInComponent(0)]
         profileSet.setObject(stage, forKey: stageNSUserData)
-        if topPickerView.selectedRowInComponent(0) == 3 {
-            self.performSegueWithIdentifier("metasticSegue", sender: self)
-        }else{
-            self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
+        if isUpdate {
+            stageSettingVCDelegate?.updateStage(stage)
+            self.navigationController?.popViewControllerAnimated(true)
+        }else {
+            if topPickerView.selectedRowInComponent(0) == 3 {
+                self.performSegueWithIdentifier("metasticSegue", sender: self)
+            }else{
+                self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
+            }
         }
     }
     

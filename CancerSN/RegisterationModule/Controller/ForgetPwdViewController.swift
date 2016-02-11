@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ForgetPwdViewController: UIViewController {
+class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
 
     let textFieldHeight: CGFloat = 44
     let textFieldLineCount: Int = 4
@@ -21,6 +21,8 @@ class ForgetPwdViewController: UIViewController {
     let password = UITextField()
     let reenterpassword = UITextField()
     
+    let haalthyService = HaalthyService()
+    let publicService = PublicService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +49,7 @@ class ForgetPwdViewController: UIViewController {
         id.frame = CGRect(x: textFieldLeftSpace, y: 0, width: textInputView.frame.width, height: textFieldHeight )
         id.font = inputViewFont
         id.placeholder = "邮箱／手机"
+        id.delegate = self
         let seperateLine1 = UIView(frame: CGRect(x: 0, y: textFieldHeight, width: textInputView.frame.width, height: 1))
         seperateLine1.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine1)
@@ -57,11 +60,13 @@ class ForgetPwdViewController: UIViewController {
         authCode.frame = CGRECT(textFieldLeftSpace, textFieldHeight + 1, authCodeTextW, textFieldHeight)
         authCode.font = inputViewFont
         authCode.placeholder = "验证码"
+        authCode.delegate = self
         textInputView.addSubview(authCode)
         let getAuthBtn = UIButton(frame: CGRect(x: textInputView.frame.width - getAuthCodeBtnW, y: textFieldHeight + 1, width: getAuthCodeBtnW, height: textFieldHeight))
         getAuthBtn.setTitle("获取验证码", forState: UIControlState.Normal)
         getAuthBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
         getAuthBtn.titleLabel?.font = getAuthCodeBtnFont
+        getAuthBtn.addTarget(self, action: "getAuthCode:", forControlEvents: UIControlEvents.TouchUpInside)
         textInputView.addSubview(getAuthBtn)
         let seperateLine2 = UIView(frame: CGRect(x: 0, y: textFieldHeight*2 + 1, width: textInputView.frame.width, height: 1))
         seperateLine2.backgroundColor = seperateLineColor
@@ -74,6 +79,7 @@ class ForgetPwdViewController: UIViewController {
         password.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*2, width: textInputView.frame.width, height: textFieldHeight )
         password.font = inputViewFont
         password.placeholder = "密码"
+        password.delegate = self
         let seperateLine3 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*3 - 1, width: textInputView.frame.width, height: 1))
         seperateLine3.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine3)
@@ -83,6 +89,7 @@ class ForgetPwdViewController: UIViewController {
         reenterpassword.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*3, width: textInputView.frame.width, height: textFieldHeight)
         reenterpassword.font = inputViewFont
         reenterpassword.placeholder = "请再次输入密码"
+        reenterpassword.delegate = self
         textInputView.addSubview(reenterpassword)
         let seperateLine4 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*4 - 1, width: textInputView.frame.width, height: 1))
         seperateLine4.backgroundColor = seperateLineColor
@@ -97,8 +104,41 @@ class ForgetPwdViewController: UIViewController {
         signUpBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         signUpBtn.layer.cornerRadius = 4
         signUpBtn.layer.masksToBounds = true
-        signUpBtn.addTarget(self, action: "signUp:", forControlEvents: UIControlEvents.TouchUpInside)
+        signUpBtn.addTarget(self, action: "resetPassword:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(signUpBtn)
     }
+    
+    func getAuthCode(sender: UIButton){
+        HudProgressManager.sharedInstance.dismissHud()
+        HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "loading")
+        let idStr: String = id.text!
+        if haalthyService.getAuthCode(idStr) == false {
+            print("获取验证码错误")
+        }
+        HudProgressManager.sharedInstance.dismissHud()
 
+    }
+
+    func resetPassword(sender: UIButton){
+        if password.text != reenterpassword.text {
+            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }else{
+            let passwordStr: String = publicService.passwordEncode(password.text!)
+            let resetPwdRequest = NSDictionary(objects: [passwordStr, id.text!, authCode.text!], forKeys: ["password", "id", "authCode"])
+            if haalthyService.resetPasswordWithCode(resetPwdRequest) {
+                print("密码重置成功，请重新登录！")
+            }else{
+                print("密码重置失败，请稍候再试！")
+            }
+//            self.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        textField.resignFirstResponder()
+        return true
+    }
 }

@@ -11,7 +11,7 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-let haalthyServiceRestfulURL : String = "http://192.168.11.41:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
 
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
@@ -44,6 +44,7 @@ let getSuggestUserByProfileURL:String = haalthyServiceRestfulURL + "security/use
 let getUserDetailURL:String = haalthyServiceRestfulURL + "security/user/detail"
 let getPostsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/posts"
 let resetPasswordURL:String = haalthyServiceRestfulURL + "security/user/resetpassword"
+let resetPasswordWithCodeURL:String = haalthyServiceRestfulURL + "open/user/resetpasswordwithauthcode"
 let getFollowingUserURL:String = haalthyServiceRestfulURL + "security/user/followingusers"
 let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/followerusers"
 let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"

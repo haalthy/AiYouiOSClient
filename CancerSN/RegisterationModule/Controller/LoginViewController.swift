@@ -20,7 +20,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     let profileSet = NSUserDefaults.standardUserDefaults()
     var data:NSMutableData?  = nil
     var haalthyService = HaalthyService()
-    var isRootViewController = false
+    var isRootViewController = true
     var tencentOAuth:TencentOAuth? = nil
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
@@ -129,6 +129,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         lookaroundBtn.setTitle("随便逛逛看最新的治疗方案", forState: UIControlState.Normal)
         lookaroundBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         lookaroundBtn.titleLabel?.font = lookaroundBtnFont
+        lookaroundBtn.addTarget(self, action: "ignore:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(lookaroundBtn)
     }
     
@@ -223,7 +224,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let publicService = PublicService()
         keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
-        if publicService.checkIsEmail(usernameStr) {
+        if publicService.checkIsEmail(usernameStr) || publicService.checkIsPhoneNumber(usernameStr) {
             usernameStr = haalthyService.getUsername(usernameStr)
         }else{
             let alert = UIAlertController(title: "提示", message: "请输入正确的手机/邮箱", preferredStyle: UIAlertControllerStyle.Alert)

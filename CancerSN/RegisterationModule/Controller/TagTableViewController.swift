@@ -52,9 +52,11 @@ class TagTableViewController: UITableViewController {
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
                 if (profileSet.objectForKey(userTypeUserData) == nil) || (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
-                    self.presentViewController(controller, animated: true, completion: nil)
+//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                    let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
+//                    self.presentViewController(controller, animated: true, completion: nil)
+                    let tabViewController : TabViewController = TabViewController()
+                    self.presentViewController(tabViewController, animated: true, completion: nil)
                 }else{
                     self.performSegueWithIdentifier("signupSegue", sender: self)
                 }
