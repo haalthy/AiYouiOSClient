@@ -25,6 +25,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         self.initVariables()
         self.initContentView()
+        self.addItem()
         self.getAllTagsFromServer()
     }
 
@@ -47,6 +48,18 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tableView.registerClass(TagCell.self, forCellReuseIdentifier: cellTagIdentifier)
         self.tagCell = self.tableView.dequeueReusableCellWithIdentifier(cellTagIdentifier) as! TagCell
     }
+    
+    // MARK: - add Item
+    
+    func addItem() {
+    
+        let leftItem: UIBarButtonItem = UIBarButtonItem.init(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "")
+        self.navigationItem.leftBarButtonItem = leftItem
+        
+        let rightItem: UIBarButtonItem = UIBarButtonItem.init(title: "确认", style: UIBarButtonItemStyle.Plain, target: self, action: "")
+        self.navigationItem.rightBarButtonItem = rightItem
+        
+    }
 
     // MARK: - 网络请求
     
@@ -55,14 +68,16 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     func getAllTagsFromServer() {
     
         HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        
         NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
             
+             HudProgressManager.sharedInstance.dismissHud()
+             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "获取成功")
             let dict: NSArray = content as! NSArray
             let tagArr = TagModel.jsonToModelList(dict as Array) as! Array<TagModel>
             self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
             self.tableView.reloadData()
-            HudProgressManager.sharedInstance.dismissHud()
-            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "获取成功")
+
             }) { (content, message) -> Void in
                
                 HudProgressManager.sharedInstance.dismissHud()

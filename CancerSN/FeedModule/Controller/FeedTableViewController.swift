@@ -78,6 +78,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListFromServer() {
         
+        
         NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=55d9bdd5-f4af-4012-baaa-ace83b05d77e", parameters:["since_id":0,
             "max_id":1000,
             "count": 5,
@@ -85,6 +86,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
             
             success: { (content , message) -> Void in
             
+                
                 self.tableView.mj_header.endRefreshing()
             
                 self.dataArr.removeAllObjects()
@@ -153,8 +155,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     // 进入到选择标签页
 
     @IBAction func pushTagAction(sender: AnyObject) {
-        
-        performSegueWithIdentifier("EnterTagView", sender: self)
+
+        let feedTagsVC = self.storyboard?.instantiateViewControllerWithIdentifier("FeedTagsView")
+        let navigation: UINavigationController = UINavigationController.init(rootViewController: feedTagsVC!)
+        self.presentViewController(navigation, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
