@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		2A05F3C91C630C4200E31848 /* SignUpSucessfulViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05F3C81C630C4200E31848 /* SignUpSucessfulViewController.swift */; };
 		2A05F3CB1C630E2100E31848 /* ForgetPwdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05F3CA1C630E2100E31848 /* ForgetPwdViewController.swift */; };
-		2A0A16F91C6AEE35005F4E47 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0A16F81C6AEE35005F4E47 /* UserProfile.swift */; settings = {ASSET_TAGS = (); }; };
+		2A0A16F91C6AEE35005F4E47 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0A16F81C6AEE35005F4E47 /* UserProfile.swift */; };
 		2A112AB11C562FF9007545F8 /* PrivateCheckUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */; };
-		2A19C05E1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2A19C05E1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */; };
 		2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */; };
 		2A1E69F61C3CE85300C882B7 /* UserProfileFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */; };
 		2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A3D1BB9E78100E4272B /* Security.framework */; };
@@ -20,7 +20,7 @@
 		2A410A481BB9E7C100E4272B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A471BB9E7C100E4272B /* CoreTelephony.framework */; };
 		2A6836DE1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */; };
 		2A7FB6A41C5B5971007030DC /* tabbarAddFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7FB6A31C5B5971007030DC /* tabbarAddFrame.swift */; };
-		2A8DCFA31C6B3E74000CCDFE /* UpdatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2A8DCFA31C6B3E74000CCDFE /* UpdatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */; };
 		2A8E43E91C4CAC4C003FAADC /* AddTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43E81C4CAC4C003FAADC /* AddTreatmentDateViewController.swift */; };
 		2A8E43EB1C4CAD4E003FAADC /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */; };
 		2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264AD1B615D2A001E52E7 /* Main.storyboard */; };
@@ -36,7 +36,9 @@
 		2AD1051A1C61E1B500FAF65B /* MetasticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD105191C61E1B500FAF65B /* MetasticViewController.swift */; };
 		2AE23B5F1C4668A500B3A86F /* PatientStatusFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE23B5E1C4668A500B3A86F /* PatientStatusFrame.swift */; };
 		2AE23B621C466B8500B3A86F /* PatientStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE23B611C466B8500B3A86F /* PatientStatus.swift */; };
-		2AF83E4B1C6B28720008D736 /* UpdateNickTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		2AF83E4B1C6B28720008D736 /* UpdateNickTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */; };
+		2AFC09041C7019D40001652D /* ContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09031C7019D40001652D /* ContactTableViewController.swift */; };
+		2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */; };
 		6B0A0BBC1C2E5FF500E01585 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */; };
 		6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */; };
 		6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */; };
@@ -107,7 +109,6 @@
 		6B93FC3D1C1E5A4F00A81EA9 /* AddTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC341C1E5A4F00A81EA9 /* AddTreatmentViewController.swift */; };
 		6B93FC3E1C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */; };
 		6B93FC4F1C1E5A9D00A81EA9 /* CommentListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC411C1E5A9D00A81EA9 /* CommentListTableViewController.swift */; };
-		6B93FC501C1E5A9D00A81EA9 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */; };
 		6B93FC511C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC431C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift */; };
 		6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC451C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift */; };
 		6B93FC541C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC461C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift */; };
@@ -302,6 +303,8 @@
 		2AE23B5E1C4668A500B3A86F /* PatientStatusFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatusFrame.swift; sourceTree = "<group>"; };
 		2AE23B611C466B8500B3A86F /* PatientStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatus.swift; sourceTree = "<group>"; };
 		2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateNickTableViewController.swift; sourceTree = "<group>"; };
+		2AFC09031C7019D40001652D /* ContactTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewController.swift; sourceTree = "<group>"; };
+		2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetRequest.swift; sourceTree = "<group>"; };
 		6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPhotosView.swift; sourceTree = "<group>"; };
@@ -373,7 +376,6 @@
 		6B93FC341C1E5A4F00A81EA9 /* AddTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentViewController.swift; sourceTree = "<group>"; };
 		6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		6B93FC411C1E5A9D00A81EA9 /* CommentListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewController.swift; sourceTree = "<group>"; };
-		6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactViewController.swift; path = ../../UserModule/Controller/ContactViewController.swift; sourceTree = "<group>"; };
 		6B93FC431C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentionedPostTableViewController.swift; sourceTree = "<group>"; };
 		6B93FC451C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePreviousTreatmentViewController.swift; sourceTree = "<group>"; };
 		6B93FC461C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTreatmentTableViewController.swift; sourceTree = "<group>"; };
@@ -907,7 +909,7 @@
 				2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */,
 				2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */,
 				2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */,
-				6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */,
+				2AFC09031C7019D40001652D /* ContactTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -918,6 +920,7 @@
 				2AC529581C4F85D100076368 /* AddFrame */,
 				6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */,
 				2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */,
+				2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1631,8 +1634,8 @@
 				6B93FCBB1C1E66CA00A81EA9 /* CVCalendarContentViewController.swift in Sources */,
 				6B93FCD31C1E66CA00A81EA9 /* CVShape.swift in Sources */,
 				6BBFD8FE1C3273F900282573 /* MJRefreshBackFooter.m in Sources */,
-				6B93FC501C1E5A9D00A81EA9 /* ContactViewController.swift in Sources */,
 				6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */,
+				2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */,
 				6BBFD9081C3273F900282573 /* MJRefreshGifHeader.m in Sources */,
 				2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */,
 				6BBFD9051C3273F900282573 /* MJRefreshBackGifFooter.m in Sources */,
@@ -1680,6 +1683,7 @@
 				6BBFD8B71C326FBF00282573 /* UIImage+WebP.m in Sources */,
 				6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */,
 				2A05F3C91C630C4200E31848 /* SignUpSucessfulViewController.swift in Sources */,
+				2AFC09041C7019D40001652D /* ContactTableViewController.swift in Sources */,
 				6BBFD8B51C326FBF00282573 /* UIImage+GIF.m in Sources */,
 				DDD6A1361C37C28C00C258D2 /* PNLineChartDataItem.m in Sources */,
 				6BBFD8BA1C326FBF00282573 /* UIView+WebCacheOperation.m in Sources */,

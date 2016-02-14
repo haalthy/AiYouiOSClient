@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate{
     var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
@@ -91,7 +91,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func initContentView(){
         //text View
-        textView.frame = CGRect(x: viewHorizonMargin, y: headerHeight + textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
+        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
         textView.textColor = ultraLightTextColor
         if self.isQuestion {
             textView.text = "请输入问题"
@@ -138,10 +138,10 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             displayTagCount++
         }
         displayTagCount--
-        var tagIndex = 0
+//        var tagIndex: Int = 0
         tagBtnX = 0
         tagBtnY = 24
-        for tagIndex; tagIndex < displayTagCount; tagIndex++ {
+        for tagIndex in 0 ... displayTagCount{
             let tag: NSDictionary = tagList?.objectAtIndex(tagIndex) as! NSDictionary
             let tagName = tag.objectForKey("name") as! String
             let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
@@ -416,9 +416,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func textViewDidBeginEditing(textView: UITextView) {
-        if textView.textColor != UIColor.blackColor() {
+        if textView.textColor != defaultTextColor {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = defaultTextColor
         }
         //        selectTagsButton.enabled = true
         submitBtn.enabled = true
@@ -439,8 +439,17 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         if segue.identifier == "contactSegue" {
-            let contactController = segue.destinationViewController as! ContactViewController
-//            contactController.mentionDelegate = self
+            let contactController = segue.destinationViewController as! ContactTableViewController
+            contactController.mentionVCDelegate = self
+        }
+    }
+    
+    func updateMentionList(userListStr: String) {
+        if textView.textColor == defaultTextColor {
+            textView.text = textView.text + userListStr
+        }else {
+            textView.text = userListStr
+            textView.textColor = defaultTextColor
         }
     }
 }
