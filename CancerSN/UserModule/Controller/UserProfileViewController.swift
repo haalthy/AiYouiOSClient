@@ -20,6 +20,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var password: NSString?
     var keychainAccess = KeychainAccess()
     var getAccessToken = GetAccessToken()
+    var publicService = PublicService()
+    
     var treatmentList = NSMutableArray()
     var patientStatusList = NSArray()
     var treatmentSections = NSMutableArray()
@@ -27,10 +29,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var clinicReportList = NSArray()
     var ceaList = NSArray()
     var userProfile = NSDictionary()
+    var userProfileObj: UserProfile?
     var broadcastList = NSArray()
     var heightForQuestionRow = NSMutableDictionary()
     var usedToBeInLoginView = false
-    var publicService = PublicService()
     var viewContainer = UIView()
     var accessToken :AnyObject? = nil
     var userList = NSArray()
@@ -60,6 +62,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         super.viewDidLoad()
 //        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
 //        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
+
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         if self.tabBarController?.selectedIndex == 2{
@@ -344,6 +347,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     logoutBtn.titleLabel?.font = logoutBtnTextFont
                     logoutBtn.layer.cornerRadius = cornerRadius
                     logoutBtn.layer.masksToBounds = true
+                    logoutBtn.addTarget(self, action: "logout:", forControlEvents: UIControlEvents.TouchUpInside)
                     cell.addSubview(logoutBtn)
                 }
             }else{
@@ -379,6 +383,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.patientStatusList = userDetail!.objectForKey("patientStatus") as! NSArray
                 self.clinicReportList = userDetail!.objectForKey("clinicReport") as! NSArray
                 self.userProfile = userDetail!.objectForKey("userProfile") as! NSDictionary
+                self.userProfileObj = UserProfile()
+                self.userProfileObj?.initVariables(self.userProfile)
                 var timeList = [Int]()
                 let timeSet = NSMutableSet()
                 for var i = 0; i < treatmentList.count; i++ {
@@ -593,4 +599,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showUserBasicInfoSeuge" {
+            let userBasicViewController = segue.destinationViewController as! UserBasicInfoTableViewController
+            userBasicViewController.userProfile = self.userProfileObj
+        }
+    }
+    
+    func logout(sender: UIButton){
+        publicService.logOutAccount()
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
 }

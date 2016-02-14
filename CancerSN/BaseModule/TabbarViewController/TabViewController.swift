@@ -150,7 +150,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         //AddPost
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
         let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostNavigationViewController
-        addViewController.isPosted = true
+        addViewController.isQuestion = true
         self.presentViewController(addViewController, animated: true, completion: nil)
     }
     
@@ -159,7 +159,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         //AddPost
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
         let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostNavigationViewController
-        addViewController.isPosted = false
+        addViewController.isQuestion = false
         self.presentViewController(addViewController, animated: true, completion: nil)
     }
     

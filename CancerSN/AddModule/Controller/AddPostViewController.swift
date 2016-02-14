@@ -8,193 +8,205 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MentionVCDelegate {
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+    var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
-    var isBroadcast: Int = 0
-    var tagList = NSMutableArray()
-    @IBOutlet weak var selectTagsButton: UIButton!
-    @IBOutlet weak var tagListDisplay: UILabel!
-    @IBOutlet weak var postContent: UITextView!
-    @IBOutlet weak var sendButton: UIButton!
-    var addTagBtn = UIButton()
-    var addImageBtn = UIButton()
-    var addMentionBtn = UIButton()
-    var suggestTagView = UIView()
-    var tagListLabel = UILabel()
-    var imagePicker = UIImagePickerController()
-    var insertImageList = NSMutableArray()
-    var addNextImageLinePositionY:CGFloat = 290
-    var imageHeight:CGFloat = 0
-    var mentionUsernameList = NSMutableArray()
+    
+    var keyboardheight:CGFloat = 0
+
+    let viewHorizonMargin = CGFloat(15)
+    let textViewVerticalMargin = CGFloat(15)
+    let textViewHeight = CGFloat(115)
+    let textViewFont = UIFont.systemFontOfSize(15)
+    let textViewTextColor: UIColor = defaultTextColor
+    
+    let imageLength: CGFloat = 60
+    let imageMargin: CGFloat = 6
+    let imageSectionButtomSpace: CGFloat = 12
+    let imageSectionTopSpace: CGFloat = 135
+    let imageDeleteBtnLength: CGFloat = 13
+    
+    let tagSectionTopMargin: CGFloat = 12
+    let tagSectionTitleFont: UIFont = UIFont.systemFontOfSize(12)
+    let tagSectionTitleTextColor: UIColor = lightTextColor
+    
+    let tagSecitonTopSpace: CGFloat = 12
+    let tagSectionBtnTextVerticalMargin: CGFloat = 8
+    let tagSectionBtnTextHorizonMargin: CGFloat = 15
+    let tagSectionBtnVerticalMargin: CGFloat = 11
+    let tagSectionBtnHorizonMargin: CGFloat = 6
+    let tagSectionHeight: CGFloat = 96
+    let tagBtnFont = UIFont.systemFontOfSize(13)
+    
+    let buttomSectionHeight: CGFloat = 45
+    let buttomSectionItemLeftSpace: CGFloat = 26
+    let buttomSectionItemHorizonMargin: CGFloat = 42
+    let buttomItemIconLength: CGFloat = 24
+    var headerHeight = CGFloat()
+    
+    let textView = UITextView()
+    let imageSection = UIView()
+    let defaultAddImageBtn = UIButton()
+    let tagSection = UIView()
+    let buttomSection = UIView()
+    let buttomSectionColor = UIColor.init(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1)
+    
+    let keychainAccess = KeychainAccess()
     let haalthyService = HaalthyService()
-    var allTagList = NSMutableArray()
-    var keychainAccess = KeychainAccess()
+    let publicService = PublicService()
     
-    @IBAction func cancel(sender: UIButton) {
-        self.dismissViewControllerAnimated(false, completion: nil)
-//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
-    }
+    var imagePicker = UIImagePickerController()
+
+    var tagList:NSArray?
     
-    @IBAction func submit(sender: UIButton) {
-        if self.isComment == 1{
-            haalthyService.addComment(postID!, body: self.postContent.text!)
-            self.dismissViewControllerAnimated(false, completion: nil)
-        }else if((self.isBroadcast == 0) || ((self.isBroadcast == 1)&&(self.tagList.count>0))){
-            let post = NSMutableDictionary()
-            post.setObject(postContent.text, forKey: "body")
-            post.setObject(0, forKey: "closed")
-            post.setObject(self.isBroadcast, forKey: "isBroadcast")
-            post.setObject("TXT", forKey: "type")
-            post.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
-            var respData:NSData
-            if(self.isBroadcast == 0){
-                respData = haalthyService.addPost(post as NSDictionary)
-            }else{
-                post.setObject(self.tagList, forKey: "tags")
-                let postContentStr = postContent.text
-                let firstRange = postContentStr.rangeOfString("@")
-                if firstRange != nil {
-                    let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
-                    for subStr in postContentArr{
-                        if (subStr as NSString).length > 0{
-                            var subStrArr = (subStr ).componentsSeparatedByString(" ")
-                            if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
-//                                mentionUsernameList.addObject(subStrArr[0])
-                                let getMentionedUsernamesRequest = NSMutableDictionary()
-                                getMentionedUsernamesRequest.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-                                getMentionedUsernamesRequest.setObject(subStrArr[0], forKey: "mentionedDisplayname")
-                                let mentionListRespData = haalthyService.getUsersByDisplayname(getMentionedUsernamesRequest)
-                                let jsonResult = try? NSJSONSerialization.JSONObjectWithData(mentionListRespData!, options: NSJSONReadingOptions.MutableContainers)
-                                if(jsonResult is NSArray){
-                                    for user in (jsonResult as! NSArray){
-                                        mentionUsernameList.addObject(user.objectForKey("username")!)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    if mentionUsernameList.count > 0 {
-                        post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
-                    }
-                }
-                post.setObject(self.insertImageList, forKey: "images")
-                respData = haalthyService.addPost(post as NSDictionary)
-            }
-            let str: NSString = NSString(data: respData, encoding: NSUTF8StringEncoding)!
-            print(str)
-            self.dismissViewControllerAnimated(false, completion: nil)
-        }else{
-//            self.performSegueWithIdentifier("selectTagSegue", sender: self)
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-            tagViewController.isBroadcastTagSelection = 1
-            tagViewController.postDelegate = self
-            self.presentViewController(tagViewController, animated: true, completion: nil)
-        }
-    }
+    var imageInfoList = NSMutableArray()
+    var imageCountPerLine: Int = 0
     
-    func disableButtonFormat(sender: UIButton){
-        sender.backgroundColor = UIColor.whiteColor()
-        sender.layer.borderColor = UIColor.lightGrayColor().CGColor
-        sender.layer.borderWidth = 1
-        sender.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Highlighted)
-    }
+    var selectTagLabel = NSMutableArray()
     
-    func enableButtonFormat(sender: UIButton){
-        sender.backgroundColor = mainColor
-        sender.layer.borderWidth = 0
-        sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-    }
+    var mentionUsernameList = NSMutableArray()
     
+    var progressHUD: MBProgressHUD?
+    
+    @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        initVariables()
+        initContentView()
+    }
+    
+    func initVariables(){
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
         imagePicker.delegate = self
-        postContent.delegate = self
-        if isComment == 1{
-            postContent.text = "添加评论"
-        }else{
-            if self.isBroadcast == 1 {
-                postContent.text = "请在此输入广播消息"
-            }else{
-                postContent.text = "在此分享心情"
-            }
-        }
-        imageHeight = (UIScreen.mainScreen().bounds.width - 35)/4
-        postContent.textColor = UIColor.grayColor()
-        sendButton.enabled = false
-        sendButton.layer.cornerRadius = 5
-        sendButton.layer.masksToBounds = true
-
-        disableButtonFormat(sendButton)
-        self.view.addSubview(tagListLabel)
+        imageCountPerLine = Int((screenWidth - viewHorizonMargin * 2) / imageLength)
         
-        self.addImageBtn = UIButton(frame: CGRectMake(10 + 55 * 0, addNextImageLinePositionY, 50, 40))
-        self.addMentionBtn = UIButton(frame: CGRectMake(10 + 55 * 1, addNextImageLinePositionY, 50, 40))
-        if isBroadcast == 1{
-            let getTagListRespData:NSData = haalthyService.getTagList()!
-            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData, options: NSJSONReadingOptions.MutableContainers)
-            if(jsonResult is NSArray){
-                var groupedTagList = jsonResult as! NSMutableArray
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
-                groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
-                for groupedTags in groupedTagList{
-                    self.allTagList.addObjectsFromArray((groupedTags.objectForKey("tags") as? [AnyObject])!)
-                }
-            }
-            if allTagList.count > 0{
-                
-                self.suggestTagView = UIView(frame: CGRectMake(10, addNextImageLinePositionY + 50, UIScreen.mainScreen().bounds.width - 20, 100))
-                self.suggestTagView.backgroundColor = sectionHeaderColor
-                self.view.addSubview(suggestTagView)
-                let suggestTagLabel = UILabel(frame: CGRectMake(10, 10, 250, 20))
-                suggestTagLabel.text = "请选择您的标签，更多人能看到您的问题"
-                suggestTagLabel.font = UIFont(name: "Helvetica", size: 12.0)
-                suggestTagView.addSubview(suggestTagLabel)
-                
-                let maxDisplayCount = allTagList.count > 10 ? 10: allTagList.count
-                let tagHeight:CGFloat = 35
-                let tagWith = ((self.suggestTagView.frame.width - 3)/5 - 3)
-                var i: Int = 0
-                while i < maxDisplayCount{
-                    var coordinateX: CGFloat?
-                    var coordinateY: CGFloat?
-                    if i < 5 {
-                        coordinateY = 28
-                    }else{
-                        coordinateY = 63
-                    }
-                    coordinateX = CGFloat(i%5) * tagWith + 10
-                    let displayTagButton = UIButton(frame: CGRectMake(coordinateX!, coordinateY!, tagWith - 3, tagHeight-3))
-//                    tagLable.text = (allTagList[i] as! NSDictionary).objectForKey("name") as! String
-                    if (i == 9) && (allTagList.count>10){
-                        displayTagButton.setTitle("更多...", forState: UIControlState.Normal)
-                    }else{
-                        displayTagButton.setTitle((allTagList[i] as! NSDictionary).objectForKey("name") as! String, forState: UIControlState.Normal)
-                    }
-                    displayTagButton.titleLabel!.font = UIFont(name: "Helvetica", size: 12.0)
-                    displayTagButton.setTitleColor(mainColor, forState: UIControlState.Normal)
-                    displayTagButton.backgroundColor = UIColor.whiteColor()
-                    displayTagButton.layer.borderColor = mainColor.CGColor
-                    displayTagButton.layer.borderWidth = 1.0
-                    displayTagButton.layer.cornerRadius = 5.0
-                    displayTagButton.layer.masksToBounds = true
-                    displayTagButton.titleLabel!.textAlignment = NSTextAlignment.Center
-                    if (i == 9) && (allTagList.count>10){
-                        displayTagButton.addTarget(self, action: "displayMoreTags", forControlEvents: UIControlEvents.TouchUpInside)
-                    }else{
-                        displayTagButton.addTarget(self, action: "selectTag:", forControlEvents: UIControlEvents.TouchUpInside)
-                    }
-                    i++
-                    self.suggestTagView.addSubview(displayTagButton)
-                }
-            }
+        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
+        tagList = haalthyService.getTopTagList()
+        submitBtn.enabled = false
+        submitBtn.setTitleColor(lightTextColor, forState: UIControlState.Normal)
+        self.isQuestion = (self.navigationController as! AddPostNavigationViewController).isQuestion
+    }
+    
+    func initContentView(){
+        //text View
+        textView.frame = CGRect(x: viewHorizonMargin, y: headerHeight + textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
+        textView.textColor = ultraLightTextColor
+        if self.isQuestion {
+            textView.text = "请输入问题"
+        }else{
+            textView.text = "我的心情..."
         }
-        if isComment == 0{
-            initButtonItem(addImageBtn, labelTitle: "Image", targetAction: "selectImages")
-            initButtonItem(addMentionBtn, labelTitle: "@", targetAction: "selectContacts")
+        textView.font = textViewFont
+        textView.delegate = self
+        self.view.addSubview(textView)
+        
+        //imageSection
+        imageSection.frame = CGRect(x: viewHorizonMargin, y: imageSectionTopSpace + headerHeight, width: screenWidth - 2 * viewHorizonMargin, height: imageLength)
+        defaultAddImageBtn.frame = CGRect(x: 0, y: 0, width: imageLength, height: imageLength)
+        let defaultAddImageView = UIImageView(frame: CGRECT(0, 0, imageLength, imageLength))
+        defaultAddImageView.image = UIImage(named: "btn_addImage")
+        defaultAddImageBtn.addSubview(defaultAddImageView)
+        defaultAddImageBtn.addTarget(self, action: "selectImages", forControlEvents: UIControlEvents.TouchUpInside)
+        imageSection.addSubview(defaultAddImageBtn)
+        self.view.addSubview(imageSection)
+        
+        //tag section
+        tagSection.frame = CGRect(x: viewHorizonMargin, y: imageSection.frame.origin.y + imageSection.frame.height + tagSectionTopMargin, width: screenWidth - 2 * viewHorizonMargin, height: tagSectionHeight)
+        let tagTitle = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth - 2 * viewHorizonMargin, height: 13))
+        tagTitle.font = tagSectionTitleFont
+        tagTitle.textColor = tagSectionTitleTextColor
+        tagTitle.text = "请选择相关的标签，让更多人能看到你的问题"
+        tagSection.addSubview(tagTitle)
+        
+        var tagBtnX: CGFloat = 0
+        var tagBtnY: CGFloat = 24
+        var displayTagCount: Int = 0
+        for tag in tagList! {
+            let tagName = (tag as! NSDictionary).objectForKey("name") as! String
+            let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+            if ((tagTextSize.width + tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - viewHorizonMargin){
+                tagBtnX = 0
+                tagBtnY += 34
+            }
+            print(tagBtnY)
+            if tagBtnY > 70{
+                break
+            }
+            tagBtnX += tagTextSize.width + tagSectionBtnTextVerticalMargin * 2 + tagSectionBtnHorizonMargin
+            displayTagCount++
         }
+        displayTagCount--
+        var tagIndex = 0
+        tagBtnX = 0
+        tagBtnY = 24
+        for tagIndex; tagIndex < displayTagCount; tagIndex++ {
+            let tag: NSDictionary = tagList?.objectAtIndex(tagIndex) as! NSDictionary
+            let tagName = tag.objectForKey("name") as! String
+            let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+            if ((tagTextSize.width + tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - viewHorizonMargin){
+                tagBtnX = 0
+                tagBtnY += 34
+            }
+            let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + tagSectionBtnTextVerticalMargin * 2, height: 29))
+            tagButton.setTitle(tagName, forState: UIControlState.Normal)
+            tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+            tagButton.titleLabel?.font = tagBtnFont
+            tagButton.layer.borderColor = headerColor.CGColor
+            tagButton.layer.borderWidth = 1
+            tagButton.layer.cornerRadius = 2
+            tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
+            tagButton.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
+            tagSection.addSubview(tagButton)
+        }
+        
+        if (self.navigationController as! AddPostNavigationViewController).isQuestion == true {
+            //更多
+            let tagTextSize = String("更多>").sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+            let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + tagSectionBtnTextVerticalMargin * 2, height: 29))
+            tagButton.setTitle("更多>", forState: UIControlState.Normal)
+            tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+            tagButton.titleLabel?.font = tagBtnFont
+            tagButton.layer.borderColor = headerColor.CGColor
+            tagButton.layer.borderWidth = 1
+            tagButton.layer.cornerRadius = 2
+            tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
+            tagSection.addSubview(tagButton)
+            self.view.addSubview(tagSection)
+        }
+        
+        //ButtonSection
+        buttomSection.frame = CGRECT(0, screenHeight - buttomSectionHeight, screenWidth, buttomSectionHeight)
+        buttomSection.backgroundColor = buttomSectionColor
+        let mentionedBtn = UIButton(frame: CGRECT(buttomSectionItemLeftSpace, 11, buttomItemIconLength, buttomItemIconLength))
+        let mentionedImageView = UIImageView(frame: CGRECT(0, 0, buttomItemIconLength, buttomItemIconLength))
+        mentionedImageView.image = UIImage(named: "btn_mentioned")
+        mentionedBtn.addSubview(mentionedImageView)
+        mentionedBtn.addTarget(self, action: "selectContacts", forControlEvents: UIControlEvents.TouchUpInside)
+        buttomSection.addSubview(mentionedBtn)
+        self.view.addSubview(buttomSection)
+    }
+    
+    func keyboardWillAppear(notification: NSNotification) {
+        
+        if self.buttomSection.center.y > UIScreen.mainScreen().bounds.height - 50{
+            // 获取键盘信息
+            let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
+            
+            keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
+            
+            self.buttomSection.center = CGPoint(x: self.buttomSection.center.x, y: self.buttomSection.center.y - keyboardheight)
+        }
+    }
+    
+    func keyboardWillDisappear(notification:NSNotification){
+        
+        self.buttomSection.center = CGPoint(x: self.buttomSection.center.x, y: self.buttomSection.center.y + keyboardheight)
+    }
+
+    @IBAction func cancel(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func selectImages(){
@@ -203,95 +215,204 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
         presentViewController(imagePicker, animated: true, completion: nil)//4
     }
     
-    func selectContacts(){
-        self.performSegueWithIdentifier("contactSegue", sender: self)
-    }
-    
-    func displayMoreTags(){
-//        self.performSegueWithIdentifier("selectTagSegue", sender: self)
-        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-        tagViewController.isBroadcastTagSelection = 1
-        tagViewController.postDelegate = self
-        self.presentViewController(tagViewController, animated: true, completion: nil)
-    }
-    
-    func selectTag(sender:UIButton){
-        var index: Int = 0
-        let maxDisplayCount = allTagList.count > 10 ? 9: allTagList.count
-        while index < maxDisplayCount{
-            if (allTagList[index].objectForKey("name") as! String) == (sender.titleLabel!).text!{
-                break
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+        //        insertImageList.addObject(chosenImage)
+        chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
+        let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
+        //        println(selectedImage.size.width, selectedImage.size.height)
+        let imageDataStr = imageData.base64EncodedStringWithOptions([])
+        let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+        
+        self.imageInfoList.addObject(imageInfo)
+        let addNextImageLinePositionY: CGFloat = CGFloat(Int((imageInfoList.count)/imageCountPerLine)) * (imageLength + imageMargin)
+
+        let coordinateX = CGFloat(imageLength+imageMargin)*CGFloat((imageInfoList.count)%imageCountPerLine)
+        let imageViewContainer = UIView(frame: CGRectMake(defaultAddImageBtn.frame.origin.x, defaultAddImageBtn.frame.origin.y, imageLength, imageLength))
+        let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
+        
+        let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+        let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+        imageDeleteView.image = UIImage(named: "btn_imageDelete")
+        imageDeleteBtn.addSubview(imageDeleteView)
+        imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        defaultAddImageBtn.frame = CGRectMake(coordinateX, addNextImageLinePositionY, imageLength, imageLength)
+        
+        imageSection.frame = CGRECT(imageSection.frame.origin.x, imageSection.frame.origin.y, imageSection.frame.width, imageSection.frame.height + imageLength + imageMargin)
+
+        
+        var selectedImage = UIImage()
+        selectedImage = publicService.cropToSquare(image: chosenImage)
+        
+        let newSize = CGSizeMake(imageLength, imageLength)
+        UIGraphicsBeginImageContext(newSize)
+        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        imageView.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.imageSection.addSubview(imageViewContainer)
+        imageViewContainer.addSubview(imageView)
+        imageViewContainer.addSubview(imageDeleteBtn)
+        if (imageInfoList.count + 1)%imageCountPerLine == 1 {
+            if isQuestion == true {
+                self.tagSection.center = CGPoint(x: self.tagSection.center.x, y: self.tagSection.center.y + imageLength + imageMargin)
             }
-            index++
         }
-        sender.backgroundColor = mainColor
-        sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        self.tagList.addObject(allTagList[index])
+        dismissViewControllerAnimated(true, completion: nil) //5
+        
     }
     
-    func initButtonItem(sender: UIButton, labelTitle: String, targetAction: Selector){
-        sender.setTitle(labelTitle, forState: UIControlState.Normal)
-        sender.addTarget(self, action: targetAction, forControlEvents: UIControlEvents.TouchUpInside)
-        sender.setTitleColor(mainColor, forState: UIControlState.Normal)
-        sender.titleLabel?.font = UIFont(name: "Helvetica", size: 13.0)
-        sender.layer.borderWidth = 1.0
-        sender.layer.borderColor = mainColor.CGColor
-        sender.backgroundColor = UIColor.whiteColor()
-        sender.layer.cornerRadius = 5
-        sender.layer.masksToBounds = true
-        self.view.addSubview(sender)
+
+    
+    func deleteImage(sender: UIButton){
+        let imageIndex: Int = getImageIndexByImageCenter(sender.superview!.center)
+        self.imageInfoList.removeObjectAtIndex(imageIndex - 1)
+        redrawImageInfo()
     }
     
-    override func viewWillAppear(animated: Bool) {
-        if(self.isBroadcast == 1){
-//            selectTagsButton.hidden = false
-//            tagListDisplay.hidden = false
-        }else{
-//            selectTagsButton.hidden = true
-//            tagListDisplay.hidden = true
-        }
-        var tagListStr:String = ""
-        if tagList.count > 0 {
-            for tagItem in tagList{
-                let tag = tagItem as! NSDictionary
-                tagListStr += tag.objectForKey("name") as! String + ","
+    func getImageIndexByImageCenter(centerPoint: CGPoint) -> Int{
+        let indexX: Int = Int(centerPoint.x / (imageLength + imageMargin)) + 1
+        let indexY: Int = Int(centerPoint.y / (imageLength + imageMargin))
+        return indexY * imageCountPerLine + indexX
+    }
+    
+    func redrawImageInfo(){
+        for subView in imageSection.subviews {
+            if (subView is UIButton) == false {
+                subView.removeFromSuperview()
             }
-            var tagListCoordinateY:CGFloat = 0
-            if insertImageList.count == 0 {
-                tagListCoordinateY = addNextImageLinePositionY
+        }
+        var imageIndex: Int = 0
+        for imageInfo in imageInfoList{
+            let coordinateX: CGFloat = CGFloat(imageIndex % imageCountPerLine) * (imageLength + imageMargin)
+            let coordinateY: CGFloat = CGFloat(imageIndex / imageCountPerLine) * (imageLength + imageMargin)
+            
+            let imageViewContainer = UIView(frame: CGRectMake(coordinateX, coordinateY, imageLength, imageLength))
+            let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
+            
+            let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+            let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+            imageDeleteView.image = UIImage(named: "btn_imageDelete")
+            imageDeleteBtn.addSubview(imageDeleteView)
+            imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
+            
+            let publicService = PublicService()
+            
+            let image = UIImage(data: NSData(base64EncodedString: (imageInfo as! NSDictionary).objectForKey("data") as! String, options: NSDataBase64DecodingOptions(rawValue: 0))!)
+            
+            let selectedImage = publicService.cropToSquare(image: image!)
+            
+            let newSize = CGSizeMake(imageLength, imageLength)
+            UIGraphicsBeginImageContext(newSize)
+            selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+            imageView.image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            self.imageSection.addSubview(imageViewContainer)
+            imageViewContainer.addSubview(imageView)
+            imageViewContainer.addSubview(imageDeleteBtn)
+            imageIndex++
+        }
+        
+        defaultAddImageBtn.frame = CGRectMake(CGFloat((imageInfoList.count) % imageCountPerLine) * (imageLength + imageMargin), CGFloat((imageInfoList.count) / imageCountPerLine) * (imageLength + imageMargin), imageLength, imageLength)
+        
+        let imageSectionH: CGFloat = CGFloat(imageIndex / imageCountPerLine + 1) * (imageLength + imageMargin)
+        
+        imageSection.frame = CGRECT(viewHorizonMargin, imageSectionTopSpace + headerHeight, screenWidth - 2 * viewHorizonMargin, imageSectionH)
+        
+        if isQuestion == true {
+            self.tagSection.frame = CGRECT(tagSection.frame.origin.x, imageSection.frame.origin.y + imageSection.frame.height, tagSection.frame.width, tagSection.frame.height)
+        }
+    }
+
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func selectedTag(sender:UIButton){
+        if sender.backgroundColor == headerColor {
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
+            selectTagLabel.removeObject((sender.titleLabel?.text!)!)
+        }else {
+            sender.backgroundColor = headerColor
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            selectTagLabel.addObject((sender.titleLabel?.text!)!)
+        }
+    }
+    
+    @IBAction func submit(sender: UIButton) {
+//        let testview = UIView(frame: CGRECT(100, 100, 300, 300))
+//        testview.backgroundColor = UIColor.redColor()
+//        self.view.addSubview(testview)
+        if((self.isQuestion == false) || ((self.isQuestion == true)&&(self.selectTagLabel.count>0))){
+            let post = NSMutableDictionary()
+            post.setObject(textView.text, forKey: "body")
+            post.setObject(0, forKey: "closed")
+            if self.isQuestion {
+                post.setObject(1, forKey: "isBroadcast")
             }else{
-                tagListCoordinateY = CGFloat((insertImageList.count-1)/4 + 1)*imageHeight + 290
+                post.setObject(0, forKey: "isBroadcast")
             }
-            tagListLabel.frame = CGRectMake(10, tagListCoordinateY, UIScreen.mainScreen().bounds.width - 20, 40)
-            tagListLabel.font = UIFont(name: "Helvetica", size: 13.0)
-            tagListLabel.text = tagListStr
-            self.addMentionBtn.center = CGPoint(x: self.addMentionBtn.center.x, y: tagListCoordinateY + 60 )
-            self.addImageBtn.center = CGPoint(x: self.addImageBtn.center.x, y: tagListCoordinateY + 60 )
-            if isBroadcast == 1 {
-                self.addTagBtn.center = CGPoint(x: self.addTagBtn.center.x, y: tagListCoordinateY + 60 )
-                self.suggestTagView.center = CGPoint(x: self.suggestTagView.center.x, y: self.addImageBtn.center.y + 80)
+            post.setObject("TXT", forKey: "type")
+            post.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
+            //get mentioned user List
+            let postContentStr = textView.text
+            let firstRange = postContentStr.rangeOfString("@")
+
+//            if self.progressHUD == nil {
+//                
+//                self.progressHUD = MBProgressHUD.init(view: self.textView)
+//            }
+//            self.textView.addSubview(self.progressHUD!)
+//            self.progressHUD?.labelText = title
+//            self.progressHUD?.show(true)
+
+            if firstRange != nil {
+                let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
+                for subStr in postContentArr{
+                    if (subStr as NSString).length > 0{
+                        var subStrArr = (subStr ).componentsSeparatedByString(" ")
+                        if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
+                            let getMentionedUsernamesRequest = NSMutableDictionary()
+                            getMentionedUsernamesRequest.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+                            getMentionedUsernamesRequest.setObject(subStrArr[0], forKey: "mentionedDisplayname")
+                            let mentionedUsers = haalthyService.getUsersByDisplayname(getMentionedUsernamesRequest)
+                            for user in mentionedUsers{
+                                mentionUsernameList.addObject(user.objectForKey("username")!)
+                            }
+                        }
+                    }
+                }
+                
+                if mentionUsernameList.count > 0 {
+                    post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
+                }
             }
-        }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "selectTagSegue" {
-            let tagViewController = segue.destinationViewController as! TagTableViewController
-//            tagViewController.postBody = postContent.text
+            post.setObject(self.imageInfoList, forKey: "imageInfos")
+            if(self.isQuestion == true){
+                post.setObject(self.getSelectedTagList(), forKey: "tags")
+            }
+            let result:Int = haalthyService.addPost(post as NSDictionary)
+            
+//            self.progressHUD?.removeFromSuperview()
+            self.dismissViewControllerAnimated(false, completion: nil)
+        }else{
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
             tagViewController.isBroadcastTagSelection = 1
-            tagViewController.postDelegate = self
-        }
-        
-        if segue.identifier == "contactSegue" {
-            let contactController = segue.destinationViewController as! ContactViewController
-            contactController.mentionDelegate = self
+            self.presentViewController(tagViewController, animated: true, completion: nil)
         }
     }
     
-    func getPostTagList(data: NSArray) {
-        self.tagList =  data.mutableCopy() as! NSMutableArray
-        
+    func getSelectedTagList()->NSArray{
+        let selectedTagList = NSMutableArray()
+        for tag in tagList! {
+            if selectTagLabel.containsObject((tag as! NSDictionary).objectForKey("name") as! String){
+                selectedTagList.addObject(tag)
+            }
+        }
+        return selectedTagList
     }
     
     func textViewDidBeginEditing(textView: UITextView) {
@@ -299,60 +420,28 @@ class AddPostViewController: UIViewController, PostTagVCDelegate, UITextViewDele
             textView.text = nil
             textView.textColor = UIColor.blackColor()
         }
-//        selectTagsButton.enabled = true
-        sendButton.enabled = true
-//        enableButtonFormat(selectTagsButton)
-        enableButtonFormat(sendButton)
+        //        selectTagsButton.enabled = true
+        submitBtn.enabled = true
+        //        enableButtonFormat(selectTagsButton)
+        submitBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-//        insertImageList.addObject(chosenImage)
-        
-        let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
-//        println(selectedImage.size.width, selectedImage.size.height)
-        let imageDataStr = imageData.base64EncodedStringWithOptions([])
-        insertImageList.addObject(imageDataStr)
-        
-        if (insertImageList.count%4 == 1) && insertImageList.count != 1 {
-            self.addNextImageLinePositionY += self.imageHeight + 10
-        }
-        
-        let coordinateX = CGFloat(imageHeight+5)*CGFloat((insertImageList.count - 1)%4)+5
-        let imageView = UIImageView(frame: CGRectMake(coordinateX, addNextImageLinePositionY, imageHeight, imageHeight))
-        let publicService = PublicService()
-        
-        var selectedImage = UIImage()
-        selectedImage = publicService.cropToSquare(image: chosenImage)
-        
-        let newSize = CGSizeMake(imageHeight, imageHeight)
-        UIGraphicsBeginImageContext(newSize)
-        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
-        imageView.image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        self.view.addSubview(imageView)
-        if insertImageList.count%4 == 1 {
-            self.addMentionBtn.center = CGPoint(x: self.addMentionBtn.center.x, y: self.addMentionBtn.center.y + imageHeight + 5 )
-            self.addImageBtn.center = CGPoint(x: self.addImageBtn.center.x, y: self.addImageBtn.center.y + imageHeight + 5 )
-            if isBroadcast == 1 {
-                self.addTagBtn.center = CGPoint(x: self.addTagBtn.center.x, y: self.addTagBtn.center.y + imageHeight + 5 )
-            }
-        }
-        self.suggestTagView.center = CGPoint(x: self.suggestTagView.center.x, y: self.addImageBtn.center.y + 80)
-        dismissViewControllerAnimated(true, completion: nil) //5
-        
+    func selectContacts(){
+        self.performSegueWithIdentifier("contactSegue", sender: self)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func updateMentionList(username: String){
-//        mentionUsernameList.addObject(username)
-        if postContent.textColor != UIColor.blackColor() {
-            postContent.text = nil
-            postContent.textColor = UIColor.blackColor()
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "selectTagSegue" {
+            let tagViewController = segue.destinationViewController as! TagTableViewController
+            //            tagViewController.postBody = postContent.text
+            tagViewController.isBroadcastTagSelection = 1
+//            tagViewController.postDelegate = self
         }
-        postContent.text = postContent.text + " @" + username + " "
+        
+        if segue.identifier == "contactSegue" {
+            let contactController = segue.destinationViewController as! ContactViewController
+//            contactController.mentionDelegate = self
+        }
     }
 }
+

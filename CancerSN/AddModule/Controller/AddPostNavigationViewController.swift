@@ -10,7 +10,7 @@ import UIKit
 
 class AddPostNavigationViewController: UINavigationController {
     
-    var isPosted: Bool = true
+    var isQuestion: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()

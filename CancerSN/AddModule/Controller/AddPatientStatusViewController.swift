@@ -41,6 +41,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var dateInserted: NSDate?
     var isPosted: Int = 1
     
+    @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         initVariables()
         initContentView()

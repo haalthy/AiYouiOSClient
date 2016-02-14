@@ -48,6 +48,7 @@ let getSuggestUserByProfileURL:String = haalthyServiceRestfulURL + "security/use
 let getUserDetailURL:String = haalthyServiceRestfulURL + "security/user/detail"
 let getPostsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/posts"
 let resetPasswordURL:String = haalthyServiceRestfulURL + "security/user/resetpassword"
+let resetPasswordWithCodeURL:String = haalthyServiceRestfulURL + "open/user/resetpasswordwithauthcode"
 let getFollowingUserURL:String = haalthyServiceRestfulURL + "security/user/followingusers"
 let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/followerusers"
 let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"
@@ -64,7 +65,12 @@ let isFollowingUserURL = haalthyServiceRestfulURL + "security/user/follow/isfoll
 let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
-let getUsernameByEmailURL = haalthyServiceRestfulURL + "security/user/getusername"
+let getUsernameURL = haalthyServiceRestfulURL + "security/user/getusername"
 let getUsersByDisplaynameURL = haalthyServiceRestfulURL + "security/user/getusersbydisplayname"
+let getEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailsend"
+let getPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smssend"
+let checkEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailcheck"
+let checkPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smscheck"
+let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 
 

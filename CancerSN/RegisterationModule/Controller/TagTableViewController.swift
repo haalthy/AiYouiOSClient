@@ -44,7 +44,7 @@ class TagTableViewController: UITableViewController {
             }
         }
         if isBroadcastTagSelection == 0 {
-            var profileSet = NSUserDefaults.standardUserDefaults()
+            let profileSet = NSUserDefaults.standardUserDefaults()
             NSUserDefaults.standardUserDefaults().setObject(selectedTags, forKey: favTagsNSUserData)
             if(keychain.getPasscode(usernameKeyChain) != nil && keychain.getPasscode(passwordKeyChain) != nil && (keychain.getPasscode(usernameKeyChain) as! String) != ""){
                 var updateUserTagsRespData = haalthyService.updateUserTag(selectedTags)
@@ -52,9 +52,8 @@ class TagTableViewController: UITableViewController {
             userTagDelegate?.updateUserTagList(selectedTags)
             if isFirstTagSelection {
                 if (profileSet.objectForKey(userTypeUserData) == nil) || (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let controller = storyboard.instantiateViewControllerWithIdentifier("MainEntry") as UIViewController
-                    self.presentViewController(controller, animated: true, completion: nil)
+                    let tabViewController : TabViewController = TabViewController()
+                    self.presentViewController(tabViewController, animated: true, completion: nil)
                 }else{
                     self.performSegueWithIdentifier("signupSegue", sender: self)
                 }
@@ -127,7 +126,9 @@ class TagTableViewController: UITableViewController {
                         selectedTags = jsonResult as! NSMutableArray
                     }
                 }else{
-                    selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
+                    if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil {
+                        selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
+                    }
                 }
                 for favTag in selectedTags{
                     selectedTagsStr.addObject(favTag.objectForKey("name") as! String)
