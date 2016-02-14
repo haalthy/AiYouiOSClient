@@ -17,6 +17,7 @@ class ContactViewController: UIViewController, UITableViewDelegate, UITableViewD
     var mentionDelegate: MentionVCDelegate?
     var haalthyService = HaalthyService()
     var contactList = NSArray()
+    var userObjList = NSMutableArray()
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func cancel(sender: UIButton) {
@@ -24,17 +25,16 @@ class ContactViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        var userListData = NSData()
         let keychainAccess = KeychainAccess()
         let username = keychainAccess.getPasscode(usernameKeyChain) as! String
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        userListData = haalthyService.getFollowingUsers(username)!
-        
-        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(userListData, options: NSJSONReadingOptions.MutableContainers)
-        if jsonResult is NSArray {
-            contactList = jsonResult as! NSArray
+        contactList = haalthyService.getFollowingUsers(username)
+        for contact in contactList {
+            let userObj = UserProfile()
+            userObj.initVariables(contact as! NSDictionary)
+            self.userObjList.addObject(userObj)
         }
     }
     
@@ -60,15 +60,20 @@ class ContactViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("contactListCell", forIndexPath: indexPath) 
-        let user = contactList[indexPath.row] as! NSDictionary
+        let user = userObjList.objectAtIndex(indexPath.row) as! UserProfile
         // Configure the cell...
-        if((user["image"] is NSNull) == false){
-            let dataString = user.objectForKey("image") as! String
-            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
+        if(user.portraitUrl != nil){
             
-            cell.imageView?.image = UIImage(data: imageData)
+            let url : NSURL = NSURL(string: user.portraitUrl!)!
+            let imageData = NSData(contentsOfURL: url)
+            if imageData != nil {
+                cell.imageView?.image = UIImage(data: imageData!)
+            }else{
+                cell.imageView?.backgroundColor = imageViewBackgroundColor
+            }
+            
         }
-        cell.textLabel?.text = user.objectForKey("username") as? String
+        cell.textLabel?.text = user.nick
         
         return cell
     }

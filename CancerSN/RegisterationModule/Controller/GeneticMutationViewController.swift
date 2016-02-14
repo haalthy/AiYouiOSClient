@@ -14,12 +14,17 @@ protocol GeneticMutationVCDelegate{
 
 class GeneticMutationViewController: UIViewController {
 
-    var publicService = PublicService()
-    @IBOutlet weak var krasBtn: UIButton!
-    @IBOutlet weak var egfrBtn: UIButton!
-    @IBOutlet weak var alkBtn: UIButton!
-    @IBOutlet weak var otherMutationBtn: UIButton!
-    @IBOutlet weak var noMutationBtn: UIButton!
+    let geneticList: NSArray = ["ALK","KARS", "EGFR", "其他", "无突变"]
+    let geneticValueList: NSArray = [25, 10, 30, 20, 15]
+    let buttonSection = UIView()
+    let pieChartCenterLabel = UILabel()
+    var pieChartOuter = PNPieChart()
+    var descriptionLabel = UILabel()
+    
+    var haalthyService = HaalthyService()
+    
+    let offsetHeightForNavigation : CGFloat = 30
+    
     let profileSet = NSUserDefaults.standardUserDefaults()
 
     var selectGeneticMutationStr = String()
@@ -28,84 +33,175 @@ class GeneticMutationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        publicService.unselectBtnFormat(krasBtn)
-        publicService.unselectBtnFormat(egfrBtn)
-        publicService.unselectBtnFormat(alkBtn)
-        publicService.unselectBtnFormat(otherMutationBtn)
-        publicService.unselectBtnFormat(noMutationBtn)
+        initVariables()
+        initContentView()
+    }
+    
+    func initVariables(){
+    
+    }
+    
+    func initContentView(){
+        //previous Btn
+        let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
+        let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+        previousImgView.image = UIImage(named: "btn_previous")
+        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addSubview(previousImgView)
+        self.view.addSubview(previousBtn)
+        
+        //sign up title
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        signUpTitle.font = signUpTitleFont
+        signUpTitle.textColor = signUpTitleTextColor
+        signUpTitle.text = "请选择病人的基因信息"
+        signUpTitle.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(signUpTitle)
+        
+        //sign up subTitle
+        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
+        signUpSubTitle.font = signUpSubTitleFont
+        signUpSubTitle.textColor = signUpTitleTextColor
+        signUpSubTitle.text = "靶向治疗方案的选择与病人的基因变异信息息息相关"
+        signUpSubTitle.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(signUpSubTitle)
+        
+        //top Item Name
+        let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
+        topItemNameLbl.font = signUpItemNameFont
+        topItemNameLbl.textColor = headerColor
+        topItemNameLbl.text = "基因信息"
+        topItemNameLbl.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(topItemNameLbl)
+        
+        //next view button
+        if isUpdate == false {
+        let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+        nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
+        nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+        nextViewBtn.titleLabel?.font = nextViewBtnFont
+        nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(nextViewBtn)
+        }
+        
+        //genetic button section
+        buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace + offsetHeightForNavigation, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
+        var buttonX: CGFloat = 0
+        var buttonY: CGFloat = 0
+        let buttonHeight: CGFloat = CGFloat(29)
+        var buttonsBeMoved = NSMutableArray()
+        for genetic in geneticList {
+            
+            let textSize: CGSize = (genetic as! String).sizeWithFont(buttonTitleLabelFont, maxSize: CGSize(width: buttonSection.frame.width - buttonX, height: buttonHeight))
+            let buttonW: CGFloat = textSize.width + buttonTitleLabelHorizonMargin * 2
+            if (buttonW + buttonX) > buttonSection.frame.width {
+                let distanceBeMoved: CGFloat = (buttonSection.frame.width - buttonX)/2
+                for button in buttonsBeMoved {
+                    (button as! UIButton).center = CGPoint(x: (button as! UIButton).center.x + distanceBeMoved, y: (button as! UIButton).center.y)
+                }
+                buttonsBeMoved.removeAllObjects()
+                buttonX = 0
+                buttonY += buttonHeight + buttonVerticalSpace
+            }
+            let newButton = UIButton(frame: CGRect(x: buttonX, y: buttonY, width: buttonW, height: buttonHeight))
+            buttonX += newButton.frame.width + 7
+            newButton.setTitle((genetic as! String), forState: UIControlState.Normal)
+            newButton.titleLabel?.font = buttonTitleLabelFont
+            newButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+            newButton.layer.borderColor = headerColor.CGColor
+            newButton.layer.cornerRadius = 2
+            newButton.layer.masksToBounds = true
+            newButton.layer.borderWidth = 1
+            newButton.backgroundColor = UIColor.whiteColor()
+            newButton.addTarget(self, action: "selectGenetic:", forControlEvents: UIControlEvents.TouchUpInside)
+            buttonsBeMoved.addObject(newButton)
+            buttonSection.addSubview(newButton)
+        }
+        for button in buttonsBeMoved {
+            (button as! UIButton).center = CGPoint(x: (button as! UIButton).center.x +  (buttonSection.frame.width - buttonX)/2, y: (button as! UIButton).center.y)
+        }
+        buttonsBeMoved.removeAllObjects()
+        self.view.addSubview(buttonSection)
         
         PieChart()
+
+        //picCenterLabel
+        pieChartCenterLabel.frame = CGRECT(0, pieChartOuter.frame.origin.y + 97, screenWidth, 24)
+        pieChartCenterLabel.font = UIFont.systemFontOfSize(24)
+        pieChartCenterLabel.textColor = headerColor
+        pieChartCenterLabel.textAlignment = NSTextAlignment.Center
+        pieChartCenterLabel.backgroundColor = UIColor.clearColor()
+        self.view.addSubview(pieChartCenterLabel)
+
+        //description label
+        descriptionLabel.frame = CGRECT(0, pieChartOuter.frame.origin.y + pieChartOuter.frame.width + 21, screenWidth, 12)
+        descriptionLabel.textColor = signUpTitleTextColor
+        descriptionLabel.font = UIFont.systemFontOfSize(12)
+        descriptionLabel.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(descriptionLabel)
+    }
+    
+    func previousView(sender: UIButton){
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func selectGenetic(sender: UIButton){
+        if sender.backgroundColor == UIColor.whiteColor() {
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            sender.backgroundColor = headerColor
+        }else{
+            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
+            sender.backgroundColor = UIColor.whiteColor()
+        }
+        
+        let itemIndex: Int = geneticList.indexOfObject((sender.titleLabel?.text)!)
+        var value1: CGFloat = 0
+        for var index = 0; index < itemIndex; index++ {
+            value1 += geneticValueList[index] as! CGFloat
+        }
+        let value2: CGFloat = geneticValueList.objectAtIndex(itemIndex) as! CGFloat
+        let value3: CGFloat = 100 - value1 - value2
+
+        let outerItems = [PNPieChartDataItem(value: value1, color: UIColor.clearColor()), PNPieChartDataItem(value: value2 - 0.2, color: headerColor, description: "ALK"), PNPieChartDataItem(value: 0.2, color: pieChartDarkGrayColor), PNPieChartDataItem(value: value3, color: UIColor.clearColor())]
+
+        let newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
+        newPieChartOuter.duration = 0
+        pieChartCenterLabel.text = String(value2) + "%"
+        self.view.addSubview(newPieChartOuter)
+        descriptionLabel.text = String(value2) + "%的患者为" + (sender.titleLabel?.text)! + "基因变异"
     }
 
     func PieChart(){
-        
-        let items = [PNPieChartDataItem(value: 10, color: UIColor.blueColor(), description: ""),PNPieChartDataItem(value: 35, color: UIColor.redColor(), description: ""),PNPieChartDataItem(value: 15, color: UIColor.orangeColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.greenColor(), description: ""),PNPieChartDataItem(value: 20, color: UIColor.yellowColor(), description: "")]
-        
-        let pieChart = PNPieChart(frame: CGRectMake(68, 425, self.view.bounds.width * 0.65, 200), items: items)
-        pieChart.descriptionTextFont = UIFont.boldSystemFontOfSize(13)
-        pieChart.strokeChart()
-        self.view.addSubview(pieChart)
-        
-        //        pieChart.legendStyle = PNLegendItemStyle.Stacked
-        //        let legend = pieChart.getLegendWithMaxWidth(200)
-        //        legend.frame = CGRectMake(150,550, legend.frame.size.width, legend.frame.size.height)
-        //        self.view.addSubview(legend)
+        let outerItems = [PNPieChartDataItem(value: 100, color: pieChartLightGrayColor)]
+        let pieChartW: CGFloat = 219
+        pieChartOuter = PNPieChart(frame: CGRectMake((screenWidth - pieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height, pieChartW, pieChartW), items: outerItems)
+        self.view.addSubview(pieChartOuter)
     }
 
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-
-    @IBAction func selectGenetic(sender: UIButton) {
-        selectGeneticMutationStr = geneticMutationMapping.objectForKey((sender.titleLabel?.text)!) as! String
-        switch sender{
-        case krasBtn:
-            publicService.selectedBtnFormat(krasBtn)
-            publicService.unselectBtnFormat(egfrBtn)
-            publicService.unselectBtnFormat(alkBtn)
-            publicService.unselectBtnFormat(otherMutationBtn)
-            publicService.unselectBtnFormat(noMutationBtn)
-        case egfrBtn:
-            publicService.selectedBtnFormat(egfrBtn)
-            publicService.unselectBtnFormat(krasBtn)
-            publicService.unselectBtnFormat(alkBtn)
-            publicService.unselectBtnFormat(otherMutationBtn)
-            publicService.unselectBtnFormat(noMutationBtn)
-        case alkBtn:
-            publicService.selectedBtnFormat(alkBtn)
-            publicService.unselectBtnFormat(krasBtn)
-            publicService.unselectBtnFormat(egfrBtn)
-            publicService.unselectBtnFormat(otherMutationBtn)
-            publicService.unselectBtnFormat(noMutationBtn)
-        case otherMutationBtn:
-            publicService.selectedBtnFormat(otherMutationBtn)
-            publicService.unselectBtnFormat(krasBtn)
-            publicService.unselectBtnFormat(egfrBtn)
-            publicService.unselectBtnFormat(alkBtn)
-            publicService.unselectBtnFormat(noMutationBtn)
-        case noMutationBtn:
-            publicService.selectedBtnFormat(noMutationBtn)
-            publicService.unselectBtnFormat(krasBtn)
-            publicService.unselectBtnFormat(egfrBtn)
-            publicService.unselectBtnFormat(otherMutationBtn)
-            publicService.unselectBtnFormat(alkBtn)
-        default:
-            break
+    @IBAction func selectedNextView(sender: UIButton){
+        for geneticBtn in buttonSection.subviews {
+            if  (geneticBtn is UIButton) && (geneticBtn.backgroundColor == headerColor) {
+                selectGeneticMutationStr += ((geneticBtn as! UIButton).titleLabel?.text)!
+            }
         }
-        
-    }
-    
-    @IBAction func confirm(sender: UIButton) {
-        if isUpdate{
+        if isUpdate {
             geneticMutationVCDelegate?.updateGeneticMutation(selectGeneticMutationStr)
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.popViewControllerAnimated(true)
         }else{
             profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
-            self.performSegueWithIdentifier("stageAndMetastasisSegue", sender: self)
+            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+                if (result.objectForKey("result") as! Int) != 1 {
+                    HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+                }
+            }
+            self.performSegueWithIdentifier("selectTagSegue", sender: self)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "selectTagSegue" {
+            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
         }
     }
 }

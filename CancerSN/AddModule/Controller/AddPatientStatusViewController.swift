@@ -41,6 +41,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var dateInserted: NSDate?
     var isPosted: Int = 1
     
+    @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         initVariables()
         initContentView()
@@ -265,16 +266,10 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     
     func getPatientStatusFormat(){
         let parameters = NSDictionary()
-        let hudProcess = HudProgressManager.sharedInstance
-//        hudProcess.showHudProgress(self, title: "loading")
         let jsonResult = NetRequest.sharedInstance.GET_A(getPatientStatusFormatURL, parameters: parameters as! Dictionary<String, AnyObject>)
         if (jsonResult.objectForKey("content") != nil){
             patientStatusFormatList = (jsonResult ).objectForKey("content") as! NSArray
         }else{
-            hudProcess.dismissHud()
-
-            hudProcess.showOnlyTextHudProgress(self, title: "fail")
-//            hudProcess.showSuccessHudProgress(self, title: )
         }
     }
     

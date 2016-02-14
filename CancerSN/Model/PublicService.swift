@@ -29,24 +29,27 @@ class PublicService:NSObject{
             age = (user["age"] as! NSNumber).stringValue
         }
         if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
-            if stages.count > 0 {
-                stage = stages[0] as! String
-            }
+//            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
+//            if stages.count > 0 {
+//                stage = stages[0] as! String
+//            }
+            stage = user["stage"] as! String
         }
         
         if (user["cancerType"] != nil) && !(user["cancerType"] is NSNull) {
-            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
-            if cancerKeysForObject.count > 0 {
-                cancerType = (cancerKeysForObject)[0] as! String
-            }
+//            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
+//            if cancerKeysForObject.count > 0 {
+//                cancerType = (cancerKeysForObject)[0] as! String
+//            }
+            cancerType = user["cancerType"] as! String
         }
         
         if user["pathological"] != nil && !(user["pathological"] is NSNull){
-            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
-            if pathologicalKeysForObject.count > 0 {
-                pathological = pathologicalKeysForObject[0] as! String
-            }
+//            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
+//            if pathologicalKeysForObject.count > 0 {
+//                pathological = pathologicalKeysForObject[0] as! String
+//            }
+            pathological = user["pathological"] as! String
         }
         
         userProfileStr = displayGender + " " + age + "岁 " + cancerType + " " + pathological + " " + stage + "期"
@@ -57,8 +60,6 @@ class PublicService:NSObject{
         let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
-        print(keychain.getPasscode(usernameKeyChain))
-        print(keychain.getPasscode(passwordKeyChain))
         let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)
@@ -72,6 +73,8 @@ class PublicService:NSObject{
         profileSet.removeObjectForKey(accessNSUserData)
         profileSet.removeObjectForKey(refreshNSUserData)
         profileSet.removeObjectForKey(userTypeUserData)
+        profileSet.removeObjectForKey(geneticMutationNSUserData)
+
     }
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {
@@ -174,5 +177,83 @@ class PublicService:NSObject{
             print(error)
             return false
         }
+    }
+    
+    func checkIsPhoneNumber(str: String) -> Bool {
+        do {
+            // - 1、创建规则
+            let pattern = "[1-9][0-9]{8,14}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+            // 输出结果
+            if res.count > 0{
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        catch {
+            return false
+        }
+    }
+    
+    func checkIsEmail(str: String)->Bool{
+        do {
+            //([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+            // - 1、创建规则
+            let pattern = "[a-zA-Z0-9_-]{1,20}@[a-zA-Z0-9_-]{1,20}.[a-zA-Z0-9_-]{1,20}"
+            // - 2、创建正则表达式对象
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+            // - 3、开始匹配
+            let res = regex.matchesInString(str, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, str.characters.count))
+            // 输出结果
+            if res.count > 0{
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        catch {
+            return false
+        }
+    }
+    
+    func resizeImage(image: UIImage, newSize: CGSize) -> UIImage{
+        let imgRef: CGImageRef = image.CGImage!;
+        
+        let width: CGFloat = CGFloat(CGImageGetWidth(imgRef))
+        let height: CGFloat = CGFloat(CGImageGetHeight(imgRef))
+        
+        var newSizeWidth: CGFloat = newSize.width
+        var newSizeHeight: CGFloat = newSize.height
+        
+        if width > height {
+            newSizeWidth = newSize.height
+            newSizeHeight = newSize.width
+        }
+        
+        var scaleWidth: CGFloat = 1
+        var scaleHeight: CGFloat = 1
+        
+        if width > newSizeWidth {
+            scaleWidth = newSizeWidth / width
+        }
+        if height > newSizeHeight {
+            scaleHeight = newSizeHeight / height
+        }
+        let scale = (scaleWidth > scaleHeight ? scaleHeight: scaleWidth)
+        newSizeWidth = width * scale
+        newSizeHeight = height * scale
+        
+        let newSize = CGSizeMake(newSizeWidth, newSizeHeight)
+        UIGraphicsBeginImageContext(newSize)
+        image.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        let newimage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newimage
     }
 }

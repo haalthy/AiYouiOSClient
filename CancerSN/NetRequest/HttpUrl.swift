@@ -11,7 +11,11 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+<<<<<<< HEAD
 let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+=======
+let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
+>>>>>>> f5dafa12d61eb453c3f3174bb5d2c60274f532ba
 
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
@@ -48,6 +52,7 @@ let getSuggestUserByProfileURL:String = haalthyServiceRestfulURL + "security/use
 let getUserDetailURL:String = haalthyServiceRestfulURL + "security/user/detail"
 let getPostsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/posts"
 let resetPasswordURL:String = haalthyServiceRestfulURL + "security/user/resetpassword"
+let resetPasswordWithCodeURL:String = haalthyServiceRestfulURL + "open/user/resetpasswordwithauthcode"
 let getFollowingUserURL:String = haalthyServiceRestfulURL + "security/user/followingusers"
 let getFollowerUserURL:String = haalthyServiceRestfulURL + "security/user/followerusers"
 let getCommentsByUsernameURL:String = haalthyServiceRestfulURL + "security/post/comments"
@@ -64,7 +69,12 @@ let isFollowingUserURL = haalthyServiceRestfulURL + "security/user/follow/isfoll
 let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 let markMentionedPostAsReadURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
-let getUsernameByEmailURL = haalthyServiceRestfulURL + "security/user/getusername"
+let getUsernameURL = haalthyServiceRestfulURL + "security/user/getusername"
 let getUsersByDisplaynameURL = haalthyServiceRestfulURL + "security/user/getusersbydisplayname"
+let getEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailsend"
+let getPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smssend"
+let checkEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailcheck"
+let checkPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smscheck"
+let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 
 

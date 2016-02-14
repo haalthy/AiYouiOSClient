@@ -87,11 +87,13 @@ class NetRequest: NSObject {
             
             // 返回任务结果
             if error == nil {
-                
+                do{
                 // 解析json
-                json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
 //                self.callbackWithResult(json, success: success, failed: failed)
-                
+                }catch let error as NSError {
+                    print("Could not create audio player: \(error)")
+                }
             }
             else {
                 
