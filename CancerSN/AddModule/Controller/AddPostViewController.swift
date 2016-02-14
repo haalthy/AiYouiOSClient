@@ -262,8 +262,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
     }
     
-
-    
     func deleteImage(sender: UIButton){
         let imageIndex: Int = getImageIndexByImageCenter(sender.superview!.center)
         self.imageInfoList.removeObjectAtIndex(imageIndex - 1)

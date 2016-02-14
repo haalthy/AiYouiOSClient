@@ -58,8 +58,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         textInputView.addSubview(username)
         password.frame = CGRect(x: 15, y: textInputView.frame.height/2, width: textInputView.frame.width, height: textInputView.frame.height/2)
         password.font = inputViewFont
-        password.placeholder = "邮箱／手机"
         password.placeholder = "密码"
+        password.secureTextEntry = true
         textInputView.addSubview(password)
         let seperateLine: UIView = UIView(frame: CGRect(x: 0, y: textInputView.frame.height/2, width: textInputView.frame.width, height: 0.5))
         seperateLine.backgroundColor = seperateLineColor
@@ -204,24 +204,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let publicService = PublicService()
         keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
+        let hudProcessManager = HudProgressManager.sharedInstance
+        hudProcessManager.showHudProgress(self, title: "登录中")
         if publicService.checkIsEmail(usernameStr) || publicService.checkIsPhoneNumber(usernameStr) {
             usernameStr = haalthyService.getUsername(usernameStr)
         }else{
-            let alert = UIAlertController(title: "提示", message: "请输入正确的手机/邮箱", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            hudProcessManager.showOnlyTextHudProgress(self, title: "请输入正确的手机/邮箱")
+            hudProcessManager.dismissHud()
             return false
         }
         if (usernameStr != "no user in database") && (usernameStr != ""){
+            hudProcessManager.dismissHud()
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             return true
         }
         else{
             keychainAccess.deletePasscode(usernameKeyChain)
             keychainAccess.deletePasscode(passwordKeyChain)
-            let alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            hudProcessManager.showOnlyTextHudProgress(self, title: "您的用户名或密码输错，请重新输入")
+            hudProcessManager.dismissHud()
             return false
         }
     }

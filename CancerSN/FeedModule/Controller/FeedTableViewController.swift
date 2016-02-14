@@ -17,6 +17,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBOutlet weak var headerView: UIView!
     
+    let keychainAccess = KeychainAccess()
+    let getAccessToken = GetAccessToken()
+    let profileSet = NSUserDefaults.standardUserDefaults()
+    
     // 自定义变量
     
     var dataArr: NSMutableArray!
@@ -28,26 +32,54 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initRefresh()
         initContentView()
        // self .getFeedListFromServer()
-        var keychainAccess = KeychainAccess()
-//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
-//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
-
-        
         }
 
     // MARK: - Init Variables
     
     func initVariables() {
-    
+
         dataArr = NSMutableArray()
-        
+        getAccessToken.getAccessToken()
+
+    }
+    
+    func getFeedListURL()->String{
+        var feedListURL: String = ""
+        let accessToken = profileSet.objectForKey(accessNSUserData)
+        if accessToken != nil{
+            feedListURL = getFeedsURL + "?access_token=" + (accessToken as! String)
+        }else{
+            feedListURL = getBroadcastsByTagsURL
+        }
+        return feedListURL
+    }
+    
+    func getFeedListParameter()-> NSDictionary{
+        let parameter = NSMutableDictionary()
+//        ["since_id":0,
+//            "max_id":1000,
+//            "count": 5,
+//            "page": 0,"username":"AY1449549912985.679"]
+        let accessToken = profileSet.objectForKey(accessNSUserData)
+        if accessToken != nil{
+            parameter.setObject(0, forKey: "since_id")
+            parameter.setObject(1000, forKey: "max_id")
+            parameter.setObject(5, forKey: "count")
+            parameter.setObject(0, forKey: "page")
+            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+        }else{
+            parameter.setObject(0, forKey: "since_id")
+            parameter.setObject(1000, forKey: "max_id")
+            parameter.setObject(5, forKey: "count")
+            parameter.setObject(0, forKey: "page")
+        }
+        return parameter
     }
     
     // MARK: - Init Related ContentView
     
     func initContentView() {
     
-        
         // headerView样式
         headerView.layer.borderWidth = 0.7
         headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
@@ -78,10 +110,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListFromServer() {
         
-        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
-            "max_id":1000,
-            "count": 5,
-            "page": 0,"username":"AY1449549912985.679"],
+        NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter() as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
             
@@ -101,7 +130,6 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
-        
         
     }
     

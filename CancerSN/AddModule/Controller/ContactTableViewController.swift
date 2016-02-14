@@ -27,8 +27,12 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let hudProcessManager = HudProgressManager.sharedInstance
+        hudProcessManager.dismissHud()
+        hudProcessManager.showHudProgress(self, title: "加载中")
         initVariables()
         initContentView()
+        hudProcessManager.dismissHud()
     }
     
     func initVariables(){
@@ -36,7 +40,7 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
         let username = keychainAccess.getPasscode(usernameKeyChain) as! String
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
+
         contactList = haalthyService.getFollowingUsers(username)
         for contact in contactList {
             let userObj = UserProfile()

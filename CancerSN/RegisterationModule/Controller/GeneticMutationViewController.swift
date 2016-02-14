@@ -14,8 +14,8 @@ protocol GeneticMutationVCDelegate{
 
 class GeneticMutationViewController: UIViewController {
 
-    let geneticList: NSArray = ["ALK","KARS", "EGFR", "其他", "无突变"]
-    let geneticValueList: NSArray = [25, 10, 30, 20, 15]
+    let geneticList: NSArray = ["EGFR","FGFR1", "KARS","ALK", "其他", "无突变"]
+    let geneticValueList: NSArray = [25, 20, 20, 5, 25, 5]
     let buttonSection = UIView()
     let pieChartCenterLabel = UILabel()
     var pieChartOuter = PNPieChart()
