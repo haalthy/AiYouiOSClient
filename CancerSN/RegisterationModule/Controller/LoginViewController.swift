@@ -267,8 +267,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func ignore(sender: UIButton) {
         let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-        controller.isFirstTagSelection = true
+        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+//        controller.isFirstTagSelection = true
         self.presentViewController(controller, animated: true, completion: nil)
     }
     

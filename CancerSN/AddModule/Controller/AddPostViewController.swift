@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate{
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate{
     var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
@@ -64,6 +64,8 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     var imageCountPerLine: Int = 0
     
     var selectTagLabel = NSMutableArray()
+    
+    var selectedTagList = NSArray()
     
     var mentionUsernameList = NSMutableArray()
     
@@ -130,14 +132,13 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                 tagBtnX = 0
                 tagBtnY += 34
             }
-            print(tagBtnY)
             if tagBtnY > 70{
                 break
             }
             tagBtnX += tagTextSize.width + tagSectionBtnTextVerticalMargin * 2 + tagSectionBtnHorizonMargin
             displayTagCount++
         }
-        displayTagCount--
+        displayTagCount = displayTagCount-2
 //        var tagIndex: Int = 0
         tagBtnX = 0
         tagBtnY = 24
@@ -173,6 +174,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             tagButton.layer.cornerRadius = 2
             tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
             tagSection.addSubview(tagButton)
+            tagButton.addTarget(self, action: "selectTags:", forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(tagSection)
         }
         
@@ -186,6 +188,14 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         mentionedBtn.addTarget(self, action: "selectContacts", forControlEvents: UIControlEvents.TouchUpInside)
         buttomSection.addSubview(mentionedBtn)
         self.view.addSubview(buttomSection)
+    }
+    
+    func selectTags(sender: UIButton){
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+        tagViewController.isSelectedByPost = true
+        tagViewController.postDelegate = self
+        self.presentViewController(tagViewController, animated: true, completion: nil)
     }
     
     func keyboardWillAppear(notification: NSNotification) {
@@ -321,7 +331,16 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.tagSection.frame = CGRECT(tagSection.frame.origin.x, imageSection.frame.origin.y + imageSection.frame.height, tagSection.frame.width, tagSection.frame.height)
         }
     }
-
+    
+    func updatePostTagList(tagList: NSArray) {
+//        self.selectedTagList = tagList
+        for tag in tagList {
+            let tagName: String = (tag as! NSDictionary).objectForKey("name") as! String
+            if self.selectTagLabel.containsObject(tagName) == false {
+                self.selectTagLabel.addObject(tagName)
+            }
+        }
+    }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -397,8 +416,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.dismissViewControllerAnimated(false, completion: nil)
         }else{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-            tagViewController.isBroadcastTagSelection = 1
+            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+            tagViewController.isSelectedByPost = true
+            tagViewController.postDelegate = self
             self.presentViewController(tagViewController, animated: true, completion: nil)
         }
     }
@@ -429,12 +449,12 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "selectTagSegue" {
-            let tagViewController = segue.destinationViewController as! TagTableViewController
-            //            tagViewController.postBody = postContent.text
-            tagViewController.isBroadcastTagSelection = 1
-//            tagViewController.postDelegate = self
-        }
+//        if segue.identifier == "selectTagSegue" {
+//            let tagViewController = segue.destinationViewController as! TagTableViewController
+//            //            tagViewController.postBody = postContent.text
+//            tagViewController.isBroadcastTagSelection = 1
+////            tagViewController.postDelegate = self
+//        }
         
         if segue.identifier == "contactSegue" {
             let contactController = segue.destinationViewController as! ContactTableViewController

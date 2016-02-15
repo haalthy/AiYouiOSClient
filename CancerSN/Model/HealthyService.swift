@@ -532,7 +532,6 @@ class HaalthyService:NSObject{
     }
     
     func updateUserTag(selectedTags: NSArray)->NSData{
-        let getAccessToken: GetAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         let accessToken: AnyObject? = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         let url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
@@ -546,6 +545,18 @@ class HaalthyService:NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
         return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
+        
+        if accessToken != nil{
+            let urlPath: String = updateFavTagsURL + "?access_token=" + (accessToken as! String)
+            let parameters = NSDictionary(objects: [keychainAccess.getPasscode(usernameKeyChain)!,selectedTags], forKeys: ["username", "tags"])
+            NetRequest.sharedInstance.POST(urlPath, parameters: parameters as! Dictionary<String, AnyObject>,
+                success: { (content , message) -> Void in
+                    print(content)
+                    
+                }) { (content, message) -> Void in
+                    print(content)
+            }
+        }
     }
     
     func updateUser(updateUserInfo: NSDictionary)->NSData{
@@ -815,9 +826,6 @@ class HaalthyService:NSObject{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil{
-//            getAccessToken.getAccessToken()
-//            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-//        }else{
             let urlPath: String = getUsernameURL + "?access_token=" + (accessToken as! String)
             let parameters = NSDictionary(object: email, forKey: "username")
             let jsonResult: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: parameters as! Dictionary<String, AnyObject>)

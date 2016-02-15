@@ -23,7 +23,7 @@ class GeneticMutationViewController: UIViewController {
     
     var haalthyService = HaalthyService()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     let profileSet = NSUserDefaults.standardUserDefaults()
 
@@ -38,7 +38,9 @@ class GeneticMutationViewController: UIViewController {
     }
     
     func initVariables(){
-    
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
@@ -201,7 +203,7 @@ class GeneticMutationViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+            (segue.destinationViewController as! FeedTagsViewController).isNavigationPop = true
         }
     }
 }

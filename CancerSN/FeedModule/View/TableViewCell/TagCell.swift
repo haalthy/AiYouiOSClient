@@ -8,6 +8,12 @@
 
 import UIKit
 
+
+protocol SelectedTagVCDelegate {
+    func selectedTag(tag: String)
+    func unselectedTag(tag: String)
+}
+
 // 相关常量
 
 let tagFont: UIFont = UIFont.systemFontOfSize(15)
@@ -18,6 +24,7 @@ let tagBorderColor: UIColor = RGB(61, 208, 221)
 class TagCell: UITableViewCell {
 
     // 相关变量
+    var selectedTagVCDelegate: SelectedTagVCDelegate?
     
     var tagArr: Array<SubTagModel>? {
     
@@ -91,10 +98,11 @@ class TagCell: UITableViewCell {
             tagBtn.setTitle(nameStr, forState: .Normal)
             tagBtn.setTitleColor(tagBorderColor, forState: .Normal)
             tagBtn.backgroundColor = UIColor.clearColor()
-            tagBtn.layer.cornerRadius = 4.0
+            tagBtn.layer.cornerRadius = 2.0
             tagBtn.layer.borderColor = tagBorderColor.CGColor
             tagBtn.layer.borderWidth = 1.0
-            
+            tagBtn.titleLabel?.font = UIFont.systemFontOfSize(13)
+            tagBtn.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
             self.contentView.addSubview(tagBtn)
             
             // 获取cell高度
@@ -104,6 +112,18 @@ class TagCell: UITableViewCell {
                 print(self.tagCellHeight)
             }
             
+        }
+    }
+    
+    func selectedTag(sender: UIButton){
+        if sender.backgroundColor == UIColor.clearColor() {
+            sender.backgroundColor = tagBorderColor
+            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            selectedTagVCDelegate?.selectedTag((sender.titleLabel?.text)!)
+        }else{
+            sender.backgroundColor = UIColor.clearColor()
+            sender.setTitleColor(tagBorderColor, forState: UIControlState.Normal)
+            selectedTagVCDelegate?.unselectedTag((sender.titleLabel?.text)!)
         }
     }
 

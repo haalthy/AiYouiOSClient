@@ -332,7 +332,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             }) { (content, message) -> Void in
                 
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-        }
+            }
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }

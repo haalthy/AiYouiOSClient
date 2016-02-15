@@ -444,7 +444,7 @@
 		6B954C5D1C2BF0DF003848F4 /* PostFeedStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostFeedStatus.swift; sourceTree = "<group>"; };
 		6B9B992F1C2D092800E377EA /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
-		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTagsViewController.swift; sourceTree = "<group>"; };
+		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTagsViewController.swift; path = ../../FeedModule/Controller/FeedTagsViewController.swift; sourceTree = "<group>"; };
 		6BA14E801C4CB37100B6FDD1 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
 		6BA14E821C4CB38200B6FDD1 /* SubTagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTagModel.swift; sourceTree = "<group>"; };
 		6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -984,7 +984,6 @@
 				6B93FC621C1E5B9400A81EA9 /* ShowPostDetailTableViewController.swift */,
 				6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */,
 				6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */,
-				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
 				6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */,
 			);
 			path = Controller;
@@ -1018,13 +1017,14 @@
 		6B93FC741C1E5C3800A81EA9 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
+				6B93FC7D1C1E5C3800A81EA9 /* TagTableViewController.swift */,
 				6B93FC751C1E5C3800A81EA9 /* CancerTypeSettingViewController.swift */,
 				6B93FC761C1E5C3800A81EA9 /* GenderSettingViewController.swift */,
 				6B93FC771C1E5C3800A81EA9 /* GeneticMutationViewController.swift */,
 				6B93FC781C1E5C3800A81EA9 /* LoginViewController.swift */,
 				6B93FC7B1C1E5C3800A81EA9 /* SignupViewController.swift */,
 				6B93FC7C1C1E5C3800A81EA9 /* StageViewController.swift */,
-				6B93FC7D1C1E5C3800A81EA9 /* TagTableViewController.swift */,
 				2AD105191C61E1B500FAF65B /* MetasticViewController.swift */,
 				2A05F3C81C630C4200E31848 /* SignUpSucessfulViewController.swift */,
 				2A05F3CA1C630E2100E31848 /* ForgetPwdViewController.swift */,

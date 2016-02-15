@@ -90,6 +90,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     // MARK: - Init Variables
     func initVariables() {
+        print((self.navigationController?.navigationBar.frame.height))
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43

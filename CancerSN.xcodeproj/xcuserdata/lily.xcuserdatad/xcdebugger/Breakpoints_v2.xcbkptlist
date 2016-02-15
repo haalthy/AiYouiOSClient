@@ -278,32 +278,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/NetRequest/NetRequest.swift"
-            timestampString = "477127256.315408"
+            filePath = "CancerSN/Model/HealthyService.swift"
+            timestampString = "477219581.340611"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "POST_A(_:parameters:)"
+            startingLineNumber = "554"
+            endingLineNumber = "554"
+            landmarkName = "updateUserTag(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/NetRequest/NetRequest.swift"
-            timestampString = "477127275.752757"
+            filePath = "CancerSN/Model/HealthyService.swift"
+            timestampString = "477219583.636407"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "POST_A(_:parameters:)"
+            startingLineNumber = "557"
+            endingLineNumber = "557"
+            landmarkName = "updateUserTag(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CancerSN/AddModule/Controller/AddPostViewController.swift"
+            timestampString = "477228931.500714"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
+            landmarkName = "updatePostTagList(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -241,7 +241,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         }
         let getAuthRequest = NSDictionary(objects: [id.text!, authCode.text!], forKeys: ["eMail", "authCode"])
         
-//        if haalthyService.checkAuthCode(getAuthRequest) {
+        if haalthyService.checkAuthCode(getAuthRequest) {
             profileSet.setObject(nick.text!, forKey: displaynameUserData)
             let selectedImageData: NSData = UIImagePNGRepresentation(appIconImageView.image!)!
             portraitImgStr = selectedImageData.base64EncodedStringWithOptions([])
@@ -251,14 +251,15 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             if (result.count > 0) && (result.objectForKey("result") as! Int) == 1 {
                 keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                 keychainAccess.setPasscode(usernameKeyChain, passcode: (result.objectForKey("content") as! NSDictionary).objectForKey("result") as! String)
+                haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
                 self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
             }else{
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: result.objectForKey("resultDesp") as! String)
                     HudProgressManager.sharedInstance.dismissHud()
             }
-//        }else{
-//            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "验证码错误")
-//            HudProgressManager.sharedInstance.dismissHud()
-//        }
+        }else{
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "验证码错误")
+            HudProgressManager.sharedInstance.dismissHud()
+        }
     }
 }

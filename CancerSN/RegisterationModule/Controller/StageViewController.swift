@@ -19,7 +19,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
     let topPickerView = UIPickerView()
     var stagePickerDataSource = [String]()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     override func viewDidLoad() {
         initVariables()
@@ -29,6 +29,9 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
     
     func initVariables(){
         stagePickerDataSource = ["I", "II", "III", "IV"]
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
