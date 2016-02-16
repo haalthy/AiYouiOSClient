@@ -155,7 +155,10 @@ class FeedOriginalFrame: NSObject {
         let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
         let tagW = SCREEN_WIDTH - tagX
-        let tagH: CGFloat = 24
+        var tagH: CGFloat = 24
+        if (self.feedModel!.highlight == "") || (self.feedModel!.highlight == "<null>"){
+            tagH = 0
+        }
         self.cureFrame = CGRECT(tagX, tagY, tagW, tagH)
         
         
@@ -163,10 +166,10 @@ class FeedOriginalFrame: NSObject {
         let clinicX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         var clinicY: CGFloat = 0
         var clinicSize: CGSize = CGSize(width: 0, height: 0)
-        if self.feedModel?.clinicReport != "" {
+        if (self.feedModel?.clinicReport != "") && (self.feedModel!.clinicReport != "<null>") {
             clinicSize = (self.feedModel?.clinicReport.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: SCREEN_WIDTH - clinicX - kCellLeftInside, height: CGFloat.max)))!
         }
-        if (self.feedModel!.highlight == "") {
+        if (self.feedModel!.highlight == "") || (self.feedModel!.highlight == "<null>"){
             clinicY = CGRectGetMaxY(self.ageFrame!) + 8.0
         }
         else {
@@ -180,8 +183,8 @@ class FeedOriginalFrame: NSObject {
         var contentY: CGFloat = 0
         let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
         
-        if self.feedModel?.clinicReport == "" {
-            if self.feedModel?.highlight == "" {
+        if (self.feedModel?.clinicReport == "") || (self.feedModel!.clinicReport == "<null>"){
+            if (self.feedModel?.highlight == "") || (self.feedModel!.highlight == "<null>") {
                 contentY = CGRectGetMaxY(self.ageFrame!) + 8.0
             }
             else {

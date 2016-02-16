@@ -17,9 +17,18 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBOutlet weak var headerView: UIView!
     
+    let keychainAccess = KeychainAccess()
+    let getAccessToken = GetAccessToken()
+    let profileSet = NSUserDefaults.standardUserDefaults()
+    
     // 自定义变量
     
     var dataArr: NSMutableArray!
+    
+    let defaultMaxID: Int = 99999999
+    var pageIndex: Int = 0
+    var countPerPage: Int  = 5
+    var maxID: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,26 +37,50 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         initRefresh()
         initContentView()
        // self .getFeedListFromServer()
-        var keychainAccess = KeychainAccess()
-//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
-//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
-
-        
         }
 
     // MARK: - Init Variables
     
     func initVariables() {
-    
+
         dataArr = NSMutableArray()
-        
+        getAccessToken.getAccessToken()
+
+    }
+    
+    func getFeedListURL()->String{
+        var feedListURL: String = ""
+        let accessToken = profileSet.objectForKey(accessNSUserData)
+        if accessToken != nil{
+            feedListURL = getFeedsURL + "?access_token=" + (accessToken as! String)
+        }else{
+            feedListURL = getBroadcastsByTagsURL
+        }
+        return feedListURL
+    }
+    
+    func getFeedListParameter(since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
+        let parameter = NSMutableDictionary()
+        let accessToken = profileSet.objectForKey(accessNSUserData)
+        if accessToken != nil{
+            parameter.setObject(since_id, forKey: "since_id")
+            parameter.setObject(max_id, forKey: "max_id")
+            parameter.setObject(countPerPage, forKey: "count")
+            parameter.setObject(pageIndex, forKey: "page")
+            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+        }else{
+            parameter.setObject(since_id, forKey: "since_id")
+            parameter.setObject(max_id, forKey: "max_id")
+            parameter.setObject(countPerPage, forKey: "count")
+            parameter.setObject(pageIndex, forKey: "page")
+        }
+        return parameter
     }
     
     // MARK: - Init Related ContentView
     
     func initContentView() {
     
-        
         // headerView样式
         headerView.layer.borderWidth = 0.7
         headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
@@ -77,56 +110,54 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     // MARK: - Net Request
     
     func getFeedListFromServer() {
-        
-        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
-            "max_id":1000,
-            "count": 5,
-            "page": 0,"username":"AY1449549912985.679"],
+        maxID = defaultMaxID
+        self.pageIndex = 0
+        NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-            
+                self.pageIndex = 1
                 self.tableView.mj_header.endRefreshing()
-            
                 self.dataArr.removeAllObjects()
+                let dict: NSArray = content as! NSArray
+                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+                if homeData.count > 0 {
+                    self.maxID = homeData[0].postID
+                    for dataItem in homeData {
+                        self.maxID = self.maxID > dataItem.postID ? self.maxID: dataItem.postID
+                    }
+                }
+                self.changeDataToFrame(homeData)
+                self.tableView.reloadData()
+
+                
+            }) { (content, message) -> Void in
+                
+                self.tableView.mj_header.endRefreshing()
+                
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+        }
+        
+    }
+    
+    func getMoreFeedListFromServer() {
+        NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
+            
+            success: { (content , message) -> Void in
+                self.pageIndex++
+                
+                self.tableView.mj_footer.endRefreshing()
+                
                 let dict: NSArray = content as! NSArray
                 let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
                 
                 self.changeDataToFrame(homeData)
                 self.tableView.reloadData()
                 
-                
             }) { (content, message) -> Void in
                 
-                self.tableView.mj_header.endRefreshing()
+                self.tableView.mj_footer.endRefreshing()
                 
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
-        
-        
-    }
-    
-    func getMoreFeedListFromServer() {
-        
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
-        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
-            "max_id":1000,
-            "count": 5,
-            "page": 0,"username":"AY1449549912985.679"],
-            
-            success: { (content , message) -> Void in
-                
-                self.tableView.mj_header.endRefreshing()
-                
-                
-            }) { (content, message) -> Void in
-                
-                self.tableView.mj_header.endRefreshing()
-                
-                HudProgressManager.sharedInstance.dismissHud()
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-        }
-        
-        
     }
 
     
@@ -195,59 +226,5 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

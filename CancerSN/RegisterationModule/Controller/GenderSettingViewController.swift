@@ -27,7 +27,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     var femaleBtn = UIButton()
     var gender: String?
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     override func viewDidLoad() {
         initVariables()
@@ -42,7 +42,9 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     }
 
     func initVariables(){
-        
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){

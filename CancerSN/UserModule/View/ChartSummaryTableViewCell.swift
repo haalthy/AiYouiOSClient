@@ -126,8 +126,12 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     let dateFormatter = NSDateFormatter()
                     dateFormatter.dateFormat = "MM/dd" // superset of OP's format
                     let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
-                    
-                    var coordinateX: CGFloat = CGFloat(Int(chartWidth - chartDateLabelWidth * 2) * ((clinicData.objectForKey("insertDate") as! Int) - beginDate)/(endDate - beginDate) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2))
+                    var coordinateX = CGFloat()
+                    if endDate != beginDate {
+                        coordinateX = CGFloat(Int(chartWidth - chartDateLabelWidth * 2) * ((clinicData.objectForKey("insertDate") as! Int) - beginDate)/(endDate - beginDate) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2))
+                    }else{
+                        coordinateX = 100
+                    }
                     if (clinicDataList.count == 2) && (index == 0) {
                         coordinateX = chartWidth/2 + chartLeftSpace
                     }
@@ -262,9 +266,9 @@ class ChartSummaryTableViewCell: UITableViewCell {
 
         CGContextBeginPath(UIGraphicsGetCurrentContext())
 
-        if dataPointsXArr.count > 0{
+        if dataPointsXArr.count > 1{
             CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[0] as! CGFloat - 2, dataPointsYArr[0] as! CGFloat)
-            for pointIndex in 1...dataPointsXArr.count - 1{
+            for pointIndex in 1...(dataPointsXArr.count - 1){
                 CGContextAddLineToPoint(UIGraphicsGetCurrentContext(),  dataPointsXArr[pointIndex] as! CGFloat + 2, dataPointsYArr[pointIndex] as! CGFloat)
                 CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[pointIndex] as! CGFloat - 2, dataPointsYArr[pointIndex] as! CGFloat)
             }

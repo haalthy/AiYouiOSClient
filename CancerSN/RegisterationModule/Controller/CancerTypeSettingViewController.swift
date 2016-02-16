@@ -29,7 +29,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     
     let haalthyService = HaalthyService()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     @IBAction func selectedNextView(sender: UIButton) {
         let cancerType: String = cancerTypePickerDataSource[topPickerView.selectedRowInComponent(0)]
@@ -85,7 +85,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
 //
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+            (segue.destinationViewController as! FeedTagsViewController).isNavigationPop = true
         }
     }
     
@@ -106,6 +106,9 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     func initVariables(){
         cancerTypePickerDataSource = cancerTypeMapping.allKeys as! [String]
         pathologicaPickerDataSource = ["腺癌","鳞癌","腺鳞癌", "小细胞癌"]
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){

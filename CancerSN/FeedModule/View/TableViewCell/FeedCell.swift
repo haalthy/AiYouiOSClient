@@ -216,7 +216,7 @@ class FeedCell: UITableViewCell {
         statusLabel.textColor = kAgeColor
         self.addSubview(statusLabel)
         
-        if feedModel?.highlight != "" {
+        if (feedModel?.highlight) != "" {
             
             // 6.标签
             var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate{
     var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
@@ -65,6 +65,8 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     var selectTagLabel = NSMutableArray()
     
+    var selectedTagList = NSArray()
+    
     var mentionUsernameList = NSMutableArray()
     
     var progressHUD: MBProgressHUD?
@@ -91,7 +93,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func initContentView(){
         //text View
-        textView.frame = CGRect(x: viewHorizonMargin, y: headerHeight + textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
+        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
         textView.textColor = ultraLightTextColor
         if self.isQuestion {
             textView.text = "请输入问题"
@@ -130,18 +132,17 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                 tagBtnX = 0
                 tagBtnY += 34
             }
-            print(tagBtnY)
             if tagBtnY > 70{
                 break
             }
             tagBtnX += tagTextSize.width + tagSectionBtnTextVerticalMargin * 2 + tagSectionBtnHorizonMargin
             displayTagCount++
         }
-        displayTagCount--
-        var tagIndex = 0
+        displayTagCount = displayTagCount-2
+//        var tagIndex: Int = 0
         tagBtnX = 0
         tagBtnY = 24
-        for tagIndex; tagIndex < displayTagCount; tagIndex++ {
+        for tagIndex in 0 ... displayTagCount{
             let tag: NSDictionary = tagList?.objectAtIndex(tagIndex) as! NSDictionary
             let tagName = tag.objectForKey("name") as! String
             let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
@@ -173,10 +174,11 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             tagButton.layer.cornerRadius = 2
             tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
             tagSection.addSubview(tagButton)
+            tagButton.addTarget(self, action: "selectTags:", forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(tagSection)
         }
         
-        //ButtonSection
+        //ButtomSection
         buttomSection.frame = CGRECT(0, screenHeight - buttomSectionHeight, screenWidth, buttomSectionHeight)
         buttomSection.backgroundColor = buttomSectionColor
         let mentionedBtn = UIButton(frame: CGRECT(buttomSectionItemLeftSpace, 11, buttomItemIconLength, buttomItemIconLength))
@@ -186,6 +188,14 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         mentionedBtn.addTarget(self, action: "selectContacts", forControlEvents: UIControlEvents.TouchUpInside)
         buttomSection.addSubview(mentionedBtn)
         self.view.addSubview(buttomSection)
+    }
+    
+    func selectTags(sender: UIButton){
+        let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+        let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+        tagViewController.isSelectedByPost = true
+        tagViewController.postDelegate = self
+        self.presentViewController(tagViewController, animated: true, completion: nil)
     }
     
     func keyboardWillAppear(notification: NSNotification) {
@@ -262,8 +272,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
     }
     
-
-    
     func deleteImage(sender: UIButton){
         let imageIndex: Int = getImageIndexByImageCenter(sender.superview!.center)
         self.imageInfoList.removeObjectAtIndex(imageIndex - 1)
@@ -323,7 +331,16 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.tagSection.frame = CGRECT(tagSection.frame.origin.x, imageSection.frame.origin.y + imageSection.frame.height, tagSection.frame.width, tagSection.frame.height)
         }
     }
-
+    
+    func updatePostTagList(tagList: NSArray) {
+//        self.selectedTagList = tagList
+        for tag in tagList {
+            let tagName: String = (tag as! NSDictionary).objectForKey("name") as! String
+            if self.selectTagLabel.containsObject(tagName) == false {
+                self.selectTagLabel.addObject(tagName)
+            }
+        }
+    }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -399,8 +416,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.dismissViewControllerAnimated(false, completion: nil)
         }else{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-            tagViewController.isBroadcastTagSelection = 1
+            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+            tagViewController.isSelectedByPost = true
+            tagViewController.postDelegate = self
             self.presentViewController(tagViewController, animated: true, completion: nil)
         }
     }
@@ -416,9 +434,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func textViewDidBeginEditing(textView: UITextView) {
-        if textView.textColor != UIColor.blackColor() {
+        if textView.textColor != defaultTextColor {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = defaultTextColor
         }
         //        selectTagsButton.enabled = true
         submitBtn.enabled = true
@@ -431,16 +449,25 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "selectTagSegue" {
-            let tagViewController = segue.destinationViewController as! TagTableViewController
-            //            tagViewController.postBody = postContent.text
-            tagViewController.isBroadcastTagSelection = 1
-//            tagViewController.postDelegate = self
-        }
+//        if segue.identifier == "selectTagSegue" {
+//            let tagViewController = segue.destinationViewController as! TagTableViewController
+//            //            tagViewController.postBody = postContent.text
+//            tagViewController.isBroadcastTagSelection = 1
+////            tagViewController.postDelegate = self
+//        }
         
         if segue.identifier == "contactSegue" {
-            let contactController = segue.destinationViewController as! ContactViewController
-//            contactController.mentionDelegate = self
+            let contactController = segue.destinationViewController as! ContactTableViewController
+            contactController.mentionVCDelegate = self
+        }
+    }
+    
+    func updateMentionList(userListStr: String) {
+        if textView.textColor == defaultTextColor {
+            textView.text = textView.text + userListStr
+        }else {
+            textView.text = userListStr
+            textView.textColor = defaultTextColor
         }
     }
 }

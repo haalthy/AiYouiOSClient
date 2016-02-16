@@ -14,8 +14,8 @@ protocol GeneticMutationVCDelegate{
 
 class GeneticMutationViewController: UIViewController {
 
-    let geneticList: NSArray = ["ALK","KARS", "EGFR", "其他", "无突变"]
-    let geneticValueList: NSArray = [25, 10, 30, 20, 15]
+    let geneticList: NSArray = ["EGFR","FGFR1", "KARS","ALK", "其他", "无突变"]
+    let geneticValueList: NSArray = [25, 20, 20, 5, 25, 5]
     let buttonSection = UIView()
     let pieChartCenterLabel = UILabel()
     var pieChartOuter = PNPieChart()
@@ -23,7 +23,7 @@ class GeneticMutationViewController: UIViewController {
     
     var haalthyService = HaalthyService()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     let profileSet = NSUserDefaults.standardUserDefaults()
 
@@ -38,7 +38,9 @@ class GeneticMutationViewController: UIViewController {
     }
     
     func initVariables(){
-    
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
@@ -201,7 +203,7 @@ class GeneticMutationViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+            (segue.destinationViewController as! FeedTagsViewController).isNavigationPop = true
         }
     }
 }

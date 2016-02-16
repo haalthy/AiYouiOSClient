@@ -259,7 +259,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     func getClinicReportFormat(){
         let parameters = NSDictionary(object: keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
         let jsonResult = NetRequest.sharedInstance.POST_A(getClinicReportFormatURL, parameters: parameters as! Dictionary<String, AnyObject>)
-        if (jsonResult.objectForKey("content") != nil){
+        if (jsonResult.objectForKey("content") != nil) && ((jsonResult ).objectForKey("content") is NSArray){
             self.clinicReportFormatList = (jsonResult ).objectForKey("content") as! NSArray
         }
     }
@@ -299,10 +299,10 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }
         
         let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
-        
+        getClinicDataStr()
         var clinicReportStr: String = ""
         for clinicData in clinicDataList {
-            let clinicDataDic = clinicData as! NSMutableDictionary
+            let clinicDataDic = clinicData as! NSDictionary
             clinicReportStr += "[" + ((clinicDataDic.allKeys as NSArray).objectAtIndex(0)as! String) + ":" + ((clinicDataDic.allValues as NSArray).objectAtIndex(0)as! String) + "]"
         }
         let clinicReportDic = NSDictionary(objects: [clinicReportStr, self.isPosted], forKeys: [ "clinicReport", "isPosted"])
@@ -313,16 +313,11 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
         let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
-        let url : NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
+
         let requestBody = NSMutableDictionary()
         requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
         requestBody.setValue(clinicReportDic, forKey: "clinicReport")
         requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             
@@ -332,7 +327,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             }) { (content, message) -> Void in
                 
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-        }
+            }
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -379,37 +374,62 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         self.checkedView.center = CGPoint(x: self.checkedView.center.x, y: self.checkedView.center.y + keyboardheight)
     }
     //UITextField
-    func textFieldDidEndEditing(textField: UITextField) {
-        if textField.superview  is UITableViewCell{
-            let clinicData = NSMutableDictionary()
+//    func textFieldDidEndEditing(textField: UITextField) {
+//        if textField.superview  is UITableViewCell{
+//            let clinicData = NSMutableDictionary()
+//            var clinicDataName: String = ""
+//            let cell = textField.superview as! UITableViewCell
+//            if textField.placeholder == reportListItemPlaceholder {
+//                if (cell.textLabel != nil) && (cell.textLabel?.text != nil) && (cell.textLabel?.text != ""){
+//                    clinicDataName = (cell.textLabel?.text)!
+//                }else{
+//                    for subView in cell.subviews {
+//                        if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+//                            clinicDataName = (subView as! UITextField).text!
+//                        }
+//                    }
+//                }
+//                if (textField.text != "")&&(clinicDataName != "") {
+//                    clinicData.setObject(textField.text!, forKey: clinicDataName)
+//                    self.clinicDataList.addObject(clinicData)
+//                }
+//            }else{
+//                if (textField.text != "") {
+//                    for subView in cell.subviews {
+//                        if (subView is UITextField) && (subView as! UITextField).placeholder == reportListItemPlaceholder {
+//                            let clinicDataValue = (subView as! UITextField).text!
+//                            if clinicDataValue != "" {
+//                                clinicData.setObject(clinicDataValue, forKey: textField.text!)
+//                                self.clinicDataList.addObject(clinicData)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    func getClinicDataStr(){
+        for index in 0...(self.clinicTableView.numberOfRowsInSection(0) - 1) {
             var clinicDataName: String = ""
-            let cell = textField.superview as! UITableViewCell
-            if textField.placeholder == reportListItemPlaceholder {
-                if (cell.textLabel != nil) && (cell.textLabel?.text != nil) && (cell.textLabel?.text != ""){
-                    clinicDataName = (cell.textLabel?.text)!
-                }else{
-                    for subView in cell.subviews {
-                        if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
-                            clinicDataName = (subView as! UITextField).text!
-                        }
-                    }
+            var clinicDataValue: String = ""
+            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            let cell = self.clinicTableView.cellForRowAtIndexPath(indexPath)
+            if (cell!.textLabel != nil) && (cell!.textLabel?.text != nil) && (cell!.textLabel?.text != ""){
+                clinicDataName = (cell!.textLabel?.text)!
+            }
+            
+            for subView in cell!.subviews {
+                if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+                    clinicDataName = (subView as! UITextField).text!
+                }else if (subView is UITextField) && (subView as! UITextField).frame.origin.x > (clinicReportLblW - 10){
+                    clinicDataValue = (subView as! UITextField).text!
                 }
-                if (textField.text != "")&&(clinicDataName != "") {
-                    clinicData.setObject(textField.text!, forKey: clinicDataName)
-                    self.clinicDataList.addObject(clinicData)
-                }
-            }else{
-                if (textField.text != "") {
-                    for subView in cell.subviews {
-                        if (subView is UITextField) && (subView as! UITextField).placeholder == reportListItemPlaceholder {
-                            let clinicDataValue = (subView as! UITextField).text!
-                            if clinicDataValue != "" {
-                                clinicData.setObject(clinicDataValue, forKey: textField.text!)
-                                self.clinicDataList.addObject(clinicData)
-                            }
-                        }
-                    }
-                }
+            }
+            
+            if (clinicDataName != "") && (clinicDataValue != "") {
+                let clinicData = NSDictionary(object: clinicDataValue, forKey: clinicDataName)
+                self.clinicDataList.addObject(clinicData)
             }
         }
     }
