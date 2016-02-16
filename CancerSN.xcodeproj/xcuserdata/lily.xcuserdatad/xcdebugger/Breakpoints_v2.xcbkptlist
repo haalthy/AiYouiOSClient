@@ -169,86 +169,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/NetRequest/NetRequest.swift"
-            timestampString = "476349366.231678"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
-            landmarkName = "GET_A(_:parameters:)"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CancerSN.NetRequest.GET_A (CancerSN.NetRequest)(Swift.String, parameters : Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;) -&gt; ObjectiveC.NSDictionary"
-                  moduleName = "CancerSN"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/lily/code/AiYou/AiYouiOSClient/CancerSN/NetRequest/NetRequest.swift"
-                  timestampString = "475987888.962194"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "165"
-                  endingLineNumber = "165"
-                  offsetFromSymbolStart = "1642">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CancerSN.NetRequest.(GET_A (CancerSN.NetRequest) -&gt; (Swift.String, parameters : Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;) -&gt; ObjectiveC.NSDictionary).(closure #1)"
-                  moduleName = "CancerSN"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/lily/code/AiYou/AiYouiOSClient/CancerSN/NetRequest/NetRequest.swift"
-                  timestampString = "475987888.96391"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168"
-                  offsetFromSymbolStart = "31">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CancerSN/NetRequest/NetRequest.swift"
-            timestampString = "476349366.231678"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
-            landmarkName = "GET_A(_:parameters:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CancerSN/NetRequest/NetRequest.swift"
-            timestampString = "476349366.231678"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
-            landmarkName = "GET_A(_:parameters:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "CancerSN/Model/GetAccessToken.swift"
             timestampString = "476099022.482215"
             startingColumnNumber = "9223372036854775807"
@@ -313,29 +233,45 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/AddModule/Controller/AddPatientStatusViewController.swift"
-            timestampString = "477281279.251026"
+            filePath = "CancerSN/AddModule/Controller/AddPostViewController.swift"
+            timestampString = "477228931.500714"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "304"
-            endingLineNumber = "304"
-            landmarkName = "submitStatus(_:)"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
+            landmarkName = "updatePostTagList(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CancerSN/AddModule/Controller/AddPatientStatusViewController.swift"
-            timestampString = "477283279.783895"
+            filePath = "CancerSN/NetRequest/NetRequest.swift"
+            timestampString = "477313748.390949"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
-            landmarkName = "getClinicDataStr()"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "GET_A(_:parameters:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CancerSN/Model/WXApiManager.swift"
+            timestampString = "477314348.470781"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "onResp(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
