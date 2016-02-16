@@ -266,10 +266,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else{
                 let patientStatus = treatmentSections[section-2]["patientStatus"]
                 
-                if patientStatus != nil {
-                    numberOfRows = (patientStatus as! NSArray).count
-                }else{
+                if (patientStatus is NSArray) == false {
                     numberOfRows = 0
+                }else{
+                    numberOfRows = (patientStatus as! NSArray).count
                 }
             }
         }else{
