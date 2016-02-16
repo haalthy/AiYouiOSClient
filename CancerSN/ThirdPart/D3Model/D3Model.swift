@@ -37,7 +37,7 @@ public class D3Model:NSObject{
                 switch type {
                 case is Int,is Int64,is Float,is Double,is Bool,is NSNumber,is NSInteger:  //base type
                     let value: AnyObject! = dic?.objectForKey(key!)
-                    if value != nil{
+                    if (value != nil) && (value is NSNull) == false{
                         obj.setValue(value, forKey: key!)
                     }
                     break

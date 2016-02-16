@@ -55,11 +55,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         username.frame = CGRect(x: 15, y: 0, width: textInputView.frame.width, height: textInputView.frame.height/2 )
         username.font = inputViewFont
         username.placeholder = "邮箱／手机"
+        username.delegate = self
         textInputView.addSubview(username)
         password.frame = CGRect(x: 15, y: textInputView.frame.height/2, width: textInputView.frame.width, height: textInputView.frame.height/2)
         password.font = inputViewFont
         password.placeholder = "密码"
         password.secureTextEntry = true
+        password.delegate = self
         textInputView.addSubview(password)
         let seperateLine: UIView = UIView(frame: CGRect(x: 0, y: textInputView.frame.height/2, width: textInputView.frame.width, height: 0.5))
         seperateLine.backgroundColor = seperateLineColor
@@ -111,6 +113,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let wechatLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
         wechatLoginImgView.image = UIImage(named: "btn_wechat")
         wechatLoginBtn.addSubview(wechatLoginImgView)
+        wechatLoginBtn.addTarget(self, action: "loginViaWechat:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(wechatLoginBtn)
         
         //qq Login
@@ -144,7 +147,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func loginViaWechat(sender: UIButton) {
+//        SendAuthReq* req =[[[SendAuthReq alloc ] init ] autorelease ];
+//        req.scope = @"snsapi_userinfo" ;
+//        req.state = @"123" ;
+        //第三方向微信终端发送一个SendAuthReq消息结构
+//        [WXApi sendReq:req];
         
+        let req: SendAuthReq = SendAuthReq()
+        req.scope = "snsapi_userinfo"
+        req.state = "123"
+        WXApi.sendReq(req)
     }
     
     func signUp(sender: UIButton) {
@@ -256,7 +268,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         if isRootViewController && loginSucessful{
             let tabViewController : TabViewController = TabViewController()
             self.presentViewController(tabViewController, animated: true, completion: nil)
-        }else{
+        }else if loginSucessful{
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }

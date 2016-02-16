@@ -266,7 +266,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else{
                 let patientStatus = treatmentSections[section-2]["patientStatus"]
                 
-                if patientStatus != nil {
+                if (patientStatus is NSArray) == true {
                     numberOfRows = (patientStatus as! NSArray).count
                 }else{
                     numberOfRows = 0

@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        WXApi.registerApp(WXAppID)
         let tabViewController : TabViewController = TabViewController()
         self.window!.rootViewController = tabViewController
         
@@ -161,12 +162,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
         return TencentOAuth.HandleOpenURL(url)
         
     }
     
+    func onReq(req: BaseReq!) {
+        print("on req")
+    }
+    
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
         return TencentOAuth.HandleOpenURL(url)
+    }
+    
+    func onResp(resp: BaseResp!) {
+        print("on resp")
+//        if ([resp isKindOfClass:[SendAuthResp class]]) {
+//            if (_delegate
+//            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
+//                SendAuthResp *authResp = (SendAuthResp *)resp;
+//                [_delegate managerDidRecvAuthResponse:authResp];
+//            }
+//        }
+        if resp.isKindOfClass(SendAuthResp) {
+            
+        }
     }
 }
 
