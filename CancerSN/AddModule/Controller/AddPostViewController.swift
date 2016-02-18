@@ -138,10 +138,10 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             displayTagCount++
         }
         displayTagCount--
-        var tagIndex = 0
+        //var tagIndex = 0
         tagBtnX = 0
         tagBtnY = 24
-        for tagIndex; tagIndex < displayTagCount; tagIndex++ {
+        for var tagIndex = 0; tagIndex < displayTagCount; tagIndex++ {
             let tag: NSDictionary = tagList?.objectAtIndex(tagIndex) as! NSDictionary
             let tagName = tag.objectForKey("name") as! String
             let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))

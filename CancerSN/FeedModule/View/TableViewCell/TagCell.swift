@@ -94,7 +94,7 @@ class TagCell: UITableViewCell {
             tagBtn.layer.cornerRadius = 4.0
             tagBtn.layer.borderColor = tagBorderColor.CGColor
             tagBtn.layer.borderWidth = 1.0
-            
+            tagBtn.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
             self.contentView.addSubview(tagBtn)
             
             // 获取cell高度
@@ -105,6 +105,24 @@ class TagCell: UITableViewCell {
             }
             
         }
+    }
+    
+    // MARK: - 功能方法
+    
+    func selectedTag(btn: UIButton) {
+        
+        btn.selected = !btn.selected
+        if btn.selected {
+        
+            btn.backgroundColor = tagBorderColor
+            btn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Selected)
+        }
+        else {
+        
+            btn.backgroundColor = UIColor.clearColor()
+            btn.setTitleColor(tagBorderColor, forState: UIControlState.Normal)
+        }
+        
     }
 
 }

@@ -21,6 +21,12 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     var dataArr: NSMutableArray!
     
+    var sinceId: Int!
+    var count: Int!
+    var page: Int!
+    var maxId: Int!
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,6 +46,11 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func initVariables() {
     
         dataArr = NSMutableArray()
+        
+        sinceId = 0
+        maxId = 1000
+        page = 0
+        count = 5
         
     }
     
@@ -79,10 +90,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func getFeedListFromServer() {
         
         
-        NetRequest.sharedInstance.POST("http://54.223.70.160:8080/haalthyservice/security/post/posts?access_token=55d9bdd5-f4af-4012-baaa-ace83b05d77e", parameters:["since_id":0,
-            "max_id":1000,
-            "count": 5,
-            "page": 0,"username":"AY1449549912985.679"],
+        NetRequest.sharedInstance.POST("http://54.222.143.245:8080/haalthyservice/security/post/posts?access_token=fe5e8a91-b42f-4313-bd44-61007e035594", parameters:["since_id":self.sinceId,
+            "max_id":self.maxId,
+            "count": self.count,
+            "page": self.page,"username":"AY1449549912985.679"],
             
             success: { (content , message) -> Void in
             
@@ -109,22 +120,24 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getMoreFeedListFromServer() {
         
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
-        NetRequest.sharedInstance.POST("http://127.0.0.1:8080/haalthyservice/security/post/posts?access_token=a7bfb178-7863-4870-8270-1cc88c01b215", parameters:["since_id":0,
-            "max_id":1000,
-            "count": 5,
-            "page": 0,"username":"AY1449549912985.679"],
+        NetRequest.sharedInstance.POST("http://54.222.143.245:8080/haalthyservice/security/post/posts?access_token=fe5e8a91-b42f-4313-bd44-61007e035594", parameters:["since_id":self.sinceId,
+            "max_id":self.maxId,
+            "count": self.count,
+            "page": self.page,"username":"AY1449549912985.679"],
             
             success: { (content , message) -> Void in
                 
-                self.tableView.mj_header.endRefreshing()
+                self.tableView.mj_footer.endRefreshing()
+                let dict: NSArray = content as! NSArray
+                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
                 
+                self.changeDataToFrame(homeData)
+                self.tableView.reloadData()
                 
             }) { (content, message) -> Void in
                 
-                self.tableView.mj_header.endRefreshing()
+                self.tableView.mj_footer.endRefreshing()
                 
-                HudProgressManager.sharedInstance.dismissHud()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
         
@@ -197,7 +210,13 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
+        let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
+        
+        let feedDetailVC: FeedDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        feedDetailVC.feedId = feedFrame.feedModel.postID
+        self.navigationController?.pushViewController(feedDetailVC, animated: true)
+        
+        //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -244,14 +263,13 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+
+            
     }
-    */
+    
 
 }

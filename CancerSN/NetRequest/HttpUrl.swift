@@ -11,11 +11,7 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-<<<<<<< HEAD
-let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-=======
-let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
->>>>>>> f5dafa12d61eb453c3f3174bb5d2c60274f532ba
+let haalthyServiceRestfulURL : String = "http://54.222.143.245:8080/haalthyservice/"
 
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
@@ -30,14 +26,20 @@ let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"
 // 用户未登录时，获取首页列表接口
 let getBroadcastsByTagsURL = haalthyServiceRestfulURL + "open/post/tags"
 
+// 获得内容详情接口
+let getPostDetailURL = haalthyServiceRestfulURL + "open/post/getpost"
+
+// 获取详情评论列表接口
+let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
+
+// 发送评论接口
+let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
 
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
 let getUserFavTagsURL = haalthyServiceRestfulURL + "security/user/tags"
 let updateFavTagsURL = haalthyServiceRestfulURL + "security/user/tag/update"
-let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
-let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
 let getPostByIdURL = haalthyServiceRestfulURL + "open/post/"
 let addPostURL = haalthyServiceRestfulURL + "security/post/add"
 let getFeedsURL = haalthyServiceRestfulURL + "security/post/posts"

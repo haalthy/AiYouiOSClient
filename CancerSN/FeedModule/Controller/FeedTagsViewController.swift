@@ -49,14 +49,15 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tagCell = self.tableView.dequeueReusableCellWithIdentifier(cellTagIdentifier) as! TagCell
     }
     
+    
     // MARK: - add Item
     
     func addItem() {
     
-        let leftItem: UIBarButtonItem = UIBarButtonItem.init(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "")
+        let leftItem: UIBarButtonItem = UIBarButtonItem.init(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
         self.navigationItem.leftBarButtonItem = leftItem
         
-        let rightItem: UIBarButtonItem = UIBarButtonItem.init(title: "确认", style: UIBarButtonItemStyle.Plain, target: self, action: "")
+        let rightItem: UIBarButtonItem = UIBarButtonItem.init(title: "确认", style: UIBarButtonItemStyle.Plain, target: self, action: "saveTagAction")
         self.navigationItem.rightBarButtonItem = rightItem
         
     }
@@ -85,6 +86,21 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         }
     }
+    
+    // MARK: - 功能方法
+    
+    // 取消
+    
+    func dismiss() {
+    
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func saveTagAction() {
+    
+    }
+    
+    
     
     // MARK: - Table view data source
     
