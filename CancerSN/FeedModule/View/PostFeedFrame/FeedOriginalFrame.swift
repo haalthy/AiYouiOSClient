@@ -181,7 +181,8 @@ class FeedOriginalFrame: NSObject {
         // 9.内容详情
         let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         var contentY: CGFloat = 0
-        let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, CGFloat.max)))!
+        let feedContentFrameHMax: CGFloat = 130
+        let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, feedContentFrameHMax)))!
         
         if (self.feedModel?.clinicReport == "") || (self.feedModel!.clinicReport == "<null>"){
             if (self.feedModel?.highlight == "") || (self.feedModel!.highlight == "<null>") {

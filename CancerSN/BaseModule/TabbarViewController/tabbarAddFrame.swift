@@ -9,19 +9,19 @@
 import Foundation
 
 //cancel btn
-let cancelBtnButtomSpace: CGFloat = CGFloat(20)
+let cancelBtnButtomSpace: CGFloat = CGFloat(10)
 let cancelBtnW: CGFloat = (34)
 //
 let addBtnW: CGFloat = CGFloat(39)
 //btn1
-let btn1LeftSpace: CGFloat = CGFloat(75)
+var btn1LeftSpace: CGFloat = CGFloat(75)
 let btn1ButtomSpace: CGFloat = CGFloat(62)
 //btn2
-let btn2LeftSpace: CGFloat = CGFloat(127)
+var btn2LeftSpace: CGFloat = CGFloat(127)
 let btn2ButtomSpace: CGFloat = CGFloat(122)
 //btn3
-let btn3RightSpace: CGFloat = CGFloat(127)
+var btn3RightSpace: CGFloat = CGFloat(127)
 let btn3ButtomSpace: CGFloat = CGFloat(122)
 //btn4
-let btn4RightSpace: CGFloat = CGFloat(75)
+var btn4RightSpace: CGFloat = CGFloat(75)
 let btn4ButtomSpace: CGFloat = CGFloat(62)

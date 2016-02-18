@@ -68,21 +68,19 @@ class FeedTagView: UIView {
     // MARK: - 添加tag label
     
     func addSubTagLabel() {
-    
-        if tagArr!.count != 0 {
         
+        if tagArr!.count != 0 {
+            
             for var i = 0; i < tagArr!.count; i++ {
-                
                 let tagLabel: UILabel = UILabel()
                 tagLabel.text = tagArr![i]
-                tagLabel.layer.cornerRadius = 4.0
+                tagLabel.layer.cornerRadius = 2.0
                 tagLabel.layer.borderWidth = 1.0
                 tagLabel.layer.borderColor = kTagBorderColor.CGColor
                 tagLabel.textColor = kTagTextColor
                 tagLabel.font = kTagFont
                 tagLabel.textAlignment = NSTextAlignment.Center
                 self.addSubview(tagLabel)
-                
             }
         }
     }

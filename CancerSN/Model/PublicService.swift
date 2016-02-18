@@ -60,6 +60,7 @@ class PublicService:NSObject{
         let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
+        let username = keychain.getPasscode(usernameKeyChain)
         let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)

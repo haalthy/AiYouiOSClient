@@ -26,3 +26,4 @@
 #import "SwiftyJSON.h"
 #import "PNChart.h"
 #import "MBProgressHUD.h"
+#import "WXApi.h"

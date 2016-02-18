@@ -22,7 +22,8 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     var isNavigationPop = false
     var isSelectedByPost = false
     
-    let selectedTagNameList = NSMutableArray()
+    var selectedTagNameList = NSMutableArray()
+    var defaultSelectTagNameList = NSArray()
     
     var dataTagsArr: NSMutableArray!
     var tagCell: TagCell!
@@ -37,10 +38,13 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     let confirmBtnRightSpace: CGFloat = 15
     let confirmBtnWidth: CGFloat = 40
 
-    let heightForHeaderInSection: CGFloat = 37
+    var heightForHeaderInSection: CGFloat = 37
     
     var postDelegate: PostTagDelegate?
     
+    var keychainAccess = KeychainAccess()
+    let haalthyService = HaalthyService()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -61,6 +65,19 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tableView.delegate = self
         self.tableView.dataSource = self
         dataTagsArr = NSMutableArray()
+        if screenHeight < 600 {
+            heightForHeaderInSection = 20
+        }
+        
+        if (isNavigationPop == false) && (isSelectedByPost == false) {
+            if (keychainAccess.getPasscode(usernameKeyChain) != nil)  {
+                defaultSelectTagNameList = haalthyService.getUserFavTags() as! NSMutableArray
+            }else{
+                if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil {
+                    defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
+                }
+            }
+        }
     }
     
     // MARK: - 初始化相关view
@@ -86,10 +103,10 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.view.addSubview(signUpTitle)
             
             //resize tablevIEW
-            self.tableView.frame = CGRECT(0, signUpTitleTopSpace + signUpTitleHeight, self.tableView.frame.width, screenHeight - signUpTitleTopSpace - signUpTitleHeight)
+            self.tableView.frame = CGRECT(0, signUpTitleTopSpace + signUpTitleHeight, self.tableView.frame.width, screenHeight - signUpTitleTopSpace - signUpTitleHeight - 50)
             
             //
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
             nextViewBtn.setTitle("确定", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
@@ -146,9 +163,8 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         if isSelectedByPost {
             postDelegate?.updatePostTagList(selectTagList)
         }else{
-            let haalthyService = HaalthyService()
             NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
-            haalthyService.updateUserTag(selectTagList as! NSArray)
+            haalthyService.updateUserTag(selectTagList )
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -158,21 +174,43 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func getAllTagsFromServer() {
     
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中")
         NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
             
             self.dict = content as! NSArray
             let tagArr = TagModel.jsonToModelList(self.dict as Array) as! Array<TagModel>
             self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
             self.tableView.reloadData()
+            self.setDefaultSelectedTagBtn()
             HudProgressManager.sharedInstance.dismissHud()
-            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "获取成功")
             }) { (content, message) -> Void in
                
                 HudProgressManager.sharedInstance.dismissHud()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
             
         }
+    }
+    
+    func setDefaultSelectedTagBtn(){
+        for tag in self.defaultSelectTagNameList {
+            selectedTagNameList.addObject((tag as! NSDictionary).objectForKey("name")!)
+        }
+        for indexSection in 0...(self.tableView.numberOfSections - 1){
+            let indexPath = NSIndexPath(forRow: 0, inSection: indexSection)
+            let cell = self.tableView.cellForRowAtIndexPath(indexPath)
+            print(cell?.subviews.count)
+            let buttonsContainer = ((cell?.subviews)!)[0].subviews
+            for subView in buttonsContainer {
+                if (subView is UIButton) {
+                    let btnTitle: String = ((subView as! UIButton).titleLabel?.text)!
+                    if selectedTagNameList.containsObject(btnTitle) {
+                        subView.backgroundColor = tagBorderColor
+                        (subView as! UIButton).setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                    }
+                }
+            }
+        }
+    
     }
     
     // MARK: - Table view data source
@@ -260,12 +298,12 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         let title = tagModel.typeName
         var headerView = UIView()
         headerView =  UIView(frame: CGRectMake(0, 0,self.tableView.bounds.size.width, heightForHeaderInSection))
-        let tagTypeLabel = UILabel(frame: CGRectMake(15, 10, self.tableView.bounds.size.width - 30, 30))
+        let tagTypeLabel = UILabel(frame: CGRectMake(13, (heightForHeaderInSection - 15)/2, self.tableView.bounds.size.width - 30, heightForHeaderInSection))
         tagTypeLabel.text = title
         tagTypeLabel.textColor = defaultTextColor
         tagTypeLabel.font = UIFont.systemFontOfSize(13)
         headerView.addSubview(tagTypeLabel)
-        headerView.backgroundColor = UIColor.clearColor()
+        headerView.backgroundColor = self.view.backgroundColor
         return headerView
     }
 }
