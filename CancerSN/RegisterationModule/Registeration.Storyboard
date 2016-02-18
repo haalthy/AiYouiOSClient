@@ -266,7 +266,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="C3H-bv-XvL" firstAttribute="leading" secondItem="h4z-eG-qTt" secondAttribute="leadingMargin" constant="-20" id="6u4-SV-C1y"/>
                             <constraint firstAttribute="trailingMargin" secondItem="C3H-bv-XvL" secondAttribute="trailing" constant="-20" id="Nai-ZA-Sgp"/>

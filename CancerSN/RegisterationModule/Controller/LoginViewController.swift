@@ -102,12 +102,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(forgetPwdBtn)
         
         //seperate Line
+        let seperateLineTopSpace = forgetPwdBtn.frame.origin.y + forgetPwdBtn.frame.height + (screenHeight - (forgetPwdBtn.frame.origin.y + forgetPwdBtn.frame.height) - lookaroundBtnBtmSpace - lookaroundBtnHeight - otherLoginBtnLength - otherLoginBtnTopSpace) / 2
         let seperateLineWithOtherLogin = UIImageView(frame: CGRect(x: (screenWidth - seperateLineWidth)/2, y: seperateLineTopSpace, width: seperateLineWidth, height: 1))
         seperateLineWithOtherLogin.image = UIImage(named: "img_seperateLine")
         self.view.addSubview(seperateLineWithOtherLogin)
         
         //wechat Login
-        let wechatLoginBtn = UIButton(frame: CGRect(x: wechatLoginBtnLeftSpace, y: screenHeight - wechatLoginBtnBtmSpace - otherLoginBtnLength, width: otherLoginBtnLength, height: otherLoginBtnLength))
+        let wechatLoginBtnLeftSpace: CGFloat = (screenWidth - (otherLoginBtnLength * 2 + otherLoginBtnSpace)) / 2
+        let wechatLoginBtn = UIButton(frame: CGRect(x: wechatLoginBtnLeftSpace, y: seperateLineTopSpace + otherLoginBtnTopSpace, width: otherLoginBtnLength, height: otherLoginBtnLength))
         wechatLoginBtn.layer.cornerRadius = otherLoginBtnLength/2
         wechatLoginBtn.layer.masksToBounds = true
         let wechatLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
@@ -117,7 +119,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(wechatLoginBtn)
         
         //qq Login
-        let qqLoginBtn = UIButton(frame: CGRect(x: screenWidth - qqLoginBtnRgithSpace - otherLoginBtnLength, y: screenHeight - qqLoginBtnBtmSpace - otherLoginBtnLength, width: otherLoginBtnLength, height: otherLoginBtnLength))
+        let qqLoginBtnRgithSpace = wechatLoginBtnLeftSpace
+        let qqLoginBtn = UIButton(frame: CGRect(x: screenWidth - qqLoginBtnRgithSpace - otherLoginBtnLength, y: seperateLineTopSpace + otherLoginBtnTopSpace, width: otherLoginBtnLength, height: otherLoginBtnLength))
         qqLoginBtn.layer.cornerRadius = otherLoginBtnLength/2
         wechatLoginBtn.layer.masksToBounds = true
         let qqLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))

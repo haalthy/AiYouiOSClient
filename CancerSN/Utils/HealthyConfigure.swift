@@ -132,6 +132,8 @@ let uploadImageSize: CGSize = CGSize(width: 400, height: 600)
 
 let qqAppID: String = "1104886596"
 
-let WXAppID: String = "wx1210c7d3d7c25f1c"
+let WXAppID: String = "wxd930ea5d5a258f4f"
 
 let WXAppSecret: String = "145f45c39e367d6b2cf9865cf1971096"
+
+let numberOfLinesInFeedVC: Int = 6

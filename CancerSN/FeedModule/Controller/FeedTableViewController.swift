@@ -10,7 +10,7 @@ import UIKit
 
 let cellFeedIdentifier = "FeedCell"
 
-class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FeedTableCellDelegate  {
 
     // 控件关联
     @IBOutlet weak var tableView: UITableView!
@@ -209,7 +209,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
-        
+        cell.feedTableCellDelegate = self
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
 
@@ -226,5 +226,16 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
+    
+    func checkUserProfile(username: String) {
 
+        let storyboard = UIStoryboard(name: "User", bundle: nil)
+        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+        userProfileController.profileOwnername = username
+        self.navigationController?.pushViewController(userProfileController, animated: true)
+    }
+    
+    func checkPostComment(postID: Int) {
+        print(postID)
+    }
 }

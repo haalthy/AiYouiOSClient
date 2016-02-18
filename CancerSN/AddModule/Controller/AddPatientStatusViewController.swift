@@ -41,6 +41,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var dateInserted: NSDate?
     var isPosted: Int = 1
     
+    var scrollViewOffset: CGFloat = 0
+    
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         initVariables()
@@ -187,7 +189,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         reportListView.addSubview(reportListTitle)
         
         //add report list
-        clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, reportListViewW, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
+        print(screenWidth)
+        clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, screenWidth - 30, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
         for clinicReportFormat in clinicReportFormatList {
             defaultClinicRowsName.addObject((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String)
         }
@@ -345,6 +348,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             textView.text = nil
             textView.textColor = UIColor.blackColor()
         }
+        self.scrollViewOffset = textView.frame.origin.y
+        self.scrollView.contentOffset = CGPoint(x: 0, y: scrollViewOffset)
     }
     
     
@@ -372,6 +377,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     func keyboardWillDisappear(notification:NSNotification){
         
         self.checkedView.center = CGPoint(x: self.checkedView.center.x, y: self.checkedView.center.y + keyboardheight)
+        self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
     }
     //UITextField
 //    func textFieldDidEndEditing(textField: UITextField) {
@@ -489,7 +495,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             cell.addSubview(clinicItemValueTextField)
             //delete button
             print(cell.frame.width)
-            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
+            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth - 30, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
 //            deleteBtn.backgroundColor = headerColor
             let btnImageView = UIImageView(frame: CGRECT(0, 0, clinicReportDelBtnWidth, clinicReportDelBtnWidth))
             btnImageView.image = UIImage(named: "btn_deleteClinicData")
@@ -501,7 +507,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }else{
             let addMoreClinicDataBtnW:CGFloat = cell.frame.size.width - 12
             let addMoreClinicDataBtnH:CGFloat = 30
-            let addMoreClinicDataBtn = UIButton(frame: CGRect(x: 12, y: 12, width: addMoreClinicDataBtnW, height: addMoreClinicDataBtnH))
+            let addMoreClinicDataBtn = UIButton(frame: CGRect(x: 12, y: 12, width: cell.frame.width - 36, height: addMoreClinicDataBtnH))
             let addReportImgView = UIImageView(frame: CGRECT(0, 0, addMoreClinicDataBtnW, addMoreClinicDataBtnH))
             addReportImgView.image = UIImage(named: "btn_addReport")
             addMoreClinicDataBtn.addSubview(addReportImgView)

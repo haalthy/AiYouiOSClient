@@ -36,13 +36,13 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         var pathological: String = ""
         if isUpdate {
             cancerTypeSettingVCDelegate?.updateCancerType(cancerType)
-            if cancerType == "肺部" {
+            if cancerType == "肺癌" {
                 pathological = pathologicaPickerDataSource[buttomPickerView.selectedRowInComponent(0)]
             }
             pathologicalSettingVCDelegate?.updatePathological(pathological)
             self.navigationController?.popViewControllerAnimated(true)
         }else {
-            if(cancerType == "肺部") && (buttomSection.hidden == false){
+            if(cancerType == "肺癌") && (buttomSection.hidden == false){
                 pathological = pathologicaPickerDataSource[buttomPickerView.selectedRowInComponent(0)]
                 profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
                 profileSet.setObject(pathological, forKey: pathologicalNSUserData)
@@ -58,29 +58,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 self.performSegueWithIdentifier("selectTagSegue", sender: self)
             }
         }
-//        else if(cancerType != "肺部"){
-//            if isUpdate {
-//                cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
-//                self.dismissViewControllerAnimated(true, completion: nil)
-//            } else {
-//                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-////                    haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
-//                }
-//                self.performSegueWithIdentifier("selectTagSegue", sender: self)
-//            }
-//        }else{
-//            let pathological = pathologicaPickerDataSource[pathologicalPickerView.selectedRowInComponent(0)]
-//            let selectedPathological:String = pathologicalMapping.objectForKey(pathological) as! String
-//            if isUpdate {
-//                cancerTypeSettingVCDelegate?.updateCancerType(selectedCancerType)
-//                pathologicalSettingVCDelegate?.updatePathological(selectedPathological)
-//                self.dismissViewControllerAnimated(true, completion: nil)
-//            }else{
-//                profileSet.setObject(selectedCancerType, forKey: cancerTypeNSUserData)
-//                profileSet.setObject(selectedPathological, forKey: pathologicalNSUserData)
-//                self.performSegueWithIdentifier("geneticMutationSegue", sender: nil)
-//            }
-//        }
     }
 //
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -113,14 +90,14 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
-        //sign up title
+        //sign vartitle
         let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
@@ -156,6 +133,10 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(seperateLine)
         
         //buttom section
+        print(screenHeight)
+        if screenHeight < 600 {
+            buttomViewHeight = 240
+        }
         buttomSection.frame  = CGRect(x: 0, y: screenHeight - buttomViewHeight - buttomViewButtomSpace, width: screenWidth, height: buttomViewHeight)
         buttomSection.hidden = true
         let buttomItemName = UILabel(frame: CGRECT(0, 33, screenWidth, signUpItemNameHeight))
@@ -172,7 +153,7 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         
         //next view button
         if isUpdate == false {
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont

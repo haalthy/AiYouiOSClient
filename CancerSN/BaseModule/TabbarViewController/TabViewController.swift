@@ -95,6 +95,16 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     }
     
     func addBtn(btnName: String)->UIButton{
+        if screenWidth < 350 {
+            //btn1
+             btn1LeftSpace = CGFloat(55)
+            //btn2
+             btn2LeftSpace = CGFloat(107)
+            //btn3
+             btn3RightSpace = CGFloat(107)
+            //btn4
+             btn4RightSpace = CGFloat(55)
+        }
         let btn = UIButton()
         btn.backgroundColor = headerColor
         let backgroundImgView = UIImageView()

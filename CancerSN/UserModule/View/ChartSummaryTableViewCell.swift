@@ -10,8 +10,8 @@ import UIKit
 
 class ChartSummaryTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var chartHearderScrollView: UIScrollView!
-    @IBOutlet weak var chartScrollView: UIScrollView!
+    var chartHearderScrollView: UIScrollView!
+    var chartScrollView: UIScrollView!
     var treatmentList = NSArray()
     var chartHeaderCoordinateX = NSMutableArray()
     var chartWidth = CGFloat()
@@ -38,9 +38,13 @@ class ChartSummaryTableViewCell: UITableViewCell {
         chartHearderScrollView.backgroundColor = chartBackgroundColor
         chartScrollView.backgroundColor = chartBackgroundColor
         chartHearderScrollView.addSubview(seperateLine)
+        self.addSubview(self.chartHearderScrollView)
+        self.addSubview(self.chartScrollView)
     }
     
     func updateUI(){
+        chartHearderScrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 44))
+        chartScrollView = UIScrollView(frame: CGRect(x: 0, y: 45, width: screenWidth, height: 189))
         self.chartScrollView.removeAllSubviews()
         dataPointsXArr.removeAllObjects()
         dataPointsYArr.removeAllObjects()
