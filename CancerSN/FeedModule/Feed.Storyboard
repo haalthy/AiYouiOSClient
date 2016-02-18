@@ -251,6 +251,13 @@
                                     <outlet property="delegate" destination="U8h-Mn-B3t" id="lis-1y-jRE"/>
                                 </connections>
                             </searchBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aiy-gl-UnB">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="108" width="400" height="163"/>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -261,6 +268,7 @@
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="IRU-yt-D36"/>
+                                <exclude reference="Aiy-gl-UnB"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="YGX-F0-ZLz"/>
@@ -271,6 +279,7 @@
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="IRU-yt-D36"/>
+                                <include reference="Aiy-gl-UnB"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="YGX-F0-ZLz"/>

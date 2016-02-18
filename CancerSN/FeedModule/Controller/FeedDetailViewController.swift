@@ -10,6 +10,7 @@ import UIKit
 
 let kFeedDetailKeyBoardHeight: CGFloat = 50
 let cellFeedDetailIdentifier = "FeedCell"
+let cellFeedDetailCommentIdentifier = "CommentCell"
 
 
 class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyBoardDelegate {
@@ -40,6 +41,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         self.initVariables()
         self.initContentView()
         self.getFeedDetailContentFromServer()
+        self.getFeedCommentListFromServer()
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -73,6 +75,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         
         // tableView 注册
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedDetailIdentifier)
+        self.tableView.registerClass(FeedCommentCell.self, forCellReuseIdentifier: cellFeedDetailCommentIdentifier)
         
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
         self.view.addGestureRecognizer(tapGesture)
@@ -190,13 +193,13 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
                 
             
                 HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "评论成功")
-            self.tableView.reloadData()
+                self.tapDismiss()
+                self.tableView.reloadData()
                 
                 
             }) { (content, message) -> Void in
                 
-                self.tableView.mj_header.endRefreshing()
-                
+                self.tapDismiss()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
 
@@ -226,10 +229,10 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         else {
         
-            
+            let commentModel: CommentModel = self.commentListData[indexPath.row + 1] as! CommentModel
+            let cellHeight = commentModel.body.sizeWithFont(UIFont.systemFontOfSize(16), maxSize: CGSize(width: SCREEN_WIDTH - 85, height: CGFloat.max)).height
+            return cellHeight + 80
         }
-        
-        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -244,11 +247,17 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
             }
             return cell
         }
+        else {
         
+            let cell: FeedCommentCell = tableView.dequeueReusableCellWithIdentifier(cellFeedDetailCommentIdentifier, forIndexPath: indexPath) as! FeedCommentCell
+            
+            let commentModel: CommentModel = self.commentListData[indexPath.row + 1] as! CommentModel
+            
+            cell.showFeedInfo(commentModel)
+            return cell
+
+        }
       
-        let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
-        
-        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
