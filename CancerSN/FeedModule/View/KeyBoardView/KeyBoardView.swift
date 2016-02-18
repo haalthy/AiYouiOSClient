@@ -33,7 +33,8 @@ let kKeyBoardFaceBtnWidth: CGFloat = 30
 protocol KeyBoardDelegate {
 
     // 发送评论
-    func sendCommentAction()
+    func sendCommentAction(commentStr: String)
+    
 }
 
 class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
@@ -144,6 +145,13 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         }
     }
     
+    // MARK: 取消键盘
+    
+    func tapDismiss() {
+        
+        self.textView.resignFirstResponder()
+    }
+    
     // MARK: 改变键盘frame
     
     func keyboardWillChangeFrame(noti: NSNotification) {
@@ -224,7 +232,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
             if self.delegate != nil {
             
                 // 发送评论
-                self.delegate?.sendCommentAction()
+                self.delegate?.sendCommentAction(self.textView.text)
                 self.textView.text = ""
                 
                 // 设置placeHolder

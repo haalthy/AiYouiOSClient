@@ -26,14 +26,20 @@ let getTagListURL = haalthyServiceRestfulURL + "open/tag/list"
 // 用户未登录时，获取首页列表接口
 let getBroadcastsByTagsURL = haalthyServiceRestfulURL + "open/post/tags"
 
+// 获得内容详情接口
+let getPostDetailURL = haalthyServiceRestfulURL + "open/post/getpost"
+
+// 获取详情评论列表接口
+let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
+
+// 发送评论接口
+let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
 
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
 let getUserFavTagsURL = haalthyServiceRestfulURL + "security/user/tags"
 let updateFavTagsURL = haalthyServiceRestfulURL + "security/user/tag/update"
-let addCommentsURL = haalthyServiceRestfulURL + "security/comment/add"
-let getCommentListByPostURL  = haalthyServiceRestfulURL + "open/comment/post/"
 let getPostByIdURL = haalthyServiceRestfulURL + "open/post/"
 let addPostURL = haalthyServiceRestfulURL + "security/post/add"
 let getFeedsURL = haalthyServiceRestfulURL + "security/post/posts"

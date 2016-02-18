@@ -46,6 +46,7 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
         }
         viewController.view.addSubview(self.progressHUD!)
         self.progressHUD?.labelText = title
+        self.progressHUD?.delegate = self
         self.progressHUD?.show(true)
     }
     

@@ -44,6 +44,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     func initVariables() {
 
         dataArr = NSMutableArray()
+
         getAccessToken.getAccessToken()
 
     }
@@ -140,12 +141,14 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func getMoreFeedListFromServer() {
+
         NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
                 self.pageIndex++
                 
                 self.tableView.mj_footer.endRefreshing()
+
                 
                 let dict: NSArray = content as! NSArray
                 let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
@@ -156,7 +159,6 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
             }) { (content, message) -> Void in
                 
                 self.tableView.mj_footer.endRefreshing()
-                
         }
     }
 
@@ -184,8 +186,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     // 进入到选择标签页
 
     @IBAction func pushTagAction(sender: AnyObject) {
-        
-        performSegueWithIdentifier("EnterTagView", sender: self)
+
+        let feedTagsVC = self.storyboard?.instantiateViewControllerWithIdentifier("FeedTagsView")
+        let navigation: UINavigationController = UINavigationController.init(rootViewController: feedTagsVC!)
+        self.presentViewController(navigation, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
@@ -224,7 +228,13 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
+        let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
+        
+        let feedDetailVC: FeedDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        feedDetailVC.feedId = feedFrame.feedModel.postID
+        self.navigationController?.pushViewController(feedDetailVC, animated: true)
+        
+        //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
     
     func checkUserProfile(username: String) {

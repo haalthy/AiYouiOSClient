@@ -51,6 +51,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         self.initVariables()
         self.initContentView()
+//        self.addItem()
         self.getAllTagsFromServer()
     }
 
@@ -80,6 +81,14 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = true
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = false
+    }
     // MARK: - 初始化相关view
     
     func initContentView() {
@@ -153,6 +162,19 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.tableView.frame = CGRECT(0, header.frame.height + headerTopSpace, screenWidth, screenHeight - header.frame.height)
         }
     }
+    
+    
+    // MARK: - add Item
+    
+    func addItem() {
+    
+        let leftItem: UIBarButtonItem = UIBarButtonItem.init(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = leftItem
+        
+        let rightItem: UIBarButtonItem = UIBarButtonItem.init(title: "确认", style: UIBarButtonItemStyle.Plain, target: self, action: "saveTagAction")
+        self.navigationItem.rightBarButtonItem = rightItem
+        
+    }
 
     func cancel(sender: UIButton){
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -189,6 +211,19 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
             
         }
+    }
+    
+    // MARK: - 功能方法
+    
+    // 取消
+    
+    func dismiss() {
+    
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func saveTagAction() {
+    
     }
     
     func setDefaultSelectedTagBtn(){
