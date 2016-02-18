@@ -55,11 +55,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         username.frame = CGRect(x: 15, y: 0, width: textInputView.frame.width, height: textInputView.frame.height/2 )
         username.font = inputViewFont
         username.placeholder = "邮箱／手机"
+        username.delegate = self
         textInputView.addSubview(username)
         password.frame = CGRect(x: 15, y: textInputView.frame.height/2, width: textInputView.frame.width, height: textInputView.frame.height/2)
         password.font = inputViewFont
-        password.placeholder = "邮箱／手机"
         password.placeholder = "密码"
+        password.secureTextEntry = true
+        password.delegate = self
         textInputView.addSubview(password)
         let seperateLine: UIView = UIView(frame: CGRect(x: 0, y: textInputView.frame.height/2, width: textInputView.frame.width, height: 0.5))
         seperateLine.backgroundColor = seperateLineColor
@@ -100,21 +102,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(forgetPwdBtn)
         
         //seperate Line
+        let seperateLineTopSpace = forgetPwdBtn.frame.origin.y + forgetPwdBtn.frame.height + (screenHeight - (forgetPwdBtn.frame.origin.y + forgetPwdBtn.frame.height) - lookaroundBtnBtmSpace - lookaroundBtnHeight - otherLoginBtnLength - otherLoginBtnTopSpace) / 2
         let seperateLineWithOtherLogin = UIImageView(frame: CGRect(x: (screenWidth - seperateLineWidth)/2, y: seperateLineTopSpace, width: seperateLineWidth, height: 1))
         seperateLineWithOtherLogin.image = UIImage(named: "img_seperateLine")
         self.view.addSubview(seperateLineWithOtherLogin)
         
         //wechat Login
-        let wechatLoginBtn = UIButton(frame: CGRect(x: wechatLoginBtnLeftSpace, y: screenHeight - wechatLoginBtnBtmSpace - otherLoginBtnLength, width: otherLoginBtnLength, height: otherLoginBtnLength))
+        let wechatLoginBtnLeftSpace: CGFloat = (screenWidth - (otherLoginBtnLength * 2 + otherLoginBtnSpace)) / 2
+        let wechatLoginBtn = UIButton(frame: CGRect(x: wechatLoginBtnLeftSpace, y: seperateLineTopSpace + otherLoginBtnTopSpace, width: otherLoginBtnLength, height: otherLoginBtnLength))
         wechatLoginBtn.layer.cornerRadius = otherLoginBtnLength/2
         wechatLoginBtn.layer.masksToBounds = true
         let wechatLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
         wechatLoginImgView.image = UIImage(named: "btn_wechat")
         wechatLoginBtn.addSubview(wechatLoginImgView)
+        wechatLoginBtn.addTarget(self, action: "loginViaWechat:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(wechatLoginBtn)
         
         //qq Login
-        let qqLoginBtn = UIButton(frame: CGRect(x: screenWidth - qqLoginBtnRgithSpace - otherLoginBtnLength, y: screenHeight - qqLoginBtnBtmSpace - otherLoginBtnLength, width: otherLoginBtnLength, height: otherLoginBtnLength))
+        let qqLoginBtnRgithSpace = wechatLoginBtnLeftSpace
+        let qqLoginBtn = UIButton(frame: CGRect(x: screenWidth - qqLoginBtnRgithSpace - otherLoginBtnLength, y: seperateLineTopSpace + otherLoginBtnTopSpace, width: otherLoginBtnLength, height: otherLoginBtnLength))
         qqLoginBtn.layer.cornerRadius = otherLoginBtnLength/2
         wechatLoginBtn.layer.masksToBounds = true
         let qqLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
@@ -144,7 +150,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     @IBAction func loginViaWechat(sender: UIButton) {
+//        SendAuthReq* req =[[[SendAuthReq alloc ] init ] autorelease ];
+//        req.scope = @"snsapi_userinfo" ;
+//        req.state = @"123" ;
+        //第三方向微信终端发送一个SendAuthReq消息结构
+//        [WXApi sendReq:req];
         
+        let req: SendAuthReq = SendAuthReq()
+        req.scope = "snsapi_userinfo"
+        req.state = "123"
+        WXApi.sendReq(req)
     }
     
     func signUp(sender: UIButton) {
@@ -204,24 +219,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let publicService = PublicService()
         keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
         keychainAccess.setPasscode(passwordKeyChain, passcode: passwordStr)
+        let hudProcessManager = HudProgressManager.sharedInstance
+        hudProcessManager.showHudProgress(self, title: "登录中")
         if publicService.checkIsEmail(usernameStr) || publicService.checkIsPhoneNumber(usernameStr) {
             usernameStr = haalthyService.getUsername(usernameStr)
         }else{
-            let alert = UIAlertController(title: "提示", message: "请输入正确的手机/邮箱", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            hudProcessManager.showOnlyTextHudProgress(self, title: "请输入正确的手机/邮箱")
+            hudProcessManager.dismissHud()
             return false
         }
         if (usernameStr != "no user in database") && (usernameStr != ""){
+            hudProcessManager.dismissHud()
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
             return true
         }
         else{
             keychainAccess.deletePasscode(usernameKeyChain)
             keychainAccess.deletePasscode(passwordKeyChain)
-            let alert = UIAlertController(title: "提示", message: "您的用户名或密码输错，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            hudProcessManager.showOnlyTextHudProgress(self, title: "您的用户名或密码输错，请重新输入")
+            hudProcessManager.dismissHud()
             return false
         }
     }
@@ -255,7 +271,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         if isRootViewController && loginSucessful{
             let tabViewController : TabViewController = TabViewController()
             self.presentViewController(tabViewController, animated: true, completion: nil)
-        }else{
+        }else if loginSucessful{
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
@@ -266,8 +282,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     
     func ignore(sender: UIButton) {
         let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! TagTableViewController
-        controller.isFirstTagSelection = true
+        let controller = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+//        controller.isFirstTagSelection = true
         self.presentViewController(controller, animated: true, completion: nil)
     }
     

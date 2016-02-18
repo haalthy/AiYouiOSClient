@@ -41,6 +41,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     var dateInserted: NSDate?
     var isPosted: Int = 1
     
+    var scrollViewOffset: CGFloat = 0
+    
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         initVariables()
@@ -187,7 +189,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         reportListView.addSubview(reportListTitle)
         
         //add report list
-        clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, reportListViewW, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
+        print(screenWidth)
+        clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, screenWidth - 30, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
         for clinicReportFormat in clinicReportFormatList {
             defaultClinicRowsName.addObject((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String)
         }
@@ -259,7 +262,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     func getClinicReportFormat(){
         let parameters = NSDictionary(object: keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
         let jsonResult = NetRequest.sharedInstance.POST_A(getClinicReportFormatURL, parameters: parameters as! Dictionary<String, AnyObject>)
-        if (jsonResult.objectForKey("content") != nil){
+        if (jsonResult.objectForKey("content") != nil) && ((jsonResult ).objectForKey("content") is NSArray){
             self.clinicReportFormatList = (jsonResult ).objectForKey("content") as! NSArray
         }
     }
@@ -299,10 +302,10 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }
         
         let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
-        
+        getClinicDataStr()
         var clinicReportStr: String = ""
         for clinicData in clinicDataList {
-            let clinicDataDic = clinicData as! NSMutableDictionary
+            let clinicDataDic = clinicData as! NSDictionary
             clinicReportStr += "[" + ((clinicDataDic.allKeys as NSArray).objectAtIndex(0)as! String) + ":" + ((clinicDataDic.allValues as NSArray).objectAtIndex(0)as! String) + "]"
         }
         let clinicReportDic = NSDictionary(objects: [clinicReportStr, self.isPosted], forKeys: [ "clinicReport", "isPosted"])
@@ -313,16 +316,11 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
         let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
-        let url : NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
+
         let requestBody = NSMutableDictionary()
         requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
         requestBody.setValue(clinicReportDic, forKey: "clinicReport")
         requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             
@@ -332,7 +330,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             }) { (content, message) -> Void in
                 
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-        }
+            }
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -350,6 +348,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             textView.text = nil
             textView.textColor = UIColor.blackColor()
         }
+        self.scrollViewOffset = textView.frame.origin.y
+        self.scrollView.contentOffset = CGPoint(x: 0, y: scrollViewOffset)
     }
     
     
@@ -377,39 +377,65 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     func keyboardWillDisappear(notification:NSNotification){
         
         self.checkedView.center = CGPoint(x: self.checkedView.center.x, y: self.checkedView.center.y + keyboardheight)
+        self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
     }
     //UITextField
-    func textFieldDidEndEditing(textField: UITextField) {
-        if textField.superview  is UITableViewCell{
-            let clinicData = NSMutableDictionary()
+//    func textFieldDidEndEditing(textField: UITextField) {
+//        if textField.superview  is UITableViewCell{
+//            let clinicData = NSMutableDictionary()
+//            var clinicDataName: String = ""
+//            let cell = textField.superview as! UITableViewCell
+//            if textField.placeholder == reportListItemPlaceholder {
+//                if (cell.textLabel != nil) && (cell.textLabel?.text != nil) && (cell.textLabel?.text != ""){
+//                    clinicDataName = (cell.textLabel?.text)!
+//                }else{
+//                    for subView in cell.subviews {
+//                        if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+//                            clinicDataName = (subView as! UITextField).text!
+//                        }
+//                    }
+//                }
+//                if (textField.text != "")&&(clinicDataName != "") {
+//                    clinicData.setObject(textField.text!, forKey: clinicDataName)
+//                    self.clinicDataList.addObject(clinicData)
+//                }
+//            }else{
+//                if (textField.text != "") {
+//                    for subView in cell.subviews {
+//                        if (subView is UITextField) && (subView as! UITextField).placeholder == reportListItemPlaceholder {
+//                            let clinicDataValue = (subView as! UITextField).text!
+//                            if clinicDataValue != "" {
+//                                clinicData.setObject(clinicDataValue, forKey: textField.text!)
+//                                self.clinicDataList.addObject(clinicData)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    func getClinicDataStr(){
+        for index in 0...(self.clinicTableView.numberOfRowsInSection(0) - 1) {
             var clinicDataName: String = ""
-            let cell = textField.superview as! UITableViewCell
-            if textField.placeholder == reportListItemPlaceholder {
-                if (cell.textLabel != nil) && (cell.textLabel?.text != nil) && (cell.textLabel?.text != ""){
-                    clinicDataName = (cell.textLabel?.text)!
-                }else{
-                    for subView in cell.subviews {
-                        if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
-                            clinicDataName = (subView as! UITextField).text!
-                        }
-                    }
+            var clinicDataValue: String = ""
+            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            let cell = self.clinicTableView.cellForRowAtIndexPath(indexPath)
+            if (cell!.textLabel != nil) && (cell!.textLabel?.text != nil) && (cell!.textLabel?.text != ""){
+                clinicDataName = (cell!.textLabel?.text)!
+            }
+            
+            for subView in cell!.subviews {
+                if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+                    clinicDataName = (subView as! UITextField).text!
+                }else if (subView is UITextField) && (subView as! UITextField).frame.origin.x > (clinicReportLblW - 10){
+                    clinicDataValue = (subView as! UITextField).text!
                 }
-                if (textField.text != "")&&(clinicDataName != "") {
-                    clinicData.setObject(textField.text!, forKey: clinicDataName)
-                    self.clinicDataList.addObject(clinicData)
-                }
-            }else{
-                if (textField.text != "") {
-                    for subView in cell.subviews {
-                        if (subView is UITextField) && (subView as! UITextField).placeholder == reportListItemPlaceholder {
-                            let clinicDataValue = (subView as! UITextField).text!
-                            if clinicDataValue != "" {
-                                clinicData.setObject(clinicDataValue, forKey: textField.text!)
-                                self.clinicDataList.addObject(clinicData)
-                            }
-                        }
-                    }
-                }
+            }
+            
+            if (clinicDataName != "") && (clinicDataValue != "") {
+                let clinicData = NSDictionary(object: clinicDataValue, forKey: clinicDataName)
+                self.clinicDataList.addObject(clinicData)
             }
         }
     }
@@ -469,7 +495,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             cell.addSubview(clinicItemValueTextField)
             //delete button
             print(cell.frame.width)
-            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
+            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth - 30, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
 //            deleteBtn.backgroundColor = headerColor
             let btnImageView = UIImageView(frame: CGRECT(0, 0, clinicReportDelBtnWidth, clinicReportDelBtnWidth))
             btnImageView.image = UIImage(named: "btn_deleteClinicData")
@@ -481,7 +507,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }else{
             let addMoreClinicDataBtnW:CGFloat = cell.frame.size.width - 12
             let addMoreClinicDataBtnH:CGFloat = 30
-            let addMoreClinicDataBtn = UIButton(frame: CGRect(x: 12, y: 12, width: addMoreClinicDataBtnW, height: addMoreClinicDataBtnH))
+            let addMoreClinicDataBtn = UIButton(frame: CGRect(x: 12, y: 12, width: cell.frame.width - 36, height: addMoreClinicDataBtnH))
             let addReportImgView = UIImageView(frame: CGRECT(0, 0, addMoreClinicDataBtnW, addMoreClinicDataBtnH))
             addReportImgView.image = UIImage(named: "btn_addReport")
             addMoreClinicDataBtn.addSubview(addReportImgView)

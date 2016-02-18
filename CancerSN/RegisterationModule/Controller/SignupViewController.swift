@@ -106,12 +106,14 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         seperateLine1.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine1)
         textInputView.addSubview(id)
+        id.delegate = self
         
         //auth code
         let authCodeTextW: CGFloat = textInputView.frame.width - textFieldLeftSpace - getAuthCodeBtnW
         authCode.frame = CGRECT(textFieldLeftSpace, textFieldHeight + 1, authCodeTextW, textFieldHeight)
         authCode.font = inputViewFont
         authCode.placeholder = "验证码"
+        authCode.delegate = self
         textInputView.addSubview(authCode)
         let getAuthBtn = UIButton(frame: CGRect(x: textInputView.frame.width - getAuthCodeBtnW, y: textFieldHeight + 1, width: getAuthCodeBtnW, height: textFieldHeight))
         getAuthBtn.setTitle("获取验证码", forState: UIControlState.Normal)
@@ -135,12 +137,15 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         seperateLine3.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine3)
         textInputView.addSubview(nick)
+        nick.delegate = self
         
         //password
         password.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*3, width: textInputView.frame.width, height: textFieldHeight)
         password.font = inputViewFont
         password.placeholder = "密码"
         textInputView.addSubview(password)
+        password.secureTextEntry = true
+        password.delegate = self
 //        let seperateLine4: UIView = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*4 - 1, width: textInputView.frame.width, height: 1))
 //        seperateLine4.backgroundColor = seperateLineColor
 //        textInputView.addSubview(seperateLine4)
@@ -229,8 +234,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     func signUp(sender: UIButton){
         if publicService.checkIsEmail(id.text!) {
             profileSet.setObject(id.text!, forKey: emailNSUserData)
+            profileSet.setObject(nil, forKey: phoneNSUserData)
         }else if publicService.checkIsPhoneNumber(id.text!){
             profileSet.setObject(id.text!, forKey: phoneNSUserData)
+            profileSet.setObject(nil, forKey: emailNSUserData)
         }
         let getAuthRequest = NSDictionary(objects: [id.text!, authCode.text!], forKeys: ["eMail", "authCode"])
         
@@ -244,7 +251,11 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             if (result.count > 0) && (result.objectForKey("result") as! Int) == 1 {
                 keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                 keychainAccess.setPasscode(usernameKeyChain, passcode: (result.objectForKey("content") as! NSDictionary).objectForKey("result") as! String)
+                haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
                 self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
+            }else{
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+                    HudProgressManager.sharedInstance.dismissHud()
             }
         }else{
             HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "验证码错误")

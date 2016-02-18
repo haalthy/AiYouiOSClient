@@ -85,7 +85,7 @@ let newTreatmentEnddate = "haalthyNewTreatmentEndDate"
 // MARK: - UI Displayname<--> Database Mapping
 
 let genderMapping = NSDictionary(objects:["M","F"], forKeys:["男","女"])
-let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝部", "肾部", "肺部", "胆管", "肠部", "胃部", "妇科", "血液"])
+let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝癌", "肾癌", "肺癌", "胆管癌", "肠癌", "胃癌", "妇科", "血液"])
 let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma"], forKeys: ["腺癌","鳞癌","腺鳞癌"])
 let stageMapping = NSDictionary(objects: [1,2,3,4], forKeys: ["I","II","III","IV"])
 let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否","是"])
@@ -131,3 +131,9 @@ var screenHeight = CGFloat()
 let uploadImageSize: CGSize = CGSize(width: 400, height: 600)
 
 let qqAppID: String = "1104886596"
+
+let WXAppID: String = "wxd930ea5d5a258f4f"
+
+let WXAppSecret: String = "145f45c39e367d6b2cf9865cf1971096"
+
+let numberOfLinesInFeedVC: Int = 6

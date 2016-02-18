@@ -16,7 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+//        let keychainAccess = KeychainAccess()
+//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
+//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
+        
         // Override point for customization after application launch.
+        WXApi.registerApp(WXAppID)
         let tabViewController : TabViewController = TabViewController()
         self.window!.rootViewController = tabViewController
         
@@ -47,11 +53,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - 是否进入到主页界面
     
     func checkUserStatus() {
+
+        let keychainAccess = KeychainAccess()
+
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
-            let keychainAccess = KeychainAccess()
 //            keychainAccess.deletePasscode(usernameKeyChain)
 //            keychainAccess.deletePasscode(passwordKeyChain)
-            if keychainAccess.getPasscode(usernameKeyChain) == nil {
+            if (keychainAccess.getPasscode(usernameKeyChain) == nil) || ((keychainAccess.getPasscode(usernameKeyChain) as! String) == "") {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
                 if self.window != nil {
@@ -161,12 +169,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
         return TencentOAuth.HandleOpenURL(url)
         
     }
     
+    func onReq(req: BaseReq!) {
+        print("on req")
+    }
+    
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
         return TencentOAuth.HandleOpenURL(url)
+    }
+    
+    func onResp(resp: BaseResp!) {
+        print("on resp")
+//        if ([resp isKindOfClass:[SendAuthResp class]]) {
+//            if (_delegate
+//            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
+//                SendAuthResp *authResp = (SendAuthResp *)resp;
+//                [_delegate managerDidRecvAuthResponse:authResp];
+//            }
+//        }
+        if resp.isKindOfClass(SendAuthResp) {
+            
+        }
     }
 }
 

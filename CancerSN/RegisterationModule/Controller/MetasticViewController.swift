@@ -15,7 +15,7 @@ class MetasticViewController: UIViewController {
     let metasticList = ["脑转移","骨转移", "肝转移", "肾上腺转移", "淋巴转移", "无转移", "其他"]
     let buttonSection = UIView()
     var metastasisSettingVCDelegate: MetastasisSettingVCDelegate?
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     var isUpdate = false
     
     override func viewDidLoad() {
@@ -43,20 +43,22 @@ class MetasticViewController: UIViewController {
     */
     
     func initVariables(){
-    
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight + 10))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的转移情况"

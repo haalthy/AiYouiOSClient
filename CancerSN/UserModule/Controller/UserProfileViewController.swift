@@ -10,11 +10,12 @@ import UIKit
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate {
     // 控件关联
-    @IBOutlet weak var tableView: UITableView!
+    var tableView = UITableView()
     
-    @IBOutlet weak var userProfileHeaderView: UIView!
+    var userProfileHeaderView: UIView!
 
     // 自定义变量 old
+    //显示他人的profile
     var profileOwnername: NSString?
     var username: NSString?
     var password: NSString?
@@ -57,53 +58,71 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var postBtnLine = UIView()
     var segmentSectionBtnHeight = CGFloat()
     
+    let followBtn = UIButton()
+    
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1449535482715.927")
-//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
-
-        username = keychainAccess.getPasscode(usernameKeyChain)
-        password = keychainAccess.getPasscode(passwordKeyChain)
-        if self.tabBarController?.selectedIndex == 2{
-            profileOwnername = self.username
-        }else{
-            
-        }
-        print("start loading")
-        getTreatmentsData()
-        if self.userProfile.count == 0 {
-            let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
-            self.tabBarController?.selectedIndex = 0
-            
-            print(self.tabBarController?.selectedIndex)
-        }else{
-            initVariables()
-            initContentView()
-            self.tableView.delegate = self
-            self.tableView.dataSource = self
-            self.tableView.reloadData()
-        }
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中...")
     }
     
+    override func viewDidAppear(animated: Bool) {
+        username = keychainAccess.getPasscode(usernameKeyChain)
+        password = keychainAccess.getPasscode(passwordKeyChain)
+        getAccessToken.getAccessToken()
+        let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if access_token != nil {
+            if self.profileOwnername == nil{
+                profileOwnername = self.username
+            }
+            
+            getTreatmentsData()
+            if self.userProfile.count == 0 {
+                let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                self.tabBarController?.selectedIndex = 0
+                
+                print(self.tabBarController?.selectedIndex)
+            }else{
+                initVariables()
+                initContentView()
+
+                self.tableView.registerClass(ChartSummaryTableViewCell.self, forCellReuseIdentifier: "ChartSummaryIdentifier")
+                self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
+                self.tableView.delegate = self
+                self.tableView.dataSource = self
+                self.tableView.reloadData()
+            }
+        }else{
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let loginController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
+            self.presentViewController(loginController, animated: true, completion: nil)
+        }
+        HudProgressManager.sharedInstance.dismissHud()
+    }
     // MARK: - Init Variables
     func initVariables() {
+        print((self.navigationController?.navigationBar.frame.height))
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
         isSelectedTreatment = true
-        if (self.userProfile.valueForKey("gender") as! String) == "F"{
-            relatedToOther = NSArray(array: ["与她相关"])
+        if ((self.userProfileObj?.gender)!) == "F"{
+            relatedToOther = NSArray(array: [herProfileStr])
         }else{
-            relatedToOther = NSArray(array: ["与他相关"])
+            relatedToOther = NSArray(array: [hisProfileStr])
         }
     }
     
     // MARK: - Init Related ContentView
     
     func initContentView() {
+        let profileHeaderH: CGFloat = 125
+        self.userProfileHeaderView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: profileHeaderH))
+        self.tableView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH )
+        self.view.addSubview(userProfileHeaderView)
+        self.view.addSubview(self.tableView)
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
 
@@ -119,10 +138,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if (self.username == self.profileOwnername) {
             self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
         }else{
-            if (self.userProfile.valueForKey("gender") as! String) == "F"{
-                self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
-            }else{
+            if ((self.userProfileObj?.gender)!) == "F"{
                 self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
+            }else{
+                self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
             }
         }
         self.postBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
@@ -178,33 +197,50 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     
     func addFollowingBtnDisplay(){
+        if username != self.profileOwnername {
+            getAccessToken.getAccessToken()
+            let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            let urlPath:String = (isFollowingUserURL as String) + "?access_token=" + (accessToken as! String);
+            
+            let requestBody = NSMutableDictionary()
+            requestBody.setObject(self.profileOwnername!, forKey: "followingUser")
+            requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+            
+            NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
+                success: { (content , message) -> Void in
+                    if (content is NSDictionary) && ((content as! NSDictionary).objectForKey("count") as! Int) == 0 {
+                        self.followBtn.frame = CGRectMake(self.screenWidth - followBtnRightSpace - followBtnWidth , followBtnTopSpace, followBtnWidth, followBtnHeight)
+                        let addFollowingImage = UIImageView(image: UIImage(named: "btn_addFollowing"))
+                        self.followBtn.addSubview(addFollowingImage)
+                        self.followBtn.layer.borderColor = followBtnBorderColor.CGColor
+                        self.followBtn.layer.borderWidth = followBtnBorderWidth
+                        self.followBtn.layer.cornerRadius = cornerRadius
+                        self.followBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+                        self.userProfileHeaderView.addSubview(self.followBtn)
+                    }
+                }) { (content, message) -> Void in
+                    
+            }
+        }
+    }
+    
+    func addFollowing(sender: UIButton){
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let urlPath:String = (isFollowingUserURL as String) + "?access_token=" + (accessToken as! String);
-        let url : NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
+        let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
+        
         let requestBody = NSMutableDictionary()
-        requestBody.setObject(username!, forKey: "followingUser")
+        requestBody.setObject(self.profileOwnername!, forKey: "followingUser")
         requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             success: { (content , message) -> Void in
-                if (content is NSDictionary) && ((content as! NSDictionary).objectForKey("count") as! Int) > 0 {
-                    let followBtn = UIButton(frame: CGRectMake(self.screenWidth - followBtnRightSpace - followBtnWidth , followBtnTopSpace, followBtnWidth, followBtnHeight))
-                    let addFollowingImage = UIImageView(image: UIImage(named: "btn_addFollowing"))
-                    followBtn.addSubview(addFollowingImage)
-                    followBtn.layer.borderColor = followBtnBorderColor.CGColor
-                    followBtn.layer.borderWidth = followBtnBorderWidth
-                    followBtn.layer.cornerRadius = cornerRadius
-                    self.userProfileHeaderView.addSubview(followBtn)
-                }
-            }) { (content, message) -> Void in
+                HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
+                self.followBtn.enabled = false
                 HudProgressManager.sharedInstance.dismissHud()
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            }) { (content, message) -> Void in
+                HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")
+                HudProgressManager.sharedInstance.dismissHud()
         }
     }
     
@@ -265,10 +301,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }else{
                 let patientStatus = treatmentSections[section-2]["patientStatus"]
                 
-                if patientStatus != nil {
-                    numberOfRows = (patientStatus as! NSArray).count
-                }else{
+                if (patientStatus is NSArray) == false {
                     numberOfRows = 0
+                }else{
+                    numberOfRows = (patientStatus as! NSArray).count
                 }
             }
         }else{
@@ -371,7 +407,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil{
                 let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
                 let urlPath:String = getUserDetailURL + "?access_token=" + accessToken
-                let requestBody = NSDictionary(object: username!, forKey: "username")
+                let requestBody = NSDictionary(object: self.profileOwnername!, forKey: "username")
                 jsonResult = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
             }
 

@@ -72,34 +72,6 @@ class TagTableViewController: UITableViewController {
         if getTagListRespData != nil{
             let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getTagListRespData!, options: NSJSONReadingOptions.MutableContainers)
             if(jsonResult is NSArray){
-//                tagList = jsonResult as! NSArray
-//                let tagTypeSet = NSMutableSet()
-//                
-//                for tagItem in tagList{
-//                    let tag = tagItem as! NSDictionary
-//                    var groupedTagsItem = NSMutableDictionary()
-//                    if tagTypeSet.containsObject(tag.objectForKey("typeName")!){
-//                        for groupedTag in groupedTagList{
-//                            let groupedTagItem = groupedTag as! NSMutableDictionary
-//                            if (groupedTagItem.objectForKey("typeName") as! String) == (tag.objectForKey("typeName") as! String){
-//                                let tagListsInGroup = NSMutableArray(array: groupedTagItem.objectForKey("tagsInGroup") as! NSArray)
-//                                tagListsInGroup.addObject(tag)
-//                                groupedTagItem.setObject(tagListsInGroup, forKey: "tagsInGroup")
-//                                break
-//                            }
-//                        }
-//                    }else {
-//                        tagTypeSet.addObject(tag.objectForKey("typeName")!)
-//                        let groupedTagItem = NSMutableDictionary()
-//                        groupedTagItem.setObject(tag.objectForKey("typeName")!, forKey: "typeName")
-//                        groupedTagItem.setObject(tag.objectForKey("typeRank")!, forKey: "typeRank")
-//                        groupedTagItem.setObject(NSArray(array: [tag]), forKey: "tagsInGroup")
-//                        groupedTagList.addObject(groupedTagItem)
-//                    }
-//                }
-//                tagTypeList = NSArray(array: tagTypeSet.allObjects)
-//                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
-//                groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
                 groupedTagList = jsonResult as! NSMutableArray
                 let descriptor: NSSortDescriptor = NSSortDescriptor(key: "typeRank", ascending: true)
                 groupedTagList = NSMutableArray(array: groupedTagList.sortedArrayUsingDescriptors([descriptor]))
@@ -120,11 +92,11 @@ class TagTableViewController: UITableViewController {
             
             if (selectedTagsStr.count == 0) && (isBroadcastTagSelection == 0) && (isFirstTagSelection == false){
                 if (keychain.getPasscode(usernameKeyChain) != nil)  {
-                    let getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
-                    if getUserFavTagsData != nil{
-                        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers)
-                        selectedTags = jsonResult as! NSMutableArray
-                    }
+//                    let getUserFavTagsData: NSData? = haalthyService.getUserFavTags()
+//                    if getUserFavTagsData != nil{
+//                        let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTagsData!, options: NSJSONReadingOptions.MutableContainers)
+//                        selectedTags = jsonResult as! NSMutableArray
+//                    }
                 }else{
                     if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil {
                         selectedTags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray

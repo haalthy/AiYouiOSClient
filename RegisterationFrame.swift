@@ -36,14 +36,16 @@ let forgetBtnRightSpace: CGFloat = CGFloat(20)
 let forgetBtnFont: UIFont = UIFont.systemFontOfSize(15)
 let forgetBtnWidth: CGFloat = CGFloat(60)
 //seperate Line
-let seperateLineTopSpace: CGFloat = CGFloat(447)
+//let seperateLineTopSpace: CGFloat = CGFloat(447)
 let seperateLineWidth: CGFloat = CGFloat(280)
 //let seperateLineHeight: CGFloat = CGFloat(1)
 //wechat Btn
-let wechatLoginBtnLeftSpace: CGFloat = CGFloat(104)
+let otherLoginBtnTopSpace: CGFloat = CGFloat(44)
+let otherLoginBtnSpace: CGFloat = CGFloat(61)
+//let wechatLoginBtnLeftSpace: CGFloat = CGFloat(104)
 let wechatLoginBtnBtmSpace: CGFloat = CGFloat(119)
 
-let qqLoginBtnRgithSpace: CGFloat = CGFloat(104)
+//let qqLoginBtnRgithSpace: CGFloat = CGFloat(104)
 let qqLoginBtnBtmSpace: CGFloat = CGFloat(119)
 
 let otherLoginBtnLength: CGFloat = CGFloat(54)
@@ -57,20 +59,20 @@ let lookaroundBtnHeight: CGFloat = CGFloat(12)
 //sign up
 let signUpTitleTopSpace: CGFloat = CGFloat(43)
 let signUpTitleMargin: CGFloat = CGFloat(40)
-let signUpTitleHeight: CGFloat = CGFloat(24)
+var signUpTitleHeight: CGFloat = CGFloat(24)
 let signUpTitleFont: UIFont = UIFont.systemFontOfSize(24)
 let signUpTitleTextColor: UIColor = UIColor.init(red: 153/255, green: 153/255, blue: 153/255, alpha: 1)
 let signUpSubTitleTopSpace: CGFloat = CGFloat(80)
 let signUpSubTitleFont: UIFont = UIFont.systemFontOfSize(12)
-let signUpSubTitleHeight: CGFloat = CGFloat(12)
-let signUpTopItemNameTopSpace: CGFloat = CGFloat(125)
+var signUpSubTitleHeight: CGFloat = CGFloat(12)
+var signUpTopItemNameTopSpace: CGFloat = CGFloat(125)
 let signUpItemNameFont: UIFont = UIFont.systemFontOfSize(15)
 let signUpItemNameHeight: CGFloat = CGFloat(15)
-let signUpSeperateLineBtmSpace: CGFloat = CGFloat(325)
-let signUpButtomItemNameButtomSpace: CGFloat = CGFloat(292)
+let signUpSeperateLineBtmSpace: CGFloat = screenHeight/2
+let signUpButtomItemNameButtomSpace: CGFloat = signUpSeperateLineBtmSpace - 33
 
 //gender setting
-let genderBtnTopSpace: CGFloat = CGFloat(190)
+var genderBtnTopSpace: CGFloat = CGFloat(190)
 let genderBtnHeight: CGFloat = CGFloat(97)
 let maleLeftSpace: CGFloat = CGFloat(83)
 let maleWidth: CGFloat = CGFloat(42)
@@ -101,16 +103,16 @@ let previousBtnLeftSpace: CGFloat = CGFloat(17)
 
 //cancerType picker View
 let topPickerTopSpace: CGFloat = CGFloat(163)
-let topPickerButtomSpace: CGFloat = CGFloat(359)
+let topPickerButtomSpace: CGFloat = screenHeight / 2 + 32
 
 //buttom section
 let buttomViewButtomSpace: CGFloat = CGFloat(45)
-let buttomViewHeight: CGFloat = CGFloat(280)
+var buttomViewHeight: CGFloat = CGFloat(280)
 let buttomNameLblTopSpace: CGFloat = CGFloat(33)
 
 //metastic view
 let buttonSectionLeftSpace: CGFloat = CGFloat(50)
-let buttonSectionTopSpace: CGFloat = CGFloat(165)
+var buttonSectionTopSpace: CGFloat = CGFloat(165)
 let buttonSectionHeight: CGFloat = CGFloat(120)
 let buttonVerticalSpace: CGFloat = CGFloat(13)
 let buttonHorizonSpace: CGFloat = CGFloat(7)

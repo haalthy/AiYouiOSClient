@@ -353,20 +353,24 @@ class HaalthyService:NSObject{
         return (try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil))!
     }
     
-    func getUserFavTags()->NSData?{
+    func getUserFavTags()->NSArray{
         getAccessToken.getAccessToken()
         if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) == nil {
-            return nil
+            return []
         }
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
         let urlPath:String = getUserFavTagsURL + "?access_token=" + accessToken
-        let url:NSURL = NSURL(string: urlPath)!
-        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        request.HTTPBody = (keychainAccess.getPasscode(usernameKeyChain) as! String).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        return (try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil))!
+//        let url:NSURL = NSURL(string: urlPath)!
+//        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+//        request.HTTPMethod = "POST"
+//        request.HTTPBody = (keychainAccess.getPasscode(usernameKeyChain) as! String).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        return (try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil))!
+//        let requestBody =  NSDictionary(object: keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+        print(keychainAccess.getPasscode(usernameKeyChain)! as String)
+        let content = NetRequest.sharedInstance.POST_A(urlPath, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)! as String ]).objectForKey("content") as! NSArray
+        return content
     }
     
     func getUserDetail(username:String)->NSData?{
@@ -531,21 +535,21 @@ class HaalthyService:NSObject{
         return try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
     }
     
-    func updateUserTag(selectedTags: NSArray)->NSData{
-        let getAccessToken: GetAccessToken = GetAccessToken()
+    func updateUserTag(selectedTags: NSArray){
         getAccessToken.getAccessToken()
         let accessToken: AnyObject? = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let url: NSURL = NSURL(string: updateFavTagsURL + "?access_token=" + (accessToken as! String))!
-        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        let tagListDic = NSMutableDictionary()
-        tagListDic.setValue(selectedTags, forKey: "tags")
-        tagListDic.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(tagListDic, options: NSJSONWritingOptions())
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-        return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
+        
+        if accessToken != nil{
+            let urlPath: String = updateFavTagsURL + "?access_token=" + (accessToken as! String)
+            let parameters = NSDictionary(objects: [keychainAccess.getPasscode(usernameKeyChain)!,selectedTags], forKeys: ["username", "tags"])
+            NetRequest.sharedInstance.POST(urlPath, parameters: parameters as! Dictionary<String, AnyObject>,
+                success: { (content , message) -> Void in
+                    print(content)
+                    
+                }) { (content, message) -> Void in
+                    print(content)
+            }
+        }
     }
     
     func updateUser(updateUserInfo: NSDictionary)->NSData{
@@ -559,9 +563,7 @@ class HaalthyService:NSObject{
         print(NSString(data: (request.HTTPBody)!, encoding: NSUTF8StringEncoding)!)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        if updateUserInfo.objectForKey("image") is String{
-//            println(updateUserInfo.objectForKey("image"))
-//        }
+
         let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
         return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
     }
@@ -815,9 +817,6 @@ class HaalthyService:NSObject{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil{
-//            getAccessToken.getAccessToken()
-//            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-//        }else{
             let urlPath: String = getUsernameURL + "?access_token=" + (accessToken as! String)
             let parameters = NSDictionary(object: email, forKey: "username")
             let jsonResult: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: parameters as! Dictionary<String, AnyObject>)

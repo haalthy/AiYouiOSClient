@@ -11,7 +11,7 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-let haalthyServiceRestfulURL : String = "http://54.222.143.245:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://192.168.11.199:8080/haalthyservice/"
 
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
