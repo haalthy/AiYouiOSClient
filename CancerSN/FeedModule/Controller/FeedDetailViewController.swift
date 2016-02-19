@@ -77,6 +77,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedDetailIdentifier)
         self.tableView.registerClass(FeedCommentCell.self, forCellReuseIdentifier: cellFeedDetailCommentIdentifier)
         
+        self.view.userInteractionEnabled = true
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
         self.view.addGestureRecognizer(tapGesture)
     }

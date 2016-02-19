@@ -235,11 +235,20 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         }
         //treatment text view
         treatmentTextInputY = treatmentTextInputViewTopSpace + treatmentTypeSectionHeight + treatmentFormatSectionView.frame.height
-        treatmentTextInput.frame = CGRECT(treatmentTextInputViewLeftSpace, treatmentTextInputY, screenWidth - treatmentTextInputViewLeftSpace * 2, UIScreen.mainScreen().bounds.height - treatmentTextInputY - buttomSectionHeight)
+        treatmentTextInput.frame = CGRECT(treatmentTextInputViewLeftSpace, treatmentTextInputY, screenWidth - treatmentTextInputViewLeftSpace * 2, 150)
         treatmentTextInput.text = "请输入剂量及使用方法..."
         treatmentTextInput.font = treatmentTextInputViewFont
         treatmentTextInput.textColor = treatmentTextInputViewColor
+        treatmentTextInput.returnKeyType = UIReturnKeyType.Done
         self.scrollView.addSubview(treatmentTextInput)
+        
+        self.scrollView.userInteractionEnabled = true
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.scrollView.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func getTreatmentDetail(){

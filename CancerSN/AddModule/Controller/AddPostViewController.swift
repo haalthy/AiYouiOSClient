@@ -93,7 +93,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func initContentView(){
         //text View
-        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
+        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin + headerHeight, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
         textView.textColor = ultraLightTextColor
         if self.isQuestion {
             textView.text = "请输入问题"
@@ -102,6 +102,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         textView.font = textViewFont
         textView.delegate = self
+        textView.returnKeyType = UIReturnKeyType.Done
         self.view.addSubview(textView)
         
         //imageSection
@@ -188,6 +189,13 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         mentionedBtn.addTarget(self, action: "selectContacts", forControlEvents: UIControlEvents.TouchUpInside)
         buttomSection.addSubview(mentionedBtn)
         self.view.addSubview(buttomSection)
+        
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func selectTags(sender: UIButton){
