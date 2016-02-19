@@ -34,6 +34,14 @@ class FeedCommentCell: UITableViewCell {
         self.userPortrait.clipsToBounds = true
     }
     
+    func showFeedInfo(commentModel: CommentModel) {
+
+        self.userPortrait.addImageCache(commentModel.imageURL, placeHolder: "")
+        self.userNickname.text = commentModel.insertUsername
+        self.dateLabel.text = NSDate.createDate(commentModel.dateInserted / 1000)?.fullDescription()
+        self.feedContentLabel.text = commentModel.body
+    }
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

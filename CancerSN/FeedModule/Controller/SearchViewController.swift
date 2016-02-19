@@ -10,7 +10,6 @@ import UIKit
 
 class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
-    @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -25,6 +24,18 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.initContentView()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.searchBar.becomeFirstResponder()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        super.viewDidAppear(animated)
+        self.searchBar.becomeFirstResponder()
+        
+    }
+    
     // MARK: - 初始化相关变量
     
     func initVaribles() {
@@ -36,7 +47,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func initContentView() {
     
-        
+        //self.searchBar.becomeFirstResponder()
     }
     
     // MARK: - 网络请求
@@ -69,6 +80,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {

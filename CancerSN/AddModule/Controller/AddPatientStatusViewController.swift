@@ -131,6 +131,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         symptomDesp.textColor = textInputViewPlaceholderColor
         symptomDesp.font = symptomDespFont
         symptomDesp.delegate = self
+        symptomDesp.returnKeyType = UIReturnKeyType.Done
         self.scrollView.addSubview(symptomDesp)
         
         //add "more" button
@@ -205,12 +206,21 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         scanReportText.textColor = textInputViewPlaceholderColor
         scanReportText.delegate = self
         scanReportText.font = scanReportDespFont
+        scanReportText.returnKeyType = UIReturnKeyType.Done
         scrollView.addSubview(scanReportText)
         //add image view
         scrollView.frame = CGRECT(0, headerHeight + dateSection.frame.height, screenWidth, UIScreen.mainScreen().bounds.height - headerHeight - dateSection.frame.height - patientstatusFooterH)
         scrollView.contentSize = CGSize(width: screenWidth, height: scrollView.frame.height + reportListViewY)
         self.scrollView.contentOffset = CGPoint(x: 0, y: symptomDespTextTopSpace + symptomsSection.frame.height + symptomDesp.frame.height)
         self.scrollView.scrollEnabled = true
+        
+        self.scrollView.userInteractionEnabled = true
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.scrollView.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func addClinicData(sender: UIButton){

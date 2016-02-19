@@ -115,16 +115,24 @@ class TagCell: UITableViewCell {
         }
     }
     
-    func selectedTag(sender: UIButton){
-        if sender.backgroundColor == UIColor.clearColor() {
-            sender.backgroundColor = tagBorderColor
-            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-            selectedTagVCDelegate?.selectedTag((sender.titleLabel?.text)!)
-        }else{
-            sender.backgroundColor = UIColor.clearColor()
-            sender.setTitleColor(tagBorderColor, forState: UIControlState.Normal)
-            selectedTagVCDelegate?.unselectedTag((sender.titleLabel?.text)!)
+    // MARK: - 功能方法
+    
+    func selectedTag(btn: UIButton) {
+        
+        btn.selected = !btn.selected
+        if btn.selected {
+        
+            btn.backgroundColor = tagBorderColor
+            btn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Selected)
+            selectedTagVCDelegate?.selectedTag((btn.titleLabel?.text)!)
         }
+        else {
+        
+            btn.backgroundColor = UIColor.clearColor()
+            btn.setTitleColor(tagBorderColor, forState: UIControlState.Normal)
+            selectedTagVCDelegate?.unselectedTag((btn.titleLabel?.text)!)
+        }
+        
     }
 
 }
