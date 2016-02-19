@@ -30,14 +30,13 @@ class FeedCommentCell: UITableViewCell {
     
     func initContentView() {
     
-        self.userPortrait.layer.cornerRadius = self.userPortrait.bounds.size.height / 2
+        self.userPortrait.layer.cornerRadius = 20
         self.userPortrait.clipsToBounds = true
     }
     
     func showFeedInfo(commentModel: CommentModel) {
-
-        self.userPortrait.addImageCache(commentModel.imageURL, placeHolder: "")
-        self.userNickname.text = commentModel.insertUsername
+        self.userPortrait.addImageCache(commentModel.imageURL, placeHolder: "icon_profile")
+        self.userNickname.text = commentModel.displayname
         self.dateLabel.text = NSDate.createDate(commentModel.dateInserted / 1000)?.fullDescription()
         self.feedContentLabel.text = commentModel.body
     }

@@ -10,7 +10,7 @@ import UIKit
 
 let kFeedDetailKeyBoardHeight: CGFloat = 50
 let cellFeedDetailIdentifier = "FeedCell"
-let cellFeedDetailCommentIdentifier = "CommentCell"
+let cellFeedDetailCommentIdentifier = "FeedCommentIdentifer"
 
 
 class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyBoardDelegate {
@@ -31,6 +31,8 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     var page: Int!
     var maxId: Int!
     
+    var defaultMaxID: Int = 999999
+    
     override func viewDidLoad() {
         
         
@@ -41,7 +43,9 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         self.initVariables()
         self.initContentView()
         self.getFeedDetailContentFromServer()
-        self.getFeedCommentListFromServer()
+//        self.getFeedCommentListFromServer()
+        initRefresh()
+        self.tableView.mj_header.beginRefreshing()
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -55,7 +59,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     
         commentListData = NSMutableArray.init(capacity: 0)
         sinceId = 0
-        maxId = 1000
+        maxId = defaultMaxID
         page = 0
         count = 5
     }
@@ -75,7 +79,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         
         // tableView 注册
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedDetailIdentifier)
-        self.tableView.registerClass(FeedCommentCell.self, forCellReuseIdentifier: cellFeedDetailCommentIdentifier)
+//        self.tableView.registerClass(FeedCommentCell.self, forCellReuseIdentifier: cellFeedDetailCommentIdentifier)
         
         self.view.userInteractionEnabled = true
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
@@ -85,12 +89,15 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: - Init Refresh
     
     func initRefresh() {
-        
+        self.tableView.mj_header = MJRefreshNormalHeader.init(refreshingBlock: { () -> Void in
+            self.getFeedCommentListFromServer()
+            
+        })
         
         self.tableView.mj_footer = MJRefreshAutoNormalFooter.init(refreshingBlock: { () -> Void in
             self.getMoreFeedCommentListFromServer()
         })
-        
+
     }
 
     
@@ -105,13 +112,13 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getFeedDetailContentFromServer() {
     
-        NetRequest.sharedInstance.POST(getPostDetailURL, parameters:["id":329],
+        NetRequest.sharedInstance.POST(getPostDetailURL, parameters:["id":self.feedId],
             
             success: { (content , message) -> Void in
                 
                
                 let postFeedModel = PostFeedStatus.jsonToModel(content) as PostFeedStatus
-                self.feedDetailFrame = PostFeedFrame(feedModel: postFeedModel)
+                self.feedDetailFrame = PostFeedFrame(feedModel: postFeedModel, isShowFullText: true)
                 self.tableView.reloadData()
                 
                 
@@ -126,20 +133,29 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: 获取评论列表
     
     func getFeedCommentListFromServer() {
-        
+        self.maxId = self.defaultMaxID
+        self.page = 0
         NetRequest.sharedInstance.POST(getCommentListByPostURL, parameters: ["id" : self.feedId,
             "since_id" : self.sinceId,
             "max_id" : self.maxId,
             "page" : self.page,
             "count" : self.count
             ], success: { (content, message) -> Void in
-            
+                self.page = 1
+                self.tableView.mj_header.endRefreshing()
                 self.commentListData.removeAllObjects()
                 
                 let dict: NSArray = content as! NSArray
                 let commentArr = CommentModel.jsonToModelList(dict as Array) as! Array<CommentModel>
                 self.commentListData = NSMutableArray(array: commentArr as NSArray)
-                
+                //重新设置 maxID
+                if self.commentListData.count > 0 {
+                    self.maxId = commentArr[0].commentID
+                    for comment in commentArr {
+                        self.maxId = self.maxId > comment.commentID ? self.maxId: comment.commentID
+                    }
+                }
+                self.tableView.mj_footer.endEditing(false)
                 if self.commentListData.count < 5 {
                 
                     self.tableView.mj_footer.endRefreshingWithNoMoreData()
@@ -147,7 +163,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.tableView.reloadData()
             
             }) { (content, message) -> Void in
-                
+                self.tableView.mj_header.endRefreshing()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
     }
@@ -162,7 +178,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
             "page" : self.page,
             "count" : self.count
             ], success: { (content, message) -> Void in
-                
+                self.page = self.page + 1
                 let dict: NSArray = content as! NSArray
                 let commentArr = CommentModel.jsonToModelList(dict as Array) as! Array<CommentModel>
                 let comment: NSMutableArray = NSMutableArray(array: commentArr as NSArray)
@@ -183,27 +199,46 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func commentToFeedDetail(commentStr: String) {
-    
-        NetRequest.sharedInstance.POST(getCommentListByPostURL, parameters:[
-            "body":commentStr,
-            "postID":self.feedId,
-            "insertUsername":"AY1449549912985.679"
-            ],
+        let keychainAccess = KeychainAccess()
+        let getAccessToken = GetAccessToken()
+        let insertUsername: String = keychainAccess.getPasscode(usernameKeyChain) as! String
+        getAccessToken.getAccessToken()
+        if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil {
+            let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
             
-            success: { (content , message) -> Void in
+            NetRequest.sharedInstance.POST(addCommentsURL + "?access_token=" + accessToken, parameters:[
+                "body":commentStr,
+                "postID":self.feedId,
+                "insertUsername":insertUsername
+                ],
                 
-            
-                HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "评论成功")
-                self.tapDismiss()
-                self.tableView.reloadData()
-                
-                
-            }) { (content, message) -> Void in
-                
-                self.tapDismiss()
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+                success: { (content , message) -> Void in
+                    
+                    
+                    HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "评论成功")
+                    self.tapDismiss()
+                    self.getFeedCommentListFromServer()
+                }) { (content, message) -> Void in
+                    
+                    self.tapDismiss()
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            }
+        }else{
+            let alertController = UIAlertController(title: "请登录后再评论", message: nil, preferredStyle: .Alert)
+            let ContinueAction = UIAlertAction(title: "返回", style: .Default){ (action)in
+            }
+            let LoginAction = UIAlertAction(title: "登录", style: .Default){ (action)in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
+                self.presentViewController(rootController, animated: true, completion: nil)
+            }
+            alertController.addAction(ContinueAction)
+            alertController.addAction(LoginAction)
+            //
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
-
     }
     
     // MARK: - Table view data source
@@ -230,7 +265,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         else {
         
-            let commentModel: CommentModel = self.commentListData[indexPath.row + 1] as! CommentModel
+            let commentModel: CommentModel = self.commentListData[indexPath.row - 1] as! CommentModel
             let cellHeight = commentModel.body.sizeWithFont(UIFont.systemFontOfSize(16), maxSize: CGSize(width: SCREEN_WIDTH - 85, height: CGFloat.max)).height
             return cellHeight + 80
         }
@@ -242,8 +277,9 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         if indexPath.row == 0 {
         
             let cell: FeedCell = tableView.dequeueReusableCellWithIdentifier(cellFeedDetailIdentifier, forIndexPath: indexPath) as! FeedCell
-            
+            cell.isShowFullText = true
             if self.feedDetailFrame != nil {
+                cell.feedOriginFrame?.isShowFullText = true
                 cell.feedOriginFrame = self.feedDetailFrame.feedOriginalFrame
             }
             return cell
@@ -252,7 +288,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         
             let cell: FeedCommentCell = tableView.dequeueReusableCellWithIdentifier(cellFeedDetailCommentIdentifier, forIndexPath: indexPath) as! FeedCommentCell
             
-            let commentModel: CommentModel = self.commentListData[indexPath.row + 1] as! CommentModel
+            let commentModel: CommentModel = self.commentListData[indexPath.row - 1] as! CommentModel
             
             cell.showFeedInfo(commentModel)
             return cell

@@ -20,4 +20,5 @@ class CommentModel: D3Model {
     var dateInserted: Int64 = 0
     var isActive: Int = 0
     var imageURL: String!
+    var displayname: String!
 }

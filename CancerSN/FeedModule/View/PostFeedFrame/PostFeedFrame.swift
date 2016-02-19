@@ -9,6 +9,8 @@
 import UIKit
 
 class PostFeedFrame: NSObject {
+    
+    var isShowFullText = false
 
     // 帖子数据
     var feedModel: PostFeedStatus!
@@ -27,11 +29,11 @@ class PostFeedFrame: NSObject {
     var feedToolBarFrame: CGRect!
     
     
-    init(feedModel: PostFeedStatus) {
+    init(feedModel: PostFeedStatus, isShowFullText: Bool) {
     
         super.init()
         self.feedModel = feedModel
-        
+        self.isShowFullText = isShowFullText
         // 设置帖子frame
         self.setFeedOriginalFrame()
         
@@ -40,8 +42,7 @@ class PostFeedFrame: NSObject {
     // MARK: - 设置帖子frame
     
     func setFeedOriginalFrame() {
-    
-        let feedOriginalFrame = FeedOriginalFrame.init(feedModel: self.feedModel)
+        let feedOriginalFrame = FeedOriginalFrame.init(feedModel: self.feedModel, isShowFullText: self.isShowFullText)
         
         self.feedOriginalFrame = feedOriginalFrame
         self.frame = feedOriginalFrame.frame

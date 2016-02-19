@@ -95,12 +95,14 @@ class FeedOriginalFrame: NSObject {
     
     // 帖子的frame
     var frame: CGRect?
+    
+    var isShowFullText:Bool = false
 
-     init(feedModel: PostFeedStatus) {
+    init(feedModel: PostFeedStatus, isShowFullText: Bool) {
         
         super.init()
         self.feedModel = feedModel;
-        
+        self.isShowFullText = isShowFullText
         self.setFrame()
     
     }
@@ -181,7 +183,10 @@ class FeedOriginalFrame: NSObject {
         // 9.内容详情
         let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
         var contentY: CGFloat = 0
-        let feedContentFrameHMax: CGFloat = 130
+        var feedContentFrameHMax: CGFloat = 130
+        if isShowFullText {
+            feedContentFrameHMax = CGFloat.max
+        }
         let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, feedContentFrameHMax)))!
         
         if (self.feedModel?.clinicReport == "") || (self.feedModel!.clinicReport == "<null>"){
