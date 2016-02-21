@@ -237,6 +237,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             success: { (content , message) -> Void in
                 HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
                 self.followBtn.enabled = false
+                let followedImageView = UIImageView(frame: CGRECT(0, 0, self.addFollowingBtn.frame.width, self.addFollowingBtn.frame.height))
+                followedImageView.image = UIImage(named: "btn_Followed")
+                self.addFollowingBtn.removeAllSubviews()
+                self.addFollowingBtn.addSubview(followedImageView)
                 HudProgressManager.sharedInstance.dismissHud()
             }) { (content, message) -> Void in
                 HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")

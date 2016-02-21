@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
+class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate{
     
     //global variable
     let getAccessToken = GetAccessToken()
@@ -37,6 +37,9 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     let scanReportText = UITextView()
     var clinicTableView = UITableView()
     let dateBtn = UIButton()
+    
+    var datePickerContainerView = UIView()
+    var datePicker = UIDatePicker()
     
     var dateInserted: NSDate?
     var isPosted: Int = 1
@@ -77,6 +80,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         dateBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
         dateBtn.titleLabel?.font = patientStatusDateBtnFont
         dateBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        dateBtn.addTarget(self, action: "selectDate:", forControlEvents: UIControlEvents.TouchUpInside)
         let dropdownImageView: UIImageView = UIImageView(frame: CGRECT(dateBtnTextSize.width + patientStatusDropdownLeftSpace, 0, patientStatusDropdownW, patientStatusDateSectionHeight))
         dropdownImageView.image = UIImage(named: "btn_datedropdown")
         dropdownImageView.contentMode = UIViewContentMode.ScaleAspectFit
@@ -168,6 +172,41 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }
     }
     
+    func selectDate(sender: UIButton) {
+        let datePickerHeight:CGFloat = 200
+        let confirmButtonWidth:CGFloat = 100
+        let confirmButtonHeight:CGFloat = 30
+        datePickerContainerView = UIView(frame: CGRectMake(0, screenHeight - datePickerHeight - 30 - 40, screenWidth, datePickerHeight + 30))
+        datePickerContainerView.backgroundColor = UIColor.whiteColor()
+        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
+        self.datePicker.datePickerMode = UIDatePickerMode.Date
+        let confirmButton = UIButton(frame: CGRectMake(screenWidth - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+        confirmButton.setTitle("确定", forState: UIControlState.Normal)
+        confirmButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
+        let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: confirmButtonWidth, height: confirmButtonHeight))
+        cancelButton.setTitle("取消", forState: UIControlState.Normal)
+        cancelButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+        cancelButton.addTarget(self, action: "dateCancel", forControlEvents: UIControlEvents.TouchUpInside)
+        datePickerContainerView.addSubview(self.datePicker)
+        datePickerContainerView.addSubview(confirmButton)
+        datePickerContainerView.addSubview(cancelButton)
+        self.view.addSubview(datePickerContainerView)
+    }
+    
+    func dateCancel(){
+        self.datePickerContainerView.removeFromSuperview()
+    }
+    
+    func dateChanged(){
+        dateInserted = datePicker.date
+        self.datePickerContainerView.removeFromSuperview()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "YYYY/MM/dd" // superset of OP's format
+        let dateStr = dateFormatter.stringFromDate(dateInserted!)
+        dateBtn.setTitle(dateStr, forState: UIControlState.Normal)
+    }
+    
     func addReport(sender: UIButton){
         sender.removeFromSuperview()
         getClinicReportFormat()
@@ -190,7 +229,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         reportListView.addSubview(reportListTitle)
         
         //add report list
-        print(screenWidth)
         clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, screenWidth - 30, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
         for clinicReportFormat in clinicReportFormatList {
             defaultClinicRowsName.addObject((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String)

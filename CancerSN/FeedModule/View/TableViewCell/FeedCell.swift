@@ -134,13 +134,16 @@ protocol FeedTableCellDelegate{
 }
 
 class FeedCell: UITableViewCell {
-
+    
+    //是否显示全部文本
+    var isShowFullText: Bool = false
+    
     var feedTableCellDelegate: FeedTableCellDelegate?
     
     var feedOriginFrame: FeedOriginalFrame? {
     
         didSet {
-        
+            feedOriginFrame?.isShowFullText = self.isShowFullText
             self.removeAllSubviews()
             // 添加feed内容
             self.setContentView()
@@ -261,8 +264,13 @@ class FeedCell: UITableViewCell {
         contentLabel.frame = (self.feedOriginFrame?.contentFrame)!
         contentLabel.textColor = kContentColor
         contentLabel.font = UIFont.systemFontOfSize(kContentFontSize)
-        contentLabel.numberOfLines = numberOfLinesInFeedVC
-        contentLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        if isShowFullText {
+            contentLabel.numberOfLines = 0
+            contentLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        }else{
+            contentLabel.numberOfLines = numberOfLinesInFeedVC
+            contentLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        }
 
         self.addSubview(contentLabel)
         

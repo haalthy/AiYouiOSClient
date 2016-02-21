@@ -171,7 +171,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         for feedData in dataArr {
         
-            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData)
+            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData, isShowFullText: false)
             self.dataArr.addObject(feedFrame)
         }
     }

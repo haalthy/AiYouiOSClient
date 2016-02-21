@@ -300,7 +300,9 @@ class NetRequest: NSObject {
             
             // 解析json
             let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-            self.callbackWithResult(json, success: success, failed: failed)
+            if (json.objectForKey("result") != nil) && (json.objectForKey("content") != nil){
+                self.callbackWithResult(json, success: success, failed: failed)
+            }
             
         }
         else {
