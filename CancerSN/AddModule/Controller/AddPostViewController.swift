@@ -85,7 +85,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         imageCountPerLine = Int((screenWidth - viewHorizonMargin * 2) / imageLength)
         
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
-        tagList = haalthyService.getTopTagList()
         submitBtn.enabled = false
         submitBtn.setTitleColor(lightTextColor, forState: UIControlState.Normal)
         self.isQuestion = (self.navigationController as! AddPostNavigationViewController).isQuestion
@@ -116,67 +115,80 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.view.addSubview(imageSection)
         
         //tag section
-        tagSection.frame = CGRect(x: viewHorizonMargin, y: imageSection.frame.origin.y + imageSection.frame.height + tagSectionTopMargin, width: screenWidth - 2 * viewHorizonMargin, height: tagSectionHeight)
-        let tagTitle = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth - 2 * viewHorizonMargin, height: 13))
-        tagTitle.font = tagSectionTitleFont
-        tagTitle.textColor = tagSectionTitleTextColor
-        tagTitle.text = "请选择相关的标签，让更多人能看到你的问题"
-        tagSection.addSubview(tagTitle)
-        
-        var tagBtnX: CGFloat = 0
-        var tagBtnY: CGFloat = 24
-        var displayTagCount: Int = 0
-        for tag in tagList! {
-            let tagName = (tag as! NSDictionary).objectForKey("name") as! String
-            let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
-            if ((tagTextSize.width + tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - viewHorizonMargin){
+        if self.isQuestion == true {
+
+            NetRequest.sharedInstance.GET(getTopTagListURL, parameters: [:], success: { (content, message) -> Void in
+                if (content is NSArray){
+                    self.tagList = content as? NSArray
+                }
+                self.tagSection.frame = CGRect(x: self.viewHorizonMargin, y: self.imageSection.frame.origin.y + self.imageSection.frame.height + self.tagSectionTopMargin, width: screenWidth - 2 * self.viewHorizonMargin, height: self.tagSectionHeight)
+                let tagTitle = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth - 2 * self.viewHorizonMargin, height: 13))
+                tagTitle.font = self.tagSectionTitleFont
+                tagTitle.textColor = self.tagSectionTitleTextColor
+                tagTitle.text = "选择标签，更多人能看到你的问题"
+                self.tagSection.addSubview(tagTitle)
+                
+                var tagBtnX: CGFloat = 0
+                var tagBtnY: CGFloat = 24
+                var displayTagCount: Int = 0
+                for tag in self.tagList! {
+                    let tagName = (tag as! NSDictionary).objectForKey("name") as! String
+                    let tagTextSize = tagName.sizeWithFont(self.tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+                    if ((tagTextSize.width + self.tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - self.viewHorizonMargin){
+                        tagBtnX = 0
+                        tagBtnY += 34
+                    }
+                    if tagBtnY > 70{
+                        break
+                    }
+                    tagBtnX += tagTextSize.width + self.tagSectionBtnTextVerticalMargin * 2 + self.tagSectionBtnHorizonMargin
+                    displayTagCount++
+                }
+                displayTagCount = displayTagCount-2
+                //        var tagIndex: Int = 0
                 tagBtnX = 0
-                tagBtnY += 34
+                tagBtnY = 24
+                for tagIndex in 0 ... displayTagCount{
+                    let tag: NSDictionary = self.tagList?.objectAtIndex(tagIndex) as! NSDictionary
+                    let tagName = tag.objectForKey("name") as! String
+                    let tagTextSize = tagName.sizeWithFont(self.tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+                    if ((tagTextSize.width + self.tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - self.viewHorizonMargin){
+                        tagBtnX = 0
+                        tagBtnY += 34
+                    }
+                    let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + self.tagSectionBtnTextVerticalMargin * 2, height: 29))
+                    tagButton.setTitle(tagName, forState: UIControlState.Normal)
+                    tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+                    tagButton.titleLabel?.font = self.tagBtnFont
+                    tagButton.layer.borderColor = headerColor.CGColor
+                    tagButton.layer.borderWidth = 1
+                    tagButton.layer.cornerRadius = 2
+                    tagBtnX += tagButton.frame.width + self.tagSectionBtnHorizonMargin
+                    tagButton.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
+                    self.tagSection.addSubview(tagButton)
+                }
+                
+                //更多
+                let tagTextSize = String("更多>").sizeWithFont(self.tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
+                let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + self.tagSectionBtnTextVerticalMargin * 2, height: 29))
+                tagButton.setTitle("更多>", forState: UIControlState.Normal)
+                tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+                tagButton.titleLabel?.font = self.tagBtnFont
+                tagButton.layer.borderColor = headerColor.CGColor
+                tagButton.layer.borderWidth = 1
+                tagButton.layer.cornerRadius = 2
+                tagBtnX += tagButton.frame.width + self.tagSectionBtnHorizonMargin
+                self.tagSection.addSubview(tagButton)
+                tagButton.addTarget(self, action: "selectTags:", forControlEvents: UIControlEvents.TouchUpInside)
+                self.view.addSubview(self.tagSection)
+
+
+                HudProgressManager.sharedInstance.dismissHud()
+                }) { (content, message) -> Void in
+
+                    
             }
-            if tagBtnY > 70{
-                break
-            }
-            tagBtnX += tagTextSize.width + tagSectionBtnTextVerticalMargin * 2 + tagSectionBtnHorizonMargin
-            displayTagCount++
-        }
-        displayTagCount = displayTagCount-2
-//        var tagIndex: Int = 0
-        tagBtnX = 0
-        tagBtnY = 24
-        for tagIndex in 0 ... displayTagCount{
-            let tag: NSDictionary = tagList?.objectAtIndex(tagIndex) as! NSDictionary
-            let tagName = tag.objectForKey("name") as! String
-            let tagTextSize = tagName.sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
-            if ((tagTextSize.width + tagSectionBtnTextHorizonMargin*2) + tagBtnX) > (screenWidth - viewHorizonMargin){
-                tagBtnX = 0
-                tagBtnY += 34
-            }
-            let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + tagSectionBtnTextVerticalMargin * 2, height: 29))
-            tagButton.setTitle(tagName, forState: UIControlState.Normal)
-            tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-            tagButton.titleLabel?.font = tagBtnFont
-            tagButton.layer.borderColor = headerColor.CGColor
-            tagButton.layer.borderWidth = 1
-            tagButton.layer.cornerRadius = 2
-            tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
-            tagButton.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
-            tagSection.addSubview(tagButton)
-        }
-        
-        if (self.navigationController as! AddPostNavigationViewController).isQuestion == true {
-            //更多
-            let tagTextSize = String("更多>").sizeWithFont(tagBtnFont, maxSize: CGSize(width: CGFloat.max, height: 13))
-            let tagButton = UIButton(frame: CGRect(x: tagBtnX, y: tagBtnY, width: tagTextSize.width + tagSectionBtnTextVerticalMargin * 2, height: 29))
-            tagButton.setTitle("更多>", forState: UIControlState.Normal)
-            tagButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-            tagButton.titleLabel?.font = tagBtnFont
-            tagButton.layer.borderColor = headerColor.CGColor
-            tagButton.layer.borderWidth = 1
-            tagButton.layer.cornerRadius = 2
-            tagBtnX += tagButton.frame.width + tagSectionBtnHorizonMargin
-            tagSection.addSubview(tagButton)
-            tagButton.addTarget(self, action: "selectTags:", forControlEvents: UIControlEvents.TouchUpInside)
-            self.view.addSubview(tagSection)
+
         }
         
         //ButtomSection

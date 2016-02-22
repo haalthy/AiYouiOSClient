@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="tqO-f3-1cm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="tqO-f3-1cm">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -81,6 +81,7 @@
                         <segue destination="Agv-aJ-KLH" kind="show" identifier="showMentionSegue" id="47I-ag-6lF"/>
                         <segue destination="XWm-M6-PNk" kind="show" identifier="showPostsSegue" id="4b3-Kz-ome"/>
                         <segue destination="o0c-xH-bgE" kind="show" identifier="showUserBasicInfoSeuge" id="Paa-Dx-gnU"/>
+                        <segue destination="9NF-Ll-Qnq" kind="presentation" id="Wsi-XZ-Omi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KeW-gB-dB9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -167,7 +168,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bfc-1o-FTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5343" y="1656"/>
+            <point key="canvasLocation" x="5652" y="1344"/>
         </scene>
         <!--Table View Controller-->
         <scene sceneID="nhh-9w-lA0">
@@ -527,6 +528,31 @@
             <point key="canvasLocation" x="3294" y="4143"/>
         </scene>
         <!--Table View Controller-->
+        <scene sceneID="UNM-JV-lCN">
+            <objects>
+                <tableViewController id="9NF-Ll-Qnq" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="zvN-mq-I0Z">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="NGj-66-kuf">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NGj-66-kuf" id="avw-sV-mvL">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="9NF-Ll-Qnq" id="OeI-xg-yMn"/>
+                            <outlet property="delegate" destination="9NF-Ll-Qnq" id="NEe-ce-0ui"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="spy-CP-RcA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4039.5" y="1692.75"/>
+        </scene>
+        <!--Table View Controller-->
         <scene sceneID="YFJ-E7-C0E">
             <objects>
                 <tableViewController id="XWm-M6-PNk" sceneMemberID="viewController">
@@ -552,7 +578,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Oo-UY-DMK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4669" y="1906"/>
+            <point key="canvasLocation" x="4801.5" y="1858.5"/>
         </scene>
         <!--Comment List Table View Controller-->
         <scene sceneID="FxQ-kZ-qP8">

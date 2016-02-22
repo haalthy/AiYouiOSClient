@@ -25,7 +25,10 @@ let kPhotosHeight = kPhotosWidth
 let kPhotosMargin = 7
 
 class FeedPhotosView: UIView {
-
+    
+    //放大图片
+    var tapedPhotoViewTag: Int = 0
+    
     // 网络图片数组
     var picsUrl: [String] {
 
@@ -61,8 +64,15 @@ class FeedPhotosView: UIView {
     init(feedModel: PostFeedStatus, frame: CGRect) {
         
 
-        let picArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(","))
+        let originPicArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
 
+        var picArr: Array<String> = []
+        for picurl in originPicArr {
+            if picurl != "" {
+                picArr.append(picurl)
+            }
+        }
+        
         self.picsUrl = picArr
         
         
@@ -90,19 +100,72 @@ class FeedPhotosView: UIView {
             
             // 添加手势
             
-            let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "addPhotoOnTap:")
-            photoImageView.addGestureRecognizer(gesture)
+            let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "showImage:")
             
+            photoImageView.addGestureRecognizer(gesture)
+            photoImageView.userInteractionEnabled = true
+
         }
     }
     
     // MARK: 点击图片查看
     
     func addPhotoOnTap(gesture: UITapGestureRecognizer) {
-    
+        print("tap photo")
         
     }
     
+    func showImage(sender: UITapGestureRecognizer){
+        let tapLocation = sender.locationInView(self)
+
+        let xIndex = Int((tapLocation.x)/( kPhotosWidth + CGFloat(kPhotosMargin)))
+        let yIndex = Int((tapLocation.y)/( kPhotosWidth + CGFloat(kPhotosMargin)))
+
+        tapedPhotoViewTag = yIndex * 3 + xIndex
+        
+        let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
+        let image = photoView.image
+        let window = UIApplication.sharedApplication().keyWindow
+        let backgroundView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height))
+        backgroundView.backgroundColor = UIColor.blackColor()
+        backgroundView.alpha = 0
+        let imageView = UIImageView(frame: photoView.frame)
+        
+        imageView.image = image
+        imageView.tag = 1
+        backgroundView.addSubview(imageView)
+        window?.addSubview(backgroundView)
+        let hide = UITapGestureRecognizer(target: self, action: "hideImage:")
+        
+        imageView.userInteractionEnabled = true
+        imageView.addGestureRecognizer(hide)
+        UIView.animateWithDuration(0.3, animations:{ () in
+            let vsize = UIScreen.mainScreen().bounds.size
+            imageView.frame = CGRect(x:0.0, y: 0.0, width: vsize.width, height: vsize.height)
+            imageView.contentMode = .ScaleAspectFit
+            backgroundView.alpha = 1
+            }, completion: {(finished:Bool) in })
+        
+    }
+    
+    func hideImage(sender: UITapGestureRecognizer){
+        let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
+        var backgroundView = sender.view as UIView?
+        if let view = backgroundView{
+            UIView.animateWithDuration(0.3,
+                animations:{ () in
+                    var imageView = view.viewWithTag(1) as! UIImageView
+                    imageView.frame = photoView.frame
+                    imageView.alpha = 0
+                    
+                },
+                completion: {(finished:Bool) in
+                    view.alpha = 0
+                    view.superview?.removeFromSuperview()
+                    view.removeFromSuperview()
+            })
+        }
+    }
     // MARK: - 单张图片布局
     
     func layoutForPic() {

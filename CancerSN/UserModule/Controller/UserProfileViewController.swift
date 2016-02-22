@@ -543,6 +543,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         return heightForHeader
     }
     
+    func editTreatment(sender: UIButton){
+        
+    }
+    
     func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView? {
         let headerView = UIView()
         if isSelectedTreatment{
@@ -555,8 +559,21 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 treatmentTitleLable.textColor = UIColor.lightGrayColor()
                 headerView.addSubview(treatmentTitleLable)
                 headerViewHeight += treatmentTitleLable.frame.height
+                
+                //编辑治疗方案
+                let editTreatmentBtn = UIButton(frame: CGRect(x: screenWidth - 65, y: 10, width: 50, height: 23))
+                editTreatmentBtn.setTitle("编辑", forState: UIControlState.Normal)
+                editTreatmentBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
+                editTreatmentBtn.titleLabel?.font = UIFont.systemFontOfSize(13)
+                editTreatmentBtn.layer.borderColor = headerColor.CGColor
+                editTreatmentBtn.layer.borderWidth = 1
+                editTreatmentBtn.layer.cornerRadius = 2
+                editTreatmentBtn.layer.masksToBounds = true
+                editTreatmentBtn.addTarget(self, action: "editTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+                headerView.addSubview(editTreatmentBtn)
             }
             
+
             if (section != 0) && (section != 1){
                 
                 let dateFormatter = NSDateFormatter()

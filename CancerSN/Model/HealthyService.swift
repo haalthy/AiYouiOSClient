@@ -517,16 +517,6 @@ class HaalthyService:NSObject{
         return try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil)
     }
     
-    func getTopTagList()->NSArray{
-        let parameters = NSDictionary()
-        var result = NSArray()
-        let jsonResult = NetRequest.sharedInstance.GET_A(getTopTagListURL, parameters: parameters as! Dictionary<String, AnyObject>)
-        if ((jsonResult.objectForKey("result") as! Int) == 1) && (jsonResult.objectForKey("content") != nil){
-            result = (jsonResult ).objectForKey("content") as! NSArray
-        }
-        return result
-    }
-    
     func getTagList()->NSData? {
         let urlPath: String = getTagListURL
         let url: NSURL = NSURL(string: urlPath)!
