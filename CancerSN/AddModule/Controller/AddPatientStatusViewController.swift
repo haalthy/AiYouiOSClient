@@ -37,6 +37,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     let scanReportText = UITextView()
     var clinicTableView = UITableView()
     let dateBtn = UIButton()
+    var isSelectedDate: Bool = false
     
     var datePickerContainerView = UIView()
     var datePicker = UIDatePicker()
@@ -173,25 +174,31 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     }
     
     func selectDate(sender: UIButton) {
-        let datePickerHeight:CGFloat = 200
-        let confirmButtonWidth:CGFloat = 100
-        let confirmButtonHeight:CGFloat = 30
-        datePickerContainerView = UIView(frame: CGRectMake(0, screenHeight - datePickerHeight - 30 - 40, screenWidth, datePickerHeight + 30))
-        datePickerContainerView.backgroundColor = UIColor.whiteColor()
-        self.datePicker = UIDatePicker(frame: CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight))
-        self.datePicker.datePickerMode = UIDatePickerMode.Date
-        let confirmButton = UIButton(frame: CGRectMake(screenWidth - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
-        confirmButton.setTitle("确定", forState: UIControlState.Normal)
-        confirmButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-        confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
-        let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: confirmButtonWidth, height: confirmButtonHeight))
-        cancelButton.setTitle("取消", forState: UIControlState.Normal)
-        cancelButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-        cancelButton.addTarget(self, action: "dateCancel", forControlEvents: UIControlEvents.TouchUpInside)
-        datePickerContainerView.addSubview(self.datePicker)
-        datePickerContainerView.addSubview(confirmButton)
-        datePickerContainerView.addSubview(cancelButton)
-        self.view.addSubview(datePickerContainerView)
+        if isSelectedDate == false {
+            isSelectedDate = true
+            let datePickerHeight:CGFloat = 200
+            let confirmButtonWidth:CGFloat = 100
+            let confirmButtonHeight:CGFloat = 30
+            datePickerContainerView = UIView(frame: CGRectMake(0, screenHeight - datePickerHeight - 30 - 40, screenWidth, datePickerHeight + 30))
+            datePickerContainerView.backgroundColor = UIColor.whiteColor()
+            self.datePicker.frame = CGRectMake(0 , 30, UIScreen.mainScreen().bounds.width, datePickerHeight)
+            self.datePicker.datePickerMode = UIDatePickerMode.Date
+            let confirmButton = UIButton(frame: CGRectMake(screenWidth - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
+            confirmButton.setTitle("确定", forState: UIControlState.Normal)
+            confirmButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+            confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
+            let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: confirmButtonWidth, height: confirmButtonHeight))
+            cancelButton.setTitle("取消", forState: UIControlState.Normal)
+            cancelButton.setTitleColor(headerColor, forState: UIControlState.Normal)
+            cancelButton.addTarget(self, action: "dateCancel", forControlEvents: UIControlEvents.TouchUpInside)
+            datePickerContainerView.addSubview(self.datePicker)
+            datePickerContainerView.addSubview(confirmButton)
+            datePickerContainerView.addSubview(cancelButton)
+            self.view.addSubview(datePickerContainerView)
+        }else {
+            isSelectedDate = false
+            dateCancel()
+        }
     }
     
     func dateCancel(){
@@ -464,26 +471,28 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
 //    }
     
     func getClinicDataStr(){
-        for index in 0...(self.clinicTableView.numberOfRowsInSection(0) - 1) {
-            var clinicDataName: String = ""
-            var clinicDataValue: String = ""
-            let indexPath = NSIndexPath(forRow: index, inSection: 0)
-            let cell = self.clinicTableView.cellForRowAtIndexPath(indexPath)
-            if (cell!.textLabel != nil) && (cell!.textLabel?.text != nil) && (cell!.textLabel?.text != ""){
-                clinicDataName = (cell!.textLabel?.text)!
-            }
-            
-            for subView in cell!.subviews {
-                if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
-                    clinicDataName = (subView as! UITextField).text!
-                }else if (subView is UITextField) && (subView as! UITextField).frame.origin.x > (clinicReportLblW - 10){
-                    clinicDataValue = (subView as! UITextField).text!
+        if self.clinicTableView.numberOfRowsInSection(0) > 0{
+            for index in 0...(self.clinicTableView.numberOfRowsInSection(0) - 1) {
+                var clinicDataName: String = ""
+                var clinicDataValue: String = ""
+                let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                let cell = self.clinicTableView.cellForRowAtIndexPath(indexPath)
+                if (cell!.textLabel != nil) && (cell!.textLabel?.text != nil) && (cell!.textLabel?.text != ""){
+                    clinicDataName = (cell!.textLabel?.text)!
                 }
-            }
-            
-            if (clinicDataName != "") && (clinicDataValue != "") {
-                let clinicData = NSDictionary(object: clinicDataValue, forKey: clinicDataName)
-                self.clinicDataList.addObject(clinicData)
+                
+                for subView in cell!.subviews {
+                    if (subView is UITextField) && (subView as! UITextField).frame.origin.x < clinicReportLblW {
+                        clinicDataName = (subView as! UITextField).text!
+                    }else if (subView is UITextField) && (subView as! UITextField).frame.origin.x > (clinicReportLblW - 10){
+                        clinicDataValue = (subView as! UITextField).text!
+                    }
+                }
+                
+                if (clinicDataName != "") && (clinicDataValue != "") {
+                    let clinicData = NSDictionary(object: clinicDataValue, forKey: clinicDataName)
+                    self.clinicDataList.addObject(clinicData)
+                }
             }
         }
     }

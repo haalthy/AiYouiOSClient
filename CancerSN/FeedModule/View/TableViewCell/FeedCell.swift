@@ -193,7 +193,7 @@ class FeedCell: UITableViewCell {
         
         // 3.帖子类别
         let feedTypeLabel = UILabel()
-        feedTypeLabel.text = getFeedTypeName((feedModel?.type)!)
+        feedTypeLabel.text = getFeedTypeName((feedModel?.type)!, isBroadcast: (feedModel?.isBroadcast)!)
         feedTypeLabel.frame = (self.feedOriginFrame?.feedTypeFrame)!
         feedTypeLabel.textColor = kAgeColor
         feedTypeLabel.font = UIFont.systemFontOfSize(kFeedTypeFontSize)

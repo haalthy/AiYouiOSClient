@@ -13,7 +13,7 @@ let cellFeedDetailIdentifier = "FeedCell"
 let cellFeedDetailCommentIdentifier = "FeedCommentIdentifer"
 
 
-class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyBoardDelegate {
+class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyBoardDelegate, FeedTableCellDelegate {
 
     // 控件关联
     
@@ -278,6 +278,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         
             let cell: FeedCell = tableView.dequeueReusableCellWithIdentifier(cellFeedDetailIdentifier, forIndexPath: indexPath) as! FeedCell
             cell.isShowFullText = true
+            cell.feedTableCellDelegate = self
             if self.feedDetailFrame != nil {
                 cell.feedOriginFrame?.isShowFullText = true
                 cell.feedOriginFrame = self.feedDetailFrame.feedOriginalFrame
@@ -320,5 +321,16 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    func checkUserProfile(username: String) {
+        
+        let storyboard = UIStoryboard(name: "User", bundle: nil)
+        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+        userProfileController.profileOwnername = username
+        self.navigationController?.pushViewController(userProfileController, animated: true)
+    }
+    
+    func checkPostComment(postID: Int) {
+        print(postID)
+    }
 }

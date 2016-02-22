@@ -59,7 +59,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
 //            keychainAccess.deletePasscode(usernameKeyChain)
 //            keychainAccess.deletePasscode(passwordKeyChain)
-            if (keychainAccess.getPasscode(usernameKeyChain) == nil) || ((keychainAccess.getPasscode(usernameKeyChain) as! String) == "") {
+            let getAccessToken = GetAccessToken()
+            getAccessToken.getAccessToken()
+            let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            
+            if (access_Token == nil) || ((access_Token as! String) == "") {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
                 if self.window != nil {

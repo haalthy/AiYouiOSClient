@@ -29,13 +29,13 @@ public class D3Model:NSObject{
         
         if dic != nil{
             if let b = AnyBidirectionalCollection(properties.children) {
-                for i in b.endIndex.advancedBy(-20, limit: b.startIndex)..<b.endIndex {  //因为是继承NSObject对象的，0是NSObject，所以从1开始
+                for i in b.endIndex.advancedBy(-30, limit: b.startIndex)..<b.endIndex {  //因为是继承NSObject对象的，0是NSObject，所以从1开始
                 let pro = b[i]
                 let key = pro.0        //pro  name
                 let type = pro.1    // pro type
-
+                    
                 switch type {
-                case is Int,is Int64,is Float,is Double,is Bool,is NSNumber,is NSInteger:  //base type
+                case is Int,is Int64,is Float,is Double,is Bool,is NSNumber,is NSInteger, is Int16, is Int32, is Int8:  //base type
                     let value: AnyObject! = dic?.objectForKey(key!)
                     if (value != nil) && (value is NSNull) == false{
                         obj.setValue(value, forKey: key!)

@@ -57,7 +57,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var treatmentBtnLine = UIView()
     var postBtnLine = UIView()
     var segmentSectionBtnHeight = CGFloat()
-    
+    let portraitView = UIImageView()
     let followBtn = UIButton()
     
     //
@@ -70,12 +70,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         getAccessToken.getAccessToken()
+        self.view.removeAllSubviews()
         let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if access_token != nil {
             if self.profileOwnername == nil{
                 profileOwnername = self.username
             }
-            
+            treatmentSections.removeAllObjects()
             getTreatmentsData()
             if self.userProfile.count == 0 {
                 let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
@@ -103,7 +104,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     // MARK: - Init Variables
     func initVariables() {
-        print((self.navigationController?.navigationBar.frame.height))
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
@@ -156,23 +157,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.userProfileHeaderView.addSubview(seperateLine)
         
         //头像
-        let portraitView = UIImageView(frame: CGRectMake(15, 20 + segmentSectionBtnHeight + 2, 40, 40))
+        portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-        if (self.userProfile.valueForKey("imageURL") != nil) && (self.userProfile.valueForKey("imageURL") is NSNull) == false {
-            let portraitURL = self.userProfile.valueForKey("imageURL") as! String
-//            let imageData: NSData = NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!
-            let url : NSURL = NSURL(string: portraitURL)!
-            let imageData = NSData(contentsOfURL: url)
-            if imageData != nil {
-                portraitView.image = UIImage(data: imageData!)
-            }else{
-                portraitView.backgroundColor = imageViewBackgroundColor
-            }
-        }else{
-            portraitView.image = UIImage(named: "Mario.jpg")
-        }
-//        self.view.addSubview(portraitView)
+        self.portraitView.addImageCache((self.userProfileObj?.portraitUrl)!, placeHolder: "icon_profile")
         self.userProfileHeaderView.addSubview(portraitView)
         
         //关注
@@ -237,10 +225,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             success: { (content , message) -> Void in
                 HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
                 self.followBtn.enabled = false
-                let followedImageView = UIImageView(frame: CGRECT(0, 0, self.addFollowingBtn.frame.width, self.addFollowingBtn.frame.height))
+                let followedImageView = UIImageView(frame: CGRECT(0, 0, self.followBtn.frame.width, self.followBtn.frame.height))
                 followedImageView.image = UIImage(named: "btn_Followed")
-                self.addFollowingBtn.removeAllSubviews()
-                self.addFollowingBtn.addSubview(followedImageView)
+                self.followBtn.removeAllSubviews()
+                self.followBtn.addSubview(followedImageView)
                 HudProgressManager.sharedInstance.dismissHud()
             }) { (content, message) -> Void in
                 HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")

@@ -72,11 +72,10 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         if (isNavigationPop == false) && (isSelectedByPost == false) {
             if (keychainAccess.getPasscode(usernameKeyChain) != nil)  {
-                defaultSelectTagNameList = haalthyService.getUserFavTags() as! NSMutableArray
-            }else{
-                if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil {
-                    defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
-                }
+                   self.defaultSelectTagNameList = haalthyService.getUserFavTags()
+            }
+            if (self.defaultSelectTagNameList.count == 0) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil) {
+                defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
             }
         }
     }

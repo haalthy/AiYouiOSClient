@@ -26,25 +26,24 @@ let kNicknameHeight: CGFloat = CGFloat(17.0)
 
 // 帖子类别
 
-func getFeedTypeName(type: Int) -> String {
+func getFeedTypeName(type: Int, isBroadcast: Int) -> String {
 
     var resultStr: String = ""
     switch type {
     
+    case 0:
+        if isBroadcast == 1 {
+            resultStr = "提出问题"
+        }
+        else{
+            resultStr = "发表心得"
+        }
+        break
     case 1:
-        resultStr = "我的提问"
-        break
-    case 2:
-        resultStr = "推荐"
-        break
-    case 3:
-        resultStr = "更新状态"
-        break
-    case 4:
         resultStr = "治疗方案"
         break
-    case 5:
-        resultStr = "心情"
+    case 2:
+        resultStr = "更新状态"
         break
     default: break
     }
@@ -128,7 +127,7 @@ class FeedOriginalFrame: NSObject {
         // 3.feed type
         let feedTypeX: CGFloat = CGRectGetMaxX(self.nicknameFrame!)
         let feedTypeY: CGFloat = kCellTopInside
-        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!).sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, kNicknameHeight)).width)
+        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!, isBroadcast: (self.feedModel?.isBroadcast)!).sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, kNicknameHeight)).width)
         let feedTypeH: CGFloat = kNicknameHeight
         self.feedTypeFrame = CGRECT(feedTypeX, feedTypeY, feedTypeW, feedTypeH)
         
