@@ -608,40 +608,29 @@ class HaalthyService:NSObject{
         }
     }
     
-    func updateTreatment(treatment: NSDictionary)->NSData?{
+    func updateTreatment(treatment: NSDictionary)->Int{
         getAccessToken.getAccessToken()
+        var ret: Int = 0
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil{
             let urlPath:String = (updateTreatmentURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(treatment, options: NSJSONWritingOptions())
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-            return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
-        }else{
-            return nil
+            let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
+            ret = result.objectForKey("result") as! Int
         }
+        return ret
     }
     
-    func deleteTreatment(treatment: NSDictionary)->NSData?{
+    func deleteTreatment(treatment: NSDictionary)->Int{
         getAccessToken.getAccessToken()
+        var ret: Int = 0
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil{
             let urlPath:String = (deleteTreatmentURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(treatment, options: NSJSONWritingOptions())
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-            return try! NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
-        }else{
-            return nil
+            let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
+            ret = result.objectForKey("result") as! Int
+            
         }
+        return ret
     }
     
     func increaseNewFollowCount(username: String)->NSData?{

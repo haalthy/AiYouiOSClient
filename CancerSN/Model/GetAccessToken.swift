@@ -13,6 +13,8 @@ class GetAccessToken: NSObject {
     func getAccessToken(){
         let profileSet = NSUserDefaults.standardUserDefaults()
         let keychainAccess = KeychainAccess()
+        print(keychainAccess.getPasscode(usernameKeyChain) != nil)
+        print(keychainAccess.getPasscode(passwordKeyChain) != nil)
         if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
             let usernameStr:String = keychainAccess.getPasscode(usernameKeyChain) as! String
             var passwordStr:String = keychainAccess.getPasscode(passwordKeyChain) as! String

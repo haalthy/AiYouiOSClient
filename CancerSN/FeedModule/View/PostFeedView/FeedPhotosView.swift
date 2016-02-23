@@ -28,6 +28,7 @@ class FeedPhotosView: UIView {
     
     //放大图片
     var tapedPhotoViewTag: Int = 0
+    let backgroundScrollView = UIScrollView()
     
     // 网络图片数组
     var picsUrl: [String] {
@@ -116,6 +117,7 @@ class FeedPhotosView: UIView {
     }
     
     func showImage(sender: UITapGestureRecognizer){
+        self.backgroundScrollView.removeAllSubviews()
         let tapLocation = sender.locationInView(self)
 
         let xIndex = Int((tapLocation.x)/( kPhotosWidth + CGFloat(kPhotosMargin)))
@@ -126,44 +128,53 @@ class FeedPhotosView: UIView {
         let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
         let image = photoView.image
         let window = UIApplication.sharedApplication().keyWindow
-        let backgroundView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height))
-        backgroundView.backgroundColor = UIColor.blackColor()
-        backgroundView.alpha = 0
-        let imageView = UIImageView(frame: photoView.frame)
+        backgroundScrollView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+        //config scroll view
+        backgroundScrollView.contentSize = CGSize(width: screenWidth * CGFloat(self.picsUrl.count), height: screenHeight)
+        backgroundScrollView.contentOffset = CGPoint(x: screenWidth * CGFloat(tapedPhotoViewTag), y: 0)
+        backgroundScrollView.pagingEnabled = true
+        backgroundScrollView.userInteractionEnabled = true
+        
+        backgroundScrollView.backgroundColor = UIColor.blackColor()
+        backgroundScrollView.alpha = 0
+        let imageView = UIImageView(frame: CGRECT(photoView.frame.origin.x + screenWidth * CGFloat(tapedPhotoViewTag), (screenHeight - photoView.frame.height)/2, photoView.frame.width, photoView.frame.height))
         
         imageView.image = image
         imageView.tag = 1
-        backgroundView.addSubview(imageView)
-        window?.addSubview(backgroundView)
+        backgroundScrollView.addSubview(imageView)
+        window?.addSubview(backgroundScrollView)
         let hide = UITapGestureRecognizer(target: self, action: "hideImage:")
-        
-        imageView.userInteractionEnabled = true
-        imageView.addGestureRecognizer(hide)
+        backgroundScrollView.addGestureRecognizer(hide)
         UIView.animateWithDuration(0.3, animations:{ () in
             let vsize = UIScreen.mainScreen().bounds.size
-            imageView.frame = CGRect(x:0.0, y: 0.0, width: vsize.width, height: vsize.height)
+            imageView.frame = CGRect(x:screenWidth * CGFloat(self.tapedPhotoViewTag), y: 0.0, width: vsize.width, height: vsize.height)
             imageView.contentMode = .ScaleAspectFit
-            backgroundView.alpha = 1
-            }, completion: {(finished:Bool) in })
+            self.backgroundScrollView.alpha = 1
+            }, completion: {(finished:Bool) in
+                if self.tapedPhotoViewTag > 0 {
+                    for index in 0...(self.tapedPhotoViewTag - 1){
+                        let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
+                        imageView.image = ((self.subviews[index]) as! UIImageView).image
+                        imageView.contentMode = .ScaleAspectFit
+                        self.backgroundScrollView.addSubview(imageView)
+                    }
+                }
+                if (self.tapedPhotoViewTag + 1) < (self.subviews.count - 1) {
+                    for index in (self.tapedPhotoViewTag+1)...(self.subviews.count - 1){
+                        let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
+                        imageView.image = ((self.subviews[index]) as! UIImageView).image
+                        imageView.contentMode = .ScaleAspectFit
+                        self.backgroundScrollView.addSubview(imageView)
+                    }
+                }
+        
+        })
         
     }
     
     func hideImage(sender: UITapGestureRecognizer){
-        let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
-        var backgroundView = sender.view as UIView?
-        if let view = backgroundView{
-            UIView.animateWithDuration(0.3,
-                animations:{ () in
-                    var imageView = view.viewWithTag(1) as! UIImageView
-                    imageView.frame = photoView.frame
-                    imageView.alpha = 0
-                    
-                },
-                completion: {(finished:Bool) in
-                    view.alpha = 0
-                    view.superview?.removeFromSuperview()
-                    view.removeFromSuperview()
-            })
+        if sender.view == backgroundScrollView {
+            self.backgroundScrollView.removeFromSuperview()
         }
     }
     // MARK: - 单张图片布局
