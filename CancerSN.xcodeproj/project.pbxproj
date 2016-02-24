@@ -44,6 +44,8 @@
 		2AFC09041C7019D40001652D /* ContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09031C7019D40001652D /* ContactTableViewController.swift */; };
 		2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */; };
 		2AFDEB0A1C7AE008008545D5 /* AddImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB091C7AE008008545D5 /* AddImageView.swift */; };
+		2AFDEB0C1C7D5730008545D5 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */; };
+		2AFDEB0E1C7DA3A1008545D5 /* PostCellFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */; };
 		6B0A0BBC1C2E5FF500E01585 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */; };
 		6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */; };
 		6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */; };
@@ -319,6 +321,8 @@
 		2AFC09031C7019D40001652D /* ContactTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewController.swift; sourceTree = "<group>"; };
 		2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		2AFDEB091C7AE008008545D5 /* AddImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddImageView.swift; sourceTree = "<group>"; };
+		2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCellFrame.swift; sourceTree = "<group>"; };
 		6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetRequest.swift; sourceTree = "<group>"; };
 		6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPhotosView.swift; sourceTree = "<group>"; };
@@ -630,6 +634,7 @@
 			children = (
 				2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */,
 				2AE23B5E1C4668A500B3A86F /* PatientStatusFrame.swift */,
+				2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */,
 			);
 			name = UserFrame;
 			sourceTree = "<group>";
@@ -1000,6 +1005,7 @@
 				2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */,
 				6B93FC4C1C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift */,
 				6B93FC4E1C1E5A9D00A81EA9 /* UserListTableViewCell.swift */,
+				2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1662,6 +1668,7 @@
 				6B93FC4F1C1E5A9D00A81EA9 /* CommentListTableViewController.swift in Sources */,
 				6B8412391C4F7E5900BE54B0 /* HudProgressManager.swift in Sources */,
 				6B93FCC31C1E66CA00A81EA9 /* CVCalendarTouchController.swift in Sources */,
+				2AFDEB0C1C7D5730008545D5 /* PostTableViewCell.swift in Sources */,
 				6B93FBFD1C1E58A000A81EA9 /* GetAccessToken.swift in Sources */,
 				6B93FCBA1C1E66CA00A81EA9 /* CVAuxiliaryView.swift in Sources */,
 				6BBFD8B01C326FBF00282573 /* SDWebImageDownloader.m in Sources */,
@@ -1695,6 +1702,7 @@
 				6B93FC691C1E5B9400A81EA9 /* ClinicTrailTableViewController.swift in Sources */,
 				6BBD5EEF1C34FF3D00588799 /* PostFeedFrame.swift in Sources */,
 				6BA3AC4E1C538BB5006B9FF1 /* SearchViewController.swift in Sources */,
+				2AFDEB0E1C7DA3A1008545D5 /* PostCellFrame.swift in Sources */,
 				6BF05DD51C3E0DC400D7AF99 /* KBTextView.swift in Sources */,
 				6B93FCD01C1E66CA00A81EA9 /* CVScrollDirection.swift in Sources */,
 				2A05F3CB1C630E2100E31848 /* ForgetPwdViewController.swift in Sources */,
