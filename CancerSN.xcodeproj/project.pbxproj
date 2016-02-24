@@ -14,6 +14,7 @@
 		2A19C05E1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */; };
 		2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */; };
 		2A1E69F61C3CE85300C882B7 /* UserProfileFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */; };
+		2A3036441C7CB1C100D9C151 /* PostsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3036431C7CB1C100D9C151 /* PostsTableViewController.swift */; };
 		2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A3D1BB9E78100E4272B /* Security.framework */; };
 		2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A411BB9E79C00E4272B /* SystemConfiguration.framework */; };
 		2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A431BB9E7A800E4272B /* CoreGraphics.framework */; };
@@ -280,6 +281,7 @@
 		2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserBasicInfoTableViewController.swift; sourceTree = "<group>"; };
 		2A1E69EF1C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		2A1E69F51C3CE85300C882B7 /* UserProfileFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileFrame.swift; sourceTree = "<group>"; };
+		2A3036431C7CB1C100D9C151 /* PostsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostsTableViewController.swift; sourceTree = "<group>"; };
 		2A410A3D1BB9E78100E4272B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		2A410A411BB9E79C00E4272B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		2A410A431BB9E7A800E4272B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -986,6 +988,7 @@
 				2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */,
 				2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */,
 				2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */,
+				2A3036431C7CB1C100D9C151 /* PostsTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1623,6 +1626,7 @@
 				DDD6A13D1C37C28C00C258D2 /* PNScatterChartDataItem.m in Sources */,
 				6BBFD8B11C326FBF00282573 /* SDWebImageDownloaderOperation.m in Sources */,
 				6BBFD9021C3273F900282573 /* MJRefreshAutoGifFooter.m in Sources */,
+				2A3036441C7CB1C100D9C151 /* PostsTableViewController.swift in Sources */,
 				6B93FC511C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift in Sources */,
 				6B93FC871C1E5C3800A81EA9 /* StageViewController.swift in Sources */,
 				DDD6A1391C37C28C00C258D2 /* PNRadarChart.m in Sources */,
