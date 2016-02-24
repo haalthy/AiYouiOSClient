@@ -79,7 +79,6 @@ class ChartSummaryTableViewCell: UITableViewCell {
         var senderIndex = buttonIndexPair.allKeysForObject((sender.titleLabel?.text)!)
         if senderIndex.count > 0 {
             selectedItemIndex((sender.titleLabel?.text)!, index: senderIndex[0] as! Int)
-            var clinicItem = clinicReportList.objectAtIndex(senderIndex[0] as! Int).objectForKey("clinicDataList") as! NSArray
             setClinicReport((clinicReportList.objectAtIndex(senderIndex[0] as! Int) as! NSDictionary).objectForKey("clinicDataList") as! NSArray)
         }
     }
@@ -152,12 +151,6 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     }else{
                         coordinateY = (dataValueMaxY - dataValueMinY)/2
                     }
-                    
-                    let dataMarkView = UIButton(frame: CGRectMake(CGFloat(coordinateX), CGFloat(coordinateY), dataMarkWidth, dataMarkWidth))
-                    dataMarkView.layer.borderColor = headerColor.CGColor
-                    dataMarkView.layer.borderWidth = dataMarkBorderWidth
-                    dataMarkView.layer.cornerRadius = dataMarkWidth/2
-                    dataMarkView.layer.masksToBounds = true
                     let dataMarkLbl = UIButton(frame: CGRectMake(CGFloat(coordinateX - chartDateLabelWidth/2)+7, CGFloat(coordinateY - dataValueLblH - dataValueSpace), dataValueLblW, dataValueLblH))
                     dataMarkLbl.setBackgroundImage(UIImage(named: "chartDataMarkLbl"), forState: UIControlState.Normal)
                     dataMarkLbl.setTitleColor(headerColor, forState: UIControlState.Normal)
@@ -165,10 +158,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dataMarkLbl.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
                     dataMarkLbl.titleLabel!.textAlignment = NSTextAlignment.Left
                     self.chartScrollView.addSubview(dataMarkLbl)
-                    self.chartScrollView.addSubview(dataMarkView)
-                    let dataPoint: CGPoint = dataMarkView.center
-                    dataPointsXArr.addObject(dataPoint.x)
-                    dataPointsYArr.addObject(dataPoint.y)
+                    dataPointsXArr.addObject(coordinateX + 4)
+                    dataPointsYArr.addObject(coordinateY + 4)
                 }
             }else{
                 let clinicData = clinicDataList[0]
@@ -254,7 +245,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
                 self.chartScrollView.addSubview(treatmentLabel)
             }
         }
-        self.drawRect(CGRECT(0, 0, self.chartScrollView.frame.width, self.chartScrollView.frame.height))
+        self.drawRect(CGRECT(0, 0, self.chartScrollView.contentSize.width, self.chartScrollView.frame.height))
     }
     
     override func drawRect(rect: CGRect) {
@@ -271,10 +262,17 @@ class ChartSummaryTableViewCell: UITableViewCell {
         CGContextBeginPath(UIGraphicsGetCurrentContext())
 
         if dataPointsXArr.count > 1{
-            CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[0] as! CGFloat - 2, dataPointsYArr[0] as! CGFloat)
+            CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[0] as! CGFloat, dataPointsYArr[0] as! CGFloat)
             for pointIndex in 1...(dataPointsXArr.count - 1){
-                CGContextAddLineToPoint(UIGraphicsGetCurrentContext(),  dataPointsXArr[pointIndex] as! CGFloat + 2, dataPointsYArr[pointIndex] as! CGFloat)
-                CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[pointIndex] as! CGFloat - 2, dataPointsYArr[pointIndex] as! CGFloat)
+                CGContextAddLineToPoint(UIGraphicsGetCurrentContext(),  dataPointsXArr[pointIndex] as! CGFloat, dataPointsYArr[pointIndex] as! CGFloat)
+                CGContextMoveToPoint(UIGraphicsGetCurrentContext(), dataPointsXArr[pointIndex] as! CGFloat, dataPointsYArr[pointIndex] as! CGFloat)
+                let dataMarkView = UIButton(frame: CGRectMake(CGFloat((dataPointsXArr[pointIndex] as! CGFloat) - 4), CGFloat((dataPointsYArr[pointIndex] as! CGFloat)-4), dataMarkWidth, dataMarkWidth))
+                dataMarkView.layer.borderColor = headerColor.CGColor
+                dataMarkView.layer.borderWidth = dataMarkBorderWidth
+                dataMarkView.layer.cornerRadius = dataMarkWidth/2
+                dataMarkView.layer.masksToBounds = true
+                dataMarkView.backgroundColor = chartBackgroundColor
+                self.chartScrollView.addSubview(dataMarkView)
             }
         }
         CGContextStrokePath(UIGraphicsGetCurrentContext())
@@ -282,6 +280,30 @@ class ChartSummaryTableViewCell: UITableViewCell {
         imageView.image=UIGraphicsGetImageFromCurrentImageContext()
 
         UIGraphicsEndImageContext();
+        var context = UIGraphicsGetCurrentContext()
+
+        let progressLayer = CAShapeLayer()
+        let path = CGPathCreateMutable()
+        
+        CGPathMoveToPoint(path, nil, dataPointsXArr[0] as! CGFloat, chartButtomLineTopSpace)
+
+        for pointIndex in 0...(dataPointsXArr.count - 1){
+            CGPathAddLineToPoint(path, nil, dataPointsXArr[pointIndex] as! CGFloat, dataPointsYArr[pointIndex] as! CGFloat)
+        }
+        
+        CGPathAddLineToPoint(path, nil, dataPointsXArr[dataPointsXArr.count - 1] as! CGFloat, chartButtomLineTopSpace)
+
+        progressLayer.path = path
+        self.chartScrollView.layer.addSublayer(progressLayer)
+        
+        var gradientLayer2 = CAGradientLayer()
+        gradientLayer2.startPoint = CGPointMake(0.5, 1.0)
+        gradientLayer2.endPoint = CGPointMake(0.5, 0.0)
+        gradientLayer2.frame = CGRectMake(0, 0, rect.width, rect.height)
+        gradientLayer2.colors = [UIColor.init(red: 61 / 255.0, green:208 / 255.0, blue:221 / 255.0, alpha: 0.0).CGColor, UIColor.init(red: 61 / 255.0, green:208 / 255.0, blue:221 / 255.0, alpha: 0.2).CGColor]
+        gradientLayer2.mask = progressLayer
+        self.chartScrollView.layer.addSublayer(gradientLayer2)
+        
     }
     
     override func awakeFromNib() {

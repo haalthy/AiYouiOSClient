@@ -121,7 +121,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func initContentView() {
         let profileHeaderH: CGFloat = 125
         self.userProfileHeaderView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: profileHeaderH))
-        self.tableView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH )
+        self.tableView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
         self.view.addSubview(userProfileHeaderView)
         self.view.addSubview(self.tableView)
         //初始化“治疗和方案”
@@ -543,6 +543,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         return heightForHeader
     }
     
+    func editTreatment(sender: UIButton){
+        //updateTreatment
+        
+        self.performSegueWithIdentifier("updateTreatment", sender: self)
+    }
+    
+    
     func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView? {
         let headerView = UIView()
         if isSelectedTreatment{
@@ -555,8 +562,23 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 treatmentTitleLable.textColor = UIColor.lightGrayColor()
                 headerView.addSubview(treatmentTitleLable)
                 headerViewHeight += treatmentTitleLable.frame.height
+                
+                if username == self.profileOwnername {
+                    //编辑治疗方案
+                    let editTreatmentBtn = UIButton(frame: CGRect(x: screenWidth - 65, y: 10, width: 50, height: 23))
+                    editTreatmentBtn.setTitle("编辑", forState: UIControlState.Normal)
+                    editTreatmentBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
+                    editTreatmentBtn.titleLabel?.font = UIFont.systemFontOfSize(13)
+                    editTreatmentBtn.layer.borderColor = headerColor.CGColor
+                    editTreatmentBtn.layer.borderWidth = 1
+                    editTreatmentBtn.layer.cornerRadius = 2
+                    editTreatmentBtn.layer.masksToBounds = true
+                    editTreatmentBtn.addTarget(self, action: "editTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+                    headerView.addSubview(editTreatmentBtn)
+                }
             }
             
+
             if (section != 0) && (section != 1){
                 
                 let dateFormatter = NSDateFormatter()
@@ -631,6 +653,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if segue.identifier == "showUserBasicInfoSeuge" {
             let userBasicViewController = segue.destinationViewController as! UserBasicInfoTableViewController
             userBasicViewController.userProfile = self.userProfileObj
+        }
+        
+        if segue.identifier == "updateTreatment" {
+            let viewController = segue.destinationViewController as! UpdateTreatmentTableViewController
+            viewController.treatmentList = self.treatmentList
         }
     }
     

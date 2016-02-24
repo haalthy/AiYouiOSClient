@@ -280,8 +280,14 @@ class FeedCell: UITableViewCell {
                         
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
-            let picArr: Array<String> = ((feedModel!.imageURL).componentsSeparatedByString(","))
-            picsView.picsUrl = picArr;
+            let originPicArr: Array<String> = ((feedModel!.imageURL).componentsSeparatedByString(";"))
+            var picArr: Array<String> = []
+            for picurl in originPicArr {
+                if picurl != "" {
+                    picArr.append(picurl)
+                }
+            }
+            picsView.picsUrl = picArr
             self.addSubview(picsView)
         }
         
