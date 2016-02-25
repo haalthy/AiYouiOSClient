@@ -146,7 +146,7 @@ class NetRequest: NSObject {
         var request: NSMutableURLRequest = NSMutableURLRequest()
         var task: NSURLSessionTask!
         
-        var json: NSDictionary = NSDictionary()
+        var json: NSDictionary = NSDictionary(object: -1000, forKey: "result")
         
         let semaphore = dispatch_semaphore_create(0)
         if parameters.count > 0 {
@@ -170,6 +170,7 @@ class NetRequest: NSObject {
             if error == nil {
                 
                 // 解析json
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
                 json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
 //                self.callbackWithResult(json, success: success, failed: failed)
                 

@@ -46,6 +46,7 @@
 		2AFDEB0A1C7AE008008545D5 /* AddImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB091C7AE008008545D5 /* AddImageView.swift */; };
 		2AFDEB0C1C7D5730008545D5 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */; };
 		2AFDEB0E1C7DA3A1008545D5 /* PostCellFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */; };
+		2AFDEB111C7EDACB008545D5 /* ClinicTrailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */; };
 		6B0A0BBC1C2E5FF500E01585 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */; };
 		6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */; };
 		6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */; };
@@ -323,6 +324,7 @@
 		2AFDEB091C7AE008008545D5 /* AddImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddImageView.swift; sourceTree = "<group>"; };
 		2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCellFrame.swift; sourceTree = "<group>"; };
+		2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicTrailModel.swift; sourceTree = "<group>"; };
 		6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetRequest.swift; sourceTree = "<group>"; };
 		6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPhotosView.swift; sourceTree = "<group>"; };
@@ -770,6 +772,14 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */ = {
+			isa = PBXGroup;
+			children = (
+				2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */,
+			);
+			name = ClinicTrailModel;
+			sourceTree = "<group>";
+		};
 		6B0A0BB91C2E5FF500E01585 /* NetRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -920,6 +930,7 @@
 		6B93FBF71C1E58A000A81EA9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */,
 				6B25C4571C72B55900CFFDD0 /* CommentModel */,
 				6BA14E7F1C4CB34D00B6FDD1 /* TagModel */,
 				6B9B992A1C2CF2BA00E377EA /* UserModel */,
@@ -1627,6 +1638,7 @@
 				6B8412361C4F7C9F00BE54B0 /* MBProgressHUD.m in Sources */,
 				6BA14E831C4CB38200B6FDD1 /* SubTagModel.swift in Sources */,
 				6B93FCBD1C1E66CA00A81EA9 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
+				2AFDEB111C7EDACB008545D5 /* ClinicTrailModel.swift in Sources */,
 				6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */,
 				6BBFD9281C32AC7000282573 /* FeedTagView.swift in Sources */,
 				DDD6A13D1C37C28C00C258D2 /* PNScatterChartDataItem.m in Sources */,

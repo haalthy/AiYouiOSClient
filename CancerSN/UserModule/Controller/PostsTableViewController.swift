@@ -29,6 +29,7 @@ class PostsTableViewController: UITableViewController {
     var countPerPage: Int  = 5
     var maxID: Int = 0
     
+    var postTableView: UITableView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +51,7 @@ class PostsTableViewController: UITableViewController {
     func initVariables() {
         
         postList = NSMutableArray()
-        
+        postTableView = self.tableView
         
         self.tableView.registerClass(PostTableViewCell.self, forCellReuseIdentifier: cellPostIdentifier)
 

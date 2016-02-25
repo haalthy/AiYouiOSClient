@@ -372,6 +372,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             getAccessToken.getAccessToken()
             accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         }
+        
         let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
 
         let requestBody = NSMutableDictionary()

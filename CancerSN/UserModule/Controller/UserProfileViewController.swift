@@ -11,8 +11,9 @@ import UIKit
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate {
     // 控件关联
     var tableView = UITableView()
+    var relatedTableView = UITableView()
     
-    var userProfileHeaderView: UIView!
+    var userProfileHeaderView = UIView()
 
     // 自定义变量 old
     //显示他人的profile
@@ -51,6 +52,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     let relatedToMe: NSArray = ["我的信息列表", "@我的", "关注", "基本资料"]
     var relatedToOther:NSArray?
     
+    var otherPeoplesPosts: NSArray?
+    
     //“治疗与方案” ”与我相关“
     var treatmentHeaderBtn = UIButton()
     var postHeaderBtn = UIButton()
@@ -60,17 +63,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     let portraitView = UIImageView()
     let followBtn = UIButton()
     
+    //scrollView
+    let scrollView = UIScrollView()
+    
     //
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.removeAllSubviews()
         HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中...")
-    }
-    
-    override func viewDidAppear(animated: Bool) {
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         getAccessToken.getAccessToken()
-        self.view.removeAllSubviews()
         let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if access_token != nil {
             if self.profileOwnername == nil{
@@ -92,7 +95,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
                 self.tableView.delegate = self
                 self.tableView.dataSource = self
-                self.tableView.reloadData()
+                self.relatedTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+                self.relatedTableView.delegate = self
+                self.relatedTableView.dataSource = self
+//                self.tableView.reloadData()
             }
         }else{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
@@ -100,6 +106,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.presentViewController(loginController, animated: true, completion: nil)
         }
         HudProgressManager.sharedInstance.dismissHud()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        self.view.addSubview(userProfileHeaderView)
+        self.view.addSubview(scrollView)
     }
     
     // MARK: - Init Variables
@@ -119,10 +131,22 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     func initContentView() {
         let profileHeaderH: CGFloat = 125
+        
         self.userProfileHeaderView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: profileHeaderH))
-        self.tableView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
-        self.view.addSubview(userProfileHeaderView)
-        self.view.addSubview(self.tableView)
+
+        scrollView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
+        scrollView.contentSize = CGSize(width: screenWidth * 2, height: scrollView.frame.height)
+        
+        
+        self.tableView.frame = CGRECT(0, 0, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
+        self.relatedTableView.frame = CGRECT(screenWidth, 0, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
+        
+        scrollView.addSubview(self.tableView)
+        scrollView.addSubview(self.relatedTableView)
+
+        scrollView.userInteractionEnabled = true
+        scrollView.pagingEnabled = true
+        
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
 
@@ -174,7 +198,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         let nicknameLabel = UILabel(frame: CGRectMake(65, 45 + 23, profileLabelWidth, 14))
         nicknameLabel.textColor = nicknameColor
         nicknameLabel.font = nicknameFont
-        nicknameLabel.text = self.userProfile.valueForKey("displayname") as? String
+        nicknameLabel.text = (self.userProfileObj?.nick)!
         self.userProfileHeaderView.addSubview(nicknameLabel)
         
         let profileLabel = UILabel(frame: CGRectMake(65,  90, profileLabelWidth, 12))
@@ -184,6 +208,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         profileLabel.text = profileStr
         self.userProfileHeaderView.addSubview(profileLabel)
         //
+
     }
     
     
@@ -245,13 +270,24 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             headerBtnFormatBeSelected(treatmentHeaderBtn)
             headerBtnFormatBeDeselected(postHeaderBtn)
             isSelectedTreatment = true
+            self.tableView.reloadData()
+            scrollView.contentOffset = CGPoint(x: 0, y: 0)
         }
         if sender == postHeaderBtn {
             headerBtnFormatBeSelected(postHeaderBtn)
             headerBtnFormatBeDeselected(treatmentHeaderBtn)
             isSelectedTreatment = false
+            self.relatedTableView.reloadData()
+            scrollView.contentOffset = CGPoint(x: screenWidth, y: 0)
+            if profileOwnername != username{
+                let postTableVC = PostsTableViewController()
+                postTableVC.username = profileOwnername as! String
+                self.addChildViewController(postTableVC)
+                self.relatedTableView.removeFromSuperview()
+                postTableVC.tableView.frame = CGRect(x: screenWidth, y: 0, width: screenWidth, height: self.scrollView.frame.height)
+                scrollView.addSubview(postTableVC.tableView)
+            }
         }
-        self.tableView.reloadData()
     }
     
     func headerBtnFormatBeSelected(sender: UIButton){
@@ -275,7 +311,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // MARK: - Table view data source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if isSelectedTreatment {
+        if tableView == self.tableView{
             return self.treatmentSections.count + 2
         }else{
             return 1
@@ -284,7 +320,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numberOfRows: Int = 0
-        if isSelectedTreatment {
+        if tableView == self.tableView{
             if section == 0 {
                 if self.clinicReportList.count > 0 {
                     numberOfRows = 1
@@ -302,11 +338,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     numberOfRows = (patientStatus as! NSArray).count
                 }
             }
-        }else{
+        }else if tableView == self.relatedTableView{
             if (self.username == self.profileOwnername) {
                 numberOfRows = relatedToMe.count + 1
             }else{
-                numberOfRows = relatedToOther!.count
+                numberOfRows = 1
             }
         }
         return numberOfRows
@@ -344,7 +380,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier:String = "cell"
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: cellIdentifier)
-        if isSelectedTreatment {
+        if tableView == self.tableView {
             if indexPath.section == 0 {
                 if indexPath.row == 0{
                     let treatmentSummaryCell = tableView.dequeueReusableCellWithIdentifier("ChartSummaryIdentifier", forIndexPath: indexPath) as! ChartSummaryTableViewCell
@@ -362,10 +398,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 patientstatusCell.patientStatus = patientStatusListInSection[indexPath.row] as! NSDictionary
                 return patientstatusCell
             }
+
         }else{
             if (self.username == self.profileOwnername) {
                 if indexPath.row < relatedToMe.count{
-                    cell.textLabel?.text = relatedToMe[indexPath.row] as! String
+                    cell.textLabel?.text = relatedToMe[indexPath.row] as? String
                     cell.textLabel?.textColor = cellTextColor
                     cell.textLabel?.font = cellTextFont
                     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
@@ -382,7 +419,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     cell.addSubview(logoutBtn)
                 }
             }else{
-                cell.textLabel?.text = relatedToOther![indexPath.row] as! String
+                cell.textLabel?.text = relatedToOther![indexPath.row] as? String
                 cell.textLabel?.textColor = cellTextColor
                 cell.textLabel?.font = cellTextFont
                 cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
@@ -407,7 +444,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             }
 
             
-            if jsonResult != nil{
+            if (jsonResult != nil) && (jsonResult is NSDictionary) && ((jsonResult as! NSDictionary).objectForKey("content") != nil){
                 let userDetail = (jsonResult as! NSDictionary).objectForKey("content")
                 treatmentList = userDetail!.objectForKey("treatments") as! NSMutableArray
 
@@ -526,7 +563,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         var heightForHeader:CGFloat = 0
-        if isSelectedTreatment {
+        if tableView == self.tableView{
             if section == 1 {
                 heightForHeader = 44
             }
@@ -555,7 +592,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     func tableView (tableView:UITableView,  viewForHeaderInSection section:Int)->UIView? {
         let headerView = UIView()
-        if isSelectedTreatment{
+        if tableView == self.tableView{
             var headerViewHeight: CGFloat = 0
             if section == 1 {
                 let treatmentTitleW: CGFloat = treatmentHeaderStr.sizeWithFont(treatmentHeaderFont, maxSize: CGSize(width: CGFloat.max, height: 13)).width
@@ -581,7 +618,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
             
-
+            
             if (section != 0) && (section != 1){
                 
                 let dateFormatter = NSDateFormatter()
@@ -610,7 +647,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     headerView.addSubview(treatmentTitleLabel)
                     headerViewHeight += treatmentTitleLabel.frame.height + treatmentTitleTopSpace + dosageButtomSpace
                 }
-
+                
                 if (self.treatmentSections[section-2].objectForKey("dosage") != nil)  && (self.treatmentSections[section-2].objectForKey("dosage") is NSNull) == false && ((self.treatmentSections[section-2].objectForKey("dosage") as! String) != ""){
                     let dosageStr: String = self.treatmentSections[section-2].objectForKey("dosage") as! String
                     let dosageSize:CGSize = dosageStr.sizeWithFont(dosageFont, maxSize: CGSize(width: screenWidth - dosageLeftSpace - dosageRightSpace, height: CGFloat.max))
@@ -626,13 +663,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             let seperatorLine:UIView = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: seperatorLineH))
             seperatorLine.backgroundColor = seperateLineColor
             headerView.addSubview(seperatorLine)
+
         }
         headerView.backgroundColor = UIColor.whiteColor()
         return headerView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if isSelectedTreatment == false {
+        if tableView == self.relatedTableView {
             switch indexPath.row {
             case 0:
                 self.performSegueWithIdentifier("showPostsSegue", sender: self)
