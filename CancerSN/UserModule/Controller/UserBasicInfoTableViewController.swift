@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, GenderSettingVCDelegate, AgeSettingVCDelegate, CancerTypeSettingVCDelegate, PathologicalSettingVCDelegate, GeneticMutationVCDelegate, StageSettingVCDelegate, MetastasisSettingVCDelegate {
 
     let heightForSction: CGFloat = CGFloat(35)

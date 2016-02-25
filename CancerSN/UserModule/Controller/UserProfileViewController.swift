@@ -47,7 +47,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var headerHeight = CGFloat()
     var screenWidth = CGFloat()
     var clinicChartItemList = NSMutableDictionary()
-    var isSelectedTreatment = Bool()
+    var isSelectedTreatment:Bool = true
     let relatedToMe: NSArray = ["我的信息列表", "@我的", "关注", "基本资料"]
     var relatedToOther:NSArray?
     
@@ -84,11 +84,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.presentViewController(alert, animated: true, completion: nil)
                 self.tabBarController?.selectedIndex = 0
                 
-                print(self.tabBarController?.selectedIndex)
             }else{
                 initVariables()
                 initContentView()
-
+                
                 self.tableView.registerClass(ChartSummaryTableViewCell.self, forCellReuseIdentifier: "ChartSummaryIdentifier")
                 self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
                 self.tableView.delegate = self
@@ -102,13 +101,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         HudProgressManager.sharedInstance.dismissHud()
     }
+    
     // MARK: - Init Variables
     func initVariables() {
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
-        isSelectedTreatment = true
         if ((self.userProfileObj?.gender)!) == "F"{
             relatedToOther = NSArray(array: [herProfileStr])
         }else{
@@ -149,7 +148,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.postHeaderBtn.addSubview(postBtnLine)
         self.postHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
         self.userProfileHeaderView.addSubview(postHeaderBtn)
-        headerBtnFormatBeDeselected(self.postHeaderBtn)
+        if isSelectedTreatment{
+            selectSegment(self.treatmentHeaderBtn)
+        }else{
+            selectSegment(self.postHeaderBtn)
+        }
         
         //初始化分割线
         let seperateLine = UIView(frame: CGRectMake(0, 1+segmentSectionBtnHeight, screenWidth, 0.5))
@@ -654,10 +657,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             let userBasicViewController = segue.destinationViewController as! UserBasicInfoTableViewController
             userBasicViewController.userProfile = self.userProfileObj
         }
-        
+
         if segue.identifier == "updateTreatment" {
             let viewController = segue.destinationViewController as! UpdateTreatmentTableViewController
             viewController.treatmentList = self.treatmentList
+        }
+        
+        if segue.identifier == "showPostsSegue" {
+            let viewController = segue.destinationViewController as! PostsTableViewController
+            viewController.username = self.profileOwnername as! String
         }
     }
     
@@ -667,4 +675,5 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
         self.presentViewController(controller, animated: true, completion: nil)
     }
+    
 }

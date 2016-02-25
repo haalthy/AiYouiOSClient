@@ -79,5 +79,5 @@ let getPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smssend"
 let checkEmailAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/emailcheck"
 let checkPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smscheck"
 let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
-
+let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 

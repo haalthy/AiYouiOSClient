@@ -64,6 +64,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     }
     
     func initContentView(){
+        //
         dateSection = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: patientStatusDateSectionHeight))
         let dateLabel = UILabel(frame: CGRect(x: patientStatusDateLabelLeftSpace, y: 0, width: 39, height: patientStatusDateSectionHeight))
         dateLabel.text = "日期："
@@ -236,6 +237,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         reportListView.addSubview(reportListTitle)
         
         //add report list
+        clinicTableView.scrollEnabled = false
         clinicTableView.frame = CGRECT(0, clinicReportTitleListHeight, screenWidth - 30, CGFloat(clinicReportFormatList.count + 1)*clinicReportTitleListHeight)
         for clinicReportFormat in clinicReportFormatList {
             defaultClinicRowsName.addObject((clinicReportFormat as! NSDictionary).objectForKey("clinicItem") as! String)
