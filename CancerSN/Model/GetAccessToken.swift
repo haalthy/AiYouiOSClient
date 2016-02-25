@@ -28,9 +28,13 @@ class GetAccessToken: NSObject {
                 let refreshToken = jsonResult.objectForKey("refresh_token")
                 profileSet.setObject(accessToken, forKey: accessNSUserData)
                 profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-            }else{
+            }else if(jsonResult.objectForKey("error") != nil) && ((jsonResult.objectForKey("error") as! String) == "unauthorized"){
                 profileSet.setObject(nil, forKey: accessNSUserData)
                 profileSet.setObject(nil, forKey: refreshNSUserData)
+            }
+            else{
+                profileSet.setObject(networkErrorCode, forKey: accessNSUserData)
+//                profileSet.setObject(nil, forKey: refreshNSUserData)
             }
         }else{
             profileSet.setObject(nil, forKey: accessNSUserData)

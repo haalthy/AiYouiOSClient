@@ -16,20 +16,35 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     var selectionPickerContainerViewHeight: CGFloat = 200
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
-    var treatmentSelectionData =  ["PD-1", "PD-2", "PD-3"]
-    var cancerTypeSelectionData = ["肝癌", "肾癌", "肺癌", "胆管癌", "肠癌", "胃癌", "妇科", "血液"]
+    var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
+    var cancerTypeSelectionData = ["腺癌", "鳞癌", "小细胞癌症"]
     var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
     var stageBtn = UIButton()
+    
+    //
+    var headerHeight: CGFloat = 0
+    let btnInPickerWidth: CGFloat = 50
+    let btnInPickerHeight: CGFloat = 25
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(UIApplication.sharedApplication().statusBarFrame.size.height)
-        selectionPickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - (self.navigationController?.navigationBar.frame)!.height - UIApplication.sharedApplication().statusBarFrame.size.height, UIScreen.mainScreen().bounds.width, selectionPickerContainerViewHeight))
+        initVariables()
+        initContentView()
+    }
+    
+    func initVariables(){
+        headerHeight = (self.navigationController?.navigationBar.frame)!.height - UIApplication.sharedApplication().statusBarFrame.size.height
+        let haalthyService = HaalthyService()
+        let resultDicArr = haalthyService.getClinicTrailList()
+        resultList = ClinicTrailObj.jsonToModelList(resultDicArr as Array) as! Array<ClinicTrailObj>
+    }
+    
+    func initContentView(){
+        //init pickerView
+        selectionPickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - headerHeight, UIScreen.mainScreen().bounds.width, selectionPickerContainerViewHeight))
         selectionPickerContainerView.backgroundColor = UIColor.whiteColor()
-        let btnInPickerWidth: CGFloat = 50
-        let btnInPickerHeight: CGFloat = 25
         let cancelBtnInPicker = UIButton(frame: CGRectMake(20, 10, btnInPickerWidth, btnInPickerHeight))
         let submitBtnInPicker = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 20 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
         cancelBtnInPicker.setTitle("取消", forState: UIControlState.Normal)
@@ -126,7 +141,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             return cell
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailList", forIndexPath: indexPath) 
-            
+            cell.textLabel?.text = (resultList.objectAtIndex(indexPath.row) as! ClinicTrailObj).drugName
             return cell
         }
     }

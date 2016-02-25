@@ -137,3 +137,6 @@ let WXAppID: String = "wxd930ea5d5a258f4f"
 let WXAppSecret: String = "145f45c39e367d6b2cf9865cf1971096"
 
 let numberOfLinesInFeedVC: Int = 6
+
+//网络异常代码
+let networkErrorCode = "-1000"

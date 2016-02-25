@@ -807,7 +807,7 @@ class HaalthyService:NSObject{
     }
 
     func queryPostBody(query:String)->NSData?{
-        var urlPath: String = queryPostBodyURL + query
+        let urlPath: String = queryPostBodyURL + query
         var url: NSURL = NSURL(string: urlPath)!
         var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "GET"
@@ -829,5 +829,15 @@ class HaalthyService:NSObject{
             return []
         }
     }
+    
+    func getClinicTrailList() -> NSArray{
+        let result: NSDictionary = NetRequest.sharedInstance.GET_A(getClinicTrailListURL,  parameters: [:])
+        if (result.objectForKey("content") != nil) && (result.objectForKey("content") is NSArray){
+            return result.objectForKey("content") as! NSArray
+        }else{
+            return []
+        }
+    }
+    
 }
 

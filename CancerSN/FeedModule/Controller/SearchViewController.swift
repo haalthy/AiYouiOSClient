@@ -24,17 +24,17 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.initContentView()
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.searchBar.becomeFirstResponder()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-        super.viewDidAppear(animated)
-        self.searchBar.becomeFirstResponder()
-        
-    }
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        self.searchBar.becomeFirstResponder()
+//    }
+//    
+//    override func viewDidAppear(animated: Bool) {
+//        
+//        super.viewDidAppear(animated)
+//        self.searchBar.becomeFirstResponder()
+//        
+//    }
     
     // MARK: - 初始化相关变量
     
@@ -48,6 +48,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func initContentView() {
     
         //self.searchBar.becomeFirstResponder()
+        
     }
     
     // MARK: - 网络请求
@@ -89,7 +90,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        
+        print("click search bar")
     }
     
     // MARK: - Table view data source
