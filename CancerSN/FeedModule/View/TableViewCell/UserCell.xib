@@ -14,22 +14,26 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26R-aj-bC9">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="26R-aj-bC9">
                         <rect key="frame" x="15" y="15" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="F7T-QQ-eiS"/>
+                            <constraint firstAttribute="height" constant="40" id="xy3-er-pos"/>
+                        </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="吴老师" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yDJ-e1-Rys">
-                        <rect key="frame" x="65" y="18" width="159" height="15"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="吴老师" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yDJ-e1-Rys">
+                        <rect key="frame" x="65" y="18" width="42" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cxG-1N-iVD">
-                        <rect key="frame" x="65" y="40" width="42" height="13"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cxG-1N-iVD">
+                        <rect key="frame" x="65" y="42" width="31" height="11"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1je-7y-lo7">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1je-7y-lo7">
                         <rect key="frame" x="242" y="15" width="62" height="38"/>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <state key="normal" image="btn_addFriend">
@@ -37,6 +41,19 @@
                         </state>
                     </button>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="26R-aj-bC9" secondAttribute="bottom" constant="14" id="37c-SO-Wmg"/>
+                    <constraint firstAttribute="bottom" secondItem="1je-7y-lo7" secondAttribute="bottom" constant="16" id="6rz-NU-DzT"/>
+                    <constraint firstItem="26R-aj-bC9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="78Y-SR-MgS"/>
+                    <constraint firstAttribute="trailing" secondItem="1je-7y-lo7" secondAttribute="trailing" constant="16" id="8UH-KF-GRW"/>
+                    <constraint firstItem="1je-7y-lo7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="B2O-q4-y3d"/>
+                    <constraint firstItem="yDJ-e1-Rys" firstAttribute="leading" secondItem="26R-aj-bC9" secondAttribute="trailing" constant="10" id="Jle-nb-7N0"/>
+                    <constraint firstAttribute="bottom" secondItem="cxG-1N-iVD" secondAttribute="bottom" constant="16" id="K07-HR-6fB"/>
+                    <constraint firstItem="yDJ-e1-Rys" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="18" id="gSD-Kx-5PW"/>
+                    <constraint firstItem="cxG-1N-iVD" firstAttribute="leading" secondItem="26R-aj-bC9" secondAttribute="trailing" constant="10" id="hkD-pg-YsA"/>
+                    <constraint firstItem="cxG-1N-iVD" firstAttribute="top" secondItem="yDJ-e1-Rys" secondAttribute="bottom" constant="7" id="lNT-nc-O5k"/>
+                    <constraint firstItem="26R-aj-bC9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="zDh-hb-5ok"/>
+                </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="addBtn" destination="1je-7y-lo7" id="cVE-Wo-CV0"/>

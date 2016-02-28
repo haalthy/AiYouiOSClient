@@ -8,6 +8,10 @@
 
 import UIKit
 
+let cellSearchUserIdentifier: String = "UserCell"
+let cellSearchTreatmentIdentifier = "FeedCell"
+
+
 class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     
@@ -23,7 +27,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var curSelectedBtn: UIButton?
     
-    var searchType: Int? // 1为用户，2为治疗方案，3为临床数据
+    var searchType: Int! // 1为用户，2为治疗方案，3为临床数据
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +35,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Do any additional setup after loading the view.
         
         self.initVaribles()
+        self.registerCell()
         self.initContentView()
     }
     
@@ -43,6 +48,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func initVaribles() {
     
         self.searchDataArr = NSMutableArray()
+        self.searchType = 1
     }
     
     // MARK: - 初始化相关View
@@ -65,6 +71,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchBar.placeholder = "用户"
     }
     
+    // MARK: 注册cell
+    
+    func registerCell() {
+    
+        self.searchDisplayController?.searchResultsTableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
+        
+        self.searchDisplayController?.searchResultsTableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
+    }
+    
     // MARK: - 功能方法
     
     // MARK: 搜索用户
@@ -81,6 +96,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.curSelectedBtn?.selected = false
             self.userBtn.selected = true
             self.curSelectedBtn = self.userBtn
+            self.searchType = 1
         }
     }
     
@@ -98,6 +114,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.curSelectedBtn?.selected = false
             self.methodBtn.selected = true
             self.curSelectedBtn = self.methodBtn
+            self.searchType = 2
         }
     }
     
@@ -115,6 +132,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.curSelectedBtn?.selected = false
             self.patientBtn.selected = true
             self.curSelectedBtn = self.patientBtn
+            self.searchType = 3
         }
     }
     
@@ -123,38 +141,85 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索用户
     
-    func getUserDataFromServer() {
+    func getUserDataFromServer(parameters: Dictionary<String, AnyObject>) {
         
-        NetRequest.sharedInstance.POST("", parameters: ["":""], success: { (content, message) -> Void in
         
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        NetRequest.sharedInstance.POST(searchUserURL, parameters: parameters, success: { (content, message) -> Void in
+        
+            self.searchDataArr?.removeAllObjects()
+            let dict: NSArray = content as! NSArray
+            let userData = UserModel.jsonToModelList(dict as Array) as! Array<UserModel>
+            self.searchDataArr = NSMutableArray(array: userData as NSArray)
+            self.searchDisplayController?.searchResultsTableView.reloadData()
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
+            
+
         }) { (content, message) -> Void in
             
+            
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
     }
     
     // MARK: 搜索治疗方案
     
-    func getCureFuncDataFromServer() {
+    func getCureFuncDataFromServer(parameters: Dictionary<String, AnyObject>) {
     
-        NetRequest.sharedInstance.POST("", parameters: ["":""], success: { (content, message) -> Void in
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+
+        NetRequest.sharedInstance.POST(searchTreatmentURL, parameters: parameters, success: { (content, message) -> Void in
             
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
+            self.searchDataArr?.removeAllObjects()
+            let dict: NSArray = content as! NSArray
+            let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+            
+            self.changeDataToFrame(homeData)
+
             }) { (content, message) -> Void in
+              
                 
+                HudProgressManager.sharedInstance.dismissHud()
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
 
     }
     
     // MARK: 搜索临床数据
     
-    func getPatientDataFromServer() {
+    func getPatientDataFromServer(parameters: Dictionary<String, AnyObject>) {
     
-        NetRequest.sharedInstance.POST("", parameters: ["":""], success: { (content, message) -> Void in
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+
+        NetRequest.sharedInstance.POST(searchClinicURL, parameters: parameters, success: { (content, message) -> Void in
             
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
             }) { (content, message) -> Void in
                 
+                HudProgressManager.sharedInstance.dismissHud()
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
 
     }
+    
+    // MARK: - Function
+    
+    // 处理数据
+    
+    func changeDataToFrame(dataArr: Array<PostFeedStatus>)  {
+        
+        for feedData in dataArr {
+            
+            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData)
+            self.searchDataArr!.addObject(feedFrame)
+        }
+    }
+
     
     // MARK: - searchBar Delegate
     
@@ -170,6 +235,34 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         
+        if self.searchBar.text == nil {
+            
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "请输入搜索内容")
+            return
+        }
+        
+        let parameters: Dictionary<String, AnyObject> = [
+            
+            "searchString" : self.searchBar.text!,
+            "page" : 1,
+            "count" : 10
+        ]
+        
+        
+        switch self.searchType {
+        
+        case 1:
+            self.getUserDataFromServer(parameters)
+            break
+        case 2:
+            self.getCureFuncDataFromServer(parameters)
+            break
+        case 3:
+            self.getPatientDataFromServer(parameters)
+            break
+        default:
+            break
+        }
     }
     
     // MARK: - Table view data source
@@ -185,12 +278,47 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        
-        return 40
+        var height: CGFloat = 40
+        switch self.searchType {
+            
+        case 1:
+            
+            height = 70
+            break
+        case 2:
+            
+            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
+            height = feedFrame.cellHeight
+            break
+            
+        case 3:
+            
+            height = 80
+            break
+            
+        default:
+            break
+        }
+
+        return height
         
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        switch self.searchType {
+            
+        case 1:
+            
+            
+            break
+        case 2:
+            break
+        case 3:
+            break
+        default:
+            break
+        }
         
         let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier)! as! FeedCell
     

@@ -24,6 +24,10 @@ class UserCell: UITableViewCell {
     
     func initContentView() {
     
+        
+        self.portraitImage.layer.cornerRadius = self.portraitImage.frame.width / 2
+        self.portraitImage.clipsToBounds = true
+        
         self.addBtn.layer.cornerRadius = 4.0
         self.addBtn.layer.borderColor = RGB(222, 228, 229).CGColor
         self.addBtn.layer.borderWidth = 2.0

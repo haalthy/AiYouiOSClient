@@ -178,6 +178,8 @@
 		6B97D1401C75A7F400CB2C03 /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B97D13E1C75A7F400CB2C03 /* UserCell.xib */; };
 		6B97D1431C75D0B600CB2C03 /* SearchTypeBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97D1421C75D0B600CB2C03 /* SearchTypeBtn.swift */; };
 		6B9B99301C2D092800E377EA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9B992F1C2D092800E377EA /* UserModel.swift */; };
+		6B9D04641C7D8C1900248681 /* ClinicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9D04621C7D8C1900248681 /* ClinicCell.swift */; };
+		6B9D04651C7D8C1900248681 /* ClinicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9D04631C7D8C1900248681 /* ClinicCell.xib */; };
 		6BA14E7C1C4C859300B6FDD1 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */; };
 		6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */; };
 		6BA14E811C4CB37100B6FDD1 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E801C4CB37100B6FDD1 /* TagModel.swift */; };
@@ -449,6 +451,8 @@
 		6B97D13E1C75A7F400CB2C03 /* UserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
 		6B97D1421C75D0B600CB2C03 /* SearchTypeBtn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTypeBtn.swift; sourceTree = "<group>"; };
 		6B9B992F1C2D092800E377EA /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		6B9D04621C7D8C1900248681 /* ClinicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicCell.swift; sourceTree = "<group>"; };
+		6B9D04631C7D8C1900248681 /* ClinicCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClinicCell.xib; sourceTree = "<group>"; };
 		6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTagsViewController.swift; sourceTree = "<group>"; };
 		6BA14E801C4CB37100B6FDD1 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
@@ -769,6 +773,8 @@
 				6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */,
 				6B97D13D1C75A7F400CB2C03 /* UserCell.swift */,
 				6B97D13E1C75A7F400CB2C03 /* UserCell.xib */,
+				6B9D04621C7D8C1900248681 /* ClinicCell.swift */,
+				6B9D04631C7D8C1900248681 /* ClinicCell.xib */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -1513,6 +1519,7 @@
 				6B8A474E1C434E940001F164 /* emoji_flower_n@2x.png in Resources */,
 				6B8A473E1C434E940001F164 /* emoji_characters_s@2x.png in Resources */,
 				6B8A47581C434E940001F164 /* emoji_tab_bg@2x.png in Resources */,
+				6B9D04651C7D8C1900248681 /* ClinicCell.xib in Resources */,
 				6B93FCE61C1E682300A81EA9 /* triangle-xxl.png in Resources */,
 				6B93FCE51C1E682300A81EA9 /* Tencent_QQ.png in Resources */,
 				6B8A47591C434E940001F164 /* emoji_touch.png in Resources */,
@@ -1687,6 +1694,7 @@
 				2A112AB11C562FF9007545F8 /* PrivateCheckUIView.swift in Sources */,
 				6B97D13F1C75A7F400CB2C03 /* UserCell.swift in Sources */,
 				6BA46E321C30D27600DCBD11 /* PostFeedToolBar.swift in Sources */,
+				6B9D04641C7D8C1900248681 /* ClinicCell.swift in Sources */,
 				6B93FC6F1C1E5B9400A81EA9 /* CommentListTableViewCell.swift in Sources */,
 				2AF83E4B1C6B28720008D736 /* UpdateNickTableViewController.swift in Sources */,
 				6BBFD9031C3273F900282573 /* MJRefreshAutoNormalFooter.m in Sources */,
