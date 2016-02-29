@@ -80,6 +80,7 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         password.font = inputViewFont
         password.placeholder = "密码"
         password.delegate = self
+        password.secureTextEntry = true
         let seperateLine3 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*3 - 1, width: textInputView.frame.width, height: 1))
         seperateLine3.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine3)
@@ -90,6 +91,7 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         reenterpassword.font = inputViewFont
         reenterpassword.placeholder = "请再次输入密码"
         reenterpassword.delegate = self
+        reenterpassword.secureTextEntry = true
         textInputView.addSubview(reenterpassword)
         let seperateLine4 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*4 - 1, width: textInputView.frame.width, height: 1))
         seperateLine4.backgroundColor = seperateLineColor
@@ -110,10 +112,10 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
     
     func getAuthCode(sender: UIButton){
         HudProgressManager.sharedInstance.dismissHud()
-        HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "loading")
+        HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "正在发送验证码")
         let idStr: String = id.text!
         if haalthyService.getAuthCode(idStr) == false {
-            print("获取验证码错误")
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "发送失败，稍后再试")
         }
         HudProgressManager.sharedInstance.dismissHud()
 
@@ -128,11 +130,11 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
             let passwordStr: String = publicService.passwordEncode(password.text!)
             let resetPwdRequest = NSDictionary(objects: [passwordStr, id.text!, authCode.text!], forKeys: ["password", "id", "authCode"])
             if haalthyService.resetPasswordWithCode(resetPwdRequest) {
-                print("密码重置成功，请重新登录！")
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "密码重置成功，请重新登录！")
             }else{
-                print("密码重置失败，请稍候再试！")
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "密码重置失败，稍后再试！")
+
             }
-//            self.dismissViewControllerAnimated(true, completion: nil)
             self.navigationController?.popViewControllerAnimated(true)
         }
     }
