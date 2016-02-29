@@ -150,9 +150,31 @@ class PublicService:NSObject{
         return digest
     }
     
+    func md5String(string: String)->String{
+        let strLen = CC_LONG(string.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
+        let result = UnsafeMutablePointer<CUnsignedChar>.alloc(digestLen)
+        CC_MD5(string.cStringUsingEncoding(NSUTF8StringEncoding)!, strLen, result)
+        let hash = NSMutableString()
+        for i in 0..<digestLen {
+            hash.appendFormat("%02x", result[i])
+        }
+        result.dealloc(digestLen)
+        return String(format: hash as String)
+    }
+    
+//    func passwordEncode(var password:String)->String{
+//        password = md5(password).base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+//        print(password)
+//        var passwordEndedeStr:String = ""
+//        for character in password.utf16 {
+//            passwordEndedeStr += "a"+(String(character))
+//        }
+//        return passwordEndedeStr
+//    }
+    
     func passwordEncode(var password:String)->String{
-        password = md5(password).base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
-        print(password)
+        password = md5String(password)
         var passwordEndedeStr:String = ""
         for character in password.utf16 {
             passwordEndedeStr += "a"+(String(character))

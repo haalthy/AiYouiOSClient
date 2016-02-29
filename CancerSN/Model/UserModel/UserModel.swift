@@ -8,9 +8,23 @@
 
 import UIKit
 
-class UserModel: NSObject {
+@objc(UserModel)
 
-    var userName : String?
-    var userId : String?
-    var portraitUrl : String?
+class UserModel: D3Model {
+
+    var Displayname: String?
+    var Age: Int = 0
+    var metastasis: String?
+    var IsSmoking: Int = 0
+    var id: String?
+    var Email: String?
+    var geneticMutation: String?
+    var Username: String?
+    var Gender: String?
+    var Pathological: String?
+    var Stage: Int = 0
+    var CancerType: String?
+    var imageURL: String?
+    var _version_: Int64 = 0
+    
 }
