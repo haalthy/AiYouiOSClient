@@ -18,6 +18,8 @@ class UserCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        self.initContentView()
     }
     
     // MARK: - 初始化相关view

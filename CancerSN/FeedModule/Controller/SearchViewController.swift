@@ -306,23 +306,41 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        switch self.searchType {
+        if self.searchType == 1 {
             
-        case 1:
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
+            
+            let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
+            cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: "")
+            
+            return cell
+
+        }
+        else if self.searchType == 2 {
+        
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
             
             
-            break
-        case 2:
-            break
-        case 3:
-            break
-        default:
-            break
+            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
+            cell.feedOriginFrame = feedFrame.feedOriginalFrame
+            
+            return cell
+
+        }
+        else {
+            
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
+            
+            
+            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
+            cell.feedOriginFrame = feedFrame.feedOriginalFrame
+            
+            return cell
+
+        
         }
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier)! as! FeedCell
-    
-        return cell
+        
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -44,6 +44,11 @@ let searchClinicURL = haalthyServiceRestfulURL + "open/search/clinictrail"
 // 搜索治疗方案接口
 let searchTreatmentURL = haalthyServiceRestfulURL + "open/search/treatment"
 
+// MARK: - 我的奇迹模块
+
+// 获取关注列表
+let userFollowURL = haalthyServiceRestfulURL + "security/user/followusers"
+
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"

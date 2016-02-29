@@ -180,6 +180,8 @@
 		6B9B99301C2D092800E377EA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9B992F1C2D092800E377EA /* UserModel.swift */; };
 		6B9D04641C7D8C1900248681 /* ClinicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9D04621C7D8C1900248681 /* ClinicCell.swift */; };
 		6B9D04651C7D8C1900248681 /* ClinicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B9D04631C7D8C1900248681 /* ClinicCell.xib */; };
+		6B9D04671C830E7C00248681 /* UserFollowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9D04661C830E7C00248681 /* UserFollowViewController.swift */; };
+		6B9D046B1C83D74500248681 /* FollowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9D046A1C83D74500248681 /* FollowModel.swift */; };
 		6BA14E7C1C4C859300B6FDD1 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */; };
 		6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */; };
 		6BA14E811C4CB37100B6FDD1 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA14E801C4CB37100B6FDD1 /* TagModel.swift */; };
@@ -453,6 +455,8 @@
 		6B9B992F1C2D092800E377EA /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		6B9D04621C7D8C1900248681 /* ClinicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicCell.swift; sourceTree = "<group>"; };
 		6B9D04631C7D8C1900248681 /* ClinicCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClinicCell.xib; sourceTree = "<group>"; };
+		6B9D04661C830E7C00248681 /* UserFollowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFollowViewController.swift; sourceTree = "<group>"; };
+		6B9D046A1C83D74500248681 /* FollowModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowModel.swift; sourceTree = "<group>"; };
 		6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTagsViewController.swift; sourceTree = "<group>"; };
 		6BA14E801C4CB37100B6FDD1 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
@@ -901,6 +905,7 @@
 		6B93FBF71C1E58A000A81EA9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6B9D04691C83D73300248681 /* FollowModel */,
 				6B25C4571C72B55900CFFDD0 /* CommentModel */,
 				6BA14E7F1C4CB34D00B6FDD1 /* TagModel */,
 				6B9B992A1C2CF2BA00E377EA /* UserModel */,
@@ -971,6 +976,7 @@
 				2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */,
 				2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */,
 				2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */,
+				6B9D04661C830E7C00248681 /* UserFollowViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1171,6 +1177,14 @@
 				6B9B992F1C2D092800E377EA /* UserModel.swift */,
 			);
 			path = UserModel;
+			sourceTree = "<group>";
+		};
+		6B9D04691C83D73300248681 /* FollowModel */ = {
+			isa = PBXGroup;
+			children = (
+				6B9D046A1C83D74500248681 /* FollowModel.swift */,
+			);
+			path = FollowModel;
 			sourceTree = "<group>";
 		};
 		6BA14E7F1C4CB34D00B6FDD1 /* TagModel */ = {
@@ -1710,9 +1724,11 @@
 				6BBFD8AB1C326FBF00282573 /* MKAnnotationView+WebCache.m in Sources */,
 				6BBFD9011C3273F900282573 /* MJRefreshHeader.m in Sources */,
 				6BBFD8B21C326FBF00282573 /* SDWebImageManager.m in Sources */,
+				6B9D04671C830E7C00248681 /* UserFollowViewController.swift in Sources */,
 				6B93FC711C1E5B9400A81EA9 /* PostContentTableViewCell.swift in Sources */,
 				6B5B3AC71C20072700CB58D4 /* FeedTableViewController.swift in Sources */,
 				6B93FCCE1C1E66CA00A81EA9 /* CVDate.swift in Sources */,
+				6B9D046B1C83D74500248681 /* FollowModel.swift in Sources */,
 				6B93FC561C1E5A9D00A81EA9 /* UserListTableViewController.swift in Sources */,
 				6B93FC591C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift in Sources */,
 				6BBFD8AF1C326FBF00282573 /* SDWebImageDecoder.m in Sources */,
