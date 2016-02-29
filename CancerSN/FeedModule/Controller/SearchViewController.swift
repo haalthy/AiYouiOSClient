@@ -10,6 +10,8 @@ import UIKit
 
 let cellSearchUserIdentifier: String = "UserCell"
 let cellSearchTreatmentIdentifier = "FeedCell"
+let cellSearchClinicTrailIdentifier = "ClinicTrailCell"
+
 
 
 class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
@@ -91,6 +93,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchDisplayController?.searchResultsTableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
         
         self.searchDisplayController?.searchResultsTableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
+        
+        self.searchDisplayController?.searchResultsTableView.registerClass(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
+
+        
     }
     
     // MARK: - 功能方法
@@ -190,8 +196,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.searchDataArr?.removeAllObjects()
             let dict: NSArray = content as! NSArray
             let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
-            
+
             self.changeDataToFrame(homeData)
+            self.searchDisplayController?.searchResultsTableView.reloadData()
 
             }) { (content, message) -> Void in
               
@@ -209,7 +216,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         HudProgressManager.sharedInstance.showHudProgress(self, title: "")
 
         NetRequest.sharedInstance.POST(searchClinicURL, parameters: parameters, success: { (content, message) -> Void in
+            self.searchDataArr?.removeAllObjects()
+            let dict: NSArray = content as! NSArray
+            let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
             
+            self.searchDataArr?.addObjectsFromArray(homeData)
+            self.searchDisplayController?.searchResultsTableView.reloadData()
             HudProgressManager.sharedInstance.dismissHud()
             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
             }) { (content, message) -> Void in
@@ -257,7 +269,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let parameters: Dictionary<String, AnyObject> = [
             
             "searchString" : self.searchBar.text!,
-            "page" : 1,
+            "page" : 0,
             "count" : 10
         ]
         
@@ -324,8 +336,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
             
             let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
-            cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: "")
-            
+            cell.userObj = userModel
             return cell
 
         }
@@ -342,11 +353,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
-            
-            
-            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
-            cell.feedOriginFrame = feedFrame.feedOriginalFrame
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchClinicTrailIdentifier, forIndexPath: indexPath) as! ClinicCell
+
             
             return cell
 
