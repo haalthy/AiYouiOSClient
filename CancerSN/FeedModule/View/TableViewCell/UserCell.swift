@@ -15,6 +15,19 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var addBtn: UIButton!
     
+    var userObj = UserModel(){
+        didSet{
+            updateUI()
+        }
+    }
+    
+    func updateUI(){
+        portraitImage.addImageCache(userObj.imageURL!, placeHolder: "icon_profile")
+        nameLabel.text = userObj.Displayname
+        var userInfo: String = (userObj.Gender!) + " " + String(userObj.Age) + " " + userObj.CancerType!  + " " + userObj.Pathological! + " " + String(userObj.Stage) + " " + userObj.geneticMutation!
+        infoLabel.text = userInfo
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
