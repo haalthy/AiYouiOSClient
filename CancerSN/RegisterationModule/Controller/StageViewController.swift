@@ -19,7 +19,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
     let topPickerView = UIPickerView()
     var stagePickerDataSource = [String]()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     override func viewDidLoad() {
         initVariables()
@@ -29,19 +29,22 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
     
     func initVariables(){
         stagePickerDataSource = ["I", "II", "III", "IV"]
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: "prevousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight + 10))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的初诊分期"
@@ -65,6 +68,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         self.view.addSubview(topItemNameLbl)
         
         //top pickerView
+
         topPickerView.frame = CGRect(x: pickerMargin, y: topPickerTopSpace + offsetHeightForNavigation, width: screenWidth - pickerMargin * 2, height: screenHeight - topPickerTopSpace - topPickerButtomSpace)
         topPickerView.delegate = self
         topPickerView.dataSource = self

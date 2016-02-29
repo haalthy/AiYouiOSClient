@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -30,8 +30,6 @@
                                 <state key="normal" title="取消"/>
                                 <connections>
                                     <action selector="cancel:" destination="Ujx-3C-I8k" eventType="touchUpInside" id="wFu-ms-7mT"/>
-                                    <action selector="cancelNewTreatment:" destination="jRT-9H-PZ0" eventType="touchUpInside" id="0rP-rw-hoV"/>
-                                    <action selector="loadPreviousView" destination="eIU-WN-uXC" eventType="touchUpInside" id="MNb-FD-zd8"/>
                                 </connections>
                             </button>
                         </barButtonItem>
@@ -58,133 +56,63 @@
                     </navigationItem>
                     <connections>
                         <outlet property="submitBtn" destination="ot8-68-ibp" id="N8z-Om-a6v"/>
-                        <segue destination="HeD-e0-37o" kind="presentation" identifier="contactSegue" id="C7K-nu-Bnm"/>
+                        <segue destination="mFH-sp-mcW" kind="show" identifier="contactSegue" id="JsP-Qj-HLV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6H4-Qr-BNu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="10188" y="587"/>
         </scene>
-        <!--Contact View Controller-->
-        <scene sceneID="4mV-l4-0Rg">
+        <!--Contact Table View Controller-->
+        <scene sceneID="ezf-j8-zmE">
             <objects>
-                <viewController id="HeD-e0-37o" customClass="ContactViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="fAf-dl-n6Q"/>
-                        <viewControllerLayoutGuide type="bottom" id="EmE-a7-fNm"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="dlj-jS-wuF">
+                <tableViewController id="mFH-sp-mcW" customClass="ContactTableViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="plz-em-KB0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="BIa-Kt-ZJS">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactListCell" textLabel="voP-bo-TyO" style="IBUITableViewCellStyleDefault" id="QXK-fi-owk">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QXK-fi-owk" id="8Hr-xx-5CE">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="voP-bo-TyO">
-                                                    <rect key="frame" x="15" y="0.0" width="290" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    </variation>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="uFw-Iw-hm2">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tFy-xQ-eln">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="JQX-wt-8S7"/>
-                                </constraints>
-                                <state key="normal" title="X">
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="contactListCell" id="65u-wz-28T" customClass="ContactsTableViewCell" customModule="CancerSN" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="65u-wz-28T" id="cmS-a3-r4u">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mFH-sp-mcW" id="6ZF-zf-sQ9"/>
+                            <outlet property="delegate" destination="mFH-sp-mcW" id="o3F-46-oMW"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="tSj-zJ-wg2">
+                        <nil key="title"/>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Icj-ju-1aT">
+                            <rect key="frame" x="240" y="5" width="120" height="34"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="提醒谁看">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="Ci3-Tj-Jgu">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pkn-0u-Isa">
+                                <rect key="frame" x="534" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="确定">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="JQX-wt-8S7"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
-                                    <mask key="constraints">
-                                        <include reference="JQX-wt-8S7"/>
-                                    </mask>
-                                </variation>
                                 <connections>
-                                    <action selector="cancel:" destination="HeD-e0-37o" eventType="touchUpInside" id="Uoa-go-kt8"/>
+                                    <action selector="submit:" destination="mFH-sp-mcW" eventType="touchUpInside" id="g5t-xv-HmV"/>
                                 </connections>
                             </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="EmE-a7-fNm" firstAttribute="top" secondItem="BIa-Kt-ZJS" secondAttribute="bottom" id="5QD-EK-F1u"/>
-                            <constraint firstItem="uFw-Iw-hm2" firstAttribute="leading" secondItem="dlj-jS-wuF" secondAttribute="leadingMargin" constant="-16" id="BcS-R0-wvp"/>
-                            <constraint firstItem="uFw-Iw-hm2" firstAttribute="top" secondItem="tFy-xQ-eln" secondAttribute="bottom" constant="14" id="Hrc-DV-ofa"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="BIa-Kt-ZJS" secondAttribute="trailing" constant="-16" id="Ira-v6-41M"/>
-                            <constraint firstItem="BIa-Kt-ZJS" firstAttribute="leading" secondItem="dlj-jS-wuF" secondAttribute="leadingMargin" constant="-16" id="JDZ-jx-dps"/>
-                            <constraint firstItem="tFy-xQ-eln" firstAttribute="top" secondItem="fAf-dl-n6Q" secondAttribute="bottom" id="WRh-dN-jRA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="uFw-Iw-hm2" secondAttribute="trailing" constant="-16" id="Zke-Ff-IlU"/>
-                            <constraint firstItem="tFy-xQ-eln" firstAttribute="leading" secondItem="dlj-jS-wuF" secondAttribute="leadingMargin" id="amy-MY-bjg"/>
-                            <constraint firstItem="BIa-Kt-ZJS" firstAttribute="top" secondItem="uFw-Iw-hm2" secondAttribute="bottom" id="oZM-Kd-yXW"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="BIa-Kt-ZJS"/>
-                                <exclude reference="uFw-Iw-hm2"/>
-                                <exclude reference="tFy-xQ-eln"/>
-                            </mask>
-                            <mask key="constraints">
-                                <exclude reference="5QD-EK-F1u"/>
-                                <exclude reference="WRh-dN-jRA"/>
-                                <exclude reference="amy-MY-bjg"/>
-                                <exclude reference="BcS-R0-wvp"/>
-                                <exclude reference="Hrc-DV-ofa"/>
-                                <exclude reference="Zke-Ff-IlU"/>
-                                <exclude reference="Ira-v6-41M"/>
-                                <exclude reference="JDZ-jx-dps"/>
-                                <exclude reference="oZM-Kd-yXW"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
-                            <mask key="subviews">
-                                <include reference="BIa-Kt-ZJS"/>
-                                <include reference="uFw-Iw-hm2"/>
-                                <include reference="tFy-xQ-eln"/>
-                            </mask>
-                            <mask key="constraints">
-                                <include reference="5QD-EK-F1u"/>
-                                <include reference="WRh-dN-jRA"/>
-                                <include reference="amy-MY-bjg"/>
-                                <include reference="BcS-R0-wvp"/>
-                                <include reference="Hrc-DV-ofa"/>
-                                <include reference="Zke-Ff-IlU"/>
-                                <include reference="Ira-v6-41M"/>
-                                <include reference="JDZ-jx-dps"/>
-                                <include reference="oZM-Kd-yXW"/>
-                            </mask>
-                        </variation>
-                    </view>
-                    <connections>
-                        <outlet property="tableView" destination="BIa-Kt-ZJS" id="OKB-f8-fSi"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RUd-WL-4si" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eGG-BJ-9zU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11021" y="599"/>
+            <point key="canvasLocation" x="10913" y="587"/>
         </scene>
         <!--Add Treatment Date View Controller-->
         <scene sceneID="1An-3g-yBc">

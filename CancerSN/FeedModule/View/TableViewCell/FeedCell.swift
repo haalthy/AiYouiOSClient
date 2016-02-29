@@ -127,8 +127,15 @@ func getPatientNum(index: Int) -> String {
 
 }
 
+protocol FeedTableCellDelegate{
+    func checkUserProfile(username: String)
+    
+    func checkPostComment(postID: Int)
+}
+
 class FeedCell: UITableViewCell {
 
+    var feedTableCellDelegate: FeedTableCellDelegate?
     
     var feedOriginFrame: FeedOriginalFrame? {
     
@@ -161,14 +168,17 @@ class FeedCell: UITableViewCell {
         let feedModel = self.feedOriginFrame?.feedModel
         
         // 1.头像
+        let portraitButton = UIButton(frame: CGRect(x: (feedOriginFrame?.portraitFrame)!.origin.x - 5, y: (feedOriginFrame?.portraitFrame)!.origin.y - 5, width: (feedOriginFrame?.portraitFrame)!.width + 10, height: (feedOriginFrame?.portraitFrame)!.height + 10))
         let portraitView = UIImageView()
         portraitView.addImageCache((feedModel?.portraitURL)!, placeHolder: "icon_profile")
-        portraitView.frame = (feedOriginFrame?.portraitFrame)!
+        portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
+        portraitButton.addSubview(portraitView)
         portraitView.backgroundColor = UIColor.greenColor()
         
         portraitView.layer.cornerRadius = portraitView.bounds.size.height / 2
         portraitView.clipsToBounds = true
-        self.addSubview(portraitView)
+        portraitButton.addTarget(self, action: "checkUserProfile:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.addSubview(portraitButton)
         
         // 2.昵称
         let nickname = UILabel()
@@ -216,13 +226,18 @@ class FeedCell: UITableViewCell {
         statusLabel.textColor = kAgeColor
         self.addSubview(statusLabel)
         
-        if feedModel?.highlight != "" {
+        if (feedModel?.highlight) != "" {
             
             // 6.标签
             var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
+            var newHighlightTagsArr: [String] = []
             highTagsArr.removeLast()
-            
-            let highView = FeedTagView(frame: (self.feedOriginFrame?.cureFrame)!, highTag: highTagsArr)
+            for highTag in highTagsArr {
+                if highTag != "" {
+                    newHighlightTagsArr.append(highTag)
+                }
+            }
+            let highView = FeedTagView(frame: (self.feedOriginFrame?.cureFrame)!, highTag: newHighlightTagsArr)
             highView.frame = (self.feedOriginFrame?.cureFrame)!
             self.addSubview(highView)
         }
@@ -240,13 +255,15 @@ class FeedCell: UITableViewCell {
         
         
         // 7.帖子内容
+        
         let contentLabel = UILabel()
         contentLabel.text = feedModel?.body
         contentLabel.frame = (self.feedOriginFrame?.contentFrame)!
         contentLabel.textColor = kContentColor
         contentLabel.font = UIFont.systemFontOfSize(kContentFontSize)
-        contentLabel.numberOfLines = 0
-        contentLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        contentLabel.numberOfLines = numberOfLinesInFeedVC
+        contentLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+
         self.addSubview(contentLabel)
         
         if feedModel?.hasImage > 0 {
@@ -311,4 +328,9 @@ class FeedCell: UITableViewCell {
         
         return resultStr
     }
+    
+    func checkUserProfile(sender: UIButton){
+        feedTableCellDelegate?.checkUserProfile(((self.feedOriginFrame?.feedModel)?.insertUsername)!)
+    }
+    
 }

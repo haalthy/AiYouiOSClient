@@ -46,14 +46,14 @@ class DiscoverTableViewController: UIViewController, UITableViewDelegate, UITabl
         if((userData.objectForKey(favTagsNSUserData)) != nil){
             tagList = userData.objectForKey(favTagsNSUserData) as! NSArray
         }
-        if tagList.count == 0 && username != nil{
-            let getUserFavTags = haalthyService.getUserFavTags()
-            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTags!, options: NSJSONReadingOptions.MutableContainers)
-            if(jsonResult is NSArray){
-                tagList = jsonResult as! NSArray
-                userData.setObject(tagList, forKey: favTagsNSUserData)
-            }
-        }
+//        if tagList.count == 0 && username != nil{
+//            let getUserFavTags = haalthyService.getUserFavTags()
+//            let jsonResult = try? NSJSONSerialization.JSONObjectWithData(getUserFavTags!, options: NSJSONReadingOptions.MutableContainers)
+//            if(jsonResult is NSArray){
+//                tagList = jsonResult as! NSArray
+//                userData.setObject(tagList, forKey: favTagsNSUserData)
+//            }
+//        }
         
 //        if((username == nil) && (tagList.count == 0)){
 //            self.performSegueWithIdentifier("setTagSegue", sender: nil)

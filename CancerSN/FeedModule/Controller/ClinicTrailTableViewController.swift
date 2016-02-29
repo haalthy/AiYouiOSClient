@@ -17,7 +17,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
     var treatmentSelectionData =  ["PD-1", "PD-2", "PD-3"]
-    var cancerTypeSelectionData = ["肝部", "肾部", "肺部", "胆管", "肠部", "胃部", "妇科", "血液"]
+    var cancerTypeSelectionData = ["肝癌", "肾癌", "肺癌", "胆管癌", "肠癌", "胃癌", "妇科", "血液"]
     var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()

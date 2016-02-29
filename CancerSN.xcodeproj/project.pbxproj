@@ -25,6 +25,9 @@
 		2A8E43EB1C4CAD4E003FAADC /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */; };
 		2AA264AF1B615D2A001E52E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AA264AD1B615D2A001E52E7 /* Main.storyboard */; };
 		2AA2650E1B684D25001E52E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AA2650D1B684D25001E52E7 /* CoreData.framework */; };
+		2AAC215D1C72FD18009E4734 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AAC21581C72FD18009E4734 /* libWeChatSDK.a */; };
+		2AAC215E1C72FD18009E4734 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2AAC21591C72FD18009E4734 /* read_me.txt */; };
+		2AAC21641C733163009E4734 /* WXApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC21631C733163009E4734 /* WXApiManager.swift */; };
 		2ABEFDB11C523FD7004D8EE9 /* AddPatientStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */; };
 		2ABEFDB31C524260004D8EE9 /* AddPatientStatusFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEFDB21C524260004D8EE9 /* AddPatientStatusFrame.swift */; };
 		2AC529571C4F85AE00076368 /* AddTreatmentFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC529561C4F85AE00076368 /* AddTreatmentFrame.swift */; };
@@ -37,6 +40,8 @@
 		2AE23B5F1C4668A500B3A86F /* PatientStatusFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE23B5E1C4668A500B3A86F /* PatientStatusFrame.swift */; };
 		2AE23B621C466B8500B3A86F /* PatientStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE23B611C466B8500B3A86F /* PatientStatus.swift */; };
 		2AF83E4B1C6B28720008D736 /* UpdateNickTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */; };
+		2AFC09041C7019D40001652D /* ContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09031C7019D40001652D /* ContactTableViewController.swift */; };
+		2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */; };
 		6B0A0BBC1C2E5FF500E01585 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */; };
 		6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */; };
 		6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */; };
@@ -107,7 +112,6 @@
 		6B93FC3D1C1E5A4F00A81EA9 /* AddTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC341C1E5A4F00A81EA9 /* AddTreatmentViewController.swift */; };
 		6B93FC3E1C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */; };
 		6B93FC4F1C1E5A9D00A81EA9 /* CommentListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC411C1E5A9D00A81EA9 /* CommentListTableViewController.swift */; };
-		6B93FC501C1E5A9D00A81EA9 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */; };
 		6B93FC511C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC431C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift */; };
 		6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC451C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift */; };
 		6B93FC541C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC461C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift */; };
@@ -294,6 +298,12 @@
 		2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
 		2AA264AE1B615D2A001E52E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = CancerSN/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2AA2650D1B684D25001E52E7 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2AAC21581C72FD18009E4734 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		2AAC21591C72FD18009E4734 /* read_me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = read_me.txt; sourceTree = "<group>"; };
+		2AAC215A1C72FD18009E4734 /* WechatAuthSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WechatAuthSDK.h; sourceTree = "<group>"; };
+		2AAC215B1C72FD18009E4734 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		2AAC215C1C72FD18009E4734 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
+		2AAC21631C733163009E4734 /* WXApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WXApiManager.swift; sourceTree = "<group>"; };
 		2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusViewController.swift; sourceTree = "<group>"; };
 		2ABEFDB21C524260004D8EE9 /* AddPatientStatusFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusFrame.swift; sourceTree = "<group>"; };
 		2AC529561C4F85AE00076368 /* AddTreatmentFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentFrame.swift; sourceTree = "<group>"; };
@@ -310,6 +320,8 @@
 		2AE23B5E1C4668A500B3A86F /* PatientStatusFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatusFrame.swift; sourceTree = "<group>"; };
 		2AE23B611C466B8500B3A86F /* PatientStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatus.swift; sourceTree = "<group>"; };
 		2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateNickTableViewController.swift; sourceTree = "<group>"; };
+		2AFC09031C7019D40001652D /* ContactTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewController.swift; sourceTree = "<group>"; };
+		2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetRequest.swift; sourceTree = "<group>"; };
 		6B2BB7931C33A67700C685A6 /* FeedPhotosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPhotosView.swift; sourceTree = "<group>"; };
@@ -381,7 +393,6 @@
 		6B93FC341C1E5A4F00A81EA9 /* AddTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentViewController.swift; sourceTree = "<group>"; };
 		6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		6B93FC411C1E5A9D00A81EA9 /* CommentListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentListTableViewController.swift; sourceTree = "<group>"; };
-		6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactViewController.swift; path = ../../UserModule/Controller/ContactViewController.swift; sourceTree = "<group>"; };
 		6B93FC431C1E5A9D00A81EA9 /* MentionedPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentionedPostTableViewController.swift; sourceTree = "<group>"; };
 		6B93FC451C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePreviousTreatmentViewController.swift; sourceTree = "<group>"; };
 		6B93FC461C1E5A9D00A81EA9 /* UpdateTreatmentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTreatmentTableViewController.swift; sourceTree = "<group>"; };
@@ -458,7 +469,7 @@
 		6B9D04661C830E7C00248681 /* UserFollowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFollowViewController.swift; sourceTree = "<group>"; };
 		6B9D046A1C83D74500248681 /* FollowModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowModel.swift; sourceTree = "<group>"; };
 		6BA14E7B1C4C859300B6FDD1 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
-		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTagsViewController.swift; sourceTree = "<group>"; };
+		6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTagsViewController.swift; path = ../../FeedModule/Controller/FeedTagsViewController.swift; sourceTree = "<group>"; };
 		6BA14E801C4CB37100B6FDD1 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
 		6BA14E821C4CB38200B6FDD1 /* SubTagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTagModel.swift; sourceTree = "<group>"; };
 		6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -605,6 +616,7 @@
 				6BF05DDF1C3E69B800D7AF99 /* libsqlite3.tbd in Frameworks */,
 				6BF05DDD1C3E69AE00D7AF99 /* libz.tbd in Frameworks */,
 				2A410A481BB9E7C100E4272B /* CoreTelephony.framework in Frameworks */,
+				2AAC215D1C72FD18009E4734 /* libWeChatSDK.a in Frameworks */,
 				2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */,
 				2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */,
 				2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */,
@@ -655,6 +667,18 @@
 				2A7FB6A31C5B5971007030DC /* tabbarAddFrame.swift */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		2AAC21571C72FD18009E4734 /* WeChatSDK1.6.2 */ = {
+			isa = PBXGroup;
+			children = (
+				2AAC21581C72FD18009E4734 /* libWeChatSDK.a */,
+				2AAC21591C72FD18009E4734 /* read_me.txt */,
+				2AAC215A1C72FD18009E4734 /* WechatAuthSDK.h */,
+				2AAC215B1C72FD18009E4734 /* WXApi.h */,
+				2AAC215C1C72FD18009E4734 /* WXApiObject.h */,
+			);
+			path = WeChatSDK1.6.2;
 			sourceTree = "<group>";
 		};
 		2AC529581C4F85D100076368 /* AddFrame */ = {
@@ -913,6 +937,7 @@
 				6B93FBFA1C1E58A000A81EA9 /* HealthyService.swift */,
 				6B93FBFB1C1E58A000A81EA9 /* KeychainAccess.swift */,
 				6B93FBFC1C1E58A000A81EA9 /* PublicService.swift */,
+				2AAC21631C733163009E4734 /* WXApiManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -937,7 +962,7 @@
 				2A8E43EA1C4CAD4E003FAADC /* CalenderViewController.swift */,
 				2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */,
 				2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */,
-				6B93FC421C1E5A9D00A81EA9 /* ContactViewController.swift */,
+				2AFC09031C7019D40001652D /* ContactTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -948,6 +973,7 @@
 				2AC529581C4F85D100076368 /* AddFrame */,
 				6B93FC361C1E5A4F00A81EA9 /* AddPatientStatusHeaderTableViewCell.swift */,
 				2A112AB01C562FF9007545F8 /* PrivateCheckUIView.swift */,
+				2AFC09051C7020D60001652D /* ContactsTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1012,7 +1038,6 @@
 				6B93FC621C1E5B9400A81EA9 /* ShowPostDetailTableViewController.swift */,
 				6B5B3AC61C20072700CB58D4 /* FeedTableViewController.swift */,
 				6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */,
-				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
 				6BA3AC4D1C538BB5006B9FF1 /* SearchViewController.swift */,
 			);
 			path = Controller;
@@ -1047,13 +1072,14 @@
 		6B93FC741C1E5C3800A81EA9 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				6BA14E7D1C4C881000B6FDD1 /* FeedTagsViewController.swift */,
+				6B93FC7D1C1E5C3800A81EA9 /* TagTableViewController.swift */,
 				6B93FC751C1E5C3800A81EA9 /* CancerTypeSettingViewController.swift */,
 				6B93FC761C1E5C3800A81EA9 /* GenderSettingViewController.swift */,
 				6B93FC771C1E5C3800A81EA9 /* GeneticMutationViewController.swift */,
 				6B93FC781C1E5C3800A81EA9 /* LoginViewController.swift */,
 				6B93FC7B1C1E5C3800A81EA9 /* SignupViewController.swift */,
 				6B93FC7C1C1E5C3800A81EA9 /* StageViewController.swift */,
-				6B93FC7D1C1E5C3800A81EA9 /* TagTableViewController.swift */,
 				2AD105191C61E1B500FAF65B /* MetasticViewController.swift */,
 				2A05F3C81C630C4200E31848 /* SignUpSucessfulViewController.swift */,
 				2A05F3CA1C630E2100E31848 /* ForgetPwdViewController.swift */,
@@ -1093,6 +1119,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				2AAC21571C72FD18009E4734 /* WeChatSDK1.6.2 */,
 				6B84122F1C4F7C9F00BE54B0 /* MBProgressHUD */,
 				6B2BF6D31C3BA3AB00654A91 /* D3Model */,
 				DDD6A10B1C37C28C00C258D2 /* PNChart */,
@@ -1562,6 +1589,7 @@
 				6B8A47481C434E940001F164 /* emoji_corner_right@2x.png in Resources */,
 				6B8A47351C434E940001F164 /* emoji_bell_s.png in Resources */,
 				6B97D1401C75A7F400CB2C03 /* UserCell.xib in Resources */,
+				2AAC215E1C72FD18009E4734 /* read_me.txt in Resources */,
 				6B8A47451C434E940001F164 /* emoji_corner_left.png in Resources */,
 				6BBFD9221C32785800282573 /* Info-iOS.plist in Resources */,
 				6B8412341C4F7C9F00BE54B0 /* 37x-Checkmark.png in Resources */,
@@ -1682,8 +1710,8 @@
 				6B93FCBB1C1E66CA00A81EA9 /* CVCalendarContentViewController.swift in Sources */,
 				6B93FCD31C1E66CA00A81EA9 /* CVShape.swift in Sources */,
 				6BBFD8FE1C3273F900282573 /* MJRefreshBackFooter.m in Sources */,
-				6B93FC501C1E5A9D00A81EA9 /* ContactViewController.swift in Sources */,
 				6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */,
+				2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */,
 				6BBFD9081C3273F900282573 /* MJRefreshGifHeader.m in Sources */,
 				2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */,
 				6BBFD9051C3273F900282573 /* MJRefreshBackGifFooter.m in Sources */,
@@ -1735,6 +1763,7 @@
 				6BBFD8B71C326FBF00282573 /* UIImage+WebP.m in Sources */,
 				6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */,
 				2A05F3C91C630C4200E31848 /* SignUpSucessfulViewController.swift in Sources */,
+				2AFC09041C7019D40001652D /* ContactTableViewController.swift in Sources */,
 				6BBFD8B51C326FBF00282573 /* UIImage+GIF.m in Sources */,
 				DDD6A1361C37C28C00C258D2 /* PNLineChartDataItem.m in Sources */,
 				6BBFD8BA1C326FBF00282573 /* UIView+WebCacheOperation.m in Sources */,
@@ -1760,6 +1789,7 @@
 				6BBFD90A1C3273F900282573 /* MJRefreshStateHeader.m in Sources */,
 				6B93FCCA1C1E66CA00A81EA9 /* CVCalendarViewPresentationMode.swift in Sources */,
 				6B93FCC71C1E66CA00A81EA9 /* CVCalendarViewAppearance.swift in Sources */,
+				2AAC21641C733163009E4734 /* WXApiManager.swift in Sources */,
 				6BBFD90C1C3273F900282573 /* MJRefreshConst.m in Sources */,
 				6BA46E371C31148A00DCBD11 /* UtilsFunction.swift in Sources */,
 				DDD6A1381C37C28C00C258D2 /* PNPieChartDataItem.m in Sources */,
@@ -1928,6 +1958,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
 				);
 				OTHER_LDFLAGS = "-fobjc-arc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1951,6 +1982,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
 				);
 				OTHER_LDFLAGS = "-fobjc-arc";
 				PRODUCT_NAME = "$(TARGET_NAME)";

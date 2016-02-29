@@ -14,8 +14,8 @@ protocol GeneticMutationVCDelegate{
 
 class GeneticMutationViewController: UIViewController {
 
-    let geneticList: NSArray = ["ALK","KARS", "EGFR", "其他", "无突变"]
-    let geneticValueList: NSArray = [25, 10, 30, 20, 15]
+    let geneticList: NSArray = ["EGFR","FGFR1", "KARS","ALK", "其他", "无突变"]
+    let geneticValueList: NSArray = [25, 20, 20, 5, 25, 5]
     let buttonSection = UIView()
     let pieChartCenterLabel = UILabel()
     var pieChartOuter = PNPieChart()
@@ -23,7 +23,7 @@ class GeneticMutationViewController: UIViewController {
     
     var haalthyService = HaalthyService()
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     let profileSet = NSUserDefaults.standardUserDefaults()
 
@@ -38,20 +38,22 @@ class GeneticMutationViewController: UIViewController {
     }
     
     func initVariables(){
-    
+        if isUpdate {
+            offsetHeightForNavigation = 30
+        }
     }
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
         //sign up title
-        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight))
+        let signUpTitle = UILabel(frame: CGRect(x: signUpTitleMargin, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth - signUpTitleMargin * 2, height: signUpTitleHeight + 10))
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的基因信息"
@@ -67,12 +69,14 @@ class GeneticMutationViewController: UIViewController {
         self.view.addSubview(signUpSubTitle)
         
         //top Item Name
+        /*
         let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "基因信息"
         topItemNameLbl.textAlignment = NSTextAlignment.Center
         self.view.addSubview(topItemNameLbl)
+        */
         
         //next view button
         if isUpdate == false {
@@ -85,6 +89,9 @@ class GeneticMutationViewController: UIViewController {
         }
         
         //genetic button section
+        if screenHeight < 600 {
+            buttonSectionTopSpace = 120
+        }
         buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace + offsetHeightForNavigation, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
         var buttonX: CGFloat = 0
         var buttonY: CGFloat = 0
@@ -201,7 +208,7 @@ class GeneticMutationViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "selectTagSegue" {
-            (segue.destinationViewController as! TagTableViewController).isFirstTagSelection = true
+            (segue.destinationViewController as! FeedTagsViewController).isNavigationPop = true
         }
     }
 }

@@ -27,7 +27,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     var femaleBtn = UIButton()
     var gender: String?
     
-    let offsetHeightForNavigation : CGFloat = 30
+    var offsetHeightForNavigation : CGFloat = 0
     
     override func viewDidLoad() {
         initVariables()
@@ -42,10 +42,18 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
     }
 
     func initVariables(){
-        
+//        if isUpdate {
+//            offsetHeightForNavigation =
+//        }
     }
     
     func initContentView(){
+        if (screenHeight < 600)  && (isUpdate == true){
+            signUpTitleHeight = 0
+            signUpSubTitleHeight = 0
+            genderBtnTopSpace = 160
+            signUpTopItemNameTopSpace = 95
+        }
         //sign up title
         let signUpTitle = UILabel(frame: CGRect(x: 0, y: signUpTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpTitleHeight))
         signUpTitle.font = signUpTitleFont
@@ -110,7 +118,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         
         //next view button
         if isUpdate == false {
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont

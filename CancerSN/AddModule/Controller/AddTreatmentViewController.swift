@@ -26,6 +26,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     let profileSet = NSUserDefaults.standardUserDefaults()
 
     //
+    var scrollView = UIScrollView()
     var treatmentTypeBtmLineView = UIView()
     var treatmentFormatSectionView = UIView()
     var treatmentTextInput = UITextView()
@@ -35,6 +36,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     var treatmentTypeBtnW: CGFloat = CGFloat()
     
     var headerHeight: CGFloat = CGFloat()
+    
+    var treatmentTextInputY: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,10 +78,11 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     }
     
     func initContentView(){
+
         //添加 治疗方案类别 按钮
         treatmentTypeBtnW = (screenWidth - treatmentTypeSectionLeftSpace - treatmentTypeSectionRightSpace)/CGFloat(treatmentTypeArr.count)
         for var typeIndex = 0; typeIndex < treatmentTypeArr.count; typeIndex++ {
-            let treatmentTypeBtn = UIButton(frame: CGRect(x: treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, y: headerHeight, width: treatmentTypeBtnW, height: treatmentTypeSectionHeight))
+            let treatmentTypeBtn = UIButton(frame: CGRect(x: treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, y: 0, width: treatmentTypeBtnW, height: treatmentTypeSectionHeight))
             treatmentTypeBtn.setTitle(treatmentTypeArr[typeIndex] as! String, forState: UIControlState.Normal)
             treatmentTypeBtn.setTitleColor(treatmentTypeSectionTextColor, forState: UIControlState.Normal)
             treatmentTypeBtn.titleLabel?.font = treatmentTypeSectionUIFont
@@ -86,24 +90,28 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             if typeIndex == 0 {
                 selectedTreatmentType(treatmentTypeBtn)
             }
-            self.view.addSubview(treatmentTypeBtn)
+            self.scrollView.addSubview(treatmentTypeBtn)
         }
         
         //添加 治疗方案类别 按钮下划线
-        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace, headerHeight + treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
+        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace, treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
         treatmentTypeBtmLineView.backgroundColor = treatmentTypeBtmLineColor
-        self.view.addSubview(treatmentTypeBtmLineView)
+        self.scrollView.addSubview(treatmentTypeBtmLineView)
         
         //添加 分割线
-        let treatmentHeaderSeperateLine = UIView(frame: CGRect(x: 0, y: headerHeight + treatmentTypeSectionHeight + treatmentTypeBtmLineHeight, width: screenWidth, height: 0.5))
+        let treatmentHeaderSeperateLine = UIView(frame: CGRect(x: 0, y: treatmentTypeSectionHeight + treatmentTypeBtmLineHeight, width: screenWidth, height: 0.5))
         treatmentHeaderSeperateLine.backgroundColor = treatmentSeperateLineColor
-        self.view.addSubview(treatmentHeaderSeperateLine)
+        self.scrollView.addSubview(treatmentHeaderSeperateLine)
         
         //添加底部选择框
         let privateCheckUIView = PrivateCheckUIView()
         treatmentBtmSectionView = privateCheckUIView.createCheckedSection()
         privateCheckUIView.checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(treatmentBtmSectionView)
+        
+        //scrollView
+        scrollView.frame = CGRECT(0, headerHeight, screenWidth, screenHeight - headerHeight - treatmentBtmSectionView.frame.height)
+        self.view.addSubview(scrollView)
     }
     
     func selectedTreatmentType(sender: UIButton){
@@ -154,14 +162,17 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
             
             keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
-            
+            self.scrollView.frame = CGRECT(0, self.scrollView.frame.origin.y, screenWidth, self.scrollView.frame.height - keyboardheight)
+            self.scrollView.contentOffset = CGPointMake(0, treatmentTextInputY)
             self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y - keyboardheight)
+            
         }
     }
     
     func keyboardWillDisappear(notification:NSNotification){
-        
         self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y + keyboardheight)
+        self.scrollView.frame = CGRECT(0, self.scrollView.frame.origin.y, screenWidth, self.scrollView.frame.height + keyboardheight)
+        self.scrollView.contentOffset = CGPointMake(0, 0)
     }
     
     func checkedPrivate(sender: UIButton){
@@ -184,7 +195,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     func resetView(sender: UIButton){
         let typeIndex = treatmentTypeArr.indexOfObject((sender.titleLabel?.text)!)
         selectedIndex = typeIndex
-        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, headerHeight + treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
+        treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW,  treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
         //添加治疗方案 选择 按钮
         treatmentFormatSectionView.removeAllSubviews()
         if selectedIndex == 0{
@@ -216,19 +227,19 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                 treatmentFormatSectionView.addSubview(treatmentNameBtn)
                 treatmentBtnX += treatmentNameBtn.frame.width + treatmentBtnHorizonSpace
             }
-            treatmentFormatSectionView.frame = CGRECT(0, 0 + headerHeight + treatmentTypeSectionHeight, screenWidth - treatmentBtnLeftSpace * 2, treatmentBtnY + treatmentBtnHeight + treatmentBtnTopSpace)
+            treatmentFormatSectionView.frame = CGRECT(0, treatmentTypeSectionHeight, screenWidth - treatmentBtnLeftSpace * 2, treatmentBtnY + treatmentBtnHeight + treatmentBtnTopSpace)
             let treatmentSectionSeperateLine = UIView(frame: CGRect(x: 0, y: treatmentFormatSectionView.frame.height, width: screenWidth, height: 0.5))
             treatmentSectionSeperateLine.backgroundColor = seperateLineColor
             treatmentFormatSectionView.addSubview(treatmentSectionSeperateLine)
-            self.view.addSubview(treatmentFormatSectionView)
+            self.scrollView.addSubview(treatmentFormatSectionView)
         }
         //treatment text view
-        let treatmentTextInputY = treatmentTextInputViewTopSpace + headerHeight + treatmentTypeSectionHeight + treatmentFormatSectionView.frame.height
+        treatmentTextInputY = treatmentTextInputViewTopSpace + treatmentTypeSectionHeight + treatmentFormatSectionView.frame.height
         treatmentTextInput.frame = CGRECT(treatmentTextInputViewLeftSpace, treatmentTextInputY, screenWidth - treatmentTextInputViewLeftSpace * 2, UIScreen.mainScreen().bounds.height - treatmentTextInputY - buttomSectionHeight)
         treatmentTextInput.text = "请输入剂量及使用方法..."
         treatmentTextInput.font = treatmentTextInputViewFont
         treatmentTextInput.textColor = treatmentTextInputViewColor
-        self.view.addSubview(treatmentTextInput)
+        self.scrollView.addSubview(treatmentTextInput)
     }
     
     func getTreatmentDetail(){
