@@ -228,7 +228,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         for feedData in dataArr {
             
-            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData)
+            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData, isShowFullText: true)
             self.searchDataArr!.addObject(feedFrame)
         }
     }

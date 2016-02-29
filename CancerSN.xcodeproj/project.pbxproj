@@ -1023,11 +1023,8 @@
 				2A19C05D1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift */,
 				2AF83E4A1C6B28720008D736 /* UpdateNickTableViewController.swift */,
 				2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */,
-<<<<<<< HEAD
 				2A3036431C7CB1C100D9C151 /* PostsTableViewController.swift */,
-=======
 				6B9D04661C830E7C00248681 /* UserFollowViewController.swift */,
->>>>>>> master
 			);
 			path = Controller;
 			sourceTree = "<group>";
