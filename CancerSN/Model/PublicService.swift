@@ -163,6 +163,16 @@ class PublicService:NSObject{
         return String(format: hash as String)
     }
     
+//    func passwordEncode(var password:String)->String{
+//        password = md5(password).base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+//        print(password)
+//        var passwordEndedeStr:String = ""
+//        for character in password.utf16 {
+//            passwordEndedeStr += "a"+(String(character))
+//        }
+//        return passwordEndedeStr
+//    }
+    
     func passwordEncode(var password:String)->String{
         password = md5String(password)
         var passwordEndedeStr:String = ""

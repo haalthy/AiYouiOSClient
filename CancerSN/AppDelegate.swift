@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+        let publicSerice = PublicService()
+        print(publicSerice.passwordEncode("password"))
 //        let keychainAccess = KeychainAccess()
 //        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
 //        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
