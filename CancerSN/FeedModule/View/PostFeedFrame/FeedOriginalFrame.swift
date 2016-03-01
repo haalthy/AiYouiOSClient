@@ -123,10 +123,11 @@ class FeedOriginalFrame: NSObject {
         let nicknameH: CGFloat = kNicknameHeight
         self.nicknameFrame = CGRECT(nicknameX, nicknameY, nicknameW, nicknameH)
         
+        print((self.feedModel?.type)!)
         // 3.feed type
         let feedTypeX: CGFloat = CGRectGetMaxX(self.nicknameFrame!)
         let feedTypeY: CGFloat = kCellTopInside
-        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!).sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, kNicknameHeight)).width)
+        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!).sizeWithFont(kNicknameFontSize, maxSize:CGSize(width: CGFloat.max, height: kNicknameHeight)).width)
         let feedTypeH: CGFloat = kNicknameHeight
         self.feedTypeFrame = CGRECT(feedTypeX, feedTypeY, feedTypeW, feedTypeH)
         
