@@ -32,7 +32,7 @@ class UserCell: UITableViewCell {
         
         self.addBtn.layer.cornerRadius = 4.0
         self.addBtn.layer.borderColor = RGB(222, 228, 229).CGColor
-        self.addBtn.layer.borderWidth = 2.0
+        self.addBtn.layer.borderWidth = 1.0
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

@@ -45,6 +45,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     func initContentView() {
     
+        self.tableView.tableFooterView = UIView(frame: CGRECT(0, 0, 0, 0))
     }
     
     // MARK: - 注册cell
@@ -73,8 +74,9 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     func getFollowDataFromServer() {
     
+        let keychainAccess = KeychainAccess()
         HudProgressManager.sharedInstance.showHudProgress(self, title: "")
-        NetRequest.sharedInstance.POST(userFollowURL, parameters: ["username":"AY1455433420173.183"], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(userFollowURL, isToken: true, parameters: ["username":keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             HudProgressManager.sharedInstance.dismissHud()
             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "获取成功")
@@ -139,31 +141,32 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         if indexPath.row < self.friendData.count {
         
             let followModel: FollowModel = self.friendData[indexPath.row] as! FollowModel
-            cell.imageView?.addImageCache(followModel.imageURL!, placeHolder: "")
+            cell.portraitImage.addImageCache(followModel.imageURL!, placeHolder: "icon_follow")
             cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + followModel.age! + "，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage!
+            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
             
             cell.addBtn.setImage(UIImage(named: "icon_follow"), forState: .Normal)
             
         }
         
-        if indexPath.row < self.followData.count + self.friendData.count {
+        else if indexPath.row < self.followData.count + self.friendData.count {
         
             let followModel: FollowModel = self.followData[indexPath.row - self.friendData.count] as! FollowModel
-            cell.imageView?.addImageCache(followModel.imageURL!, placeHolder: "")
+            cell.portraitImage.addImageCache(followModel.imageURL!, placeHolder: "icon_follow")
             cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + followModel.age! + "，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage!
+            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
             
             cell.addBtn.setImage(UIImage(named: "icon_followM"), forState: .Normal)
         }
         
-        if indexPath.row < self.followrData.count + self.friendData.count + self.followData.count {
-        
-            let followModel: FollowModel = self.followrData[indexPath.row - self.friendData.count - self.followrData.count] as! FollowModel
-            cell.imageView?.addImageCache(followModel.imageURL!, placeHolder: "")
-            cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + followModel.age! + "，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage!
+        else if indexPath.row < self.followrData.count + self.friendData.count + self.followData.count {
             
+            print(indexPath.row - self.friendData.count - self.followData.count)
+        
+            let followModel: FollowModel = self.followrData[indexPath.row - self.friendData.count - self.followData.count] as! FollowModel
+            cell.portraitImage.addImageCache(followModel.imageURL!, placeHolder: "icon_follow")
+            cell.nameLabel.text = followModel.displayname
+            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
             cell.addBtn.setImage(UIImage(named: "icon_followY"), forState: .Normal)
         }
         
