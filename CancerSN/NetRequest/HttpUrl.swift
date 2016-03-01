@@ -45,8 +45,11 @@ let searchTreatmentURL = haalthyServiceRestfulURL + "open/search/treatment"
 
 // MARK: - 我的奇迹模块
 
-// 获取关注列表
+// 获取关注列表接口
 let userFollowURL = haalthyServiceRestfulURL + "security/user/followusers"
+
+// 获取@我的列表接口
+let userMentionedURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"

@@ -540,7 +540,7 @@
         <!--@我的-->
         <scene sceneID="KIH-5t-C98">
             <objects>
-                <viewController id="nsG-0I-ZHb" customClass="MentionedViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="nsG-0I-ZHb" customClass="MentionedViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hyU-39-YlZ"/>
                         <viewControllerLayoutGuide type="bottom" id="RP9-H7-Ti1"/>

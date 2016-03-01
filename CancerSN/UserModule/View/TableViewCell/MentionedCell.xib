@@ -28,7 +28,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUu-4u-vrK">
-                        <rect key="frame" x="65" y="40" width="36" height="13"/>
+                        <rect key="frame" x="65" y="40" width="168" height="13"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -63,6 +63,7 @@
                     <constraint firstItem="Q6J-2B-OCZ" firstAttribute="top" secondItem="DR5-W1-JdI" secondAttribute="top" constant="10" id="K5D-JL-iUD"/>
                     <constraint firstAttribute="trailing" secondItem="Q6J-2B-OCZ" secondAttribute="trailing" constant="13" id="bbJ-1f-COZ"/>
                     <constraint firstItem="Toj-1Q-yN4" firstAttribute="top" secondItem="Q6J-2B-OCZ" secondAttribute="bottom" constant="3" id="hGc-rD-y2K"/>
+                    <constraint firstItem="Toj-1Q-yN4" firstAttribute="leading" secondItem="kUu-4u-vrK" secondAttribute="trailing" constant="31" id="hhu-zi-OMD"/>
                     <constraint firstItem="aed-wh-DsP" firstAttribute="leading" secondItem="rkP-XC-Kj6" secondAttribute="trailing" constant="10" id="mse-Gf-r2T"/>
                     <constraint firstItem="kUu-4u-vrK" firstAttribute="leading" secondItem="rkP-XC-Kj6" secondAttribute="trailing" constant="10" id="pT6-OQ-0xI"/>
                     <constraint firstItem="kUu-4u-vrK" firstAttribute="top" secondItem="aed-wh-DsP" secondAttribute="bottom" constant="7" id="sf0-8A-8yF"/>
