@@ -57,6 +57,8 @@ let passwordKeyChain = "haalthyPasswordIdentifier"
 let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
 let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
 
+let placeHolderStr = "icon_placeholder"
+
 
 //store info in NSUserData
 let favTagsNSUserData = "favoriteTags"
