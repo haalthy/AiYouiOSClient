@@ -12,10 +12,13 @@ let cellSearchUserIdentifier: String = "UserCell"
 let cellSearchTreatmentIdentifier = "FeedCell"
 
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
 
     
-    @IBOutlet weak var searchBar: UISearchBar!
+    
+    @IBOutlet weak var typeView: UIView!
+    
+    @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var userBtn: UIButton!
     
@@ -26,6 +29,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var searchDataArr: NSMutableArray?
     
     var curSelectedBtn: UIButton?
+    
+    var searchViewController: UISearchController!
     
     var searchType: Int! // 1为用户，2为治疗方案，3为临床数据
     
@@ -54,6 +59,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - 初始化相关View
     
     func initContentView() {
+        
+        
+        self.searchViewController = UISearchController(searchResultsController: nil)
+        self.searchViewController.searchResultsUpdater = self
+        self.searchViewController.delegate = self
+        self.searchViewController.searchBar.delegate = self
+        self.searchViewController.dimsBackgroundDuringPresentation = false
+        self.searchViewController.searchBar.sizeToFit()
+        self.tableView.tableHeaderView = self.searchViewController.searchBar
     
         self.userBtn.setImage(UIImage(named: "btn_user_selected"), forState: .Selected)
         self.userBtn.setImage(UIImage(named: "btn_user"), forState: .Normal)
@@ -68,16 +82,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.curSelectedBtn = self.userBtn
         
-        self.searchBar.placeholder = "用户"
+        self.searchViewController.searchBar.placeholder = "用户"
     }
     
     // MARK: 注册cell
     
     func registerCell() {
     
-        self.searchDisplayController?.searchResultsTableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
+        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
         
-        self.searchDisplayController?.searchResultsTableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
+        self.tableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
     }
     
     // MARK: - 功能方法
@@ -92,7 +106,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else
         {
-            self.searchBar.placeholder = "用户"
+            self.searchViewController.searchBar.placeholder = "用户"
             self.curSelectedBtn?.selected = false
             self.userBtn.selected = true
             self.curSelectedBtn = self.userBtn
@@ -110,7 +124,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else {
         
-            self.searchBar.placeholder = "治疗方案"
+            self.searchViewController.searchBar.placeholder = "治疗方案"
             self.curSelectedBtn?.selected = false
             self.methodBtn.selected = true
             self.curSelectedBtn = self.methodBtn
@@ -128,7 +142,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else {
         
-            self.searchBar.placeholder = "临床数据"
+            self.searchViewController.searchBar.placeholder = "临床数据"
             self.curSelectedBtn?.selected = false
             self.patientBtn.selected = true
             self.curSelectedBtn = self.patientBtn
@@ -151,7 +165,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let dict: NSArray = content as! NSArray
             let userData = UserModel.jsonToModelList(dict as Array) as! Array<UserModel>
             self.searchDataArr = NSMutableArray(array: userData as NSArray)
-            self.searchDisplayController?.searchResultsTableView.reloadData()
+            self.tableView.reloadData()
             HudProgressManager.sharedInstance.dismissHud()
             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
             
@@ -220,8 +234,26 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
 
+    // MARK: - UISearchResultsUpdating
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+        
+    }
+    
+    func willDismissSearchController(searchController: UISearchController) {
+        
+        self.searchViewController.searchBar.resignFirstResponder()
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func willPresentSearchController(searchController: UISearchController) {
+        
+        self.typeView.hidden = true
+    }
     
     // MARK: - searchBar Delegate
+    
+    
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         
@@ -235,7 +267,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         
-        if self.searchBar.text == nil {
+        if self.searchViewController.searchBar.text == nil {
             
             HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "请输入搜索内容")
             return
@@ -243,7 +275,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         let parameters: Dictionary<String, AnyObject> = [
             
-            "searchString" : self.searchBar.text!,
+            "searchString" : self.searchViewController.searchBar.text!,
             "page" : 1,
             "count" : 10
         ]
@@ -274,6 +306,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.searchDataArr!.count
+        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -310,8 +343,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
             
-            let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
-            cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: "")
+            
+                let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
+                cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: placeHolderStr)
+            
+            
             
             return cell
 
@@ -347,7 +383,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
+        //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
 
 

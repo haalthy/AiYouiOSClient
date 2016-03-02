@@ -104,7 +104,7 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getFeedDetailContentFromServer() {
     
-        NetRequest.sharedInstance.POST(getPostDetailURL, parameters:["id":329],
+        NetRequest.sharedInstance.POST(getPostDetailURL, parameters:["id":self.feedId],
             
             success: { (content , message) -> Void in
                 

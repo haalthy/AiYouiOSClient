@@ -60,6 +60,20 @@ class NetRequest: NSObject {
 
     }
     
+    // MARK: include token and Params
+    
+    func POST(url: String, isToken: Bool, parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+        
+        if isToken == true {
+        
+            let manager = NetRequestManager(url: self.addTokenToURL(url), method: "POST", parameters: parameters) { (data, response, error) -> Void in
+                
+                self.getDataAndCheck(data, error, success, failed)
+            }
+            manager.netWorkFire()
+        }
+    }
+    
     //同步POST请求
     // MARK: 同步GET请求, 带参数
 //    
@@ -361,6 +375,39 @@ class NetRequest: NSObject {
         allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
         
         return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? ""
+    }
+    
+    // MARK: - 添加存储本地token
+    
+    func addTokenToURL(url: String) -> String {
+        
+        let getAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let urlPath:String = (url as String) + "?access_token=" + (accessToken as! String)
+        return urlPath
+        
+    }
+    
+    // MARK: - 检测用户是否登录 
+    
+    func checkUserIsLogin() {
+    
+        let getAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if (access_Token != nil){
+            //已经登陆
+            //if(access_token == networkErrorCode) // networkErrorCode == -1000
+            //{
+                //网络异常    请稍候再试
+                
+           // }else{
+                //正常登录
+          //  }
+      //  }else{
+            //未登录或登录超时请重新登录
+        }
     }
 
 }

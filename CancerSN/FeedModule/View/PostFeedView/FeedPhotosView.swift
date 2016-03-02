@@ -45,7 +45,7 @@ class FeedPhotosView: UIView {
                 let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
                 
-                    photoView.addImageCache(self.picsUrl[i], placeHolder: "icon_profile")
+                    photoView.addImageCache(self.picsUrl[i], placeHolder: placeHolderStr)
                     photoView.hidden = false
                 }
                 else {
