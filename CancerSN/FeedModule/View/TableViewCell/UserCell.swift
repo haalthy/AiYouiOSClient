@@ -25,9 +25,9 @@ class UserCell: UITableViewCell {
     }
     
     func updateUI(){
-        portraitImage.addImageCache(userObj.imageURL!, placeHolder: "icon_profile")
+        portraitImage.addImageCache(userObj.imageURL, placeHolder: "icon_profile")
         nameLabel.text = userObj.Displayname
-        var userInfo: String = (userObj.Gender!) + " " + String(userObj.Age) + " " + userObj.CancerType!  + " " + userObj.Pathological! + " " + String(userObj.Stage) + " " + userObj.geneticMutation!
+        var userInfo: String = (userObj.Gender) + " " + String(userObj.Age) + " " + userObj.CancerType  + " " + userObj.Pathological + " " + userObj.Stage + " " + userObj.geneticMutation
         infoLabel.text = userInfo
     }
     
@@ -58,7 +58,7 @@ class UserCell: UITableViewCell {
         let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
         
         let requestBody = NSMutableDictionary()
-        requestBody.setObject(userObj.Username!, forKey: "followingUser")
+        requestBody.setObject(userObj.Username, forKey: "followingUser")
         requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
         
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,

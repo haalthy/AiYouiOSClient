@@ -92,7 +92,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func initContentView(){
         //text View
-        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin + headerHeight, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
+        textView.frame = CGRect(x: viewHorizonMargin, y: textViewVerticalMargin, width: screenWidth - 2 * viewHorizonMargin, height: textViewHeight)
         textView.textColor = ultraLightTextColor
         if self.isQuestion {
             textView.text = "请输入问题"

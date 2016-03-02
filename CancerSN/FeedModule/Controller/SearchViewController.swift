@@ -358,7 +358,14 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
+        let storyboard = UIStoryboard(name: "User", bundle: nil)
+        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+        let info = self.searchDataArr![indexPath.row]
+        if info is UserModel {
+            userProfileController.profileOwnername = (info as! UserModel).Username
+                self.navigationController?.pushViewController(userProfileController, animated: true)
+        }
+//        self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
 
 

@@ -78,6 +78,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         imagePicker.sourceType = .PhotoLibrary //
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = true
+    }
+    
     func initContentView(){
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")
