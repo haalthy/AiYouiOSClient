@@ -9,7 +9,8 @@
 import UIKit
 
 class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-    
+    var searchDataArr = NSMutableArray()
+
     var resultList = NSArray()
     var selectionPicker = UIPickerView()
     var selectionPickerContainerView = UIView()
@@ -32,6 +33,13 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         super.viewDidLoad()
         initVariables()
         initContentView()
+        let parameters: Dictionary<String, AnyObject> = [
+            
+            "searchString" : "",
+            "page" : 0,
+            "count" : 10
+        ]
+        getPatientDataFromServer(parameters)
     }
     
     func initVariables(){
@@ -39,6 +47,29 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         let haalthyService = HaalthyService()
         let resultDicArr = haalthyService.getClinicTrailList()
         resultList = ClinicTrailObj.jsonToModelList(resultDicArr as Array) as! Array<ClinicTrailObj>
+
+        self.tableView.registerClass(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
+    }
+    
+    func getPatientDataFromServer(parameters: Dictionary<String, AnyObject>) {
+        
+        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        
+        NetRequest.sharedInstance.POST(searchClinicURL, parameters: parameters, success: { (content, message) -> Void in
+            self.searchDataArr.removeAllObjects()
+            let dict: NSArray = content as! NSArray
+            let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
+            
+            self.searchDataArr.addObjectsFromArray(homeData)
+            self.tableView.reloadData()
+            HudProgressManager.sharedInstance.dismissHud()
+            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
+            }) { (content, message) -> Void in
+                
+                HudProgressManager.sharedInstance.dismissHud()
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+        }
+        
     }
     
     func initContentView(){
@@ -58,7 +89,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         selectionPickerContainerView.addSubview(cancelBtnInPicker)
         selectionPickerContainerView.addSubview(submitBtnInPicker)
         selectionPickerContainerView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(1.0)
-        self.view.addSubview(selectionPickerContainerView)
+//        self.view.addSubview(selectionPickerContainerView)
         
         selectionPicker = UIPickerView(frame: CGRectMake(10.0, 40.0, UIScreen.mainScreen().bounds.width - 20, 150.0))
         
@@ -68,21 +99,22 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     func cancelSelectionPicker(){
-        let durationTime: NSTimeInterval = 0.5
-        UIView.animateWithDuration(durationTime, animations: {
-            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
-        })
-        selectionPickerContainerAppear = false
+//        let durationTime: NSTimeInterval = 0.5
+//        UIView.animateWithDuration(durationTime, animations: {
+//            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
+//        })
+//        selectionPickerContainerAppear = false
+        selectionPickerContainerView.removeFromSuperview()
     }
     
     func submitSelectionPicker(){
         let durationTime: NSTimeInterval = 0.5
-        UIView.animateWithDuration(durationTime, animations: {
-            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
-        })
+//        UIView.animateWithDuration(durationTime, animations: {
+//            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
+//        })
         let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
         print(selectStr)
-        selectionPickerContainerAppear = false
+//        selectionPickerContainerAppear = false
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
         }
@@ -92,6 +124,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         if (stageSelectionData as NSArray).containsObject(selectStr) {
             stageBtn.setTitle(selectStr, forState: UIControlState.Normal)
         }
+        selectionPickerContainerView.removeFromSuperview()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -118,7 +151,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         switch section{
         case 0: numberOfRows = 1
             break
-        case 1: numberOfRows = resultList.count
+        case 1: numberOfRows = self.searchDataArr.count
             break
         default: break
         }
@@ -140,8 +173,10 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             cell.addSubview(typeBtn)
             return cell
         }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailList", forIndexPath: indexPath) 
-            cell.textLabel?.text = (resultList.objectAtIndex(indexPath.row) as! ClinicTrailObj).drugName
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchClinicTrailIdentifier, forIndexPath: indexPath) as! ClinicCell
+            
+            cell.clinicTrial = self.searchDataArr[indexPath.row] as! ClinicTrailObj
+//            cell.clinicCellDelegate = self
             return cell
         }
     }
@@ -152,9 +187,10 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
             let durationTime: NSTimeInterval = 0.5
-            UIView.animateWithDuration(durationTime, animations: {
-                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-            })
+//            UIView.animateWithDuration(durationTime, animations: {
+//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
+//            })
+            self.view.addSubview(selectionPickerContainerView)
         }
     }
     
@@ -164,9 +200,11 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
             let durationTime: NSTimeInterval = 0.5
-            UIView.animateWithDuration(durationTime, animations: {
-                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-            })
+//            UIView.animateWithDuration(durationTime, animations: {
+//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
+//            })
+            self.view.addSubview(selectionPickerContainerView)
+
         }
     }
     
@@ -176,10 +214,13 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
             let durationTime: NSTimeInterval = 0.5
-            UIView.animateWithDuration(durationTime, animations: {
-                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-            })
+//            UIView.animateWithDuration(durationTime, animations: {
+//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
+//            })
+            selectionPickerContainerView.removeFromSuperview()
+
         }
+        selectionPickerContainerView.removeFromSuperview()
     }
     
     func formatSelectBtn(selectBtn: UIButton, title: String){
@@ -218,5 +259,13 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     }
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerDataSource[row]
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        if indexPath.section == 0 {
+            return 40
+        }else{
+            return 120
+        }
     }
 }

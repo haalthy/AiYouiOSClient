@@ -10,12 +10,12 @@ import UIKit
 @objc(ClinicTrailObj)
 
 class ClinicTrailObj: D3Model {
-    var drugType: String = ""
-    var drugName: String = ""
-    var subGroup: String = ""
+    var drugtype: String = ""
+    var drugname: String = ""
+    var subgroup: String = ""
     var stage: String = ""
     var effect: String = ""
     var researchInfo: String = ""
-    var sideEffect: String = ""
+    var sideeffect: String = ""
     var original: String = ""
 }

@@ -77,7 +77,6 @@
                         </button>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="rE7-05-vEM" id="olM-tf-gg0"/>
                         <outlet property="userProfileHeaderView" destination="1VO-cZ-O3n" id="ZK9-qW-B2r"/>
                         <segue destination="4Dp-a9-k8b" kind="show" identifier="showFollowSegue" id="GZR-rE-WKe"/>
                         <segue destination="Agv-aJ-KLH" kind="show" identifier="showMentionSegue" id="47I-ag-6lF"/>

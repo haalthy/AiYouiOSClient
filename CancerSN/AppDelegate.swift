@@ -63,7 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
             let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-            
             if (access_Token == nil) || ((access_Token as! String) == "") {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
                 let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController

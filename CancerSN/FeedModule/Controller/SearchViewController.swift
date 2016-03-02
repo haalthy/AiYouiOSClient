@@ -9,12 +9,12 @@
 import UIKit
 
 let cellSearchUserIdentifier: String = "UserCell"
-let cellSearchTreatmentIdentifier = "FeedCell"
+let cellSearchTreatmentIdentifier = "TreatmentCell"
 let cellSearchClinicTrailIdentifier = "ClinicTrailCell"
 
 
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, ClinicCellDelegate {
 
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -90,7 +90,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func registerCell() {
     
-        self.searchDisplayController?.searchResultsTableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
+        self.searchDisplayController?.searchResultsTableView.registerClass(TreatmentCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
         
         self.searchDisplayController?.searchResultsTableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
         
@@ -176,8 +176,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
 
         }) { (content, message) -> Void in
-            
-            
             HudProgressManager.sharedInstance.dismissHud()
             HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
@@ -195,18 +193,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
             self.searchDataArr?.removeAllObjects()
             let dict: NSArray = content as! NSArray
-            let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
-
-            self.changeDataToFrame(homeData)
+            let homeData = TreatmentModel.jsonToModelList(dict as Array) as! Array<TreatmentModel>
+            self.searchDataArr?.addObjectsFromArray(homeData)
+            //            self.changeDataToFrame(homeData)
             self.searchDisplayController?.searchResultsTableView.reloadData()
 
             }) { (content, message) -> Void in
-              
                 
                 HudProgressManager.sharedInstance.dismissHud()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
-
     }
     
     // MARK: 搜索临床数据
@@ -230,19 +226,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
         }
 
-    }
-    
-    // MARK: - Function
-    
-    // 处理数据
-    
-    func changeDataToFrame(dataArr: Array<PostFeedStatus>)  {
-        
-        for feedData in dataArr {
-            
-            let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData, isShowFullText: true)
-            self.searchDataArr!.addObject(feedFrame)
-        }
     }
 
     
@@ -312,13 +295,14 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
         case 2:
             
-            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
-            height = feedFrame.cellHeight
+//            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
+//            height = feedFrame.cellHeight
+            height = 120
             break
             
         case 3:
             
-            height = 80
+            height = 140
             break
             
         default:
@@ -342,11 +326,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else if self.searchType == 2 {
         
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchTreatmentIdentifier, forIndexPath: indexPath) as! TreatmentCell
             
-            
-            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
-            cell.feedOriginFrame = feedFrame.feedOriginalFrame
+//            
+//            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
+//            cell.feedOriginFrame = feedFrame.feedOriginalFrame
+            cell.treatmentObj = self.searchDataArr![indexPath.row] as! TreatmentModel
             
             return cell
 
@@ -355,13 +340,18 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchClinicTrailIdentifier, forIndexPath: indexPath) as! ClinicCell
 
-            
+            cell.clinicTrial = self.searchDataArr![indexPath.row] as! ClinicTrailObj
+            cell.clinicCellDelegate = self
             return cell
-
         
         }
         
         
+    }
+    
+    func updateCellHeight(height: CGFloat) {
+        self.searchDisplayController?.searchResultsTableView.beginUpdates()
+        self.searchDisplayController?.searchResultsTableView.endUpdates()
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
