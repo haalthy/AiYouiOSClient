@@ -345,7 +345,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             
                 let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
-                cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: placeHolderStr)
+//                cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: placeHolderStr)
             
             
             
