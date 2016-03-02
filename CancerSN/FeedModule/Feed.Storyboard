@@ -233,7 +233,7 @@
         <!--搜索-->
         <scene sceneID="7dX-CA-qmN">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="U8h-Mn-B3t" customClass="SearchViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchVC" hidesBottomBarWhenPushed="YES" id="U8h-Mn-B3t" customClass="SearchViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LZP-nU-Bs1"/>
                         <viewControllerLayoutGuide type="bottom" id="Hft-y4-JE2"/>
@@ -242,9 +242,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SYw-9I-Lde">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="SYw-9I-Lde">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="U8h-Mn-B3t" id="c3A-Wx-WpL"/>
                                     <outlet property="delegate" destination="U8h-Mn-B3t" id="RXW-uB-044"/>
@@ -343,9 +343,6 @@
                                     <constraint firstAttribute="trailing" secondItem="odh-Hj-qh5" secondAttribute="trailing" constant="35" id="513-J1-I9P"/>
                                     <constraint firstItem="tDa-8s-P2B" firstAttribute="top" secondItem="Aiy-gl-UnB" secondAttribute="top" constant="68" id="LXM-Xe-kBW"/>
                                     <constraint firstItem="tDa-8s-P2B" firstAttribute="centerX" secondItem="Aiy-gl-UnB" secondAttribute="centerX" id="QCe-Yy-kJU"/>
-                                    <constraint firstAttribute="height" constant="175" id="cCe-54-Mbi">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="222"/>
-                                    </constraint>
                                     <constraint firstItem="odh-Hj-qh5" firstAttribute="top" secondItem="Aiy-gl-UnB" secondAttribute="top" constant="68" id="d90-8u-zsg"/>
                                     <constraint firstItem="Gju-dZ-zJ7" firstAttribute="leading" secondItem="Aiy-gl-UnB" secondAttribute="leading" constant="35" id="fho-wF-ctf"/>
                                     <constraint firstItem="Gju-dZ-zJ7" firstAttribute="top" secondItem="Aiy-gl-UnB" secondAttribute="top" constant="68" id="oxl-Qx-goj"/>
@@ -357,7 +354,6 @@
                                         <exclude reference="odh-Hj-qh5"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <exclude reference="cCe-54-Mbi"/>
                                         <exclude reference="fho-wF-ctf"/>
                                         <exclude reference="oxl-Qx-goj"/>
                                         <exclude reference="513-J1-I9P"/>
@@ -373,7 +369,6 @@
                                         <include reference="odh-Hj-qh5"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <include reference="cCe-54-Mbi"/>
                                         <include reference="fho-wF-ctf"/>
                                         <include reference="oxl-Qx-goj"/>
                                         <include reference="513-J1-I9P"/>
@@ -391,6 +386,7 @@
                             <constraint firstItem="Aiy-gl-UnB" firstAttribute="top" secondItem="LZP-nU-Bs1" secondAttribute="bottom" constant="44" id="Lht-Q5-6xE"/>
                             <constraint firstItem="SYw-9I-Lde" firstAttribute="top" secondItem="UcT-2K-TDO" secondAttribute="top" id="SWV-dN-lin"/>
                             <constraint firstItem="SYw-9I-Lde" firstAttribute="leading" secondItem="UcT-2K-TDO" secondAttribute="leading" id="iMN-Nd-u2t"/>
+                            <constraint firstItem="Hft-y4-JE2" firstAttribute="top" secondItem="Aiy-gl-UnB" secondAttribute="bottom" id="p2G-fy-yuf"/>
                             <constraint firstItem="Hft-y4-JE2" firstAttribute="top" secondItem="SYw-9I-Lde" secondAttribute="bottom" id="tGL-dn-p1Z"/>
                             <constraint firstAttribute="trailing" secondItem="Aiy-gl-UnB" secondAttribute="trailing" id="wqQ-mq-b1p"/>
                         </constraints>
@@ -400,13 +396,14 @@
                                 <exclude reference="Aiy-gl-UnB"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="tGL-dn-p1Z"/>
-                                <exclude reference="2X5-sZ-kkf"/>
-                                <exclude reference="Lht-Q5-6xE"/>
-                                <exclude reference="wqQ-mq-b1p"/>
                                 <exclude reference="Bz6-N4-fN3"/>
                                 <exclude reference="SWV-dN-lin"/>
                                 <exclude reference="iMN-Nd-u2t"/>
+                                <exclude reference="2X5-sZ-kkf"/>
+                                <exclude reference="Lht-Q5-6xE"/>
+                                <exclude reference="wqQ-mq-b1p"/>
+                                <exclude reference="p2G-fy-yuf"/>
+                                <exclude reference="tGL-dn-p1Z"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -415,13 +412,14 @@
                                 <include reference="Aiy-gl-UnB"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="tGL-dn-p1Z"/>
-                                <include reference="2X5-sZ-kkf"/>
-                                <include reference="Lht-Q5-6xE"/>
-                                <include reference="wqQ-mq-b1p"/>
                                 <include reference="Bz6-N4-fN3"/>
                                 <include reference="SWV-dN-lin"/>
                                 <include reference="iMN-Nd-u2t"/>
+                                <include reference="2X5-sZ-kkf"/>
+                                <include reference="Lht-Q5-6xE"/>
+                                <include reference="wqQ-mq-b1p"/>
+                                <include reference="p2G-fy-yuf"/>
+                                <include reference="tGL-dn-p1Z"/>
                             </mask>
                         </variation>
                     </view>
@@ -430,6 +428,7 @@
                         <outlet property="methodBtn" destination="tDa-8s-P2B" id="bsx-OR-s2G"/>
                         <outlet property="patientBtn" destination="odh-Hj-qh5" id="Eke-uE-fpq"/>
                         <outlet property="searchDisplayController" destination="30y-jS-SgH" id="2pR-gl-h67"/>
+                        <outlet property="tableView" destination="SYw-9I-Lde" id="KPP-fI-e3X"/>
                         <outlet property="userBtn" destination="Gju-dZ-zJ7" id="GoY-bC-16v"/>
                     </connections>
                 </viewController>

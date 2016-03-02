@@ -173,7 +173,6 @@ class FeedCell: UITableViewCell {
         portraitView.addImageCache((feedModel?.portraitURL)!, placeHolder: "icon_profile")
         portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
         portraitButton.addSubview(portraitView)
-        portraitView.backgroundColor = UIColor.greenColor()
         
         portraitView.layer.cornerRadius = portraitView.bounds.size.height / 2
         portraitView.clipsToBounds = true
