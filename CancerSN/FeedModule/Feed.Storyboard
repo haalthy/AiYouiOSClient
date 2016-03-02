@@ -242,9 +242,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="SYw-9I-Lde">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SYw-9I-Lde">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="U8h-Mn-B3t" id="c3A-Wx-WpL"/>
                                     <outlet property="delegate" destination="U8h-Mn-B3t" id="RXW-uB-044"/>
@@ -429,6 +429,7 @@
                         <outlet property="patientBtn" destination="odh-Hj-qh5" id="Eke-uE-fpq"/>
                         <outlet property="searchDisplayController" destination="30y-jS-SgH" id="2pR-gl-h67"/>
                         <outlet property="tableView" destination="SYw-9I-Lde" id="KPP-fI-e3X"/>
+                        <outlet property="typeView" destination="Aiy-gl-UnB" id="Igp-Jc-1y6"/>
                         <outlet property="userBtn" destination="Gju-dZ-zJ7" id="GoY-bC-16v"/>
                     </connections>
                 </viewController>

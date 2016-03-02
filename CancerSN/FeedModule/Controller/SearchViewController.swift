@@ -16,6 +16,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     
     
+    @IBOutlet weak var typeView: UIView!
+    
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var userBtn: UIButton!
@@ -63,6 +65,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchViewController.searchResultsUpdater = self
         self.searchViewController.delegate = self
         self.searchViewController.searchBar.delegate = self
+        self.searchViewController.dimsBackgroundDuringPresentation = false
         self.searchViewController.searchBar.sizeToFit()
         self.tableView.tableHeaderView = self.searchViewController.searchBar
     
@@ -243,6 +246,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    func willPresentSearchController(searchController: UISearchController) {
+        
+        self.typeView.hidden = true
+    }
+    
     // MARK: - searchBar Delegate
     
     
@@ -298,6 +306,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.searchDataArr!.count
+        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -334,8 +343,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
             
-            let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
-            cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: "")
+            
+                let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
+                cell.portraitImage.addImageCache(userModel.imageURL!, placeHolder: placeHolderStr)
+            
+            
             
             return cell
 
@@ -371,7 +383,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
+        //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
 
 

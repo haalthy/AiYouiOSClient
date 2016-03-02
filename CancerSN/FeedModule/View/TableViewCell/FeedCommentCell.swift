@@ -36,7 +36,7 @@ class FeedCommentCell: UITableViewCell {
     
     func showFeedInfo(commentModel: CommentModel) {
 
-        self.userPortrait.addImageCache(commentModel.imageURL, placeHolder: "")
+        self.userPortrait.addImageCache(commentModel.imageURL, placeHolder: placeHolderStr)
         self.userNickname.text = commentModel.insertUsername
         self.dateLabel.text = NSDate.createDate(commentModel.dateInserted / 1000)?.fullDescription()
         self.feedContentLabel.text = commentModel.body

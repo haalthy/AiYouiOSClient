@@ -53,7 +53,7 @@ class MentionedCell: UITableViewCell {
     
     func setContentViewAction(feedModel: PostFeedStatus) {
     
-        self.portraitImage.addImageCache(feedModel.imageURL, placeHolder: "btn_comment")
+        self.portraitImage.addImageCache(feedModel.imageURL, placeHolder: placeHolderStr)
         self.nameLabel.text = feedModel.displayname
         self.bodyLabel.text = self.getMentionedAndBody(feedModel.body)
         self.typeLabel.text = getFeedTypeName(feedModel.type)
@@ -105,7 +105,7 @@ class MentionedCell: UITableViewCell {
             self.showImage.hidden = false
             
             let picArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
-            self.showImage.addImageCache(picArr[0], placeHolder: "btn_comment")
+            self.showImage.addImageCache(picArr[0], placeHolder: placeHolderStr)
         }
         else if type == 2 {
         
