@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate{
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate, UIActionSheetDelegate, ZLPhotoPickerBrowserViewControllerDataSource, ZLPhotoPickerBrowserViewControllerDelegate, ZLPhotoPickerViewControllerDelegate {
     var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
@@ -68,6 +68,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     var selectedTagList = NSArray()
     
     var mentionUsernameList = NSMutableArray()
+    var imageViewArr = NSMutableArray()
     
     var progressHUD: MBProgressHUD?
     
@@ -239,28 +240,223 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func selectImages(){
-        imagePicker.allowsEditing = false //2
-        imagePicker.sourceType = .PhotoLibrary //3
-        presentViewController(imagePicker, animated: true, completion: nil)//4
+    func selectImages() {
+        
+        let sysVersion: NSString = UIDevice.currentDevice().systemVersion as NSString
+        if sysVersion.floatValue > 8.2 {
+            
+            let alertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "取消", style: .Cancel, handler: { (action) -> Void in
+                
+            })
+            
+            let cameraAction: UIAlertAction = UIAlertAction(title: "相机", style: .Default, handler: { (action) -> Void in
+                self.openCameraAction()
+            })
+            let photoAction: UIAlertAction = UIAlertAction(title: "照片库", style: .Default, handler: { (action) -> Void in
+                self.openPhotoAction()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(cameraAction)
+            alertController.addAction(photoAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        else {
+        
+            let actionSheet: UIActionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "取消", destructiveButtonTitle: nil, otherButtonTitles: "相机", "照片库")
+            actionSheet.showInView(self.view)
+
+        }
+        
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-        //        insertImageList.addObject(chosenImage)
-        chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
-        let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
-        //        println(selectedImage.size.width, selectedImage.size.height)
-        let imageDataStr = imageData.base64EncodedStringWithOptions([])
-        let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+    // MARK: 打开相机
+    
+    func openCameraAction() {
         
-        self.imageInfoList.addObject(imageInfo)
-        let addNextImageLinePositionY: CGFloat = CGFloat(Int((imageInfoList.count)/imageCountPerLine)) * (imageLength + imageMargin)
+        imagePicker.allowsEditing = false //2
+        imagePicker.sourceType = .Camera //3
+        presentViewController(imagePicker, animated: true, completion: nil)//4
 
+    }
+    
+    func openPhotoAction() {
+    
+    
+        let pickView: ZLPhotoPickerViewController = ZLPhotoPickerViewController()
+        // 默认显示相册里面的内容SavePhotos
+        pickView.status = PickerViewShowStatus.CameraRoll
+        pickView.selectPickers = self.imageInfoList as [AnyObject]
+        // 最多能选9张图片
+        pickView.maxCount = 9
+        pickView.delegate = self
+        pickView.showPickerVc(self)
+
+        
+    }
+    
+    // MARK: - setupCell click ZLPhotoPickerBrowserViewController
+    
+    func setupPhotoBrowser(gesture: UITapGestureRecognizer) {
+    
+        // 图片浏览
+        let pickerBrowser: ZLPhotoPickerBrowserViewController = ZLPhotoPickerBrowserViewController()
+        pickerBrowser.delegate = self
+        pickerBrowser.dataSource = self
+        // 是否可以删除照片
+        pickerBrowser.editing = false
+        // 当前选中的值
+        pickerBrowser.currentIndexPath = NSIndexPath.init(forRow: (gesture.view?.tag)!, inSection: 0)
+            // 展示控制器
+        pickerBrowser.showPickerVc(self)
+        
+    }
+    
+    //MARK: - 图片浏览
+    
+    //MARK: ZLPhotoPickerBrowserViewControllerDataSource
+    
+    func numberOfSectionInPhotosInPickerBrowser(pickerBrowser: ZLPhotoPickerBrowserViewController!) -> Int {
+        return 1
+    }
+    
+    func photoBrowser(photoBrowser: ZLPhotoPickerBrowserViewController!, numberOfItemsInSection section: UInt) -> Int {
+        return self.imageInfoList.count
+    }
+    
+    // MARK: 每个组展示什么图片,需要包装下ZLPhotoPickerBrowserPhoto
+    
+    func photoBrowser(pickerBrowser: ZLPhotoPickerBrowserViewController!, photoAtIndexPath indexPath: NSIndexPath!) -> ZLPhotoPickerBrowserPhoto! {
+        
+        
+        
+        
+        let imageObj = self.imageInfoList[indexPath.row]
+        // 包装下imageObj 成 ZLPhotoPickerBrowserPhoto 传给数据源
+        let photo: ZLPhotoPickerBrowserPhoto = ZLPhotoPickerBrowserPhoto(anyImageObjWith: imageObj)
+        
+        let imageView: UIImageView = self.imageViewArr[indexPath.row] as! UIImageView
+        photo.toView = imageView
+        photo.thumbImage = imageView.image
+        return photo
+
+    }
+    
+    // MARK: 删除照片调用
+    
+    func photoBrowser(photoBrowser: ZLPhotoPickerBrowserViewController!, removePhotoAtIndexPath indexPath: NSIndexPath!) {
+        
+        
+    }
+    
+    // MARK: 获取到相册图片
+    
+    func pickerViewControllerDoneAsstes(assets: [AnyObject]!) {
+        
+        if self.imageInfoList.count + assets.count > 9 {
+        
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "最多上传9张图片！")
+            return
+        }
+        
+        let assetImageArr: NSMutableArray = NSMutableArray(array: assets)
+        
+        for image in assetImageArr {
+            
+            let assetImage: ZLPhotoAssets = image as! ZLPhotoAssets
+            self.showPhotoLocation(assetImage.originImage())
+        }
+        
+        self.imageInfoList.addObjectsFromArray(assets)
+        
+        
+    }
+    
+
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+//        //        insertImageList.addObject(chosenImage)
+//        chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
+       // let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
+//        //        println(selectedImage.size.width, selectedImage.size.height)
+//        let imageDataStr = imageData.base64EncodedStringWithOptions([])
+//        let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+        
+
+        self.imageInfoList.addObject(chosenImage)
+        
+        
+        // 展示图片
+        self.showPhotoLocation(chosenImage)
+        
+//        let addNextImageLinePositionY: CGFloat = CGFloat(Int((imageInfoList.count)/imageCountPerLine)) * (imageLength + imageMargin)
+//
+//        let coordinateX = CGFloat(imageLength+imageMargin)*CGFloat((imageInfoList.count)%imageCountPerLine)
+//        let imageViewContainer = UIView(frame: CGRectMake(defaultAddImageBtn.frame.origin.x, defaultAddImageBtn.frame.origin.y, imageLength, imageLength))
+//        let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
+//        
+//        let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+//        let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
+//        imageDeleteView.image = UIImage(named: "btn_imageDelete")
+//        imageDeleteBtn.addSubview(imageDeleteView)
+//        imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
+//        
+//        defaultAddImageBtn.frame = CGRectMake(coordinateX, addNextImageLinePositionY, imageLength, imageLength)
+//        
+//        imageSection.frame = CGRECT(imageSection.frame.origin.x, imageSection.frame.origin.y, imageSection.frame.width, imageSection.frame.height + imageLength + imageMargin)
+//
+//        
+//        var selectedImage = UIImage()
+//        selectedImage = publicService.cropToSquare(image: chosenImage)
+//        
+//        let newSize = CGSizeMake(imageLength, imageLength)
+//        UIGraphicsBeginImageContext(newSize)
+//        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+//        imageView.image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//        self.imageSection.addSubview(imageViewContainer)
+//        imageViewContainer.addSubview(imageView)
+//        imageViewContainer.addSubview(imageDeleteBtn)
+//        if (imageInfoList.count + 1)%imageCountPerLine == 1 {
+//            if isQuestion == true {
+//                self.tagSection.center = CGPoint(x: self.tagSection.center.x, y: self.tagSection.center.y + imageLength + imageMargin)
+//            }
+//        }
+        dismissViewControllerAnimated(true, completion: nil) //5
+        
+    }
+    
+    // MARK: 将image转化为提交格式
+//    
+//    func makeImageToCorrespondingFormat(array: NSMutableArray) -> NSMutableArray {
+//    
+//        //        insertImageList.addObject(chosenImage)
+//        //chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
+//      //  let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
+//        //        println(selectedImage.size.width, selectedImage.size.height)
+//      //  let imageDataStr = imageData.base64EncodedStringWithOptions([])
+//      //  let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+//        
+//        
+//    }
+    
+    // MARK: 展示图片位置
+    
+    func showPhotoLocation(image: UIImage) {
+    
+        let addNextImageLinePositionY: CGFloat = CGFloat(Int((imageInfoList.count)/imageCountPerLine)) * (imageLength + imageMargin)
+        
         let coordinateX = CGFloat(imageLength+imageMargin)*CGFloat((imageInfoList.count)%imageCountPerLine)
         let imageViewContainer = UIView(frame: CGRectMake(defaultAddImageBtn.frame.origin.x, defaultAddImageBtn.frame.origin.y, imageLength, imageLength))
         let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
         
+        self.imageViewArr.addObject(imageView)
+        let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setupPhotoBrowser:")
+        gesgure.view?.tag = self.imageInfoList.count
+        imageView.userInteractionEnabled = true
+        imageView.addGestureRecognizer(gesgure)
         let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         imageDeleteView.image = UIImage(named: "btn_imageDelete")
@@ -270,16 +466,17 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         defaultAddImageBtn.frame = CGRectMake(coordinateX, addNextImageLinePositionY, imageLength, imageLength)
         
         imageSection.frame = CGRECT(imageSection.frame.origin.x, imageSection.frame.origin.y, imageSection.frame.width, imageSection.frame.height + imageLength + imageMargin)
-
+        
         
         var selectedImage = UIImage()
-        selectedImage = publicService.cropToSquare(image: chosenImage)
+        selectedImage = publicService.cropToSquare(image: image)
         
         let newSize = CGSizeMake(imageLength, imageLength)
         UIGraphicsBeginImageContext(newSize)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+        imageViewContainer.userInteractionEnabled = true
         self.imageSection.addSubview(imageViewContainer)
         imageViewContainer.addSubview(imageView)
         imageViewContainer.addSubview(imageDeleteBtn)
@@ -288,8 +485,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                 self.tagSection.center = CGPoint(x: self.tagSection.center.x, y: self.tagSection.center.y + imageLength + imageMargin)
             }
         }
-        dismissViewControllerAnimated(true, completion: nil) //5
-        
     }
     
     func deleteImage(sender: UIButton){
@@ -324,11 +519,17 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             imageDeleteBtn.addSubview(imageDeleteView)
             imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
             
+            var image = UIImage()
             let publicService = PublicService()
             
-            let image = UIImage(data: NSData(base64EncodedString: (imageInfo as! NSDictionary).objectForKey("data") as! String, options: NSDataBase64DecodingOptions(rawValue: 0))!)
+            if imageInfo is UIImage {
+                image = imageInfo as! UIImage
+            }
+            else {
+                image = (imageInfo as! ZLPhotoAssets).originImage()
+            }
             
-            let selectedImage = publicService.cropToSquare(image: image!)
+            let selectedImage = publicService.cropToSquare(image: image)
             
             let newSize = CGSizeMake(imageLength, imageLength)
             UIGraphicsBeginImageContext(newSize)
