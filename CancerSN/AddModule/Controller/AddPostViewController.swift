@@ -246,6 +246,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        //图片选择完之后的操作
         var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         //        insertImageList.addObject(chosenImage)
         chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
