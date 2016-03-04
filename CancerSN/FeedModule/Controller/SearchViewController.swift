@@ -248,7 +248,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func willDismissSearchController(searchController: UISearchController) {
         
         self.searchViewController.searchBar.resignFirstResponder()
-        self.navigationController?.popViewControllerAnimated(true)
+        
+        self.typeView.hidden = false
     }
     
     func willPresentSearchController(searchController: UISearchController) {
@@ -262,7 +263,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         
-        self.navigationController?.popViewControllerAnimated(true)
+        //self.navigationController?.popViewControllerAnimated(true)
     }
     
     func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -385,6 +386,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        self.searchViewController.searchBar.resignFirstResponder()
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         

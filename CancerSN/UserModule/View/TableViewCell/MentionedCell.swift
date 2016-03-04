@@ -53,7 +53,7 @@ class MentionedCell: UITableViewCell {
     
     func setContentViewAction(feedModel: PostFeedStatus) {
     
-        self.portraitImage.addImageCache(feedModel.imageURL, placeHolder: placeHolderStr)
+        self.portraitImage.addImageCache(feedModel.portraitURL, placeHolder: placeHolderStr)
         self.nameLabel.text = feedModel.displayname
         self.bodyLabel.text = self.getMentionedAndBody(feedModel.body)
         self.typeLabel.text = getFeedTypeName(feedModel.type, isBroadcast: feedModel.isBroadcast)
@@ -99,7 +99,7 @@ class MentionedCell: UITableViewCell {
     func showContentViewForType(type: Int, feedModel: PostFeedStatus) {
     
         
-        if type == 1 {
+        if type == 0 && feedModel.isBroadcast == 1 || (type == 0 && feedModel.isBroadcast == 0) {
         
             self.tagLabel.hidden = true
             self.showImage.hidden = false
@@ -107,7 +107,7 @@ class MentionedCell: UITableViewCell {
             let picArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
             self.showImage.addImageCache(picArr[0], placeHolder: placeHolderStr)
         }
-        else if type == 2 {
+        else if type == 1 {
         
             self.tagLabel.hidden = false
             self.showImage.hidden = true
@@ -120,7 +120,7 @@ class MentionedCell: UITableViewCell {
             self.tagLabel.text = highTagsArr[0]
         }
         
-        else if type == 3 {
+        else if type == 2 {
         
             self.tagLabel.hidden = false
             self.showImage.hidden = true
