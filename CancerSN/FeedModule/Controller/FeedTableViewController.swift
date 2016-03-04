@@ -29,7 +29,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     var pageIndex: Int = 0
     var countPerPage: Int  = 5
     var maxID: Int = 0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

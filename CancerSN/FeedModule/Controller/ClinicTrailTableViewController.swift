@@ -11,7 +11,6 @@ import UIKit
 class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     var searchDataArr = NSMutableArray()
 
-    var resultList = NSArray()
     var selectionPicker = UIPickerView()
     var selectionPickerContainerView = UIView()
     var selectionPickerContainerViewHeight: CGFloat = 200
@@ -44,9 +43,6 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     func initVariables(){
         headerHeight = (self.navigationController?.navigationBar.frame)!.height - UIApplication.sharedApplication().statusBarFrame.size.height
-        let haalthyService = HaalthyService()
-        let resultDicArr = haalthyService.getClinicTrailList()
-        resultList = ClinicTrailObj.jsonToModelList(resultDicArr as Array) as! Array<ClinicTrailObj>
 
         self.tableView.registerClass(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
     }

@@ -35,7 +35,8 @@ class TreatmentCell: UITableViewCell {
     func updateUI(){
         self.removeAllSubviews()
         let portraitImage = UIImageView(frame: CGRect(x: portraitLeftSpace, y: itemTopSpace, width: portraitLength, height: portraitLength))
-        portraitImage.addImageCache(treatmentObj.ImageURL, placeHolder: "icon_profile")
+        let imageURL = treatmentObj.ImageURL + "@80h_80w_1e"
+        portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         portraitImage.layer.cornerRadius = portraitLength / 2
         portraitImage.layer.masksToBounds = true
         self.addSubview(portraitImage)

@@ -57,6 +57,8 @@ let passwordKeyChain = "haalthyPasswordIdentifier"
 let latestBroadcastUpdateTimestamp = "haalthyLatestBroadcastUpdateTimestamp"
 let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
 
+let placeHolderStr = "icon_placeholder"
+
 
 //store info in NSUserData
 let favTagsNSUserData = "favoriteTags"
@@ -128,7 +130,7 @@ let imageViewBackgroundColor: UIColor = UIColor.init(red:237 / 255.0, green:238 
 var screenWidth = CGFloat()
 var screenHeight = CGFloat()
 
-let uploadImageSize: CGSize = CGSize(width: 400, height: 600)
+let uploadImageSize: CGSize = CGSize(width: 800, height: 1200)
 
 let qqAppID: String = "1104886596"
 

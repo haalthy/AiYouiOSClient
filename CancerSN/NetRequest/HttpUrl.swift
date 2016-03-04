@@ -11,7 +11,7 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
-let haalthyServiceRestfulURL : String = "http://service.haalthy.com:8080/haalthyservice/"
+let haalthyServiceRestfulURL : String = "http://service.haalthy.com/"
 let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
 let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
 
@@ -45,8 +45,11 @@ let searchTreatmentURL = haalthyServiceRestfulURL + "open/search/treatment"
 
 // MARK: - 我的奇迹模块
 
-// 获取关注列表
+// 获取关注列表接口
 let userFollowURL = haalthyServiceRestfulURL + "security/user/followusers"
+
+// 获取@我的列表接口
+let userMentionedURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"

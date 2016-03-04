@@ -21,4 +21,5 @@ class TreatmentModel: D3Model  {
     var Dosage: String = ""
     var Pathological: String = ""
     var CancerType: String = ""
+    var username: String = ""
 }

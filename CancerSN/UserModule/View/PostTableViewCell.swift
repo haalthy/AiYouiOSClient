@@ -131,7 +131,8 @@ class PostTableViewCell: UITableViewCell {
             if post.imageURL != "" {
                 let localImageList = post.imageURL.componentsSeparatedByString(";")
                 if (localImageList.count > 0) && (localImageList[0] != ""){
-                    postImageView.addImageCache(localImageList[0], placeHolder: "icon_profile")
+                    let imageURL = localImageList[0] + "@100h_100w_1e"
+                    postImageView.addImageCache(imageURL, placeHolder: placeHolderStr)
                 }
                 postContent.addSubview(postImageView)
                 

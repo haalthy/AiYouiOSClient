@@ -187,7 +187,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-        self.portraitView.addImageCache((self.userProfileObj?.portraitUrl)!, placeHolder: "icon_profile")
+        let imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
         self.userProfileHeaderView.addSubview(portraitView)
         
         //关注
