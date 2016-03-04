@@ -248,8 +248,10 @@ class PublicService:NSObject{
     func resizeImage(image: UIImage, newSize: CGSize) -> UIImage{
         let imgRef: CGImageRef = image.CGImage!;
         
-        let width: CGFloat = CGFloat(CGImageGetWidth(imgRef))
-        let height: CGFloat = CGFloat(CGImageGetHeight(imgRef))
+//        let width: CGFloat = CGFloat(CGImageGetWidth(imgRef))
+//        let height: CGFloat = CGFloat(CGImageGetHeight(imgRef))
+        let width: CGFloat = image.size.width
+        let height: CGFloat = image.size.height
         
         var newSizeWidth: CGFloat = newSize.width
         var newSizeHeight: CGFloat = newSize.height

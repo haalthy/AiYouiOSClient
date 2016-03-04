@@ -25,7 +25,7 @@ let kPhotosHeight = kPhotosWidth
 let kPhotosMargin = 7
 
 class FeedPhotosView: UIView {
-    
+    var progressHUD: MBProgressHUD = MBProgressHUD()
     //放大图片
     var tapedPhotoViewTag: Int = 0
     let backgroundScrollView = UIScrollView()
@@ -44,12 +44,12 @@ class FeedPhotosView: UIView {
             let picsCount = self.picsUrl.count
         
             
-            for var i = 0; i < kPhotosMaxCount; i++ {
+            for var i = 0; i < ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count); i++ {
             
                 let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
-                
-                    photoView.addImageCache(self.picsUrl[i], placeHolder: placeHolderStr)
+                    let imageURL = self.picsUrl[i] + "@100h_100w_1e_1c"
+                    photoView.addImageCache(imageURL, placeHolder: placeHolderStr)
                     photoView.hidden = false
                 }
                 else {
@@ -93,7 +93,7 @@ class FeedPhotosView: UIView {
     
     func addFeedPhotos() {
     
-        for var i = 0; i < kPhotosMaxCount; i++ {
+        for var i = 0; i < ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count); i++ {
             
             let photoImageView: UIImageView = UIImageView()
             photoImageView.tag = i;
@@ -119,57 +119,79 @@ class FeedPhotosView: UIView {
     func showImage(sender: UITapGestureRecognizer){
         self.backgroundScrollView.removeAllSubviews()
         let tapLocation = sender.locationInView(self)
-
+        
         let xIndex = Int((tapLocation.x)/( kPhotosWidth + CGFloat(kPhotosMargin)))
         let yIndex = Int((tapLocation.y)/( kPhotosWidth + CGFloat(kPhotosMargin)))
-
+        
         tapedPhotoViewTag = yIndex * 3 + xIndex
         
         let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
-        let image = photoView.image
-        let window = UIApplication.sharedApplication().keyWindow
-        backgroundScrollView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
-        //config scroll view
-        backgroundScrollView.contentSize = CGSize(width: screenWidth * CGFloat(self.picsUrl.count), height: screenHeight)
-        backgroundScrollView.contentOffset = CGPoint(x: screenWidth * CGFloat(tapedPhotoViewTag), y: 0)
-        backgroundScrollView.pagingEnabled = true
-        backgroundScrollView.userInteractionEnabled = true
+        if photoView.sd_imageURL().absoluteString != self.picsUrl[tapedPhotoViewTag] {
+            self.superview?.addSubview(progressHUD)
+            progressHUD.labelText = "加载图片"
+            progressHUD.show(true)
+            photoView.sd_setImageWithURL(NSURL(string: self.picsUrl[tapedPhotoViewTag] + "@800h"), placeholderImage: photoView.image, options: SDWebImageOptions.CacheMemoryOnly) { (imageTest, err, type , urltest) -> Void in
+                //
+                self.progressHUD.removeFromSuperview()
+                if err == nil{
+                    print(urltest.absoluteString)
+                    self.showSlideImage()
+                }else{
+                    print("加载失败")
+                }
+            }
+        }
+        else{
+            showSlideImage()
+        }
+    }
+    
+    func showSlideImage(){
+        let photoView = self.subviews[self.tapedPhotoViewTag] as! UIImageView
+        let image = (self.subviews[self.tapedPhotoViewTag] as! UIImageView).image
         
-        backgroundScrollView.backgroundColor = UIColor.blackColor()
-        backgroundScrollView.alpha = 0
-        let imageView = UIImageView(frame: CGRECT(photoView.frame.origin.x + screenWidth * CGFloat(tapedPhotoViewTag), (screenHeight - photoView.frame.height)/2, photoView.frame.width, photoView.frame.height))
+        let window = UIApplication.sharedApplication().keyWindow
+        self.backgroundScrollView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+        //config scroll view
+        self.backgroundScrollView.contentSize = CGSize(width: screenWidth * CGFloat(self.picsUrl.count), height: screenHeight)
+        self.backgroundScrollView.contentOffset = CGPoint(x: screenWidth * CGFloat(self.tapedPhotoViewTag), y: 0)
+        self.backgroundScrollView.pagingEnabled = true
+        self.backgroundScrollView.userInteractionEnabled = true
+        
+        self.backgroundScrollView.backgroundColor = UIColor.blackColor()
+        self.backgroundScrollView.alpha = 0
+        let imageView = UIImageView(frame: CGRECT(photoView.frame.origin.x + screenWidth * CGFloat(self.tapedPhotoViewTag), (screenHeight - photoView.frame.height)/2, photoView.frame.width, photoView.frame.height))
         
         imageView.image = image
         imageView.tag = 1
-        backgroundScrollView.addSubview(imageView)
-        window?.addSubview(backgroundScrollView)
+        self.backgroundScrollView.addSubview(imageView)
+        window?.addSubview(self.backgroundScrollView)
         let hide = UITapGestureRecognizer(target: self, action: "hideImage:")
-        backgroundScrollView.addGestureRecognizer(hide)
+        self.backgroundScrollView.addGestureRecognizer(hide)
         UIView.animateWithDuration(0.3, animations:{ () in
             let vsize = UIScreen.mainScreen().bounds.size
             imageView.frame = CGRect(x:screenWidth * CGFloat(self.tapedPhotoViewTag), y: 0.0, width: vsize.width, height: vsize.height)
             imageView.contentMode = .ScaleAspectFit
             self.backgroundScrollView.alpha = 1
             }, completion: {(finished:Bool) in
+                print(self.subviews.count)
                 if self.tapedPhotoViewTag > 0 {
                     for index in 0...(self.tapedPhotoViewTag - 1){
                         let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
-                        imageView.image = ((self.subviews[index]) as! UIImageView).image
+                        imageView.sd_setImageWithURL(NSURL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.CacheMemoryOnly)
                         imageView.contentMode = .ScaleAspectFit
                         self.backgroundScrollView.addSubview(imageView)
                     }
                 }
-                if (self.tapedPhotoViewTag + 1) < (self.subviews.count - 1) {
+                if (self.tapedPhotoViewTag + 1) < (self.subviews.count ) {
                     for index in (self.tapedPhotoViewTag+1)...(self.subviews.count - 1){
                         let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
-                        imageView.image = ((self.subviews[index]) as! UIImageView).image
+                        imageView.sd_setImageWithURL(NSURL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.CacheMemoryOnly)
                         imageView.contentMode = .ScaleAspectFit
                         self.backgroundScrollView.addSubview(imageView)
                     }
                 }
-        
         })
-        
     }
     
     func hideImage(sender: UITapGestureRecognizer){

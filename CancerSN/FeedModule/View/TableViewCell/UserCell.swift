@@ -25,7 +25,8 @@ class UserCell: UITableViewCell {
     }
     
     func updateUI(){
-        portraitImage.addImageCache(userObj.imageURL, placeHolder: "icon_profile")
+        let imageURL = userObj.imageURL + "@80h_80w_1e"
+        portraitImage.addImageCache(imageURL, placeHolder: "icon_profile")
         nameLabel.text = userObj.Displayname
         var userInfo: String = (userObj.Gender) + " " + String(userObj.Age) + " " + userObj.CancerType  + " " + userObj.Pathological + " " + userObj.Stage + " " + userObj.geneticMutation
         infoLabel.text = userInfo

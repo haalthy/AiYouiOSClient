@@ -247,6 +247,8 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+        print(chosenImage.size.height)
+        print(chosenImage.size.width)
         //        insertImageList.addObject(chosenImage)
         chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
         let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
@@ -273,10 +275,14 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         
         var selectedImage = UIImage()
+
         selectedImage = publicService.cropToSquare(image: chosenImage)
-        
-        let newSize = CGSizeMake(imageLength, imageLength)
+        print(selectedImage.size.width)
+        print(selectedImage.size.height)
+
+        let newSize = CGSizeMake(imageLength * 3, imageLength * 3)
         UIGraphicsBeginImageContext(newSize)
+//        UIGraphicsBeginImageContext(selectedImage.size)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

@@ -52,8 +52,8 @@ class MentionedCell: UITableViewCell {
     }
     
     func setContentViewAction(feedModel: PostFeedStatus) {
-    
-        self.portraitImage.addImageCache(feedModel.imageURL, placeHolder: placeHolderStr)
+        let imageURL = (feedModel.portraitURL) + "@80h_80w_1e"
+        self.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         self.nameLabel.text = feedModel.displayname
         self.bodyLabel.text = self.getMentionedAndBody(feedModel.body)
         self.typeLabel.text = getFeedTypeName(feedModel.type, isBroadcast: feedModel.isBroadcast)
@@ -105,7 +105,8 @@ class MentionedCell: UITableViewCell {
             self.showImage.hidden = false
             
             let picArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
-            self.showImage.addImageCache(picArr[0], placeHolder: placeHolderStr)
+            let imageURL = picArr[0] + "@100h_100w_1e"
+            self.showImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         }
         else if type == 2 {
         

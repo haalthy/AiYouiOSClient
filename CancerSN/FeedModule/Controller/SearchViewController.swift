@@ -63,7 +63,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - 初始化相关变量
     
     func initVaribles() {
-    
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
         self.searchDataArr = NSMutableArray()
         self.searchType = 1
     }
@@ -71,8 +72,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - 初始化相关View
     
     func initContentView() {
-        
-        
+        self.typeView.hidden = true
+
         self.searchViewController = UISearchController(searchResultsController: nil)
         self.searchViewController.searchResultsUpdater = self
         self.searchViewController.delegate = self
@@ -139,7 +140,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return
         }
         else {
-        
             self.searchViewController.searchBar.placeholder = "治疗方案"
             self.curSelectedBtn?.selected = false
             self.methodBtn.selected = true
@@ -253,7 +253,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func willPresentSearchController(searchController: UISearchController) {
         
-        self.typeView.hidden = true
+        self.typeView.hidden = false
     }
     
     // MARK: - searchBar Delegate
@@ -262,7 +262,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         
-        self.navigationController?.popViewControllerAnimated(true)
+//        self.navigationController?.popViewControllerAnimated(true)
     }
     
     func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -395,6 +395,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             userProfileController.profileOwnername = (info as! UserModel).Username
                 self.navigationController?.pushViewController(userProfileController, animated: true)
         }
+        if info is TreatmentModel{
+            userProfileController.profileOwnername = (info as! TreatmentModel).username
+            self.navigationController?.pushViewController(userProfileController, animated: true)
+        }
     }
 
 
@@ -407,5 +411,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Pass the selected object to the new view controller.
     }
     */
-
+    func keyboardWillDisappear(notification:NSNotification){
+        self.typeView.hidden = true
+    }
+    func keyboardWillAppear(notification:NSNotification){
+        self.typeView.hidden = false
+    }
 }
