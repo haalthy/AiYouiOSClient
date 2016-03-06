@@ -10,10 +10,8 @@ import Foundation
 
 //restful service URL setting
 
-//let haalthyServiceRestfulURL : String = "http://54.223.70.160:8080/haalthyservice/"
+//let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
 let haalthyServiceRestfulURL : String = "http://service.haalthy.com/"
-let haalthyServiceSolrURL : String = "http://54.223.70.160:8983/solr/aiyoupost/"
-let queryPostBodyURL = haalthyServiceSolrURL + "select?wt=jason&indent=true&q=body%3A"
 
 // MARK: - 智囊圈模块
 
@@ -96,3 +94,4 @@ let checkPhoneAuthCodeURL = haalthyServiceRestfulURL + "open/authcode/smscheck"
 let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
+let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"

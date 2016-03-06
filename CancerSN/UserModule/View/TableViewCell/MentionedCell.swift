@@ -99,7 +99,7 @@ class MentionedCell: UITableViewCell {
     func showContentViewForType(type: Int, feedModel: PostFeedStatus) {
     
         
-        if type == 1 {
+        if type == 0 && feedModel.isBroadcast == 1 || (type == 0 && feedModel.isBroadcast == 0) {
         
             self.tagLabel.hidden = true
             self.showImage.hidden = false
@@ -108,7 +108,7 @@ class MentionedCell: UITableViewCell {
             let imageURL = picArr[0] + "@100h_100w_1e"
             self.showImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         }
-        else if type == 2 {
+        else if type == 1 {
         
             self.tagLabel.hidden = false
             self.showImage.hidden = true
@@ -121,7 +121,7 @@ class MentionedCell: UITableViewCell {
             self.tagLabel.text = highTagsArr[0]
         }
         
-        else if type == 3 {
+        else if type == 2 {
         
             self.tagLabel.hidden = false
             self.showImage.hidden = true

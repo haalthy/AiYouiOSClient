@@ -806,17 +806,6 @@ class HaalthyService:NSObject{
         return username
     }
 
-    func queryPostBody(query:String)->NSData?{
-        let urlPath: String = queryPostBodyURL + query
-        var url: NSURL = NSURL(string: urlPath)!
-        var request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        var response: AutoreleasingUnsafeMutablePointer<NSURLResponse?> = nil
-        return try? NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
-    }
-
     func getUsersByDisplayname(getMentionedUsernamesRequest: NSDictionary)->NSArray{
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)

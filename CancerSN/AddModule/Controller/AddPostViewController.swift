@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate{
+class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MentionVCDelegate, PostTagDelegate, UIActionSheetDelegate, ZLPhotoPickerBrowserViewControllerDataSource, ZLPhotoPickerBrowserViewControllerDelegate, ZLPhotoPickerViewControllerDelegate {
     var isQuestion: Bool = true
     var isComment:Int = 0
     var postID: Int? = nil
@@ -55,6 +55,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     let keychainAccess = KeychainAccess()
     let haalthyService = HaalthyService()
     let publicService = PublicService()
+    let getAccessToken = GetAccessToken()
     
     var imagePicker = UIImagePickerController()
 
@@ -68,6 +69,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     var selectedTagList = NSArray()
     
     var mentionUsernameList = NSMutableArray()
+    var imageViewArr = NSMutableArray()
     
     var progressHUD: MBProgressHUD?
     
@@ -239,30 +241,210 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func selectImages(){
-        imagePicker.allowsEditing = false //2
-        imagePicker.sourceType = .PhotoLibrary //3
-        presentViewController(imagePicker, animated: true, completion: nil)//4
+    func selectImages() {
+        
+        let sysVersion: NSString = UIDevice.currentDevice().systemVersion as NSString
+        if sysVersion.floatValue > 8.2 {
+            
+            let alertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "取消", style: .Cancel, handler: { (action) -> Void in
+                
+            })
+            
+            let cameraAction: UIAlertAction = UIAlertAction(title: "相机", style: .Default, handler: { (action) -> Void in
+                self.openCameraAction()
+            })
+            let photoAction: UIAlertAction = UIAlertAction(title: "照片库", style: .Default, handler: { (action) -> Void in
+                self.openPhotoAction()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(cameraAction)
+            alertController.addAction(photoAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        else {
+        
+            let actionSheet: UIActionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "取消", destructiveButtonTitle: nil, otherButtonTitles: "相机", "照片库")
+            actionSheet.showInView(self.view)
+
+        }
+        
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-        print(chosenImage.size.height)
-        print(chosenImage.size.width)
-        //        insertImageList.addObject(chosenImage)
-        chosenImage = publicService.resizeImage(chosenImage, newSize: uploadImageSize)
-        let imageData: NSData = UIImagePNGRepresentation(chosenImage)!
-        //        println(selectedImage.size.width, selectedImage.size.height)
-        let imageDataStr = imageData.base64EncodedStringWithOptions([])
-        let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+    // MARK: 打开相机
+    
+    func openCameraAction() {
         
-        self.imageInfoList.addObject(imageInfo)
-        let addNextImageLinePositionY: CGFloat = CGFloat(Int((imageInfoList.count)/imageCountPerLine)) * (imageLength + imageMargin)
+        imagePicker.allowsEditing = false //2
+        imagePicker.sourceType = .Camera //3
+        presentViewController(imagePicker, animated: true, completion: nil)//4
 
-        let coordinateX = CGFloat(imageLength+imageMargin)*CGFloat((imageInfoList.count)%imageCountPerLine)
+    }
+    
+    // MARK: 打开相册
+    
+    func openPhotoAction() {
+    
+    
+        let pickView: ZLPhotoPickerViewController = ZLPhotoPickerViewController()
+        // 默认显示相册里面的内容SavePhotos
+        pickView.status = PickerViewShowStatus.CameraRoll
+        pickView.selectPickers = self.imageInfoList as [AnyObject]
+        // 最多能选9张图片
+        pickView.maxCount = 9
+        pickView.delegate = self
+        pickView.showPickerVc(self)
+
+        
+    }
+    
+    // MARK: - setupCell click ZLPhotoPickerBrowserViewController
+    
+    func setupPhotoBrowser(gesture: UITapGestureRecognizer) {
+    
+        
+        // 图片浏览
+        let pickerBrowser: ZLPhotoPickerBrowserViewController = ZLPhotoPickerBrowserViewController()
+        pickerBrowser.delegate = self
+        pickerBrowser.dataSource = self
+        // 是否可以删除照片
+        pickerBrowser.editing = true
+        // 当前选中的值
+        pickerBrowser.currentIndexPath = NSIndexPath.init(forRow: (gesture.view?.tag)!, inSection: 0)
+            // 展示控制器
+        pickerBrowser.showPickerVc(self)
+        
+    }
+    
+    //MARK: - 图片浏览
+    
+    //MARK: ZLPhotoPickerBrowserViewControllerDataSource
+    
+    func numberOfSectionInPhotosInPickerBrowser(pickerBrowser: ZLPhotoPickerBrowserViewController!) -> Int {
+        return 1
+    }
+    
+    func photoBrowser(photoBrowser: ZLPhotoPickerBrowserViewController!, numberOfItemsInSection section: UInt) -> Int {
+        return self.imageInfoList.count
+    }
+    
+    // MARK: 每个组展示什么图片,需要包装下ZLPhotoPickerBrowserPhoto
+    
+    func photoBrowser(pickerBrowser: ZLPhotoPickerBrowserViewController!, photoAtIndexPath indexPath: NSIndexPath!) -> ZLPhotoPickerBrowserPhoto! {
+        
+        let imageObj = self.imageInfoList[indexPath.row]
+        // 包装下imageObj 成 ZLPhotoPickerBrowserPhoto 传给数据源
+        let photo: ZLPhotoPickerBrowserPhoto = ZLPhotoPickerBrowserPhoto(anyImageObjWith: imageObj)
+        
+        let imageView: UIImageView = self.imageViewArr[indexPath.row] as! UIImageView
+        photo.toView = imageView
+        photo.thumbImage = imageView.image
+        return photo
+
+    }
+    
+    // MARK: 删除照片调用
+    
+    func photoBrowser(photoBrowser: ZLPhotoPickerBrowserViewController!, removePhotoAtIndexPath indexPath: NSIndexPath!) {
+        
+        self.imageInfoList.removeObjectAtIndex(indexPath.row)
+        self.redrawImageInfo()
+    }
+    
+    // MARK: 获取到相册图片
+    
+    func pickerViewControllerDoneAsstes(assets: [AnyObject]!) {
+        
+        if self.imageInfoList.count + assets.count > 9 {
+        
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "最多上传9张图片！")
+            return
+        }
+        
+        let assetImageArr: NSMutableArray = NSMutableArray(array: assets)
+        
+        
+        self.imageInfoList.removeAllObjects()
+        self.imageViewArr.removeAllObjects()
+        
+        redrawImageInfo()
+        
+        self.imageInfoList = NSMutableArray(array: assets)
+        
+        for var i = 1; i <= assetImageArr.count; i++ {
+        
+            
+            if assetImageArr[i - 1] is UIImage {
+                
+                self.showPhotoLocation(assetImageArr[i - 1] as! UIImage, index: i)
+
+            }
+            else {
+                let assetImage: ZLPhotoAssets = assetImageArr[i - 1] as! ZLPhotoAssets
+                self.showPhotoLocation(assetImage.originImage(), index: i)
+
+            }
+        }
+        
+    }
+    
+
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //
+
+        self.imageInfoList.addObject(chosenImage)
+        
+        // 展示图片
+        self.showPhotoLocation(chosenImage, index: self.imageInfoList.count)
+        
+        dismissViewControllerAnimated(true, completion: nil) //5
+        
+    }
+    
+    // MARK: 将image转化为提交格式
+    
+    func makeImageToCorrespondingFormat(array: NSMutableArray) -> NSMutableArray {
+    
+        let resultArr: NSMutableArray = NSMutableArray(capacity: 0)
+        for item in array {
+        
+            var targetImage: UIImage = UIImage()
+            if item is UIImage {
+            
+                targetImage = item as! UIImage
+            }
+            else {
+            
+                let assetImage: ZLPhotoAssets = item as! ZLPhotoAssets
+                targetImage = assetImage.originImage()
+            }
+            
+            targetImage = publicService.resizeImage(targetImage, newSize: uploadImageSize)
+            let imageData: NSData = UIImagePNGRepresentation(targetImage)!
+            let imageDataStr = imageData.base64EncodedStringWithOptions([])
+            let imageInfo = NSDictionary(objects: [imageDataStr, "jpg"], forKeys: ["data", "type"])
+            resultArr.addObject(imageInfo)
+        }
+        
+        return resultArr
+    }
+    
+    // MARK: 展示图片位置
+    
+    func showPhotoLocation(image: UIImage, index: Int) {
+    
+        let addNextImageLinePositionY: CGFloat = CGFloat(Int(index/imageCountPerLine)) * (imageLength + imageMargin)
+        
+        let coordinateX = CGFloat(imageLength+imageMargin)*CGFloat(index%imageCountPerLine)
         let imageViewContainer = UIView(frame: CGRectMake(defaultAddImageBtn.frame.origin.x, defaultAddImageBtn.frame.origin.y, imageLength, imageLength))
         let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
-        
+        imageView.tag = index - 1
+        self.imageViewArr.addObject(imageView)
+        let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setupPhotoBrowser:")
+        imageView.userInteractionEnabled = true
+        imageView.addGestureRecognizer(gesgure)
         let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         imageDeleteView.image = UIImage(named: "btn_imageDelete")
@@ -272,30 +454,27 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         defaultAddImageBtn.frame = CGRectMake(coordinateX, addNextImageLinePositionY, imageLength, imageLength)
         
         imageSection.frame = CGRECT(imageSection.frame.origin.x, imageSection.frame.origin.y, imageSection.frame.width, imageSection.frame.height + imageLength + imageMargin)
-
+        
         
         var selectedImage = UIImage()
 
-        selectedImage = publicService.cropToSquare(image: chosenImage)
-        print(selectedImage.size.width)
-        print(selectedImage.size.height)
-
-        let newSize = CGSizeMake(imageLength * 3, imageLength * 3)
+        selectedImage = publicService.cropToSquare(image: image)
+        
+        let newSize = CGSizeMake(imageLength, imageLength)
         UIGraphicsBeginImageContext(newSize)
 //        UIGraphicsBeginImageContext(selectedImage.size)
         selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+        imageViewContainer.userInteractionEnabled = true
         self.imageSection.addSubview(imageViewContainer)
         imageViewContainer.addSubview(imageView)
         imageViewContainer.addSubview(imageDeleteBtn)
-        if (imageInfoList.count + 1)%imageCountPerLine == 1 {
+        if (index + 1)%imageCountPerLine == 1 {
             if isQuestion == true {
                 self.tagSection.center = CGPoint(x: self.tagSection.center.x, y: self.tagSection.center.y + imageLength + imageMargin)
             }
         }
-        dismissViewControllerAnimated(true, completion: nil) //5
-        
     }
     
     func deleteImage(sender: UIButton){
@@ -316,6 +495,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                 subView.removeFromSuperview()
             }
         }
+        
+        self.imageViewArr.removeAllObjects()
+        
         var imageIndex: Int = 0
         for imageInfo in imageInfoList{
             let coordinateX: CGFloat = CGFloat(imageIndex % imageCountPerLine) * (imageLength + imageMargin)
@@ -324,17 +506,29 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             let imageViewContainer = UIView(frame: CGRectMake(coordinateX, coordinateY, imageLength, imageLength))
             let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
             
+            imageView.tag = imageIndex
+            self.imageViewArr.addObject(imageView)
+            let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setupPhotoBrowser:")
+            imageView.userInteractionEnabled = true
+            imageView.addGestureRecognizer(gesgure)
+            
             let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
             let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
             imageDeleteView.image = UIImage(named: "btn_imageDelete")
             imageDeleteBtn.addSubview(imageDeleteView)
             imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
             
+            var image = UIImage()
             let publicService = PublicService()
             
-            let image = UIImage(data: NSData(base64EncodedString: (imageInfo as! NSDictionary).objectForKey("data") as! String, options: NSDataBase64DecodingOptions(rawValue: 0))!)
+            if imageInfo is UIImage {
+                image = imageInfo as! UIImage
+            }
+            else {
+                image = (imageInfo as! ZLPhotoAssets).originImage()
+            }
             
-            let selectedImage = publicService.cropToSquare(image: image!)
+            let selectedImage = publicService.cropToSquare(image: image)
             
             let newSize = CGSizeMake(imageLength, imageLength)
             UIGraphicsBeginImageContext(newSize)
@@ -385,9 +579,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func submit(sender: UIButton) {
-//        let testview = UIView(frame: CGRECT(100, 100, 300, 300))
-//        testview.backgroundColor = UIColor.redColor()
-//        self.view.addSubview(testview)
         if((self.isQuestion == false) || ((self.isQuestion == true)&&(self.selectTagLabel.count>0))){
             let post = NSMutableDictionary()
             post.setObject(textView.text, forKey: "body")
@@ -402,14 +593,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             //get mentioned user List
             let postContentStr = textView.text
             let firstRange = postContentStr.rangeOfString("@")
-
-//            if self.progressHUD == nil {
-//                
-//                self.progressHUD = MBProgressHUD.init(view: self.textView)
-//            }
-//            self.textView.addSubview(self.progressHUD!)
-//            self.progressHUD?.labelText = title
-//            self.progressHUD?.show(true)
 
             if firstRange != nil {
                 let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
@@ -432,20 +615,58 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                     post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
                 }
             }
-            post.setObject(self.imageInfoList, forKey: "imageInfos")
+//            post.setObject(self.makeImageToCorrespondingFormat(self.imageInfoList), forKey: "imageInfos")
+            post.setObject(self.imageInfoList.count, forKey: "hasImage")
+
             if(self.isQuestion == true){
                 post.setObject(self.getSelectedTagList(), forKey: "tags")
             }
-            let result:Int = haalthyService.addPost(post as NSDictionary)
             
-//            self.progressHUD?.removeFromSuperview()
+            let result:Int = haalthyService.addPost(post as NSDictionary)
+//            dispatch_async(dispatch_get_main_queue()) {
+//                self.submitImages(result)
+//            }
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                self.submitImages(result)
+                dispatch_async(dispatch_get_main_queue(), {
+
+                })
+            })
+            HudProgressManager.sharedInstance.dismissHud()
+            if result > 0 {
+                HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "提交成功")
+            }else {
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "提交失败")
+            }
             self.dismissViewControllerAnimated(false, completion: nil)
+
+            
         }else{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
             let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
             tagViewController.isSelectedByPost = true
             tagViewController.postDelegate = self
             self.presentViewController(tagViewController, animated: true, completion: nil)
+        }
+    }
+
+    func submitImages(id: Int){
+        let imageInfosParameter = self.makeImageToCorrespondingFormat(self.imageInfoList)
+        var index: Int = 0
+        for imgeInfo in imageInfosParameter{
+            
+            getAccessToken.getAccessToken()
+            let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            
+            let urlPath:String = (addPostImageURL as String) + "?access_token=" + (accessToken as! String)
+            
+            let requestBody = NSMutableDictionary()
+            requestBody.setValue(id, forKey: "id")
+            requestBody.setValue(index, forKey: "imageIndex")
+            requestBody.setValue(imgeInfo, forKey: "imageInfo")
+            NetRequest.sharedInstance.POST_A(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>)
+            index++
         }
     }
     

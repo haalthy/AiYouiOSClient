@@ -274,12 +274,12 @@ class FeedCell: UITableViewCell {
 
         self.addSubview(contentLabel)
         
-        if feedModel?.hasImage > 0 {
+        if (feedModel?.hasImage > 0) {
         
             // 8.配图
-                        
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
+            
             let originPicArr: Array<String> = ((feedModel!.imageURL).componentsSeparatedByString(";"))
             var picArr: Array<String> = []
             for picurl in originPicArr {

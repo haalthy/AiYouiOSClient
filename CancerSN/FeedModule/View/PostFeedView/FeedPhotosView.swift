@@ -48,8 +48,10 @@ class FeedPhotosView: UIView {
             
                 let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
-                    let imageURL = self.picsUrl[i] + "@100h_100w_1e_1c"
-                    photoView.addImageCache(imageURL, placeHolder: placeHolderStr)
+                    if (self.picsUrl[i] != "<null>"){
+                        let imageURL = self.picsUrl[i] + "@100h_100w_1e_1c"
+                        photoView.addImageCache(imageURL, placeHolder: placeHolderStr)
+                    }
                     photoView.hidden = false
                 }
                 else {
@@ -96,6 +98,7 @@ class FeedPhotosView: UIView {
         for var i = 0; i < ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count); i++ {
             
             let photoImageView: UIImageView = UIImageView()
+            photoImageView.backgroundColor = seperateLineColor
             photoImageView.tag = i;
             self.addSubview(photoImageView)
             
@@ -126,23 +129,25 @@ class FeedPhotosView: UIView {
         tapedPhotoViewTag = yIndex * 3 + xIndex
         
         let photoView = self.subviews[tapedPhotoViewTag] as! UIImageView
-        if photoView.sd_imageURL().absoluteString != self.picsUrl[tapedPhotoViewTag] {
-            self.superview?.addSubview(progressHUD)
-            progressHUD.labelText = "加载图片"
-            progressHUD.show(true)
-            photoView.sd_setImageWithURL(NSURL(string: self.picsUrl[tapedPhotoViewTag] + "@800h"), placeholderImage: photoView.image, options: SDWebImageOptions.CacheMemoryOnly) { (imageTest, err, type , urltest) -> Void in
-                //
-                self.progressHUD.removeFromSuperview()
-                if err == nil{
-                    print(urltest.absoluteString)
-                    self.showSlideImage()
-                }else{
-                    print("加载失败")
+        if photoView.sd_imageURL() != nil {
+            if photoView.sd_imageURL().absoluteString != self.picsUrl[tapedPhotoViewTag] {
+                self.superview?.addSubview(progressHUD)
+                progressHUD.labelText = "加载图片"
+                progressHUD.show(true)
+                photoView.sd_setImageWithURL(NSURL(string: self.picsUrl[tapedPhotoViewTag] + "@800h"), placeholderImage: photoView.image, options: SDWebImageOptions.CacheMemoryOnly) { (imageTest, err, type , urltest) -> Void in
+                    //
+                    self.progressHUD.removeFromSuperview()
+                    if err == nil{
+                        print(urltest.absoluteString)
+                        self.showSlideImage()
+                    }else{
+                        print("加载失败")
+                    }
                 }
             }
-        }
-        else{
-            showSlideImage()
+            else{
+                showSlideImage()
+            }
         }
     }
     

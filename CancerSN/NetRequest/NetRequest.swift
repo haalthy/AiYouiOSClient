@@ -78,7 +78,6 @@ class NetRequest: NSObject {
     // MARK: 同步GET请求, 带参数
 //    
     func POST_A(url: String,  parameters: Dictionary<String, AnyObject>)-> NSDictionary {
-        
         var session: NSURLSession = NSURLSession()
         var request: NSMutableURLRequest = NSMutableURLRequest()
         var task: NSURLSessionTask!

@@ -13,10 +13,11 @@ extension UIImageView {
     // 添加webImage图片缓存
     
     func addImageCache(url: String, placeHolder: String) {
-    
         // 图片加载失败显示图片
         let placeHolderImg: UIImage = UIImage(named: placeHolder)!
-        
-        self.sd_setImageWithURL(NSURL(string: url)!, placeholderImage: placeHolderImg, options: SDWebImageOptions.RefreshCached)
+        let imageURL = NSURL(string: url)
+        if imageURL != nil {
+            self.sd_setImageWithURL(imageURL!, placeholderImage: placeHolderImg, options: SDWebImageOptions.RefreshCached)
+        }
     }
 }

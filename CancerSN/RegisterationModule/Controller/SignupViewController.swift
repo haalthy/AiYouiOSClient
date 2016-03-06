@@ -255,7 +255,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             if (result.count > 0) && (result.objectForKey("result") as! Int) == 1 {
                 keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                 keychainAccess.setPasscode(usernameKeyChain, passcode: (result.objectForKey("content") as! NSDictionary).objectForKey("result") as! String)
-                haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
+                if (profileSet.objectForKey(favTagsNSUserData) != nil) &&
+                    (profileSet.objectForKey(favTagsNSUserData) is NSArray){
+                        haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
+                }
                 self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
             }else{
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: result.objectForKey("resultDesp") as! String)

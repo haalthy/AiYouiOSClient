@@ -88,6 +88,7 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getMentionedDataFromServer() {
         
+        self.pageIndex = 0
         NetRequest.sharedInstance.POST(userMentionedURL, isToken: true, parameters: self.getParamters(0, max_id: self.maxID, pageIndex: self.pageIndex), success: { (content, message) -> Void in
             
             
@@ -98,7 +99,6 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
             let mentioned: NSArray = content as! NSArray
             
             let mentionedArr = PostFeedStatus.jsonToModelList(mentioned as Array) as! Array<PostFeedStatus>
-            self.pageIndex = 1
             if mentionedArr.count > 0 {
                 self.maxID = mentionedArr[0].postID
                 for dataItem in mentionedArr {
@@ -121,10 +121,11 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getMoreMentionedDataFromServer() {
     
+        self.pageIndex++
+
         NetRequest.sharedInstance.POST(userMentionedURL, isToken: true, parameters: self.getParamters(0, max_id: self.maxID, pageIndex: self.pageIndex), success: { (content, message) -> Void in
             
             
-            self.pageIndex++
             let mentioned: NSArray = content as! NSArray
             
             let mentionedArr = PostFeedStatus.jsonToModelList(mentioned as Array) as! Array<PostFeedStatus>
