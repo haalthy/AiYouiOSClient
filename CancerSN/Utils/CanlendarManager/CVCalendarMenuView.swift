@@ -59,7 +59,7 @@ class CVCalendarMenuView: UIView {
     }
 
     func setupWeekdaySymbols() {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+        let calendar = NSCalendar(identifier: NSCalendarIdentifierChinese)!
         calendar.components([NSCalendarUnit.Month, NSCalendarUnit.Day], fromDate: NSDate())
         calendar.firstWeekday = firstWeekday!.rawValue
 
@@ -95,10 +95,36 @@ class CVCalendarMenuView: UIView {
             let symbol = UILabel(frame: CGRectMake(x, y, width, height))
             symbol.textAlignment = .Center
             symbol.text = self.symbols[i]
-
-            if (dayOfWeekTextUppercase!) {
-                symbol.text = (self.symbols[i]).uppercaseString
+            
+            //周一 周二 周三
+            switch (symbol.text)! {
+                case "Sun":
+                    symbol.text = "日"
+                break
+            case "Mon":
+                symbol.text = "一"
+                break
+            case "Tue":
+                symbol.text = "二"
+                break
+            case "Wed":
+                symbol.text = "三"
+                break
+            case "Thu":
+                symbol.text = "四"
+                break
+            case "Fri":
+                symbol.text = "五"
+                break
+            case "Sat":
+                symbol.text = "六"
+                break
+            default:
+                break
             }
+//            if (dayOfWeekTextUppercase!) {
+//                symbol.text = (self.symbols[i]).uppercaseString
+//            }
 
             symbol.font = dayOfWeekFont
             symbol.textColor = dayOfWeekTextColor

@@ -555,9 +555,10 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             cell.addSubview(clinicItemValueTextField)
             //delete button
             print(cell.frame.width)
-            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth - 30, y: 16, width: clinicReportDelBtnWidth, height: clinicReportDelBtnWidth))
-//            deleteBtn.backgroundColor = headerColor
-            let btnImageView = UIImageView(frame: CGRECT(0, 0, clinicReportDelBtnWidth, clinicReportDelBtnWidth))
+            let clinicReportDelBtnWidthMargin: CGFloat = 15
+            let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth - 30 - clinicReportDelBtnWidthMargin * 2, y: 16 - clinicReportDelBtnWidthMargin, width: clinicReportDelBtnWidth + clinicReportDelBtnWidthMargin * 2, height: clinicReportDelBtnWidth + clinicReportDelBtnWidthMargin * 2))
+            deleteBtn.backgroundColor = UIColor.clearColor()
+            let btnImageView = UIImageView(frame: CGRECT(clinicReportDelBtnWidth, clinicReportDelBtnWidth, clinicReportDelBtnWidth, clinicReportDelBtnWidth))
             btnImageView.image = UIImage(named: "btn_deleteClinicData")
             deleteBtn.addSubview(btnImageView)
             deleteBtn.layer.cornerRadius = clinicReportDelBtnWidth/2

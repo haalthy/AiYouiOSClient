@@ -105,7 +105,6 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         self.tableView.mj_footer = MJRefreshAutoNormalFooter.init(refreshingBlock: { () -> Void in
             self.getMoreFeedListFromServer()
         })
-        
     }
     
     // MARK: - Net Request

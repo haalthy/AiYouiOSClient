@@ -120,7 +120,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
-        if ((self.userProfileObj?.gender)!) == "F"{
+        if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F") {
             relatedToOther = NSArray(array: [herProfileStr])
         }else{
             relatedToOther = NSArray(array: [hisProfileStr])
@@ -162,7 +162,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if (self.username == self.profileOwnername) {
             self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
         }else{
-            if ((self.userProfileObj?.gender)!) == "F"{
+            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
                 self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
             }else{
                 self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
@@ -187,7 +187,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-        let imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        var imageURL = ""
+        
+        if self.userProfileObj?.portraitUrl != nil {
+            imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        }
+        
         self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
         self.userProfileHeaderView.addSubview(portraitView)
         

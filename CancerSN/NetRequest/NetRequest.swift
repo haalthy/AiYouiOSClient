@@ -95,26 +95,27 @@ class NetRequest: NSObject {
         config.timeoutIntervalForRequest = 30
         
         session = NSURLSession(configuration: config)
-
+        
         task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            
             // 返回任务结果
             if error == nil {
                 do{
-                // 解析json
-                json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-//                self.callbackWithResult(json, success: success, failed: failed)
+                    // 解析json
+                    json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                    //                self.callbackWithResult(json, success: success, failed: failed)
                 }catch let error as NSError {
-                    print("Could not create audio player: \(error)")
+                    print("ERROR: \(error)")
                 }
             }
             else {
-                
-//                failed(content: ["": ""], message: "网络异常")
+                json = NSDictionary(object: "resultDesp", forKey: "网络异常")
+                //                failed(content: ["": ""], message: "网络异常")
             }
             
             dispatch_semaphore_signal(semaphore)
-        })
+            }
+        )
+
         // 任务结束
         task.resume()
         

@@ -25,8 +25,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     //
     var headerHeight: CGFloat = 0
-    let btnInPickerWidth: CGFloat = 50
-    let btnInPickerHeight: CGFloat = 25
+    let btnInPickerWidth: CGFloat = 70
+    let btnInPickerHeight: CGFloat = 30
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,10 +70,10 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     func initContentView(){
         //init pickerView
-        selectionPickerContainerView = UIView(frame: CGRectMake(0, UIScreen.mainScreen().bounds.height - headerHeight, UIScreen.mainScreen().bounds.width, selectionPickerContainerViewHeight))
-        selectionPickerContainerView.backgroundColor = UIColor.whiteColor()
-        let cancelBtnInPicker = UIButton(frame: CGRectMake(20, 10, btnInPickerWidth, btnInPickerHeight))
-        let submitBtnInPicker = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 20 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
+        selectionPickerContainerView = UIView(frame: CGRectMake(0, screenHeight - selectionPickerContainerViewHeight - headerHeight, screenWidth, selectionPickerContainerViewHeight))
+        selectionPickerContainerView.backgroundColor = chartBackgroundColor
+        let cancelBtnInPicker = UIButton(frame: CGRectMake(10, 10, btnInPickerWidth, btnInPickerHeight))
+        let submitBtnInPicker = UIButton(frame: CGRectMake(screenWidth - 10 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
         cancelBtnInPicker.setTitle("取消", forState: UIControlState.Normal)
         submitBtnInPicker.setTitle("确定", forState: UIControlState.Normal)
         cancelBtnInPicker.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
@@ -99,18 +99,16 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
 //        UIView.animateWithDuration(durationTime, animations: {
 //            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
 //        })
-//        selectionPickerContainerAppear = false
+        selectionPickerContainerAppear = false
         selectionPickerContainerView.removeFromSuperview()
     }
     
     func submitSelectionPicker(){
-        let durationTime: NSTimeInterval = 0.5
+//        let durationTime: NSTimeInterval = 0.5
 //        UIView.animateWithDuration(durationTime, animations: {
 //            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
 //        })
         let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
-        print(selectStr)
-//        selectionPickerContainerAppear = false
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
         }
@@ -120,6 +118,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         if (stageSelectionData as NSArray).containsObject(selectStr) {
             stageBtn.setTitle(selectStr, forState: UIControlState.Normal)
         }
+        selectionPickerContainerAppear = false
+
         selectionPickerContainerView.removeFromSuperview()
     }
     
@@ -182,10 +182,6 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             pickerDataSource = treatmentSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
-            let durationTime: NSTimeInterval = 0.5
-//            UIView.animateWithDuration(durationTime, animations: {
-//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-//            })
             self.view.addSubview(selectionPickerContainerView)
         }
     }
@@ -195,29 +191,10 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             pickerDataSource = cancerTypeSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
-            let durationTime: NSTimeInterval = 0.5
-//            UIView.animateWithDuration(durationTime, animations: {
-//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-//            })
             self.view.addSubview(selectionPickerContainerView)
-
         }
     }
     
-    func selectStage(){
-        if selectionPickerContainerAppear == false{
-            pickerDataSource = stageSelectionData
-            self.selectionPicker.reloadAllComponents()
-            selectionPickerContainerAppear = true
-            let durationTime: NSTimeInterval = 0.5
-//            UIView.animateWithDuration(durationTime, animations: {
-//                self.selectionPickerContainerView.center.y -= self.selectionPickerContainerViewHeight
-//            })
-            selectionPickerContainerView.removeFromSuperview()
-
-        }
-        selectionPickerContainerView.removeFromSuperview()
-    }
     
     func formatSelectBtn(selectBtn: UIButton, title: String){
         selectBtn.setTitle(title, forState: UIControlState.Normal)
@@ -261,7 +238,23 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         if indexPath.section == 0 {
             return 40
         }else{
-            return 120
+            
+            let clinicTrial = self.searchDataArr[indexPath.row] as! ClinicTrailObj
+            
+            let otherInfoStr: String = clinicTrial.subgroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideeffect + "\n" + clinicTrial.researchInfo
+            
+            let strHeight = otherInfoStr.sizeWithFont(UIFont.systemFontOfSize(13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.max)).height
+            return strHeight + 45
+        }
+    }
+    
+    var lastPosition: CGFloat = 0
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        let currentPostion: CGFloat = scrollView.contentOffset.y
+        let distance: CGFloat = currentPostion - lastPosition;
+        if distance > 25 {
+            self.cancelSelectionPicker()
         }
     }
 }
