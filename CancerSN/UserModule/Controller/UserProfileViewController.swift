@@ -8,7 +8,9 @@
 
 import UIKit
 
-class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate {
+let kProfileTimeInterval = 0.5
+
+class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
     // 控件关联
     var tableView = UITableView()
     var relatedTableView = UITableView()
@@ -57,14 +59,25 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     //“治疗与方案” ”与我相关“
     var treatmentHeaderBtn = UIButton()
     var postHeaderBtn = UIButton()
-    var treatmentBtnLine = UIView()
-    var postBtnLine = UIView()
+    var selectedBtnLine = UIView()
     var segmentSectionBtnHeight = CGFloat()
     let portraitView = UIImageView()
     let followBtn = UIButton()
     
+    // 当前选中的button
+    var curSelectedBtn = UIButton()
+    // 初始化标识
+    var firstInit: Bool = true
+    
+    
     //scrollView
     let scrollView = UIScrollView()
+    
+    // 开始时，偏移量（判断scrollview的滑动方向）
+    var startContentOffsetX: CGFloat = 0.0
+    
+    // 结束时，偏移量
+    var endContentOffsetX: CGFloat = 0.0
     
     //
     override func viewDidLoad() {
@@ -116,6 +129,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     // MARK: - Init Variables
     func initVariables() {
+        
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
@@ -132,6 +146,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func initContentView() {
         let profileHeaderH: CGFloat = 125
         
+        // 选中提示线颜色
+        self.selectedBtnLine.backgroundColor = headerColor
+        
         self.userProfileHeaderView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: profileHeaderH))
 
         scrollView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
@@ -141,22 +158,26 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.tableView.frame = CGRECT(0, 0, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
         self.relatedTableView.frame = CGRECT(screenWidth, 0, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
         
+        self.relatedTableView.tableFooterView = UIView(frame: CGRectZero)
+        
         scrollView.addSubview(self.tableView)
         scrollView.addSubview(self.relatedTableView)
 
         scrollView.userInteractionEnabled = true
         scrollView.pagingEnabled = true
+        scrollView.delegate = self
+        scrollView.showsHorizontalScrollIndicator = false
         
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
 
         self.treatmentHeaderBtn.setTitle(processHeaderStr, forState: UIControlState.Normal)
-        self.treatmentBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
-        self.treatmentHeaderBtn.addSubview(treatmentBtnLine)
+        self.selectedBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
+        self.treatmentHeaderBtn.addSubview(self.selectedBtnLine)
         self.treatmentHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
         self.userProfileHeaderView.addSubview(treatmentHeaderBtn)
-        headerBtnFormatBeSelected(self.treatmentHeaderBtn)
         
+
         //初始化“与我相关”
         self.postHeaderBtn.frame = CGRectMake(screenWidth/2, 1, screenWidth/2, segmentSectionBtnHeight)
         if (self.username == self.profileOwnername) {
@@ -168,8 +189,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
             }
         }
-        self.postBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
-        self.postHeaderBtn.addSubview(postBtnLine)
         self.postHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
         self.userProfileHeaderView.addSubview(postHeaderBtn)
         if isSelectedTreatment{
@@ -294,13 +313,34 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func headerBtnFormatBeSelected(sender: UIButton){
         sender.setTitleColor(headerColor, forState: UIControlState.Normal)
         sender.titleLabel?.font = UIFont(name: fontBoldStr, size: 13.0)
-        if sender == treatmentHeaderBtn{
-            treatmentBtnLine.backgroundColor = headerColor
-            postBtnLine.backgroundColor = UIColor.whiteColor()
+        
+        self.curSelectedBtn = sender
+
+        if firstInit {
+            
+            firstInit = false
+            return
         }
-        if sender == postHeaderBtn{
-            postBtnLine.backgroundColor = headerColor
-            treatmentBtnLine.backgroundColor = UIColor.whiteColor()
+        
+        if sender == treatmentHeaderBtn {
+            
+            // 添加动画
+            UIView.animateWithDuration(kProfileTimeInterval, animations: { () -> Void in
+                let frame: CGRect = self.selectedBtnLine.frame
+                self.selectedBtnLine.frame = CGRECT(0, frame.origin.y, frame.size.width, frame.size.height)
+            })
+
+        }
+        if sender == postHeaderBtn {
+            
+            // 添加动画
+            UIView.animateWithDuration(kProfileTimeInterval, animations: { () -> Void in
+                let x: CGFloat = SCREEN_WIDTH / 2
+                
+                let frame: CGRect = self.selectedBtnLine.frame
+                self.selectedBtnLine.frame = CGRECT(x, frame.origin.y, frame.size.width, frame.size.height)
+            })
+
         }
     }
     
@@ -316,6 +356,36 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             return self.treatmentSections.count + 2
         }else{
             return 1
+        }
+    }
+    
+    // MARK: - scrollView Delegate
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        
+        startContentOffsetX = scrollView.contentOffset.x
+    }
+
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        endContentOffsetX = scrollView.contentOffset.x
+        
+        if abs(endContentOffsetX - startContentOffsetX) > SCREEN_WIDTH / 2 - 60 && scrollView == self.scrollView  {
+        
+            if self.curSelectedBtn == treatmentHeaderBtn {
+                
+                headerBtnFormatBeSelected(postHeaderBtn)
+                headerBtnFormatBeDeselected(treatmentHeaderBtn)
+                isSelectedTreatment = false
+                self.relatedTableView.reloadData()
+            }
+            else {
+                
+                headerBtnFormatBeSelected(treatmentHeaderBtn)
+                headerBtnFormatBeDeselected(postHeaderBtn)
+                isSelectedTreatment = true
+                self.tableView.reloadData()
+            }
         }
     }
     
