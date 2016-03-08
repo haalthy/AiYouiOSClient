@@ -29,6 +29,8 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     var tagCell: TagCell!
     var dict = NSArray()
     
+    var islookAround = false
+    
     let headerHeight: CGFloat = 44
     let cancelBtnLeftSpace: CGFloat = 15
     let cancelBtnWidth: CGFloat = 40
@@ -187,7 +189,12 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
             haalthyService.updateUserTag(selectTagList )
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        if islookAround {
+            let tabViewController : TabViewController = TabViewController()
+            self.presentViewController(tabViewController, animated: true, completion: nil)
+        }else{
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     // MARK: - 网络请求
     
