@@ -741,6 +741,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if tableView == self.relatedTableView {
             switch indexPath.row {
             case 0:
