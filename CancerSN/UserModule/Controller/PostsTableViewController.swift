@@ -193,6 +193,19 @@ class PostsTableViewController: UITableViewController {
         postCellFrame.post = postList[indexPath.row] as! PostFeedStatus
         return postCellFrame.cellHeight + 30
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let feedStatus: PostFeedStatus = postList[indexPath.row] as! PostFeedStatus
+        
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
+        let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        feedDetailVC.feedId = feedStatus.postID
+        self.navigationController?.pushViewController(feedDetailVC, animated: true)
+
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
