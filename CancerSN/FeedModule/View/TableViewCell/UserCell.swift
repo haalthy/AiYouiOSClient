@@ -30,7 +30,25 @@ class UserCell: UITableViewCell {
         let imageURL = userObj.imageURL + "@80h_80w_1e"
         portraitImage.addImageCache(imageURL, placeHolder: "icon_profile")
         nameLabel.text = userObj.displayname
-        var userInfo: String = (userObj.gender) + " " + String(userObj.age) + " " + userObj.cancerType  + " " + userObj.pathological + " " + userObj.stage + " " + userObj.geneticMutation
+        var userInfo: String = ""
+        if userObj.gender != "<null>" {
+            userInfo += (userObj.gender) + " "
+        }
+        if userObj.age != 0 {
+            userInfo += String(userObj.age) + " "
+        }
+        if userObj.cancerType != "<null>" {
+            userInfo += userObj.cancerType  + " "
+        }
+        if userObj.pathological != "<null>" {
+            userInfo += userObj.pathological + " "
+        }
+        if userObj.stage != "<null>" {
+            userInfo += userObj.stage + " "
+        }
+        if userObj.geneticMutation != "<null>" {
+            userInfo += userObj.geneticMutation
+        }
         infoLabel.text = userInfo
         if isFollowing == true {
             self.addBtn.hidden = true

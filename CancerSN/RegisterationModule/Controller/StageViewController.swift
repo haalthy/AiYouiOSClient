@@ -33,11 +33,17 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
             offsetHeightForNavigation = 30
         }
     }
+    override func viewWillAppear(animated: Bool) {
+        if isUpdate == false {
+            self.navigationController?.navigationBar.hidden = true
+        }
+    }
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
+        let btnMargin: CGFloat = 15
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
@@ -75,7 +81,8 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         self.view.addSubview(topPickerView)
         if isUpdate == false {
             //next view button
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            let btnMargin: CGFloat = 15
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
@@ -120,7 +127,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         pickerLabel.font = pickerSelectedFont
     }
     
-    func prevousView(sender: UIButton){
+    func previousView(sender: UIButton){
         self.navigationController?.popViewControllerAnimated(true)
     }
     

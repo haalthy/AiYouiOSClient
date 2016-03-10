@@ -37,6 +37,12 @@ class GeneticMutationViewController: UIViewController {
         initContentView()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        if isUpdate == false {
+            self.navigationController?.navigationBar.hidden = true
+        }
+    }
+    
     func initVariables(){
         if isUpdate {
             offsetHeightForNavigation = 30
@@ -45,8 +51,9 @@ class GeneticMutationViewController: UIViewController {
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
+        let btnMargin: CGFloat = 15
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
@@ -80,12 +87,13 @@ class GeneticMutationViewController: UIViewController {
         
         //next view button
         if isUpdate == false {
-        let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
-        nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-        nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
-        nextViewBtn.titleLabel?.font = nextViewBtnFont
-        nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(nextViewBtn)
+            let btnMargin: CGFloat = 15
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
+            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
+            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.titleLabel?.font = nextViewBtnFont
+            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(nextViewBtn)
         }
         
         //genetic button section

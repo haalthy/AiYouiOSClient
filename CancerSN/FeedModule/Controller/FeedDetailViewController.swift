@@ -71,8 +71,8 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         // 评论
         self.keyBoardView = KeyBoardView(frame: CGRECT(0, SCREEN_HEIGHT - kFeedDetailKeyBoardHeight, SCREEN_WIDTH, kFeedDetailKeyBoardHeight))
         self.keyBoardView.delegate = self
-        self.keyBoardView.setPlaceHolderTextColor(RGB(204, 204, 204))
-        self.keyBoardView.setPlaceHolderText("在此输入您要发送的评论")
+        self.keyBoardView.setPlaceHolderTextColor(defaultTextColor)
+        self.keyBoardView.setPlaceHolderText("")
 
         self.view.addSubview(keyBoardView)
         self.view.bringSubviewToFront(keyBoardView)
@@ -331,7 +331,6 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     */
     
     func checkUserProfile(username: String) {
-        
         let storyboard = UIStoryboard(name: "User", bundle: nil)
         let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
         userProfileController.profileOwnername = username
