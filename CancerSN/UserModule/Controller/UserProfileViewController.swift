@@ -140,15 +140,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.view.addSubview(userProfileHeaderView)
         self.view.addSubview(scrollView)
 //        HudProgressManager.sharedInstance.dismissHud()
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+        titleLabel.textAlignment = NSTextAlignment.Center
         if username != profileOwnername {
-//            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            titleLabel.text = "他的奇迹"
+        }else{
+            titleLabel.text = "我的奇迹"
         }
+        titleLabel.textColor = UIColor.whiteColor()
+        self.navigationItem.titleView = titleLabel
 
     }
     
     // MARK: - Init Variables
     func initVariables() {
-        
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
