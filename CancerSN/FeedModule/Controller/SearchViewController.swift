@@ -201,8 +201,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         let urlStr: String = getFollowingUserURL + "?access_token=" + (accessToken as! String)
         let json = NetRequest.sharedInstance.POST_A(urlStr, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)!])
-        let userList: NSArray = json.objectForKey("content") as! NSArray
-        self.followingList = UserModel.jsonToModelList(userList as Array) as! Array<UserModel>
+        if  json.objectForKey("content") != nil {
+            let userList: NSArray = json.objectForKey("content") as! NSArray
+            self.followingList = UserModel.jsonToModelList(userList as Array) as! Array<UserModel>
+        }
     }
     
     //获得推荐用户列表
