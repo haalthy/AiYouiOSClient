@@ -98,7 +98,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let treatmentNameTextField = UITextField(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, treatmentNameTextFieldHeight))
         treatmentNameTextField.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as? String
         let dosageTextView = UITextView(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth + treatmentNameTextFieldHeight + marginWidth, cell.frame.width - marginWidth * 2, dosageTextViewHeight))
-        dosageTextView.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as! String
+        dosageTextView.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as? String
         treatmentNameTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
         treatmentNameTextField.layer.borderWidth = 1.5
         treatmentNameTextField.layer.cornerRadius = 2

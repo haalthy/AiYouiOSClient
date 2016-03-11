@@ -30,7 +30,25 @@ class UserCell: UITableViewCell {
         let imageURL = userObj.imageURL + "@80h_80w_1e"
         portraitImage.addImageCache(imageURL, placeHolder: "icon_profile")
         nameLabel.text = userObj.displayname
-        var userInfo: String = (userObj.gender) + " " + String(userObj.age) + " " + userObj.cancerType  + " " + userObj.pathological + " " + userObj.stage + " " + userObj.geneticMutation
+        var userInfo: String = ""
+        if userObj.gender != "<null>" {
+            userInfo += (userObj.gender) + " "
+        }
+        if userObj.age != 0 {
+            userInfo += String(userObj.age) + " "
+        }
+        if userObj.cancerType != "<null>" {
+            userInfo += userObj.cancerType  + " "
+        }
+        if userObj.pathological != "<null>" {
+            userInfo += userObj.pathological + " "
+        }
+        if userObj.stage != "<null>" {
+            userInfo += userObj.stage + " "
+        }
+        if userObj.geneticMutation != "<null>" {
+            userInfo += userObj.geneticMutation
+        }
         infoLabel.text = userInfo
         if isFollowing == true {
             self.addBtn.hidden = true
@@ -65,15 +83,15 @@ class UserCell: UITableViewCell {
         let requestBody = NSMutableDictionary()
         requestBody.setObject(userObj.username, forKey: "followingUser")
         requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-        
+        sender.enabled = false
+        let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
+        followedImageView.image = UIImage(named: "btn_Followed")
+        sender.removeAllSubviews()
+        sender.addSubview(followedImageView)
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             success: { (content , message) -> Void in
 //                HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
-                sender.enabled = false
-                let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
-                followedImageView.image = UIImage(named: "btn_Followed")
-                sender.removeAllSubviews()
-                sender.addSubview(followedImageView)
+
 //                HudProgressManager.sharedInstance.dismissHud()
             }) { (content, message) -> Void in
 //                HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")

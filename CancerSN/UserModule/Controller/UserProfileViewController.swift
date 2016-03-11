@@ -45,7 +45,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var unreadMentionedPostCount: Int = 0
     var unreadMentionedPostLabel = UILabel()
     var selectedPostId = Int()
-    
     // 自定义变量
     var headerHeight = CGFloat()
     var screenWidth = CGFloat()
@@ -79,31 +78,27 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // 结束时，偏移量
     var endContentOffsetX: CGFloat = 0.0
     
+    let nicknameLabel = UILabel()
+    let profileLabel = UILabel()
     //
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.removeAllSubviews()
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中...")
+//        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         getAccessToken.getAccessToken()
         let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if access_token != nil {
+            initRefresh()
             if self.profileOwnername == nil{
                 profileOwnername = self.username
             }
-            treatmentSections.removeAllObjects()
-            getTreatmentsData()
-            if self.userProfile.count == 0 {
-                let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
-                self.tabBarController?.selectedIndex = 0
-                
-            }else{
+//            getTreatmentsData()
+
                 initVariables()
                 initContentView()
-                
+            
                 self.tableView.registerClass(ChartSummaryTableViewCell.self, forCellReuseIdentifier: "ChartSummaryIdentifier")
                 self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
                 self.tableView.delegate = self
@@ -111,34 +106,93 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.relatedTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
                 self.relatedTableView.delegate = self
                 self.relatedTableView.dataSource = self
-//                self.tableView.reloadData()
-            }
+//            }
         }else{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
             let loginController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
             self.presentViewController(loginController, animated: true, completion: nil)
         }
-        HudProgressManager.sharedInstance.dismissHud()
+
+    }
+    
+    
+    
+    func initRefresh(){
+        self.tableView.mj_header = MJRefreshNormalHeader.init(refreshingBlock: { () -> Void in
+            self.getTreatmentsData()
+            if self.userProfile.count == 0 {
+                let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                self.tabBarController?.selectedIndex = 0
+                
+            }else{
+                self.reloadHeader()
+                self.tableView.reloadData()
+            }
+        })
     }
     
     override func viewDidAppear(animated: Bool) {
-        
+        self.getTreatmentsData()
+        self.reloadHeader()
+        self.tableView.reloadData()
         self.view.addSubview(userProfileHeaderView)
         self.view.addSubview(scrollView)
+//        HudProgressManager.sharedInstance.dismissHud()
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+        titleLabel.textAlignment = NSTextAlignment.Center
+        if username != profileOwnername {
+            titleLabel.text = "他的奇迹"
+        }else{
+            titleLabel.text = "我的奇迹"
+        }
+        titleLabel.textColor = UIColor.whiteColor()
+        self.navigationItem.titleView = titleLabel
+
     }
     
     // MARK: - Init Variables
     func initVariables() {
-        
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
+
+    }
+    
+    func reloadHeader(){
         if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F") {
             relatedToOther = NSArray(array: [herProfileStr])
         }else{
             relatedToOther = NSArray(array: [hisProfileStr])
         }
+        
+        self.treatmentHeaderBtn.setTitle(processHeaderStr, forState: UIControlState.Normal)
+        
+        if (self.username == self.profileOwnername) {
+            self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
+        }else{
+            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
+                self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
+            }else{
+                self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
+            }
+        }
+        
+        var imageURL = ""
+        
+        if self.userProfileObj?.portraitUrl != nil {
+            imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        }
+        
+        self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
+        
+        nicknameLabel.text = (self.userProfileObj?.nick)!
+        
+        let profileStr = publicService.getProfileStrByDictionary(self.userProfile)
+        profileLabel.text = profileStr
+
     }
     
     // MARK: - Init Related ContentView
@@ -171,7 +225,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
 
-        self.treatmentHeaderBtn.setTitle(processHeaderStr, forState: UIControlState.Normal)
         self.selectedBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
         self.treatmentHeaderBtn.addSubview(self.selectedBtnLine)
         self.treatmentHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -180,15 +233,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 
         //初始化“与我相关”
         self.postHeaderBtn.frame = CGRectMake(screenWidth/2, 1, screenWidth/2, segmentSectionBtnHeight)
-        if (self.username == self.profileOwnername) {
-            self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
-        }else{
-            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
-                self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
-            }else{
-                self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
-            }
-        }
+
         self.postHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
         self.userProfileHeaderView.addSubview(postHeaderBtn)
         if isSelectedTreatment{
@@ -206,13 +251,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-        var imageURL = ""
-        
-        if self.userProfileObj?.portraitUrl != nil {
-            imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
-        }
-        
-        self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
+
         self.userProfileHeaderView.addSubview(portraitView)
         
         //关注
@@ -220,17 +259,15 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         //昵称 和 profile描述 标签
         let profileLabelWidth: CGFloat = screenWidth - 25 - 40 - 15 - followBtnWidth
-        let nicknameLabel = UILabel(frame: CGRectMake(65, 45 + 23, profileLabelWidth, 14))
+        nicknameLabel.frame = CGRectMake(65, 45 + 23, profileLabelWidth, 14)
         nicknameLabel.textColor = nicknameColor
         nicknameLabel.font = nicknameFont
-        nicknameLabel.text = (self.userProfileObj?.nick)!
         self.userProfileHeaderView.addSubview(nicknameLabel)
         
-        let profileLabel = UILabel(frame: CGRectMake(65,  90, profileLabelWidth, 12))
+        profileLabel.frame = CGRectMake(65,  90, profileLabelWidth, 12)
         profileLabel.textColor = UIColor.lightGrayColor()
         profileLabel.font = UIFont(name: fontStr, size: 12.0)
-        let profileStr = publicService.getProfileStrByDictionary(self.userProfile)
-        profileLabel.text = profileStr
+
         self.userProfileHeaderView.addSubview(profileLabel)
         //
 
@@ -508,6 +545,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     
     func getTreatmentsData(){
+        treatmentSections.removeAllObjects()
         if (username != nil) && (password != nil){
             var jsonResult:AnyObject? = nil
             
@@ -626,6 +664,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
+        self.tableView.mj_header.endRefreshing()
+
     }
     
     func getNSDateMod(date: Double)->Double{

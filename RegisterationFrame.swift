@@ -96,7 +96,7 @@ let nextViewBtnFont: UIFont = UIFont.systemFontOfSize(15)
 let nextViewBtnColor: UIColor = UIColor.init(red: 153/255, green: 153/255, blue: 153/255, alpha: 1)
 
 //cancel Btn
-let previousBtnTopSpace: CGFloat = CGFloat(43)
+let previousBtnTopSpace: CGFloat = CGFloat(30)
 let previousBtnHeight: CGFloat = CGFloat(19)
 let previousBtnWidth: CGFloat = CGFloat(11)
 let previousBtnLeftSpace: CGFloat = CGFloat(17)

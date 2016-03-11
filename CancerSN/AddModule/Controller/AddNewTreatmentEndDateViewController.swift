@@ -45,7 +45,7 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
         }
         print(profileSet.objectForKey(newTreatmentEnddate) as! Int)
         print(profileSet.objectForKey(newTreatmentBegindate) as! Int)
-        if (profileSet.objectForKey(newTreatmentEnddate) as! Int) < (profileSet.objectForKey(newTreatmentBegindate) as! Int) {
+        if (profileSet.objectForKey(newTreatmentEnddate) as! Int) <= ((profileSet.objectForKey(newTreatmentBegindate) as! Int) + 60) {
             let alertController = UIAlertController(title: "结束时间必须大于开始时间", message: nil, preferredStyle: .Alert)
             let ContinueAction = UIAlertAction(title: "返回", style: .Default){ (action)in
             }

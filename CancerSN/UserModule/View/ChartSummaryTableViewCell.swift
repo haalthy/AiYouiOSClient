@@ -92,6 +92,12 @@ class ChartSummaryTableViewCell: UITableViewCell {
     
     func setClinicReport(clinicDataList: NSArray){
         self.chartScrollView.removeAllSubviews()
+        if self.chartScrollView.layer.sublayers?.count > 0{
+            for subLayer in self.chartScrollView.layer.sublayers!{
+                subLayer.removeFromSuperlayer()
+            }
+        }
+
         dataPointsXArr.removeAllObjects()
         dataPointsYArr.removeAllObjects()
         let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Int
@@ -110,6 +116,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
             chartHorizonLine.backgroundColor = chartButtomLineColor
             self.chartScrollView.addSubview(chartHorizonLine)
             self.chartScrollView.contentSize = CGSize(width: chartWidth, height: self.chartScrollView.frame.height)
+            self.chartScrollView.contentOffset = CGPoint(x: chartWidth - screenWidth , y: 0)
             
             var dataMax: Float = 0
             var dataMin: Float = 10000
