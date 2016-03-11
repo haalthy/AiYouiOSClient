@@ -83,15 +83,15 @@ class UserCell: UITableViewCell {
         let requestBody = NSMutableDictionary()
         requestBody.setObject(userObj.username, forKey: "followingUser")
         requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-        
+        sender.enabled = false
+        let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
+        followedImageView.image = UIImage(named: "btn_Followed")
+        sender.removeAllSubviews()
+        sender.addSubview(followedImageView)
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             success: { (content , message) -> Void in
 //                HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
-                sender.enabled = false
-                let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
-                followedImageView.image = UIImage(named: "btn_Followed")
-                sender.removeAllSubviews()
-                sender.addSubview(followedImageView)
+
 //                HudProgressManager.sharedInstance.dismissHud()
             }) { (content, message) -> Void in
 //                HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")
