@@ -279,6 +279,14 @@
 		6BC05A2D1C882B2A006F0A65 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC05A0F1C882B2A006F0A65 /* DACircularProgressView.m */; };
 		6BC05A2E1C882B2A006F0A65 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC05A111C882B2A006F0A65 /* DALabeledCircularProgressView.m */; };
 		6BC05A2F1C882B2A006F0A65 /* ZLPhotoLib.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6BC05A121C882B2A006F0A65 /* ZLPhotoLib.bundle */; };
+		6BD5FFD41C9002B7003170C1 /* jpush-ios-2.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BD5FFD21C9002B7003170C1 /* jpush-ios-2.1.0.a */; };
+		6BD5FFD61C9004A1003170C1 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BD5FFD51C9004A1003170C1 /* CFNetwork.framework */; };
+		6BD5FFD81C9004B0003170C1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BD5FFD71C9004B0003170C1 /* CoreFoundation.framework */; };
+		6BD5FFDA1C9004C8003170C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BD5FFD91C9004C8003170C1 /* Foundation.framework */; };
+		6BD5FFE31C90136F003170C1 /* CAAnimation+WAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5FFDE1C90136F003170C1 /* CAAnimation+WAnimation.m */; };
+		6BD5FFE41C90136F003170C1 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5FFE01C90136F003170C1 /* UIView+Frame.m */; };
+		6BD5FFE51C90136F003170C1 /* UIView+WZLBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5FFE21C90136F003170C1 /* UIView+WZLBadge.m */; };
+		6BD5FFE81C90163E003170C1 /* RedBadgeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5FFE71C90163E003170C1 /* RedBadgeManager.swift */; };
 		6BF05DD31C3D0AEF00D7AF99 /* KeyBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF05DD21C3D0AEF00D7AF99 /* KeyBoardView.swift */; };
 		6BF05DD51C3E0DC400D7AF99 /* KBTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF05DD41C3E0DC400D7AF99 /* KBTextView.swift */; };
 		6BF05DD71C3E639E00D7AF99 /* FeedDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */; };
@@ -666,6 +674,18 @@
 		6BC05A101C882B2A006F0A65 /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DALabeledCircularProgressView.h; sourceTree = "<group>"; };
 		6BC05A111C882B2A006F0A65 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
 		6BC05A121C882B2A006F0A65 /* ZLPhotoLib.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZLPhotoLib.bundle; sourceTree = "<group>"; };
+		6BD5FFD21C9002B7003170C1 /* jpush-ios-2.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.0.a"; sourceTree = "<group>"; };
+		6BD5FFD31C9002B7003170C1 /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
+		6BD5FFD51C9004A1003170C1 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		6BD5FFD71C9004B0003170C1 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		6BD5FFD91C9004C8003170C1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6BD5FFDD1C90136F003170C1 /* CAAnimation+WAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+WAnimation.h"; sourceTree = "<group>"; };
+		6BD5FFDE1C90136F003170C1 /* CAAnimation+WAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+WAnimation.m"; sourceTree = "<group>"; };
+		6BD5FFDF1C90136F003170C1 /* UIView+Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
+		6BD5FFE01C90136F003170C1 /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
+		6BD5FFE11C90136F003170C1 /* UIView+WZLBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WZLBadge.h"; sourceTree = "<group>"; };
+		6BD5FFE21C90136F003170C1 /* UIView+WZLBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WZLBadge.m"; sourceTree = "<group>"; };
+		6BD5FFE71C90163E003170C1 /* RedBadgeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RedBadgeManager.swift; sourceTree = "<group>"; };
 		6BF05DD21C3D0AEF00D7AF99 /* KeyBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyBoardView.swift; sourceTree = "<group>"; };
 		6BF05DD41C3E0DC400D7AF99 /* KBTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KBTextView.swift; sourceTree = "<group>"; };
 		6BF05DD61C3E639E00D7AF99 /* FeedDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDetailViewController.swift; sourceTree = "<group>"; };
@@ -719,12 +739,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BD5FFDA1C9004C8003170C1 /* Foundation.framework in Frameworks */,
+				6BD5FFD81C9004B0003170C1 /* CoreFoundation.framework in Frameworks */,
+				6BD5FFD61C9004A1003170C1 /* CFNetwork.framework in Frameworks */,
 				6BF05DE31C3E6A8500D7AF99 /* libstdc++.tbd in Frameworks */,
 				6BF05DE11C3E69D300D7AF99 /* libiconv.tbd in Frameworks */,
 				6BF05DDF1C3E69B800D7AF99 /* libsqlite3.tbd in Frameworks */,
 				6BF05DDD1C3E69AE00D7AF99 /* libz.tbd in Frameworks */,
 				2A410A481BB9E7C100E4272B /* CoreTelephony.framework in Frameworks */,
 				2AAC215D1C72FD18009E4734 /* libWeChatSDK.a in Frameworks */,
+				6BD5FFD41C9002B7003170C1 /* jpush-ios-2.1.0.a in Frameworks */,
 				2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */,
 				2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */,
 				2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */,
@@ -756,6 +780,9 @@
 		2A410A381BB9E71100E4272B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6BD5FFD91C9004C8003170C1 /* Foundation.framework */,
+				6BD5FFD71C9004B0003170C1 /* CoreFoundation.framework */,
+				6BD5FFD51C9004A1003170C1 /* CFNetwork.framework */,
 				6BF05DE41C3E6B2A00D7AF99 /* libdyld.tbd */,
 				6BF05DE21C3E6A8500D7AF99 /* libstdc++.tbd */,
 				6BF05DE01C3E69D300D7AF99 /* libiconv.tbd */,
@@ -1241,6 +1268,7 @@
 		6B93FC9D1C1E5CBE00A81EA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6BD5FFE61C9014C3003170C1 /* RedBadgeManager */,
 				6B8412371C4F7E2900BE54B0 /* HudProgressManager */,
 				6BA46E351C31145800DCBD11 /* UtilsFunction */,
 				6B93FC9F1C1E66CA00A81EA9 /* CanlendarManager */,
@@ -1252,6 +1280,8 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				6BD5FFDB1C90136F003170C1 /* UIView+WZLBadge */,
+				6BD5FFD11C9002B7003170C1 /* lib */,
 				6BC059C81C882B2A006F0A65 /* ZLPhotoLib */,
 				2AAC21571C72FD18009E4734 /* WeChatSDK1.6.2 */,
 				6B84122F1C4F7C9F00BE54B0 /* MBProgressHUD */,
@@ -1736,6 +1766,44 @@
 			path = DACircularProgress;
 			sourceTree = "<group>";
 		};
+		6BD5FFD11C9002B7003170C1 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				6BD5FFD21C9002B7003170C1 /* jpush-ios-2.1.0.a */,
+				6BD5FFD31C9002B7003170C1 /* JPUSHService.h */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		6BD5FFDB1C90136F003170C1 /* UIView+WZLBadge */ = {
+			isa = PBXGroup;
+			children = (
+				6BD5FFDC1C90136F003170C1 /* Category */,
+				6BD5FFE11C90136F003170C1 /* UIView+WZLBadge.h */,
+				6BD5FFE21C90136F003170C1 /* UIView+WZLBadge.m */,
+			);
+			path = "UIView+WZLBadge";
+			sourceTree = "<group>";
+		};
+		6BD5FFDC1C90136F003170C1 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				6BD5FFDD1C90136F003170C1 /* CAAnimation+WAnimation.h */,
+				6BD5FFDE1C90136F003170C1 /* CAAnimation+WAnimation.m */,
+				6BD5FFDF1C90136F003170C1 /* UIView+Frame.h */,
+				6BD5FFE01C90136F003170C1 /* UIView+Frame.m */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		6BD5FFE61C9014C3003170C1 /* RedBadgeManager */ = {
+			isa = PBXGroup;
+			children = (
+				6BD5FFE71C90163E003170C1 /* RedBadgeManager.swift */,
+			);
+			path = RedBadgeManager;
+			sourceTree = "<group>";
+		};
 		6BF05DD11C3D0ACF00D7AF99 /* KeyBoardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1989,6 +2057,7 @@
 				6BA14E831C4CB38200B6FDD1 /* SubTagModel.swift in Sources */,
 				6B93FCBD1C1E66CA00A81EA9 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				6BC05A191C882B2A006F0A65 /* ZLPhotoPickerBrowserPhoto.m in Sources */,
+				6BD5FFE31C90136F003170C1 /* CAAnimation+WAnimation.m in Sources */,
 				2AFDEB111C7EDACB008545D5 /* ClinicTrailModel.swift in Sources */,
 				6B93FC531C1E5A9D00A81EA9 /* UpdatePreviousTreatmentViewController.swift in Sources */,
 				6BBFD9281C32AC7000282573 /* FeedTagView.swift in Sources */,
@@ -2093,6 +2162,7 @@
 				6BA46E321C30D27600DCBD11 /* PostFeedToolBar.swift in Sources */,
 				6BC05A151C882B2A006F0A65 /* ZLCamera.m in Sources */,
 				6B9D04641C7D8C1900248681 /* ClinicCell.swift in Sources */,
+				6BD5FFE81C90163E003170C1 /* RedBadgeManager.swift in Sources */,
 				6B93FC6F1C1E5B9400A81EA9 /* CommentListTableViewCell.swift in Sources */,
 				2AF83E4B1C6B28720008D736 /* UpdateNickTableViewController.swift in Sources */,
 				6BBFD9031C3273F900282573 /* MJRefreshAutoNormalFooter.m in Sources */,
@@ -2118,6 +2188,7 @@
 				6B93FC591C1E5A9D00A81EA9 /* PatientStatusTableViewCell.swift in Sources */,
 				6BBFD8AF1C326FBF00282573 /* SDWebImageDecoder.m in Sources */,
 				6BBFD8B71C326FBF00282573 /* UIImage+WebP.m in Sources */,
+				6BD5FFE41C90136F003170C1 /* UIView+Frame.m in Sources */,
 				6B2BB7941C33A67700C685A6 /* FeedPhotosView.swift in Sources */,
 				6BC05A171C882B2A006F0A65 /* ZLCameraView.m in Sources */,
 				2A05F3C91C630C4200E31848 /* SignUpSucessfulViewController.swift in Sources */,
@@ -2176,6 +2247,7 @@
 				DDD6A1331C37C28C00C258D2 /* PNGenericChart.m in Sources */,
 				6B93FC6B1C1E5B9400A81EA9 /* FeedEntryViewController.swift in Sources */,
 				2A8DCFA31C6B3E74000CCDFE /* UpdatePasswordViewController.swift in Sources */,
+				6BD5FFE51C90136F003170C1 /* UIView+WZLBadge.m in Sources */,
 				6BBFD8B81C326FBF00282573 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2A19C05E1C68A0F500FEFDEB /* UserBasicInfoTableViewController.swift in Sources */,
 				6BBFD8FF1C3273F900282573 /* MJRefreshComponent.m in Sources */,
@@ -2327,6 +2399,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/lib",
 				);
 				OTHER_LDFLAGS = "-fobjc-arc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2351,6 +2424,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/lib",
 				);
 				OTHER_LDFLAGS = "-fobjc-arc";
 				PRODUCT_NAME = "$(TARGET_NAME)";

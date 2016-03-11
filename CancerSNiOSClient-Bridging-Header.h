@@ -28,3 +28,5 @@
 #import "MBProgressHUD.h"
 #import "WXApi.h"
 #import "ZLPhoto.h"
+#import "JPUSHService.h"
+#import "UIView+WZLBadge.h"
