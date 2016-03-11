@@ -13,7 +13,10 @@ class PublicService:NSObject{
     func getProfileStrByDictionary(user:NSDictionary)->String{
         
         var userProfileStr : String
-        let gender = user["gender"] as! String
+        var gender = ""
+        if (user["gender"] != nil) && (user["gender"] is String){
+            gender = user["gender"] as! String
+        }
         var displayGender:String = ""
         if(gender == "M"){
             displayGender = "男"

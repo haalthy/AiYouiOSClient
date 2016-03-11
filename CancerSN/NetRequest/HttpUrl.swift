@@ -112,3 +112,5 @@ let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
 let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"
+
+

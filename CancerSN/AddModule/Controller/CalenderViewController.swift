@@ -30,8 +30,8 @@ class CalenderViewController: UIViewController {
         
         // Menu delegate [Required]
         self.menuView.menuViewDelegate = self
+
         monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
-        print(monthLabel.titleLabel?.text)
 
     }
     

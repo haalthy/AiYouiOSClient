@@ -133,29 +133,33 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
             btn.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addTreatment")
             btn.addTarget(self, action: "addTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
-
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addStatusBtn" {
             btn.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addStatus")
             btn.addTarget(self, action: "addStatus:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addQuestionBtn" {
             btn.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addQuestion")
             btn.addTarget(self, action: "addQuestion:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addMoodBtn" {
             btn.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addMood")
             btn.addTarget(self, action: "addMood:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "cancelBtn" {
+            let cancelBtnMargin: CGFloat = 10
             let cancelBtnX: CGFloat = (screenWidth - cancelBtnW)/2.0
-            btn.frame = CGRect(x: cancelBtnX, y: screenHeight - cancelBtnButtomSpace - cancelBtnW, width: cancelBtnW, height: cancelBtnW)
+            btn.frame = CGRect(x: cancelBtnX - cancelBtnMargin, y: screenHeight - cancelBtnButtomSpace - cancelBtnW - cancelBtnMargin, width: cancelBtnW + cancelBtnMargin * 2, height: cancelBtnW + cancelBtnMargin * 2)
+            backgroundImgView.frame = CGRECT(cancelBtnMargin + cancelBtnW/4, cancelBtnMargin + cancelBtnW/4, cancelBtnW/2, cancelBtnW/2)
             backgroundImgView.image = UIImage(named: "btn_cancelAdd")
             btn.backgroundColor = UIColor.clearColor()
             btn.addTarget(self, action: "cancel:", forControlEvents: UIControlEvents.TouchUpInside)
         }
         btn.layer.cornerRadius = btn.frame.width/2
         btn.layer.masksToBounds = true
-        backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         backgroundImgView.contentMode = UIViewContentMode.ScaleAspectFit
         btn.addSubview(backgroundImgView)
         return btn
