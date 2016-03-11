@@ -35,14 +35,14 @@ class TreatmentCell: UITableViewCell {
     func updateUI(){
         self.removeAllSubviews()
         let portraitImage = UIImageView(frame: CGRect(x: portraitLeftSpace, y: itemTopSpace, width: portraitLength, height: portraitLength))
-        let imageURL = treatmentObj.ImageURL + "@80h_80w_1e"
+        let imageURL = treatmentObj.imageURL + "@80h_80w_1e"
         portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         portraitImage.layer.cornerRadius = portraitLength / 2
         portraitImage.layer.masksToBounds = true
         self.addSubview(portraitImage)
         
         let profileLabel  = UILabel(frame: CGRect(x: profileLeftSpace, y: itemTopSpace, width: screenWidth - profileLeftSpace, height: 13))
-        profileLabel.text = treatmentObj.Displayname + " " + treatmentObj.Gender + " " + String(treatmentObj.Age) + " " + treatmentObj.CancerType
+        profileLabel.text = treatmentObj.displayname + " " + treatmentObj.gender + " " + String(treatmentObj.age) + " " + treatmentObj.cancerType
         profileLabel.font = textFont
         profileLabel.textColor = lightTextColor
         self.addSubview(profileLabel)
@@ -70,13 +70,13 @@ class TreatmentCell: UITableViewCell {
             }
         }
         
-        let dosageLabeSize = treatmentObj.Dosage.sizeWithFont(bodyFont, maxSize: CGSize(width: screenWidth - profileLeftSpace, height: 38))
+        let dosageLabeSize = treatmentObj.dosage.sizeWithFont(bodyFont, maxSize: CGSize(width: screenWidth - profileLeftSpace, height: 38))
         
         let dosageLabel = UILabel(frame: CGRect(x: profileLeftSpace, y: buttonY + 30, width: screenWidth - profileLeftSpace, height: dosageLabeSize.height))
         dosageLabel.numberOfLines = 2
         dosageLabel.textColor = defaultTextColor
         dosageLabel.font = bodyFont
-        dosageLabel.text = treatmentObj.Dosage
+        dosageLabel.text = treatmentObj.dosage
         self.addSubview(dosageLabel)
         
         //date label

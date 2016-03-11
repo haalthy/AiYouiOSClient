@@ -13,6 +13,11 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     var screenWidth = CGFloat()
     var screenHeight = CGFloat()
     var blurView = UIView()
+    
+    var keychainAccess = KeychainAccess()
+    
+    var redDotBadge: UIView = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         screenWidth = UIScreen.mainScreen().bounds.width
@@ -48,6 +53,22 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         // 设置tabbar属性
         
         self.setTabBarAttributes()
+        
+        // 初始化通知
+        
+        self.initNotification()
+        
+        // 初始化加红点状态（个数）
+        
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
+        
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadFollowBadgeCount)
+        
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadMentionedBadgeCount)
+        
+        self.getUnreadCommentCountFromServer()
+        self.getUnreadFollowCountFromServer()
+        self.getUnreadMentionedCountFromServer()
     }
     
     // MARK: - 添加中间postBtn
@@ -112,29 +133,33 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
             btn.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addTreatment")
             btn.addTarget(self, action: "addTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
-
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addStatusBtn" {
             btn.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addStatus")
             btn.addTarget(self, action: "addStatus:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addQuestionBtn" {
             btn.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addQuestion")
             btn.addTarget(self, action: "addQuestion:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addMoodBtn" {
             btn.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addMood")
             btn.addTarget(self, action: "addMood:", forControlEvents: UIControlEvents.TouchUpInside)
+            backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "cancelBtn" {
+            let cancelBtnMargin: CGFloat = 10
             let cancelBtnX: CGFloat = (screenWidth - cancelBtnW)/2.0
-            btn.frame = CGRect(x: cancelBtnX, y: screenHeight - cancelBtnButtomSpace - cancelBtnW, width: cancelBtnW, height: cancelBtnW)
+            btn.frame = CGRect(x: cancelBtnX - cancelBtnMargin, y: screenHeight - cancelBtnButtomSpace - cancelBtnW - cancelBtnMargin, width: cancelBtnW + cancelBtnMargin * 2, height: cancelBtnW + cancelBtnMargin * 2)
+            backgroundImgView.frame = CGRECT(cancelBtnMargin + cancelBtnW/4, cancelBtnMargin + cancelBtnW/4, cancelBtnW/2, cancelBtnW/2)
             backgroundImgView.image = UIImage(named: "btn_cancelAdd")
             btn.backgroundColor = UIColor.clearColor()
             btn.addTarget(self, action: "cancel:", forControlEvents: UIControlEvents.TouchUpInside)
         }
         btn.layer.cornerRadius = btn.frame.width/2
         btn.layer.masksToBounds = true
-        backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         backgroundImgView.contentMode = UIViewContentMode.ScaleAspectFit
         btn.addSubview(backgroundImgView)
         return btn
@@ -181,7 +206,15 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     func setTabBarAttributes() {
         UITabBar.appearance().tintColor = mainColor
         UITabBar.appearance().barTintColor = tabBarColor
-
+        
+        let tabbarFrame: CGRect = self.tabBar.frame
+        
+        let itemWidth = tabbarFrame.width / 3
+        let x = itemWidth / 2 + 10
+        let y = tabbarFrame.height / 3 - 5
+        // 添加红点view
+        self.redDotBadge.frame = CGRECT(x, y, 5, 5)
+        self.tabBar.addSubview(self.redDotBadge)
     }
     
     // MARK: - Navigation 
@@ -201,6 +234,114 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
         (self.viewControllers![self.selectedIndex] as! UINavigationController).popViewControllerAnimated(true)
     }
+    
+    // MARK: - 初始化通知
+    
+    func initNotification() {
+    
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showRedDotBadge", name: addTabbarRedDotBadge, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "deleteRedDotBadge", name: deleteTabbarRedDotBadge, object: nil)
+    }
+    
+    // MARK: 展示智囊圈badge
+    
+    func showRedDotBadge() {
+    
+        let isComment: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadCommentBadgeCount)
+        
+        let isFollow: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadFollowBadgeCount)
+        
+        let isMentioned: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadMentionedBadgeCount)
+        
+        if isComment || isFollow || isMentioned {
+        
+            //self.tabBar.items![0].badgeValue = ""
+            self.redDotBadge.showBadgeWithShowType(.Up)
+        
+        }
+        else {
+        
+            self.deleteRedDotBadge()
+        }
+        
+    }
+    
+    // MARK: 删除智囊圈badge
+    
+    func deleteRedDotBadge() {
+    
+       // self.tabBar.items![0].badgeValue = nil
+        self.redDotBadge.clearBadge()
+    }
+    
+    // MARK: - 网络请求
+    
+    // MARK: 获取未读@我的数量
+    
+    func getUnreadMentionedCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+                
+                judgeIsAddCount(1)
+            }
+            else {
+                judgeIsDecCount(1)
+            }
+            
+            }) { (content, message) -> Void in
+                
+        }
+    }
+    
+    
+    // MARK: 获取未读关注的数量
+    
+    func getUnreadFollowCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+                
+                judgeIsAddCount(2)
+            }
+            else {
+                judgeIsDecCount(2)
+            }
+            
+            
+            }) { (content, message) -> Void in
+                
+        }
+    }
+    
+    // 获取未读评论的数量
+    
+    func getUnreadCommentCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+                
+                judgeIsAddCount(0)
+            }
+            else {
+                
+                judgeIsDecCount(0)
+            }
+            }) { (content, message) -> Void in
+                
+        }
+        
+    }
+
     
     /*
     // MARK: - Navigation

@@ -49,6 +49,24 @@ let userFollowURL = haalthyServiceRestfulURL + "security/user/followusers"
 // 获取@我的列表接口
 let userMentionedURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
 
+// 获取未读新关注个数接口
+let getNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/count"
+
+// 重置未读新关注个数为0接口
+let refreshNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/refresh"
+
+// 获取未读被@我的个数接口
+let getNewMentionedCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
+
+// 重置未读被@我的个数为0接口
+let refreshNewMentionedCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/markasread"
+
+// 获取未读新评论个数接口
+let getNewCommentCountURL = haalthyServiceRestfulURL + "security/comment/unreadcommentscount"
+
+// 重置未读新评论接口为0接口
+let refreshNewCommentURL = haalthyServiceRestfulURL + "security/comment/readallcomments"
+
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
@@ -80,7 +98,6 @@ let updateTreatmentURL = haalthyServiceRestfulURL + "security/patient/treatment/
 let deleteTreatmentURL = haalthyServiceRestfulURL + "security/patient/treatment/delete"
 let increaseNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/increase"
 let selectNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/count"
-let refreshNewFollowCountURL = haalthyServiceRestfulURL + "security/user/newfollow/refresh"
 let isFollowingUserURL = haalthyServiceRestfulURL + "security/user/follow/isfollowing"
 let getUnreadMentionedPostCountURL = haalthyServiceRestfulURL + "security/post/mentionedpost/unreadcount"
 let getMentionedPostListURL = haalthyServiceRestfulURL + "security/post/mentionedpost/list"
@@ -95,3 +112,5 @@ let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
 let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"
+
+

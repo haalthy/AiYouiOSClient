@@ -18,6 +18,8 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var addBtn: UIButton!
     
+    var isFollowing: Bool = false
+    
     var userObj = UserModel(){
         didSet{
             updateUI()
@@ -27,9 +29,12 @@ class UserCell: UITableViewCell {
     func updateUI(){
         let imageURL = userObj.imageURL + "@80h_80w_1e"
         portraitImage.addImageCache(imageURL, placeHolder: "icon_profile")
-        nameLabel.text = userObj.Displayname
-        var userInfo: String = (userObj.Gender) + " " + String(userObj.Age) + " " + userObj.CancerType  + " " + userObj.Pathological + " " + userObj.Stage + " " + userObj.geneticMutation
+        nameLabel.text = userObj.displayname
+        var userInfo: String = (userObj.gender) + " " + String(userObj.age) + " " + userObj.cancerType  + " " + userObj.pathological + " " + userObj.stage + " " + userObj.geneticMutation
         infoLabel.text = userInfo
+        if isFollowing == true {
+            self.addBtn.hidden = true
+        }
     }
     
     override func awakeFromNib() {
@@ -49,7 +54,6 @@ class UserCell: UITableViewCell {
         self.addBtn.layer.cornerRadius = 4.0
         self.addBtn.layer.borderColor = RGB(222, 228, 229).CGColor
         self.addBtn.layer.borderWidth = 2.0
-        
         self.addBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
     }
     
@@ -59,7 +63,7 @@ class UserCell: UITableViewCell {
         let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
         
         let requestBody = NSMutableDictionary()
-        requestBody.setObject(userObj.Username, forKey: "followingUser")
+        requestBody.setObject(userObj.username, forKey: "followingUser")
         requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
         
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,

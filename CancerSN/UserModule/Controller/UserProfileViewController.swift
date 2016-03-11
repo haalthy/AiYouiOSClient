@@ -69,6 +69,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // 初始化标识
     var firstInit: Bool = true
     
+    // @我的红点显示view
+    var mentionedBadgeView: UIView = UIView()
+    
+    // 关注红点显示view
+    var followBadgeView: UIView = UIView()
+    
+    // 消息红点显示view
+    var messageBadgeView: UIView = UIView()
+    
+    // 我的奇迹红点提示view
+    var headerBadgeView: UIView = UIView()
     
     //scrollView
     let scrollView = UIScrollView()
@@ -121,6 +132,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         HudProgressManager.sharedInstance.dismissHud()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 展示未读@我的红点
+        self.getUnreadMentionedCountFromServer()
+        
+        // 展示未读关注的红点
+        self.getUnreadFollowCountFromServer()
+        
+        // 展示未读消息的红点
+        self.getUnreadCommentCountFromServer()
+    }
+    
     override func viewDidAppear(animated: Bool) {
         
         self.view.addSubview(userProfileHeaderView)
@@ -134,7 +158,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
-        if ((self.userProfileObj?.gender)!) == "F"{
+        if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F") {
             relatedToOther = NSArray(array: [herProfileStr])
         }else{
             relatedToOther = NSArray(array: [hisProfileStr])
@@ -180,10 +204,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 
         //初始化“与我相关”
         self.postHeaderBtn.frame = CGRectMake(screenWidth/2, 1, screenWidth/2, segmentSectionBtnHeight)
+        
+        self.headerBadgeView.frame = CGRECT(3 * (SCREEN_WIDTH / 4) + 10, 5, 20, 20)
+        self.userProfileHeaderView.addSubview(self.headerBadgeView)
+        
         if (self.username == self.profileOwnername) {
             self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
         }else{
-            if ((self.userProfileObj?.gender)!) == "F"{
+            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
                 self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
             }else{
                 self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
@@ -206,7 +234,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-        let imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        var imageURL = ""
+        
+        if self.userProfileObj?.portraitUrl != nil {
+            imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        }
+        
         self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
         self.userProfileHeaderView.addSubview(portraitView)
         
@@ -229,6 +262,90 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.userProfileHeaderView.addSubview(profileLabel)
         //
 
+    }
+    
+    // MARK: - 网络请求
+    
+    // MARK: 获取未读@我的数量
+    
+    func getUnreadMentionedCountFromServer() {
+    
+        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+            
+                self.mentionedBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                judgeIsAddCount(1)
+            }
+            else {
+            
+                self.mentionedBadgeView.clearBadge()
+                judgeIsDecCount(1)
+                self.judgeIsDeleteRedBadge()
+            }
+            
+            }) { (content, message) -> Void in
+                
+        }
+    }
+    
+        
+    // MARK: 获取未读关注的数量
+    
+    func getUnreadFollowCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+                
+                self.followBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                judgeIsAddCount(2)
+            }
+            else {
+            
+                self.followBadgeView.clearBadge()
+                judgeIsDecCount(2)
+                self.judgeIsDeleteRedBadge()
+            }
+
+            
+            }) { (content, message) -> Void in
+                
+        }
+    }
+    
+    // 获取未读评论的数量
+    
+    func getUnreadCommentCountFromServer() {
+    
+        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            let dict: NSDictionary = content as! NSDictionary
+            
+            if dict["count"] as! Int > 0 {
+                
+                self.messageBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+                judgeIsAddCount(0)
+            }
+            else {
+                
+                self.messageBadgeView.clearBadge()
+                judgeIsDecCount(0)
+                self.judgeIsDeleteRedBadge()
+            }
+            
+            
+            }) { (content, message) -> Void in
+                
+        }
+        
     }
     
     
@@ -349,6 +466,27 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         sender.titleLabel?.font = UIFont(name: fontBoldStr, size: 13.0)
 
     }
+    
+    // 判断是否删除我的奇迹红点
+    
+    func judgeIsDeleteRedBadge() {
+    
+        let isComment: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadCommentBadgeCount)
+        
+        let isFollow: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadFollowBadgeCount)
+        
+        let isMentioned: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadMentionedBadgeCount)
+        
+        if isComment || isFollow || isMentioned {
+            
+            self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
+        }
+        else {
+            self.headerBadgeView.clearBadge()
+        }
+
+    }
+    
     // MARK: - Table view data source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -477,6 +615,27 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     cell.textLabel?.textColor = cellTextColor
                     cell.textLabel?.font = cellTextFont
                     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                    
+                    if indexPath.row == 0 {
+                        
+                        self.messageBadgeView.frame = CGRECT(SCREEN_WIDTH - 70, cell.frame.size.height / 2 - 7, 20, 20)
+                        cell.addSubview(self.messageBadgeView)
+                    }
+                    else if indexPath.row == 1 {
+                    
+                        self.mentionedBadgeView.frame = CGRECT(SCREEN_WIDTH - 70, cell.frame.size.height / 2 - 7, 20, 20)
+                        cell.addSubview(self.mentionedBadgeView)
+                    }
+                    else if indexPath.row == 2 {
+                    
+                        self.followBadgeView.frame = CGRECT(SCREEN_WIDTH - 70, cell.frame.size.height / 2 - 7, 20, 20)
+                        cell.addSubview(self.followBadgeView)
+
+                    }
+                    else {
+                    
+                    }
+
                 }else{
                     //退出登录
                     let logoutBtn = UIButton(frame: CGRect(x: logoutBtnLeftSpace, y: logoutBtnTopSpace, width: screenWidth - logoutBtnLeftSpace - logoutBtnRightSpce, height: logoutBtnHeight))
@@ -494,6 +653,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 cell.textLabel?.textColor = cellTextColor
                 cell.textLabel?.font = cellTextFont
                 cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                
             }
             let seperatorLine:UIView = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: seperatorLineH))
             seperatorLine.backgroundColor = seperateLineColor
