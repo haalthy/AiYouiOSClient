@@ -96,12 +96,6 @@ class HaalthyService:NSObject{
         }
         let passwordStr = publicService.passwordEncode(password)
         let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone"])
-//        let addUserUrl = NSURL(string: addNewUserURL)
-//        let request: NSMutableURLRequest = NSMutableURLRequest(URL: addUserUrl!)
-//        request.HTTPMethod = "POST"
-//        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(addUserBody, options:  NSJSONWritingOptions())
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
         return NetRequest.sharedInstance.POST_A(addNewUserURL, parameters: addUserBody as! Dictionary<String, AnyObject>)
     }
     
@@ -118,7 +112,7 @@ class HaalthyService:NSObject{
         }else{
             return false
         }
-        if (result?.count == 0) || (result!.objectForKey("result") as! Int) != 1 {
+        if (result == nil) || (result?.count == 0) || (result!.objectForKey("result") == nil) || (result!.objectForKey("result") as! Int) != 1 {
             return false
         }
         return true
@@ -134,7 +128,7 @@ class HaalthyService:NSObject{
         }else{
             return false
         }
-        if (result!.objectForKey("result") as! Int) != 1 {
+        if (result == nil) || (result!.objectForKey("result") != nil) || (result!.objectForKey("result") as! Int) != 1 {
             return false
         }
         return true
@@ -360,17 +354,13 @@ class HaalthyService:NSObject{
         }
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
         let urlPath:String = getUserFavTagsURL + "?access_token=" + accessToken
-//        let url:NSURL = NSURL(string: urlPath)!
-//        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
-//        request.HTTPMethod = "POST"
-//        request.HTTPBody = (keychainAccess.getPasscode(usernameKeyChain) as! String).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        return (try? NSURLConnection.sendSynchronousRequest(request, returningResponse: nil))!
-//        let requestBody =  NSDictionary(object: keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-        print(keychainAccess.getPasscode(usernameKeyChain)! as String)
-        let content = NetRequest.sharedInstance.POST_A(urlPath, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)! as String ]).objectForKey("content") as! NSArray
-        return content
+        let content = NetRequest.sharedInstance.POST_A(urlPath, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)! as String ]).objectForKey("content")
+        if content != nil {
+            return content as! NSArray
+        }else {
+            return NSArray()
+        }
+//        return content
     }
     
     func getUserDetail(username:String)->NSData?{
@@ -430,7 +420,7 @@ class HaalthyService:NSObject{
         let requestBody = NSDictionary(object: newPassword, forKey: "password")
 //        requestBody.setValue(newPassword, forKey: "password")
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if (result.count == 0) || (result.objectForKey("result") as! Int) != 1 {
+        if (result.count == 0) || (result.objectForKey("result") == nil) || (result.objectForKey("result") as! Int) != 1 {
             return false
         }
         return true
@@ -439,7 +429,7 @@ class HaalthyService:NSObject{
     func resetPasswordWithCode(requestBody: NSDictionary)->Bool{
         let urlPath:String = resetPasswordWithCodeURL
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if (result.count == 0) || (result.objectForKey("result") as! Int) != 1 {
+        if (result.count == 0) || (result.objectForKey("result") == nil) || (result.objectForKey("result") as! Int) != 1 {
             return false
         }
         return true
@@ -455,7 +445,7 @@ class HaalthyService:NSObject{
         let requestBody = NSMutableDictionary()
         requestBody.setValue(username, forKey: "username")
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
+        if (result.objectForKey("content") != nil) &&  (result.objectForKey("result") != nil) && ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
             return result.objectForKey("content") as! NSArray
         }else{
             return []
@@ -615,7 +605,11 @@ class HaalthyService:NSObject{
         if accessToken != nil{
             let urlPath:String = (updateTreatmentURL as String) + "?access_token=" + (accessToken as! String);
             let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
-            ret = result.objectForKey("result") as! Int
+            if result.objectForKey("result") != nil {
+                ret = result.objectForKey("result") as! Int
+            }else{
+                ret = 0
+            }
         }
         return ret
     }
@@ -627,7 +621,11 @@ class HaalthyService:NSObject{
         if accessToken != nil{
             let urlPath:String = (deleteTreatmentURL as String) + "?access_token=" + (accessToken as! String);
             let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
-            ret = result.objectForKey("result") as! Int
+            if result.objectForKey("result") != nil {
+                ret = result.objectForKey("result") as! Int
+            }else {
+                ret = 0
+            }
             
         }
         return ret
@@ -812,7 +810,7 @@ class HaalthyService:NSObject{
         let urlPath: String = getUsersByDisplaynameURL + "?access_token=" + (accessToken as! String)
 
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: getMentionedUsernamesRequest as! Dictionary<String, AnyObject>)
-        if ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
+        if (result.objectForKey("result") != nil) && ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
             return result.objectForKey("content") as! NSArray
         }else{
             return []

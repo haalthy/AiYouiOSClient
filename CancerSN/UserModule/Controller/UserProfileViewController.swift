@@ -146,15 +146,17 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // 展示未读@我的红点
-        self.getUnreadMentionedCountFromServer()
-        
-        // 展示未读关注的红点
-        self.getUnreadFollowCountFromServer()
-        
-        // 展示未读消息的红点
-        self.getUnreadCommentCountFromServer()
+        if keychainAccess.getPasscode(accessNSUserData) != nil {
+            
+            // 展示未读@我的红点
+            self.getUnreadMentionedCountFromServer()
+            
+            // 展示未读关注的红点
+            self.getUnreadFollowCountFromServer()
+            
+            // 展示未读消息的红点
+            self.getUnreadCommentCountFromServer()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -211,8 +213,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         
         self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
-        
-        nicknameLabel.text = (self.userProfileObj?.nick)!
+        if self.userProfileObj?.nick != nil {
+            nicknameLabel.text = (self.userProfileObj?.nick)!
+        }
         
         let profileStr = publicService.getProfileStrByDictionary(self.userProfile)
         profileLabel.text = profileStr

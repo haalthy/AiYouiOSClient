@@ -50,8 +50,14 @@ class UserCell: UITableViewCell {
             userInfo += userObj.geneticMutation
         }
         infoLabel.text = userInfo
-        if isFollowing == true {
+        let addFollowingImage = UIImageView(image: UIImage(named: "btn_addFollowing"))
+        self.addBtn.removeAllSubviews()
+        self.addBtn.addSubview(addFollowingImage)
+        self.addBtn.enabled = true
+        if userObj.isFollowedByCurrentUser == 1 {
             self.addBtn.hidden = true
+        }else{
+            self.addBtn.hidden = false
         }
     }
     

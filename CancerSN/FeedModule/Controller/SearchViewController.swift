@@ -356,8 +356,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let parameters: Dictionary<String, AnyObject> = [
             "searchString" : searchStr,
             "page" : page,
-            "count" : count
+            "count" : count,
+            "username": keychainAccess.getPasscode(usernameKeyChain)!
         ]
+        
+        
+        
         switch self.searchType {
             
         case 1:
