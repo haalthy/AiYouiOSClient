@@ -11,7 +11,7 @@ import UIKit
 let cellFollowIdentifier = "UserCell"
 
 class UserFollowViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,7 +24,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         self.initVariables()
         
@@ -53,21 +53,21 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - 初始化相关view
     
     func initContentView() {
-    
+        
         self.tableView.tableFooterView = UIView(frame: CGRECT(0, 0, 0, 0))
     }
     
     // MARK: - 注册cell
     
     func registerCell() {
-    
+        
         self.tableView.registerNib(UINib(nibName: cellFollowIdentifier, bundle: nil), forCellReuseIdentifier: cellFollowIdentifier)
     }
     
     // MARK: - 初始化刷新
     
     func addRefresh() {
-    
+        
         self.tableView.mj_header = MJRefreshNormalHeader.init(refreshingBlock: { () -> Void in
             
             
@@ -75,14 +75,14 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         
         //self.tableView.mj_footer = MJRefreshAutoNormalFooter.init(refreshingBlock: { () -> Void in
         //})
-
+        
     }
     
     
     // MARK: - 网络请求
     
     func getFollowDataFromServer() {
-    
+        
         let keychainAccess = KeychainAccess()
         HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         NetRequest.sharedInstance.POST(userFollowURL, isToken: true, parameters: ["username":keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
@@ -95,14 +95,14 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
             
             let friends: NSArray = content["friends"] as! NSArray
             if friends.count != 0 {
-            
+                
                 let friendsArr = FollowModel.jsonToModelList(friends as Array) as! Array<FollowModel>
                 self.friendData =  NSMutableArray(array: friendsArr as NSArray)
             }
             
             let follow: NSArray = content["followingUsers"] as! NSArray
             if follow.count != 0 {
-            
+                
                 let followArr = FollowModel.jsonToModelList(follow as Array) as! Array<FollowModel>
                 self.followData =  NSMutableArray(array: followArr as NSArray)
             }
@@ -113,12 +113,12 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
                 let followerArr = FollowModel.jsonToModelList(follower as Array) as! Array<FollowModel>
                 self.followrData =  NSMutableArray(array: followerArr as NSArray)
             }
-
+            
             self.tableView.reloadData()
             
             
             }) { (content, message) -> Void in
-        
+                
                 HudProgressManager.sharedInstance.dismissHud()
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "")
         }
@@ -158,41 +158,52 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(cellFollowIdentifier)! as! UserCell
-        
+        var followModel: FollowModel?
         if indexPath.row < self.friendData.count {
-        
-            let followModel: FollowModel = self.friendData[indexPath.row] as! FollowModel
-            let imageURL = followModel.imageURL! + "@80h_80w_1e"
-            cell.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
-            cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
             
+            followModel = self.friendData[indexPath.row] as? FollowModel
             cell.addBtn.setImage(UIImage(named: "icon_follow"), forState: .Normal)
             
         }
-        
-        else if indexPath.row < self.followData.count + self.friendData.count {
-        
-            let followModel: FollowModel = self.followData[indexPath.row - self.friendData.count] as! FollowModel
-            let imageURL = followModel.imageURL! + "@80h_80w_1e"
-            cell.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
-            cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
             
+        else if indexPath.row < self.followData.count + self.friendData.count {
+            
+            followModel = self.followData[indexPath.row - self.friendData.count] as? FollowModel
             cell.addBtn.setImage(UIImage(named: "icon_followM"), forState: .Normal)
         }
-        
+            
         else if indexPath.row < self.followrData.count + self.friendData.count + self.followData.count {
             
-            print(indexPath.row - self.friendData.count - self.followData.count)
-        
-            let followModel: FollowModel = self.followrData[indexPath.row - self.friendData.count - self.followData.count] as! FollowModel
-            let imageURL = followModel.imageURL! + "@80h_80w_1e"
-            cell.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
-            cell.nameLabel.text = followModel.displayname
-            cell.infoLabel.text = self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
+            followModel = self.followrData[indexPath.row - self.friendData.count - self.followData.count] as? FollowModel
             cell.addBtn.setImage(UIImage(named: "icon_followY"), forState: .Normal)
         }
+        
+        let imageURL = followModel!.imageURL! + "@80h_80w_1e"
+        cell.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
+        
+        cell.nameLabel.text = followModel!.displayname
+        //self.getGenderAction(followModel.gender!) + "，" + String(followModel.age) + "岁，" + followModel.cancerType! + "，" + followModel.pathological! + "，" + followModel.stage + "期"
+        var userInfo: String = ""
+        if followModel!.gender != "<null>" {
+            userInfo += (followModel!.gender) + " "
+        }
+        if followModel!.age != 0 {
+            userInfo += String(followModel!.age) + " "
+        }
+        if followModel!.cancerType != "<null>" {
+            userInfo += followModel!.cancerType  + " "
+        }
+        if followModel!.pathological != "<null>" {
+            userInfo += followModel!.pathological + " "
+        }
+        if followModel!.stage != "<null>" {
+            userInfo += followModel!.stage + "期 "
+        }
+        if followModel!.geneticMutation != "<null>" {
+            userInfo += followModel!.geneticMutation
+        }
+        cell.infoLabel.text = userInfo
+        //        cell.addBtn.setImage(UIImage(named: "icon_follow"), forState: .Normal)
         
         return cell
     }
@@ -200,18 +211,31 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        var user: FollowModel?
+        if indexPath.row < self.friendData.count {
+            user = self.friendData.objectAtIndex(indexPath.row) as? FollowModel
+        }
+        if (indexPath.row < self.friendData.count + self.followData.count) && (indexPath.row >= self.friendData.count){
+            user = self.followData.objectAtIndex(indexPath.row - self.friendData.count) as? FollowModel
+        }
+        if indexPath.row > (self.friendData.count + self.followData.count) {
+            user = self.followrData.objectAtIndex(indexPath.row - self.friendData.count - self.followData.count) as? FollowModel
+        }
+        let storyboard = UIStoryboard(name: "User", bundle: nil)
+        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+        userProfileController.profileOwnername = user?.username
+        self.navigationController?.pushViewController(userProfileController, animated: true)
         
-        self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
-
+    
     // MARK: - 功能方法
     
     // MARK: 获取性别
     
     func getGenderAction(type: String) -> String {
-    
+        
         var gender: String = "男"
-
+        
         
         if type == "F" {
             
@@ -221,17 +245,17 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
             
             gender = "男"
         }
-
+        
         return gender
     }
     
     // MARK: - Navigation
-
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         
         
     }
-
-
+    
+    
 }

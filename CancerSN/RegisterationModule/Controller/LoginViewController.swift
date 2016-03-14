@@ -36,6 +36,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     }
     
     func initContentView(){
+        let btnMargin: CGFloat = 15
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")
         self.view.addSubview(backgroudImgView)
@@ -84,7 +85,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(loginBtn)
         
         //registerationBtn
-        let registerationBtn = UIButton(frame: CGRect(x: registerationBtnLeftSpace, y: registerationBtnTopSpace, width: registerationBtnWidth, height: registerationBtnHeight))
+        let registerationBtn = UIButton(frame: CGRect(x: registerationBtnLeftSpace, y: registerationBtnTopSpace - btnMargin, width: registerationBtnWidth, height: registerationBtnHeight + btnMargin * 2))
         registerationBtn.backgroundColor = UIColor.clearColor()
         registerationBtn.setTitle("注册账号", forState: UIControlState.Normal)
         registerationBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -93,7 +94,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(registerationBtn)
         
         //forget password Btn
-        let forgetPwdBtn = UIButton(frame: CGRect(x: screenWidth - forgetBtnWidth - forgetBtnRightSpace, y: forgetBtnTopSpace, width: registerationBtnWidth, height: registerationBtnHeight))
+        let forgetPwdBtn = UIButton(frame: CGRect(x: screenWidth - forgetBtnWidth - forgetBtnRightSpace, y: forgetBtnTopSpace -  btnMargin, width: registerationBtnWidth, height: registerationBtnHeight + btnMargin * 2))
         forgetPwdBtn.backgroundColor = UIColor.clearColor()
         forgetPwdBtn.setTitle("忘记密码", forState: UIControlState.Normal)
         forgetPwdBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -130,7 +131,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         self.view.addSubview(qqLoginBtn)
         
         //look around
-        let lookaroundBtn = UIButton(frame: CGRect(x: (screenWidth - lookaroundBtnWidth)/2, y: screenHeight - lookaroundBtnBtmSpace - lookaroundBtnHeight, width: lookaroundBtnWidth, height: lookaroundBtnHeight))
+        
+        let lookaroundBtn = UIButton(frame: CGRect(x: (screenWidth - lookaroundBtnWidth)/2, y: screenHeight - lookaroundBtnBtmSpace - lookaroundBtnHeight - btnMargin, width: lookaroundBtnWidth, height: lookaroundBtnHeight + btnMargin * 2))
         lookaroundBtn.backgroundColor = UIColor.clearColor()
         lookaroundBtn.setTitle("随便逛逛看最新的治疗方案", forState: UIControlState.Normal)
         lookaroundBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)

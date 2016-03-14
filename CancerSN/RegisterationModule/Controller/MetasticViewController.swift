@@ -25,6 +25,12 @@ class MetasticViewController: UIViewController {
         initVariables()
         initContentView()
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        if isUpdate == false {
+            self.navigationController?.navigationBar.hidden = true
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -50,8 +56,9 @@ class MetasticViewController: UIViewController {
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
+        let btnMargin: CGFloat = 15
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
@@ -66,12 +73,12 @@ class MetasticViewController: UIViewController {
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
-        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
-        signUpSubTitle.font = signUpSubTitleFont
-        signUpSubTitle.textColor = signUpTitleTextColor
-        signUpSubTitle.text = "不同的转移情况有不同的治疗方法"
-        signUpSubTitle.textAlignment = NSTextAlignment.Center
-        self.view.addSubview(signUpSubTitle)
+//        let signUpSubTitle = UILabel(frame: CGRect(x: 0, y: signUpSubTitleTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpSubTitleHeight))
+//        signUpSubTitle.font = signUpSubTitleFont
+//        signUpSubTitle.textColor = signUpTitleTextColor
+//        signUpSubTitle.text = "不同的转移情况有不同的治疗方法"
+//        signUpSubTitle.textAlignment = NSTextAlignment.Center
+//        self.view.addSubview(signUpSubTitle)
         
         //top Item Name
         let topItemNameLbl = UILabel(frame: CGRect(x: 0, y: signUpTopItemNameTopSpace + offsetHeightForNavigation, width: screenWidth, height: signUpItemNameHeight))
@@ -83,7 +90,8 @@ class MetasticViewController: UIViewController {
         
         if isUpdate == false {
             //next view button
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight))
+            let btnMargin: CGFloat = 15
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
@@ -93,6 +101,7 @@ class MetasticViewController: UIViewController {
         
         //metastic button section
         buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace + offsetHeightForNavigation, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
+        print(buttonSection.frame.origin.y)
         var buttonX: CGFloat = 0
         var buttonY: CGFloat = 0
         let buttonHeight: CGFloat = CGFloat(29)

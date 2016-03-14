@@ -59,9 +59,9 @@ class KBTextView: UITextView {
             
            // self.placeHolderColor!.set()
            
-            let context: CGContextRef = UIGraphicsGetCurrentContext()!
-            CGContextSetFillColorWithColor(context, self.placeHolderColor?.CGColor)
-
+//            let context: CGContextRef = UIGraphicsGetCurrentContext()!
+//            CGContextSetFillColorWithColor(context, self.placeHolderColor?.CGColor)
+            self.textColor = self.placeHolderColor
 
             // 定义属性
             let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
@@ -71,7 +71,6 @@ class KBTextView: UITextView {
                 NSParagraphStyleAttributeName : paragraphStyle.copy(),
             ]
             self.placeHolder?.drawInRect(placeHolderRect, withAttributes: dict)
-            
 
         }
     }

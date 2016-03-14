@@ -26,7 +26,7 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
+        headerHeight = 66
         initContentView()
     }
 

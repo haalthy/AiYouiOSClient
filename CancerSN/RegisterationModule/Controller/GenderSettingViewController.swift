@@ -118,7 +118,8 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         
         //next view button
         if isUpdate == false {
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
+            let btnMargin: CGFloat = 15
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont

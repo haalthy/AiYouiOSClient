@@ -108,7 +108,7 @@ class NetRequest: NSObject {
                 }
             }
             else {
-                json = NSDictionary(object: "resultDesp", forKey: "网络异常")
+                json = NSDictionary(object: "content", forKey: "网络异常")
                 //                failed(content: ["": ""], message: "网络异常")
             }
             

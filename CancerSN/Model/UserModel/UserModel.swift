@@ -26,5 +26,6 @@ class UserModel: D3Model {
     var cancerType: String = ""
     var imageURL: String = ""
     var _version_: Int64 = 0
+    var isFollowedByCurrentUser: Int = 0
     
 }

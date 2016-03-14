@@ -97,8 +97,9 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tagCell = self.tableView.dequeueReusableCellWithIdentifier(cellTagIdentifier) as! TagCell
         if isNavigationPop {
             //previous Btn
-            let previousBtn = UIButton(frame: CGRect(x: previousBtnLeftSpace, y: previousBtnTopSpace, width: previousBtnWidth, height: previousBtnHeight))
-            let previousImgView = UIImageView(frame: CGRECT(0, 0, previousBtn.frame.width, previousBtn.frame.height))
+            let btnMargin: CGFloat = 15
+            let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
+            let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
             previousImgView.image = UIImage(named: "btn_previous")
             previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
             previousBtn.addSubview(previousImgView)
@@ -145,7 +146,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             header.addSubview(titleLabel)
             
             //confirm
-            let confirmBtn = UIButton(frame: CGRect(x: screenWidth - confirmBtnRightSpace - confirmBtnWidth, y: 9, width: confirmBtnWidth, height: 15))
+            let confirmBtn = UIButton(frame: CGRect(x: screenWidth - confirmBtnRightSpace - confirmBtnWidth, y: 0, width: confirmBtnWidth, height: 33))
             confirmBtn.setTitle("确定", forState: UIControlState.Normal)
             confirmBtn.setTitleColor(cancelBtnColor, forState: UIControlState.Normal)
             confirmBtn.titleLabel?.font = cancelBtnFont
