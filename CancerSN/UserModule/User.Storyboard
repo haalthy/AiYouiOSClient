@@ -78,11 +78,11 @@
                     </navigationItem>
                     <connections>
                         <outlet property="userProfileHeaderView" destination="1VO-cZ-O3n" id="ZK9-qW-B2r"/>
-                        <segue destination="XWm-M6-PNk" kind="show" identifier="showPostsSegue" id="4b3-Kz-ome"/>
                         <segue destination="o0c-xH-bgE" kind="show" identifier="showUserBasicInfoSeuge" id="Paa-Dx-gnU"/>
                         <segue destination="9NF-Ll-Qnq" kind="show" identifier="updateTreatment" id="Wsi-XZ-Omi"/>
                         <segue destination="Zr4-br-qjp" kind="push" identifier="showFollowSegue" id="yJY-tW-GFn"/>
                         <segue destination="nsG-0I-ZHb" kind="push" identifier="showMentionSegue" id="omh-Cu-tEL"/>
+                        <segue destination="PPI-W0-wg9" kind="push" identifier="showPostsSegue" id="NId-FY-ESa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KeW-gB-dB9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -546,44 +546,68 @@
             </objects>
             <point key="canvasLocation" x="4387.5" y="1674.75"/>
         </scene>
-        <!--Posts Table View Controller-->
-        <scene sceneID="YFJ-E7-C0E">
+        <!--发布的帖子-->
+        <scene sceneID="Jeh-zI-8ua">
             <objects>
-                <tableViewController hidesBottomBarWhenPushed="YES" id="XWm-M6-PNk" customClass="PostsTableViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="jAB-s8-Ynd">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="PPI-W0-wg9" customClass="PostsViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dqQ-Lp-feu"/>
+                        <viewControllerLayoutGuide type="bottom" id="by7-GV-TAw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="puU-qW-Hrf">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r4g-dk-8wI">
+                                <rect key="frame" x="0.0" y="129" width="600" height="471"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="PPI-W0-wg9" id="LBB-Xi-TxH"/>
+                                    <outlet property="delegate" destination="PPI-W0-wg9" id="OOv-JP-Zzv"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MjI-c9-2L2">
+                                <rect key="frame" x="0.0" y="64" width="600" height="65"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="miq-3Q-3kz">
+                                        <rect key="frame" x="207" y="13" width="187" height="40"/>
+                                        <color key="backgroundColor" red="0.94901960784313721" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="MMd-Jf-VlK"/>
+                                            <constraint firstAttribute="width" constant="187" id="y3u-zO-1rG"/>
+                                        </constraints>
+                                        <state key="normal" title="你有两条新评论">
+                                            <color key="titleColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="miq-3Q-3kz" firstAttribute="centerY" secondItem="MjI-c9-2L2" secondAttribute="centerY" id="b5l-nC-qRX"/>
+                                    <constraint firstItem="miq-3Q-3kz" firstAttribute="centerX" secondItem="MjI-c9-2L2" secondAttribute="centerX" id="cLN-gi-hib"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="uMs-Lr-SYL">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uMs-Lr-SYL" id="Oj6-tH-7c8">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="XWm-M6-PNk" id="4NV-HA-6im"/>
-                            <outlet property="delegate" destination="XWm-M6-PNk" id="Ocj-5T-q38"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="ejZ-8i-eBr">
-                        <nil key="title"/>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VX5-Ce-UO6" userLabel="我发布的帖子">
-                            <rect key="frame" x="255" y="5" width="90" height="34"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                            <state key="normal" title="发布的帖子">
-                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </state>
-                        </button>
-                    </navigationItem>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3Oo-UY-DMK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="MjI-c9-2L2" secondAttribute="trailing" id="56z-mK-Vbb"/>
+                            <constraint firstAttribute="trailing" secondItem="r4g-dk-8wI" secondAttribute="trailing" id="ALz-Xr-wzB"/>
+                            <constraint firstItem="r4g-dk-8wI" firstAttribute="top" secondItem="puU-qW-Hrf" secondAttribute="top" constant="129" id="MkB-nr-WLh"/>
+                            <constraint firstItem="by7-GV-TAw" firstAttribute="top" secondItem="r4g-dk-8wI" secondAttribute="bottom" id="TD4-oc-GYb"/>
+                            <constraint firstItem="r4g-dk-8wI" firstAttribute="top" secondItem="MjI-c9-2L2" secondAttribute="bottom" id="Wxc-Rw-Zh3"/>
+                            <constraint firstItem="MjI-c9-2L2" firstAttribute="leading" secondItem="puU-qW-Hrf" secondAttribute="leading" id="ch5-AK-3IE"/>
+                            <constraint firstItem="r4g-dk-8wI" firstAttribute="leading" secondItem="puU-qW-Hrf" secondAttribute="leading" id="l3f-qC-C8l"/>
+                            <constraint firstItem="MjI-c9-2L2" firstAttribute="top" secondItem="dqQ-Lp-feu" secondAttribute="bottom" id="ugu-NO-Fav"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="发布的帖子" id="B21-V8-LcX"/>
+                    <connections>
+                        <outlet property="tableView" destination="r4g-dk-8wI" id="vbR-4S-KgA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Al-cK-WyJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5178" y="1834.5"/>
+            <point key="canvasLocation" x="5005" y="1716"/>
         </scene>
         <!--@我的-->
         <scene sceneID="KIH-5t-C98">

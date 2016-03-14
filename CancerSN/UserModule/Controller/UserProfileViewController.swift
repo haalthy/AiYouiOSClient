@@ -135,6 +135,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        self.view.addSubview(userProfileHeaderView)
+        self.view.addSubview(scrollView)
+
         // 展示未读@我的红点
         self.getUnreadMentionedCountFromServer()
         
@@ -143,12 +151,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         // 展示未读消息的红点
         self.getUnreadCommentCountFromServer()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-        self.view.addSubview(userProfileHeaderView)
-        self.view.addSubview(scrollView)
+
     }
     
     // MARK: - Init Variables
@@ -260,7 +263,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         let profileStr = publicService.getProfileStrByDictionary(self.userProfile)
         profileLabel.text = profileStr
         self.userProfileHeaderView.addSubview(profileLabel)
-        //
 
     }
     
@@ -417,7 +419,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.relatedTableView.reloadData()
             scrollView.contentOffset = CGPoint(x: screenWidth, y: 0)
             if profileOwnername != username{
-                let postTableVC = PostsTableViewController()
+                let postTableVC = PostsViewController()
                 postTableVC.username = profileOwnername as! String
                 self.addChildViewController(postTableVC)
                 self.relatedTableView.removeFromSuperview()
@@ -935,7 +937,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         
         if segue.identifier == "showPostsSegue" {
-            let viewController = segue.destinationViewController as! PostsTableViewController
+            let viewController = segue.destinationViewController as! PostsViewController
             viewController.username = self.profileOwnername as! String
         }
     }

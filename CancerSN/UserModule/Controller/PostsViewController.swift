@@ -8,14 +8,15 @@
 
 import UIKit
 
-class PostsTableViewController: UITableViewController {
+class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let cellPostIdentifier = "PostCell"
 
     var username: String = ""
     // 控件关联
-    @IBOutlet weak var headerView: UIView!
     
+    @IBOutlet weak var tableView: UITableView!
+
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
     let profileSet = NSUserDefaults.standardUserDefaults()
@@ -170,31 +171,31 @@ class PostsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return self.postList.count
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellPostIdentifier, forIndexPath: indexPath) as! PostTableViewCell
         
         cell.post = postList[indexPath.row] as! PostFeedStatus
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let postCellFrame: PostCellFrame = PostCellFrame()
         postCellFrame.post = postList[indexPath.row] as! PostFeedStatus
         return postCellFrame.cellHeight + 30
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
