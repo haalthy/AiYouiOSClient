@@ -60,15 +60,18 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         
         // 初始化加红点状态（个数）
         
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
-        
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadFollowBadgeCount)
-        
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadMentionedBadgeCount)
-        
-        self.getUnreadCommentCountFromServer()
-        self.getUnreadFollowCountFromServer()
-        self.getUnreadMentionedCountFromServer()
+        if keychainAccess.getPasscode(accessNSUserData) != nil {
+            
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
+            
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadFollowBadgeCount)
+            
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadMentionedBadgeCount)
+            
+            self.getUnreadCommentCountFromServer()
+            self.getUnreadFollowCountFromServer()
+            self.getUnreadMentionedCountFromServer()
+        }
     }
     
     // MARK: - 添加中间postBtn

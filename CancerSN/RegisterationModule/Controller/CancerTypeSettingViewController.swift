@@ -75,6 +75,12 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         initContentView()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        if isUpdate == false {
+            self.navigationController?.navigationBar.hidden = true
+        }
+    }
+    
     override func viewDidAppear(animated: Bool) {
         topPickerView.selectRow(4, inComponent: 0, animated: false)
         buttomPickerView.selectRow(1, inComponent: 0, animated: false)
@@ -90,8 +96,9 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
     
     func initContentView(){
         //previous Btn
-        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace, height: previousBtnHeight))
-        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, 0, previousBtnWidth, previousBtn.frame.height))
+        let btnMargin: CGFloat = 15
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
+        let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
         previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
@@ -153,7 +160,8 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         
         //next view button
         if isUpdate == false {
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
+            let btnMargin: CGFloat = 15
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont

@@ -356,8 +356,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let parameters: Dictionary<String, AnyObject> = [
             "searchString" : searchStr,
             "page" : page,
-            "count" : count
+            "count" : count,
+            "username": keychainAccess.getPasscode(usernameKeyChain)!
         ]
+        
+        
+        
         switch self.searchType {
             
         case 1:
@@ -455,10 +459,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
             let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
-            for followingUser in self.followingList {
-                if followingUser.username == userModel.username {
-                    cell.isFollowing = true
-                }
+//            for followingUser in self.followingList {
+//                if followingUser.username == userModel.username {
+//                    cell.isFollowing = true
+//                }
+//            }
+            if userModel.isFollowedByCurrentUser == 1 {
+                cell.isFollowing = true
             }
             cell.userObj = userModel
             return cell

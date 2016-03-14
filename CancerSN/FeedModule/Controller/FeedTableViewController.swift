@@ -51,6 +51,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListURL()->String{
         var feedListURL: String = ""
+        getAccessToken.getAccessToken()
         let accessToken = profileSet.objectForKey(accessNSUserData)
         if accessToken != nil{
             feedListURL = getFeedsURL + "?access_token=" + (accessToken as! String)
@@ -62,6 +63,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getFeedListParameter(since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
         let parameter = NSMutableDictionary()
+        getAccessToken.getAccessToken()
         let accessToken = profileSet.objectForKey(accessNSUserData)
         if accessToken != nil{
             parameter.setObject(since_id, forKey: "since_id")

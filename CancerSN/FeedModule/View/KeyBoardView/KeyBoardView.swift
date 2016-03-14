@@ -31,10 +31,8 @@ let kKeyBoardWColor: UIColor = RGB(211, 211, 211)
 let kKeyBoardFaceBtnWidth: CGFloat = 30
 
 protocol KeyBoardDelegate {
-
     // 发送评论
     func sendCommentAction(commentStr: String)
-    
 }
 
 class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
@@ -192,7 +190,6 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     // MARK: 设置placeHolder颜色
     
     func setPlaceHolderTextColor(color: UIColor) {
-    
         self.textView.placeHolderColor = color
     }
     
@@ -214,7 +211,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     // MARK: - UITextView Delegate
     
     func textViewDidBeginEditing(textView: UITextView) {
-        //self.showBottomView(nil)
+//        self.showBottomView(nil)
     }
     
     func textViewDidChange(textView: UITextView) {
