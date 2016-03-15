@@ -142,8 +142,8 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             cell.addSubview(treatmentNameTextField)
             cell.addSubview(dosageTextView)
             cell.addSubview(saveButton)
-            heightForRowForTreatmentList[indexPath.row] = 100
-            seperateLine.frame = CGRect(x: 0, y: 100 + 70 - 1, width: cell.frame.width, height: 1)
+            heightForRowForTreatmentList[indexPath.row] = 110
+            seperateLine.frame = CGRect(x: 0, y: 110 + 70 - 1, width: cell.frame.width, height: 1)
 
         }else{
             cell.removeAllSubviews()
