@@ -89,6 +89,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // 结束时，偏移量
     var endContentOffsetX: CGFloat = 0.0
     
+    var commentCount: Int = 0
+    
     let nicknameLabel = UILabel()
     let profileLabel = UILabel()
     //
@@ -160,7 +162,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)        
+        super.viewWillAppear(animated)
 
     }
     
@@ -397,12 +399,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             
             if dict["count"] as! Int > 0 {
                 
+                self.commentCount = dict["count"] as! Int
                 self.messageBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
                 self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
                 judgeIsAddCount(0)
             }
             else {
                 
+                self.commentCount = 0
                 self.messageBadgeView.clearBadge()
                 judgeIsDecCount(0)
                 self.judgeIsDeleteRedBadge()
@@ -484,7 +488,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.relatedTableView.reloadData()
             scrollView.contentOffset = CGPoint(x: screenWidth, y: 0)
             if profileOwnername != username{
-                let postTableVC = PostsViewController()
+                let postTableVC = PostsListTableViewController()
                 postTableVC.username = profileOwnername as! String
                 self.addChildViewController(postTableVC)
                 self.relatedTableView.removeFromSuperview()
@@ -1007,6 +1011,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if segue.identifier == "showPostsSegue" {
             let viewController = segue.destinationViewController as! PostsViewController
             viewController.username = self.profileOwnername as! String
+            viewController.commentCount = self.commentCount
         }
     }
     
