@@ -295,6 +295,8 @@
 		6BF05DDF1C3E69B800D7AF99 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF05DDE1C3E69B800D7AF99 /* libsqlite3.tbd */; };
 		6BF05DE11C3E69D300D7AF99 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF05DE01C3E69D300D7AF99 /* libiconv.tbd */; };
 		6BF05DE31C3E6A8500D7AF99 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF05DE21C3E6A8500D7AF99 /* libstdc++.tbd */; };
+		A5946BCB1C97A9350065A30A /* libGrowing.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5946BCA1C97A9350065A30A /* libGrowing.a */; };
+		A5946BCE1C97A9AA0065A30A /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A5946BCD1C97A9AA0065A30A /* libicucore.tbd */; };
 		DDD6A12E1C37C28C00C258D2 /* PNBar.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD6A10D1C37C28C00C258D2 /* PNBar.m */; };
 		DDD6A12F1C37C28C00C258D2 /* PNBarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD6A10F1C37C28C00C258D2 /* PNBarChart.m */; };
 		DDD6A1301C37C28C00C258D2 /* PNChartLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD6A1131C37C28C00C258D2 /* PNChartLabel.m */; };
@@ -695,6 +697,9 @@
 		6BF05DE01C3E69D300D7AF99 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		6BF05DE21C3E6A8500D7AF99 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		6BF05DE41C3E6B2A00D7AF99 /* libdyld.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libdyld.tbd; path = usr/lib/system/libdyld.tbd; sourceTree = SDKROOT; };
+		A5946BC91C97A9350065A30A /* Growing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Growing.h; path = "Growing-0.9.7/Growing.h"; sourceTree = "<group>"; };
+		A5946BCA1C97A9350065A30A /* libGrowing.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGrowing.a; path = "Growing-0.9.7/libGrowing.a"; sourceTree = "<group>"; };
+		A5946BCD1C97A9AA0065A30A /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		DDD6A10C1C37C28C00C258D2 /* PNBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNBar.h; sourceTree = "<group>"; };
 		DDD6A10D1C37C28C00C258D2 /* PNBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNBar.m; sourceTree = "<group>"; };
 		DDD6A10E1C37C28C00C258D2 /* PNBarChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNBarChart.h; sourceTree = "<group>"; };
@@ -740,13 +745,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B25A3B91C95A2FD00138043 /* CoreTelephony.framework in Frameworks */,
 				6BD5FFDA1C9004C8003170C1 /* Foundation.framework in Frameworks */,
+				A5946BCE1C97A9AA0065A30A /* libicucore.tbd in Frameworks */,
+				6BF05DDF1C3E69B800D7AF99 /* libsqlite3.tbd in Frameworks */,
+				6B25A3B91C95A2FD00138043 /* CoreTelephony.framework in Frameworks */,
 				6BD5FFD81C9004B0003170C1 /* CoreFoundation.framework in Frameworks */,
 				6BD5FFD61C9004A1003170C1 /* CFNetwork.framework in Frameworks */,
 				6BF05DE31C3E6A8500D7AF99 /* libstdc++.tbd in Frameworks */,
 				6BF05DE11C3E69D300D7AF99 /* libiconv.tbd in Frameworks */,
-				6BF05DDF1C3E69B800D7AF99 /* libsqlite3.tbd in Frameworks */,
 				6BF05DDD1C3E69AE00D7AF99 /* libz.tbd in Frameworks */,
 				6BD5FFD41C9002B7003170C1 /* jpush-ios-2.1.0.a in Frameworks */,
 				6B25A3B81C95A2A100138043 /* libWeChatSDK.a in Frameworks */,
@@ -755,6 +761,7 @@
 				2A410A3E1BB9E78100E4272B /* Security.framework in Frameworks */,
 				6B93FCED1C1E68EB00A81EA9 /* TencentOpenAPI.framework in Frameworks */,
 				2AA2650E1B684D25001E52E7 /* CoreData.framework in Frameworks */,
+				A5946BCB1C97A9350065A30A /* libGrowing.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,6 +788,7 @@
 		2A410A381BB9E71100E4272B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5946BCD1C97A9AA0065A30A /* libicucore.tbd */,
 				6BD5FFD91C9004C8003170C1 /* Foundation.framework */,
 				6BD5FFD71C9004B0003170C1 /* CoreFoundation.framework */,
 				6BD5FFD51C9004A1003170C1 /* CFNetwork.framework */,
@@ -1281,6 +1289,7 @@
 		6B93FC9E1C1E63B200A81EA9 /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				A5946BCC1C97A9530065A30A /* GrowingIO */,
 				6BD5FFDB1C90136F003170C1 /* UIView+WZLBadge */,
 				6BD5FFD11C9002B7003170C1 /* lib */,
 				6BC059C81C882B2A006F0A65 /* ZLPhotoLib */,
@@ -1815,6 +1824,15 @@
 			path = KeyBoardView;
 			sourceTree = "<group>";
 		};
+		A5946BCC1C97A9530065A30A /* GrowingIO */ = {
+			isa = PBXGroup;
+			children = (
+				A5946BC91C97A9350065A30A /* Growing.h */,
+				A5946BCA1C97A9350065A30A /* libGrowing.a */,
+			);
+			name = GrowingIO;
+			sourceTree = "<group>";
+		};
 		DDD6A10B1C37C28C00C258D2 /* PNChart */ = {
 			isa = PBXGroup;
 			children = (
@@ -1919,7 +1937,7 @@
 				TargetAttributes = {
 					2AC59C0D1B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = CZG7PM9NVL;
+						DevelopmentTeam = Y53V92P3MW;
 					};
 					2AC59C221B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
@@ -2389,6 +2407,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2402,9 +2421,15 @@
 					"$(SDKROOT)/usr/lib/system",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/lib",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/Growing-0.9.7",
 				);
-				OTHER_LDFLAGS = "-fobjc-arc";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-fobjc-arc",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 			};
 			name = Debug;
@@ -2414,6 +2439,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2427,9 +2453,15 @@
 					"$(SDKROOT)/usr/lib/system",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/WeChatSDK1.6.2",
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/lib",
+					"$(PROJECT_DIR)/CancerSN/ThirdPart/Growing-0.9.7",
 				);
-				OTHER_LDFLAGS = "-fobjc-arc";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-fobjc-arc",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 			};
 			name = Release;

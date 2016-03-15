@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    
+        Growing.startWithAccountId("81234af7e631c255")
+        
         let publicSerice = PublicService()
         print(publicSerice.passwordEncode("password"))
 //        let keychainAccess = KeychainAccess()
