@@ -59,6 +59,20 @@ let latestFeedsUpdateTimestamp = "haalthyLatestFeedsUpdateTimestamp"
 
 let placeHolderStr = "icon_placeholder"
 
+// 计算判断是否加红点key
+let unreadCommentBadgeCount = "unreadCommentBadgeCount"
+
+let unreadFollowBadgeCount = "unreadFollowBadgeCount"
+
+let unreadMentionedBadgeCount = "unreadMentionedBadgeCount"
+
+
+// 删除tabbar红点通知
+let deleteTabbarRedDotBadge = "deleteTabbarRedDotBadge"
+
+// 添加tabbar红点通知
+let addTabbarRedDotBadge = "addTabbarRedDotBadge"
+
 
 //store info in NSUserData
 let favTagsNSUserData = "favoriteTags"

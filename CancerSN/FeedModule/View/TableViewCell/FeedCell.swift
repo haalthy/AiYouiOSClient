@@ -174,7 +174,7 @@ class FeedCell: UITableViewCell {
         let portraitButton = UIButton(frame: CGRect(x: (feedOriginFrame?.portraitFrame)!.origin.x - 5, y: (feedOriginFrame?.portraitFrame)!.origin.y - 5, width: (feedOriginFrame?.portraitFrame)!.width + 10, height: (feedOriginFrame?.portraitFrame)!.height + 10))
         let portraitView = UIImageView()
         let imageURL = (feedModel?.portraitURL)! + "@80h_80w_1e"
-        portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
+        portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
         portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
         portraitButton.addSubview(portraitView)
         

@@ -18,6 +18,8 @@ extension UIImageView {
         let imageURL = NSURL(string: url)
         if imageURL != nil {
             self.sd_setImageWithURL(imageURL!, placeholderImage: placeHolderImg, options: SDWebImageOptions.RefreshCached)
+        }else{
+            self.image = placeHolderImg
         }
     }
 }

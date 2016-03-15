@@ -19,6 +19,9 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     var followrData: NSMutableArray!
     var friendData: NSMutableArray!
     
+    var keychainAccess = KeychainAccess()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,7 +34,13 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         self.getFollowDataFromServer()
     }
     
-    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // 重置未读个数为0
+        self.resetUnreadFollowCountFromServer()
+    }
+
     // MARK: - 初始化数据
     
     func initVariables() {
@@ -115,6 +124,18 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         
+    }
+    
+    // MARK: 重置未读关注的数量为0
+    
+    func resetUnreadFollowCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(refreshNewFollowCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            
+            }) { (content, message) -> Void in
+                
+        }
     }
     
     // MARK: - Table view data source

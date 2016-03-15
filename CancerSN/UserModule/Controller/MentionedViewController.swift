@@ -21,6 +21,8 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     var countPerPage: Int  = 5
     var maxID: Int = 0
     
+    var keychainAccess = KeychainAccess()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,6 +31,13 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
         self.registerCell()
         self.addRefresh()
         self.initContentView()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // 重置未读个数为0
+        self.resetUnreadMentionedCountFromServer()
     }
 
     // MARK: - 初始化数据
@@ -152,6 +161,18 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
         }
 
     }
+    
+    // MARK: 重置未读@我的数量为0
+    
+    func resetUnreadMentionedCountFromServer() {
+        
+        NetRequest.sharedInstance.POST(refreshNewMentionedCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+            
+            }) { (content, message) -> Void in
+                
+        }
+    }
+
     
     // MARK: - Table view data source
     

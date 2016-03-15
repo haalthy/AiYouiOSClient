@@ -13,7 +13,7 @@ let cellSearchTreatmentIdentifier = "TreatmentCell"
 let cellSearchClinicTrailIdentifier = "ClinicTrailCell"
 
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate, UserVCDelegate {
     
     @IBOutlet weak var typeView: UIView!
     
@@ -196,14 +196,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: - 网络请求
     //获得following用户列表
-    func getFollowingUser(){
-        getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let urlStr: String = getFollowingUserURL + "?access_token=" + (accessToken as! String)
-        let json = NetRequest.sharedInstance.POST_A(urlStr, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)!])
-        let userList: NSArray = json.objectForKey("content") as! NSArray
-        self.followingList = UserModel.jsonToModelList(userList as Array) as! Array<UserModel>
-    }
+//    func getFollowingUser(){
+//        getAccessToken.getAccessToken()
+//        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+//        let urlStr: String = getFollowingUserURL + "?access_token=" + (accessToken as! String)
+//        let json = NetRequest.sharedInstance.POST_A(urlStr, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)!])
+//        if  json.objectForKey("content") != nil {
+//            let userList: NSArray = json.objectForKey("content") as! NSArray
+//            self.followingList = UserModel.jsonToModelList(userList as Array) as! Array<UserModel>
+//        }
+//    }
     
     //获得推荐用户列表
     func getSuggestedUser() {
@@ -216,7 +218,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             parameters = ["page" : page, "count" : count, "username" : keychainAccess.getPasscode(usernameKeyChain)!]
         }else{
             urlStr = getSuggestUserByTagsURL
-            parameters = ["page" : page, "count" : count]
+            let tags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray
+//            let tagIDs = NSMutableArray()
+//            for tag in tags {
+//                tagIDs.addObject(((tag as! NSDictionary).objectForKey("tagId")!) as! Int)
+//            }
+            parameters = ["page" : page, "count" : count, "tags": tags]
         }
 //        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         NetRequest.sharedInstance.POST(urlStr, parameters: parameters as! Dictionary<String, AnyObject>, success: { (content, message) -> Void in
@@ -354,8 +361,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let parameters: Dictionary<String, AnyObject> = [
             "searchString" : searchStr,
             "page" : page,
-            "count" : count
+            "count" : count,
+            "username": keychainAccess.getPasscode(usernameKeyChain)!
         ]
+        
+        
+        
         switch self.searchType {
             
         case 1:
@@ -382,9 +393,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return
         }
         
-        if self.searchType == 1 {
-            getFollowingUser()
-        }
+//        if self.searchType == 1 {
+//            getFollowingUser()
+//        }
         
         getResult(self.searchViewController.searchBar.text!)
     }
@@ -461,6 +472,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             if userModel.isFollowedByCurrentUser == 1 {
                 cell.isFollowing = true
             }
+            cell.userVCDelegate = self
             cell.userObj = userModel
             return cell
             
@@ -475,20 +487,46 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        self.searchViewController.searchBar.resignFirstResponder()
+        getAccessToken.getAccessToken()
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         
-        let storyboard = UIStoryboard(name: "User", bundle: nil)
-        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
-        let info = self.searchDataArr![indexPath.row]
-        if info is UserModel {
-            userProfileController.profileOwnername = (info as! UserModel).username
+        if accessToken != nil {
+            
+            self.searchViewController.searchBar.resignFirstResponder()
+            
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            
+            let storyboard = UIStoryboard(name: "User", bundle: nil)
+            let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            let info = self.searchDataArr![indexPath.row]
+            if info is UserModel {
+                userProfileController.profileOwnername = (info as! UserModel).username
                 self.navigationController?.pushViewController(userProfileController, animated: true)
-        }
-        if info is TreatmentModel{
-            userProfileController.profileOwnername = (info as! TreatmentModel).username
-            self.navigationController?.pushViewController(userProfileController, animated: true)
+            }
+            if info is TreatmentModel{
+                userProfileController.profileOwnername = (info as! TreatmentModel).username
+                self.navigationController?.pushViewController(userProfileController, animated: true)
+            }
+        }else{
+            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
     }
 
@@ -508,4 +546,24 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //    func keyboardWillAppear(notification:NSNotification){
 //        self.typeView.hidden = false
 //    }
+    func unlogin(){
+        let alertController = UIAlertController(title: "需要登录才能关注该用户", message: nil, preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+
+        }
+        
+        alertController.addAction(cancelAction)
+        let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+        alertController.addAction(loginAction)
+        
+        
+        self.presentViewController(alertController, animated: true) {
+            // ...
+        }
+    }
 }

@@ -36,7 +36,6 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
         super.viewDidLoad()
         profileSet.removeObjectForKey(newTreatmentEnddate)
         monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
-
     }
     
     @IBAction func submitTreatmentEndDate(sender: UIButton) {
