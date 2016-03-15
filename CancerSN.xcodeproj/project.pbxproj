@@ -1937,7 +1937,7 @@
 				TargetAttributes = {
 					2AC59C0D1B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = Y53V92P3MW;
+						DevelopmentTeam = CZG7PM9NVL;
 					};
 					2AC59C221B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;

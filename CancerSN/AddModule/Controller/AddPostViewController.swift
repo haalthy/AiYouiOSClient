@@ -106,6 +106,18 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+        titleLabel.textAlignment = NSTextAlignment.Center
+        if self.isQuestion {
+            titleLabel.text = "提出问题"
+        }else{
+            titleLabel.text = "发表心得"
+        }
+        titleLabel.textColor = UIColor.whiteColor()
+        self.navigationItem.titleView = titleLabel
+    }
+    
     func initVariables(){
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
