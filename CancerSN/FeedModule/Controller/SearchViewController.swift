@@ -44,6 +44,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var followingList = NSArray()
     
+    var heightForCinicInfo = NSMutableDictionary()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -311,6 +313,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
             
             self.searchDataArr?.addObjectsFromArray(homeData)
+            self.heightForCinicInfo.removeAllObjects()
+            var index = 0
+            for data in self.searchDataArr! {
+                let clinicTrial = data as! ClinicTrailObj
+                let clinicStr: String = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
+                let clinicInfoHeight: CGFloat = clinicStr.sizeWithFont(UIFont.systemFontOfSize(13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.max)).height
+                self.heightForCinicInfo.setObject(clinicInfoHeight, forKey: index)
+                index++
+            }
             self.tableView.reloadData()
 //            HudProgressManager.sharedInstance.dismissHud()
 //            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
@@ -385,6 +396,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         self.searchDataArr?.removeAllObjects()
+        self.heightForCinicInfo.removeAllObjects()
         page = 0
         self.showSuggestedUser = false
         if self.searchViewController.searchBar.text == nil {
@@ -426,7 +438,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             height = 120
             break
         case 3:
-            height = 140
+            height = (self.heightForCinicInfo.objectForKey(indexPath.row) as! CGFloat) + 70
             break
             
         default:

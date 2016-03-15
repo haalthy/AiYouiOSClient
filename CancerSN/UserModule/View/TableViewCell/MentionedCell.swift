@@ -61,6 +61,17 @@ class MentionedCell: UITableViewCell {
         self.showContentViewForType(feedModel.type, feedModel: feedModel)
     }
     
+    func setContentViewForUserComment(commentModel: UserCommentModel) {
+    
+        let imageURL = (commentModel.imageURL) + "@40h_40w_1e"
+        self.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
+        self.nameLabel.text = commentModel.displayname
+        self.bodyLabel.text = self.getMentionedAndBody(commentModel.body)
+        self.typeLabel.text = getFeedTypeName(commentModel.postType, isBroadcast: commentModel.isBroadcast)
+        
+        self.showContentViewForUserComment(commentModel)
+    }
+    
     // MARK: - 功能方法
     
     func getMentionedAndBody(body: String) -> String {
@@ -131,4 +142,25 @@ class MentionedCell: UITableViewCell {
         }
     }
     
+    // MARK: - 显示不同的用户评论列表数据
+    
+    func showContentViewForUserComment(commentModel: UserCommentModel) {
+    
+        
+        if (commentModel.postImageURL as NSString).length > 0 {
+        
+            self.tagLabel.hidden = true
+            self.showImage.hidden = false
+            let picArr: Array<String> = ((commentModel.postImageURL).componentsSeparatedByString(";"))
+            let imageURL = picArr[0] + "@100h_100w_1e"
+            self.showImage.addImageCache(imageURL, placeHolder: placeHolderStr)
+        }
+        else {
+            self.tagLabel.hidden = false
+            self.showImage.hidden = true
+            self.tagLabel.text = "“" + commentModel.postBody + "”"
+        
+        }
+
+    }
 }

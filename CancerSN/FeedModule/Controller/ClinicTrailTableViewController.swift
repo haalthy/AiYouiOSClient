@@ -16,8 +16,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     var selectionPickerContainerViewHeight: CGFloat = 200
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
-    var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
-    var cancerTypeSelectionData = ["腺癌", "鳞癌", "小细胞癌症"]
+    var treatmentSelectionData =  ["PD-1 v", "CTLA-4 v", "Vaccine v", "CART v",]
+    var cancerTypeSelectionData = ["腺癌 v", "鳞癌 v", "小细胞癌症 v"]
     var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
@@ -156,7 +156,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailHeader", forIndexPath: indexPath) 
+            let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailHeader", forIndexPath: indexPath)
+            cell.removeAllSubviews()
             let selectBtnWidth: CGFloat = (cell.frame.width - 60)/2
             let selectBtnHeight: CGFloat = 30
             treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
@@ -241,7 +242,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             
             let clinicTrial = self.searchDataArr[indexPath.row] as! ClinicTrailObj
             
-            let otherInfoStr: String = clinicTrial.subgroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideeffect + "\n" + clinicTrial.researchInfo
+            let otherInfoStr: String = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
             
             let strHeight = otherInfoStr.sizeWithFont(UIFont.systemFontOfSize(13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.max)).height
             return strHeight + 45
