@@ -81,6 +81,72 @@
             </objects>
             <point key="canvasLocation" x="3516" y="2016"/>
         </scene>
+        <!--评论-->
+        <scene sceneID="Qq5-dn-grX">
+            <objects>
+                <viewController id="TBw-ix-NdN" customClass="CommentViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KtM-ch-CZr"/>
+                        <viewControllerLayoutGuide type="bottom" id="vBa-rf-rvK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZQG-ev-QpK">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JEr-OP-ahL">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="TBw-ix-NdN" id="XkO-ay-CEt"/>
+                                    <outlet property="delegate" destination="TBw-ix-NdN" id="6dq-Oc-4x5"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vBa-rf-rvK" firstAttribute="top" secondItem="JEr-OP-ahL" secondAttribute="bottom" id="7B1-lQ-MZ9"/>
+                            <constraint firstItem="JEr-OP-ahL" firstAttribute="leading" secondItem="ZQG-ev-QpK" secondAttribute="leading" id="DFg-Ha-pvg"/>
+                            <constraint firstItem="JEr-OP-ahL" firstAttribute="top" secondItem="ZQG-ev-QpK" secondAttribute="top" id="j1X-XK-pRx"/>
+                            <constraint firstAttribute="trailing" secondItem="JEr-OP-ahL" secondAttribute="trailing" id="u6w-aN-6ta"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="评论" id="PgL-TV-mW8"/>
+                    <connections>
+                        <outlet property="tableView" destination="JEr-OP-ahL" id="x1G-T6-JhR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sWD-0R-iwZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5834" y="1261"/>
+        </scene>
+        <!--Posts List Table View Controller-->
+        <scene sceneID="IU8-hJ-zQw">
+            <objects>
+                <tableViewController id="Ha7-cb-onQ" customClass="PostsListTableViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="NMk-yy-CoS">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="nFv-4G-ict">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nFv-4G-ict" id="ree-pW-hbh">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Ha7-cb-onQ" id="dX9-d9-llL"/>
+                            <outlet property="delegate" destination="Ha7-cb-onQ" id="J9R-6h-rZd"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q4M-YU-e93" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6528" y="1261"/>
+        </scene>
         <!--Update Treatment Table View Controller-->
         <scene sceneID="SWa-Zp-7tc">
             <objects>
@@ -161,7 +227,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bfc-1o-FTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5652" y="1344"/>
+            <point key="canvasLocation" x="5834" y="2016"/>
         </scene>
         <!--关注-->
         <scene sceneID="CEn-S0-JmY">
@@ -536,12 +602,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="spy-CP-RcA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4387.5" y="1674.75"/>
+            <point key="canvasLocation" x="4375" y="2016"/>
         </scene>
         <!--发布的帖子-->
         <scene sceneID="Jeh-zI-8ua">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="PPI-W0-wg9" customClass="PostsViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="PPI-W0-wg9" customClass="PostsViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dqQ-Lp-feu"/>
                         <viewControllerLayoutGuide type="bottom" id="by7-GV-TAw"/>
@@ -550,14 +616,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r4g-dk-8wI">
-                                <rect key="frame" x="0.0" y="129" width="600" height="471"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="PPI-W0-wg9" id="LBB-Xi-TxH"/>
-                                    <outlet property="delegate" destination="PPI-W0-wg9" id="OOv-JP-Zzv"/>
-                                </connections>
-                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MjI-c9-2L2">
                                 <rect key="frame" x="0.0" y="64" width="600" height="65"/>
                                 <subviews>
@@ -571,14 +629,35 @@
                                         <state key="normal" title="你有两条新评论">
                                             <color key="titleColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="commentListAction:" destination="PPI-W0-wg9" eventType="touchUpInside" id="GvP-jM-5aD"/>
+                                        </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6DP-Ea-dgQ">
+                                        <rect key="frame" x="0.0" y="64" width="600" height="1"/>
+                                        <color key="backgroundColor" red="0.8666666666666667" green="0.8666666666666667" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="kIe-kI-PJG"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="6DP-Ea-dgQ" secondAttribute="trailing" id="8cK-Dk-s3Y"/>
                                     <constraint firstItem="miq-3Q-3kz" firstAttribute="centerY" secondItem="MjI-c9-2L2" secondAttribute="centerY" id="b5l-nC-qRX"/>
                                     <constraint firstItem="miq-3Q-3kz" firstAttribute="centerX" secondItem="MjI-c9-2L2" secondAttribute="centerX" id="cLN-gi-hib"/>
+                                    <constraint firstAttribute="bottom" secondItem="6DP-Ea-dgQ" secondAttribute="bottom" id="d04-Jl-k7q"/>
+                                    <constraint firstItem="6DP-Ea-dgQ" firstAttribute="leading" secondItem="MjI-c9-2L2" secondAttribute="leading" id="p90-lI-9gE"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r4g-dk-8wI">
+                                <rect key="frame" x="0.0" y="129" width="600" height="471"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="PPI-W0-wg9" id="LBB-Xi-TxH"/>
+                                    <outlet property="delegate" destination="PPI-W0-wg9" id="OOv-JP-Zzv"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -594,12 +673,14 @@
                     </view>
                     <navigationItem key="navigationItem" title="发布的帖子" id="B21-V8-LcX"/>
                     <connections>
+                        <outlet property="commentListBtn" destination="miq-3Q-3kz" id="k8l-6r-p3J"/>
                         <outlet property="tableView" destination="r4g-dk-8wI" id="vbR-4S-KgA"/>
+                        <segue destination="TBw-ix-NdN" kind="push" identifier="EnterCommentListView" id="G8T-gU-Oh5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Al-cK-WyJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5005" y="1716"/>
+            <point key="canvasLocation" x="5055" y="2016"/>
         </scene>
         <!--@我的-->
         <scene sceneID="KIH-5t-C98">
@@ -637,7 +718,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q9X-3P-hD1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4660" y="2793"/>
+            <point key="canvasLocation" x="4678" y="2865"/>
         </scene>
         <!--Comment List Table View Controller-->
         <scene sceneID="FxQ-kZ-qP8">
@@ -665,7 +746,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pZ2-Zr-2Rk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4745" y="3869"/>
+            <point key="canvasLocation" x="4745" y="3659"/>
         </scene>
         <!--Mentioned Post Table View Controller-->
         <scene sceneID="jSO-Wz-rHL">

@@ -1,25 +1,20 @@
 //
-//  PostsTableViewController.swift
+//  PostsListTableViewController.swift
 //  CancerSN
 //
-//  Created by lily on 2/23/16.
-//  Copyright © 2016 lily. All rights reserved.
+//  Created by lay on 16/3/15.
+//  Copyright © 2016年 lily. All rights reserved.
 //
 
 import UIKit
 
-class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PostsListTableViewController: UITableViewController {
+
     
     let cellPostIdentifier = "PostCell"
-
+    
     var username: String = ""
-    var commentCount: Int = 0
     // 控件关联
-    
-    @IBOutlet weak var tableView: UITableView!
-
-    @IBOutlet weak var commentListBtn: UIButton!
-    
     
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
@@ -35,6 +30,7 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var maxID: Int = 0
     
     var postTableView: UITableView?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +45,7 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             initContentView()
         }
     }
-
+    
     
     // MARK: - Init Variables
     
@@ -59,7 +55,7 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         postTableView = self.tableView
         
         self.tableView.registerClass(PostTableViewCell.self, forCellReuseIdentifier: cellPostIdentifier)
-
+        
     }
     
     func getFeedListURL()->String{
@@ -89,15 +85,11 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func initContentView() {
         
         // headerView样式
-//        headerView.layer.borderWidth = 0.7
-//        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
-        
-        self.commentListBtn.setTitle("你有" + String(self.commentCount) + "条新评论", forState: .Normal)
+        //        headerView.layer.borderWidth = 0.7
+        //        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
         // tableView 注册
         self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "changeBtnShowing", name: "refreshCommentNoti", object: nil)
         
         self.tableView.mj_header.beginRefreshing()
     }
@@ -170,50 +162,41 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.tableView.mj_footer.endRefreshing()
         }
     }
-
     
-
-    // MARK: - 功能方法
     
-    func changeBtnShowing() {
-        
-        self.commentCount = 0
     
-        self.commentListBtn.setTitle("没有未读评论", forState: .Normal)
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func commentListAction(sender: AnyObject) {
-        
-        self.performSegueWithIdentifier("EnterCommentListView", sender: self)
-    }
-
     // MARK: - Table view data source
-
-     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return self.postList.count
     }
-
     
-     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellPostIdentifier, forIndexPath: indexPath) as! PostTableViewCell
         
         cell.post = postList[indexPath.row] as! PostFeedStatus
         return cell
     }
     
-     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let postCellFrame: PostCellFrame = PostCellFrame()
         postCellFrame.post = postList[indexPath.row] as! PostFeedStatus
         return postCellFrame.cellHeight + 30
     }
     
-     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
@@ -223,8 +206,20 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
         feedDetailVC.feedId = feedStatus.postID
         self.navigationController?.pushViewController(feedDetailVC, animated: true)
-
+        
     }
+
+    
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
+        // Configure the cell...
+
+        return cell
+    }
+    */
+
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
