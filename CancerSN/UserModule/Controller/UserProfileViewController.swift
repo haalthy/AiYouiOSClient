@@ -160,42 +160,42 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     }
     
     override func viewWillAppear(animated: Bool) {
-        let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        if access_token != nil {
-            super.viewWillAppear(animated)
-            if keychainAccess.getPasscode(accessNSUserData) != nil {
-                
-                // 展示未读@我的红点
-                self.getUnreadMentionedCountFromServer()
-                
-                // 展示未读关注的红点
-                self.getUnreadFollowCountFromServer()
-                
-                // 展示未读消息的红点
-                self.getUnreadCommentCountFromServer()
-            }
-        }
+        super.viewWillAppear(animated)        
+
     }
     
+    
     override func viewDidAppear(animated: Bool) {
-        let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+         let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if access_token != nil {
-            self.getTreatmentsData()
-            self.reloadHeader()
-            self.tableView.reloadData()
-            self.view.addSubview(userProfileHeaderView)
-            self.view.addSubview(scrollView)
-            //        HudProgressManager.sharedInstance.dismissHud()
-            let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
-            titleLabel.textAlignment = NSTextAlignment.Center
-            if username != profileOwnername {
-                titleLabel.text = "他的奇迹"
-            }else{
-                titleLabel.text = "我的奇迹"
-            }
-            titleLabel.textColor = UIColor.whiteColor()
-            self.navigationItem.titleView = titleLabel
+       
+        if keychainAccess.getPasscode(accessNSUserData) != nil {
+            
+            // 展示未读@我的红点
+            self.getUnreadMentionedCountFromServer()
+            
+            // 展示未读关注的红点
+            self.getUnreadFollowCountFromServer()
+            
+            // 展示未读消息的红点
+            self.getUnreadCommentCountFromServer()
+        
         }
+
+        self.getTreatmentsData()
+        self.reloadHeader()
+        self.tableView.reloadData()
+        self.view.addSubview(userProfileHeaderView)
+        self.view.addSubview(scrollView)
+//        HudProgressManager.sharedInstance.dismissHud()
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+        titleLabel.textAlignment = NSTextAlignment.Center
+        if username != profileOwnername {
+            titleLabel.text = "他的奇迹"
+        }else{
+            titleLabel.text = "我的奇迹"
+        }
+	}
     }
     
     // MARK: - Init Variables
@@ -328,7 +328,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         profileLabel.font = UIFont(name: fontStr, size: 12.0)
 
         self.userProfileHeaderView.addSubview(profileLabel)
-        //
 
     }
     
@@ -485,7 +484,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             self.relatedTableView.reloadData()
             scrollView.contentOffset = CGPoint(x: screenWidth, y: 0)
             if profileOwnername != username{
-                let postTableVC = PostsTableViewController()
+                let postTableVC = PostsViewController()
                 postTableVC.username = profileOwnername as! String
                 self.addChildViewController(postTableVC)
                 self.relatedTableView.removeFromSuperview()
@@ -1006,7 +1005,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         
         if segue.identifier == "showPostsSegue" {
-            let viewController = segue.destinationViewController as! PostsTableViewController
+            let viewController = segue.destinationViewController as! PostsViewController
             viewController.username = self.profileOwnername as! String
         }
     }
