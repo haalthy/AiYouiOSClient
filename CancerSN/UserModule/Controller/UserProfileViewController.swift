@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kProfileTimeInterval = 0.5
+let kProfileTimeInterval = 0.25
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
     // 控件关联
@@ -580,9 +580,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
-        
+
         if abs(endContentOffsetX - startContentOffsetX) > SCREEN_WIDTH / 2 - 60 && scrollView == self.scrollView  {
-        
             if self.curSelectedBtn == treatmentHeaderBtn {
                 
                 headerBtnFormatBeSelected(postHeaderBtn)

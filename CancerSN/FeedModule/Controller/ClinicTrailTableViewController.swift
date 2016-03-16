@@ -10,14 +10,15 @@ import UIKit
 
 class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     var searchDataArr = NSMutableArray()
-
+    var originalDataArr = NSMutableArray()
+    
     var selectionPicker = UIPickerView()
     var selectionPickerContainerView = UIView()
     var selectionPickerContainerViewHeight: CGFloat = 200
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
-    var treatmentSelectionData =  ["PD-1 v", "CTLA-4 v", "Vaccine v", "CART v",]
-    var cancerTypeSelectionData = ["腺癌 v", "鳞癌 v", "小细胞癌症 v"]
+    var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
+    var cancerTypeSelectionData = ["腺癌", "鳞癌", "非小细胞癌症", "弥漫性大B细胞淋巴瘤"]
     var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
@@ -45,6 +46,34 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         headerHeight = (self.navigationController?.navigationBar.frame)!.height - UIApplication.sharedApplication().statusBarFrame.size.height
 
         self.tableView.registerClass(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
+        
+        getDrugTypeFromServer()
+        
+        getSubGroupFromServer()
+    }
+    
+    func getDrugTypeFromServer() {
+        
+        NetRequest.sharedInstance.GET(getCinicTrialDrugType, success: { (content, message) -> Void in
+            if content is NSDictionary{
+                self.treatmentSelectionData = (content as! NSDictionary).objectForKey("results") as! [String]
+            }
+            }) { (content, message) -> Void in
+                
+        }
+        
+    }
+    
+    func getSubGroupFromServer() {
+        
+        NetRequest.sharedInstance.GET(getCinicTrialSubGroup, success: { (content, message) -> Void in
+            if content is NSDictionary{
+                self.cancerTypeSelectionData = (content as! NSDictionary).objectForKey("results") as! [String]
+            }
+            }) { (content, message) -> Void in
+                
+        }
+        
     }
     
     func getPatientDataFromServer(parameters: Dictionary<String, AnyObject>) {
@@ -57,6 +86,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
             
             self.searchDataArr.addObjectsFromArray(homeData)
+            self.originalDataArr.addObjectsFromArray(self.searchDataArr as [AnyObject])
             self.tableView.reloadData()
             HudProgressManager.sharedInstance.dismissHud()
             HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
@@ -111,9 +141,26 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
+            //更新tableView
+            self.searchDataArr.removeAllObjects()
+            for cinicTrialItem in self.originalDataArr {
+                if (cinicTrialItem as! ClinicTrailObj).drugType == selectStr {
+                    self.searchDataArr.addObject(cinicTrialItem)
+                }
+            }
+            self.tableView.reloadData()
         }
         if (cancerTypeSelectionData as NSArray).containsObject(selectStr) {
             typeBtn.setTitle(selectStr, forState: UIControlState.Normal)
+            //更新tableView
+            self.searchDataArr.removeAllObjects()
+            for cinicTrialItem in self.originalDataArr {
+                if (cinicTrialItem as! ClinicTrailObj).subGroup == selectStr {
+                    self.searchDataArr.addObject(cinicTrialItem)
+                }
+            }
+            self.tableView.reloadData()
+
         }
         if (stageSelectionData as NSArray).containsObject(selectStr) {
             stageBtn.setTitle(selectStr, forState: UIControlState.Normal)
@@ -258,4 +305,5 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             self.cancelSelectionPicker()
         }
     }
+
 }
