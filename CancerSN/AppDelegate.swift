@@ -113,6 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if registrationID != nil {
         
+            self.submitRegistrationIDToServer(registrationID)
         }
         
         NSUserDefaults.standardUserDefaults().setValue(registrationID, forKey:kDeviceToken)
