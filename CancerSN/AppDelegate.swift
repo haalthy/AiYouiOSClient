@@ -111,6 +111,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(registrationID)
         
+        if registrationID != nil {
+        
+        }
+        
         NSUserDefaults.standardUserDefaults().setValue(registrationID, forKey:kDeviceToken)
     }
     
@@ -118,6 +122,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(error)
     }
     
+    
+    // MARK: 更新registrationID 
+    
+    func submitRegistrationIDToServer(registrationID: String) {
+    
+        let keychainAccess = KeychainAccess()
+        
+        let username = keychainAccess.getPasscode(usernameKeyChain)
+        if username != nil {
+        
+            let paramtersDict: Dictionary<String, AnyObject> = ["userName" : username!, "fromUserName" : registrationID]
+            NetRequest.sharedInstance.POST(pushIdURL, parameters: paramtersDict, success: { (content, message) -> Void in
+                
+                }, failed: { (content, message) -> Void in
+                    
+            })
+        }
+
+    }
 
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
         
