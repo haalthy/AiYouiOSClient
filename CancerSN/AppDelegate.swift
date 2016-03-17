@@ -34,6 +34,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkUserStatus()
         screenHeight = (self.window?.bounds.height)!
         screenWidth = (self.window?.bounds.width)!
+        
+
+        // 注册远程通知
+        
+        self.registerRemoteNotificaiton(application)
+        
+        JPUSHService.setupWithOption(launchOptions, appKey: appKey, channel: channel, apsForProduction: isProduction)
 
         return true
     }
@@ -76,6 +83,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
+    func registerRemoteNotificaiton(application: UIApplication) {
+    
+        
+        if Float(UIDevice.currentDevice().systemVersion)! >= 8.0 {
+        
+
+        application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+        }
+        else {
+        
+        application.registerForRemoteNotificationTypes ([UIRemoteNotificationType.Alert, UIRemoteNotificationType.Sound, UIRemoteNotificationType.Badge])
+
+        }
+        
+    }
+    
+    // MARK: - 获取deviceToken
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        
+        let token: NSString = NSString(format: "%@", deviceToken)
+        
+        JPUSHService.registerDeviceToken(deviceToken)
+        
+        let registrationID = JPUSHService.registrationID()
+        
+        print(registrationID)
+        
+        NSUserDefaults.standardUserDefaults().setValue(registrationID, forKey:kDeviceToken)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print(error)
+    }
+    
+
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        
+        
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+        JPUSHService.handleRemoteNotification(userInfo)
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        
+        JPUSHService.handleRemoteNotification(userInfo)
+
+    }
+    
+    
+
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -84,10 +150,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        application.applicationIconBadgeNumber = 0
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
+        application.applicationIconBadgeNumber = 0
+        application.cancelAllLocalNotifications()
+
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

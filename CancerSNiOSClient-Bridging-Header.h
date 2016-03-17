@@ -30,3 +30,5 @@
 #import "ZLPhoto.h"
 #import "JPUSHService.h"
 #import "UIView+WZLBadge.h"
+#import "JPUSHService.h"
+

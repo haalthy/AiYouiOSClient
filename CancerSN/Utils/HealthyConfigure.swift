@@ -73,6 +73,15 @@ let deleteTabbarRedDotBadge = "deleteTabbarRedDotBadge"
 // 添加tabbar红点通知
 let addTabbarRedDotBadge = "addTabbarRedDotBadge"
 
+// Remote Notification
+
+let appKey = "399fbda4ffa9d6acf43c53b0"
+
+let channel = "Publish channel"
+
+let isProduction: Bool = false
+
+let kDeviceToken = "kDeviceToken"
 
 //store info in NSUserData
 let favTagsNSUserData = "favoriteTags"
