@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var tabVC: TabViewController = TabViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let publicSerice = PublicService()
@@ -27,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabViewController : TabViewController = TabViewController()
         self.window!.rootViewController = tabViewController
         
+        self.tabVC = tabViewController
         // 初始化导航栏
         self.initNavigationBar()
         
@@ -141,6 +143,60 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         }
 
+    }
+    
+    // MARK: - 跳转功能
+    
+    // MARK: 跳转到消息中心
+    
+    func enterMessageView() {
+    
+        // 判断用户是否登录
+        
+        let keychainAccess = KeychainAccess()
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let postVC: PostsViewController = profileSB.instantiateViewControllerWithIdentifier("PostView") as! PostsViewController
+        postVC.username = keychainAccess.getPasscode(usernameKeyChain) as! String
+        postVC.commentCount = 0
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(postVC, animated: true)
+    }
+    
+    // MARK: 跳转到关注
+    
+    func enterFollowView() {
+    
+        // 判断用户是否登录
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let followVC: UserFollowViewController = profileSB.instantiateViewControllerWithIdentifier("FollowView") as! UserFollowViewController
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(followVC, animated: true)
+    }
+    
+    // MARK: 跳转到@我的
+    
+    func enterMentionedView() {
+    
+        // 判断用户是否登录
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let mentionedVC: MentionedViewController = profileSB.instantiateViewControllerWithIdentifier("MentionedView") as! MentionedViewController
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(mentionedVC, animated: true)
+    }
+    
+    // MARK: 跳转到内容详情
+    
+    func enterFeedDetailView() {
+    
+        let feedSB: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
+        
+        let feedDetailVC: FeedDetailViewController = feedSB.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        feedDetailVC.feedId = 0
+
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(feedDetailVC, animated: true)
     }
 
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
