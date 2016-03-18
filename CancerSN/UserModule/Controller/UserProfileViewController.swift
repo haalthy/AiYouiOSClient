@@ -272,6 +272,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         scrollView.pagingEnabled = true
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.bounces = false
+        scrollView.alwaysBounceHorizontal = false
         
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
@@ -580,8 +582,16 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
+<<<<<<< HEAD
 
         if abs(endContentOffsetX - startContentOffsetX) > SCREEN_WIDTH / 2 - 60 && scrollView == self.scrollView  {
+=======
+        
+        print(endContentOffsetX - startContentOffsetX)
+        
+        if abs(endContentOffsetX - startContentOffsetX) > 40 && scrollView == self.scrollView {
+        
+>>>>>>> master
             if self.curSelectedBtn == treatmentHeaderBtn {
                 
                 headerBtnFormatBeSelected(postHeaderBtn)
