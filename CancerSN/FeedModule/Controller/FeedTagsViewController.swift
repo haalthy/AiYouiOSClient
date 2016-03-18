@@ -128,8 +128,10 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             let headerTopSpace = UIApplication.sharedApplication().statusBarFrame.height
             let header = UIView(frame: CGRect(x: 0, y: headerTopSpace, width: screenWidth, height: headerHeight))
             
+            let btnMargin: CGFloat = 9
+            
             //cancel Btn
-            let cancelBtn = UIButton(frame: CGRect(x: cancelBtnLeftSpace, y: 9, width: cancelBtnWidth, height: 15))
+            let cancelBtn = UIButton(frame: CGRect(x: cancelBtnLeftSpace - btnMargin, y: 9 - btnMargin, width: cancelBtnWidth + btnMargin * 2, height: 15 + btnMargin * 2))
             cancelBtn.setTitle("取消", forState: UIControlState.Normal)
             cancelBtn.setTitleColor(cancelBtnColor, forState: UIControlState.Normal)
             cancelBtn.titleLabel?.font = cancelBtnFont
