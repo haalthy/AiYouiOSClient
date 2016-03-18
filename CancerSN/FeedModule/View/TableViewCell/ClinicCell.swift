@@ -41,14 +41,14 @@ class ClinicCell: UITableViewCell {
     }
     
     func initVariables(){
-        otherInfoStr = clinicTrial.subgroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideeffect + "\n" + clinicTrial.researchInfo
+        otherInfoStr = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
     }
     
     func updateUI(){
         self.removeAllSubviews()
         
         let drugnameLabel = UILabel(frame: CGRect(x: labelLeftSpace, y: drugNameTopSpace, width: screenWidth - labelLeftSpace * 2, height: 14))
-        drugnameLabel.text = clinicTrial.drugname
+        drugnameLabel.text = clinicTrial.drugName
         drugnameLabel.textColor = headerColor
         drugnameLabel.font = drugNameFont
         self.addSubview(drugnameLabel)

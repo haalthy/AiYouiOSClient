@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kProfileTimeInterval = 0.5
+let kProfileTimeInterval = 0.25
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
     // 控件关联
@@ -168,36 +168,38 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     
     override func viewDidAppear(animated: Bool) {
-         let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if access_token != nil {
-       
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
             
-            // 展示未读@我的红点
-            self.getUnreadMentionedCountFromServer()
+            if keychainAccess.getPasscode(accessNSUserData) != nil {
+                
+                // 展示未读@我的红点
+                self.getUnreadMentionedCountFromServer()
+                
+                // 展示未读关注的红点
+                self.getUnreadFollowCountFromServer()
+                
+                // 展示未读消息的红点
+                self.getUnreadCommentCountFromServer()
+                
+            }
             
-            // 展示未读关注的红点
-            self.getUnreadFollowCountFromServer()
-            
-            // 展示未读消息的红点
-            self.getUnreadCommentCountFromServer()
-        
+            self.getTreatmentsData()
+            self.reloadHeader()
+            self.tableView.reloadData()
+            self.view.addSubview(userProfileHeaderView)
+            self.view.addSubview(scrollView)
+            //        HudProgressManager.sharedInstance.dismissHud()
+            let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+            titleLabel.textAlignment = NSTextAlignment.Center
+            if username != profileOwnername {
+                titleLabel.text = "他的奇迹"
+            }else{
+                titleLabel.text = "我的奇迹"
+            }
+            titleLabel.textColor = UIColor.whiteColor()
+            self.navigationItem.titleView = titleLabel
         }
-
-        self.getTreatmentsData()
-        self.reloadHeader()
-        self.tableView.reloadData()
-        self.view.addSubview(userProfileHeaderView)
-        self.view.addSubview(scrollView)
-//        HudProgressManager.sharedInstance.dismissHud()
-        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
-        titleLabel.textAlignment = NSTextAlignment.Center
-        if username != profileOwnername {
-            titleLabel.text = "他的奇迹"
-        }else{
-            titleLabel.text = "我的奇迹"
-        }
-	}
     }
     
     // MARK: - Init Variables
@@ -578,9 +580,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
-        
+
         if abs(endContentOffsetX - startContentOffsetX) > SCREEN_WIDTH / 2 - 60 && scrollView == self.scrollView  {
-        
             if self.curSelectedBtn == treatmentHeaderBtn {
                 
                 headerBtnFormatBeSelected(postHeaderBtn)
