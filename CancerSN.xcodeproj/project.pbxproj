@@ -1954,7 +1954,15 @@
 				TargetAttributes = {
 					2AC59C0D1B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = CZG7PM9NVL;
+						DevelopmentTeam = 3Q3R8F55RD;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2AC59C221B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
@@ -2426,8 +2434,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Li Zhang (7AC7SDGF9M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Li Zhang (7AC7SDGF9M)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2447,9 +2455,9 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
+				PRODUCT_BUNDLE_IDENTIFIER = fili99.CancerSN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a86f816a-cda0-4d58-b7c8-b293b4c964fe";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 			};
 			name = Debug;
@@ -2458,8 +2466,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Li Zhang (7AC7SDGF9M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Li Zhang (7AC7SDGF9M)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2479,9 +2487,9 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
+				PRODUCT_BUNDLE_IDENTIFIER = fili99.CancerSN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a86f816a-cda0-4d58-b7c8-b293b4c964fe";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 			};
 			name = Release;

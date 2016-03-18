@@ -233,6 +233,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         if (usernameStr != "no user in database") && (usernameStr != ""){
             hudProcessManager.dismissHud()
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+            if NSUserDefaults.standardUserDefaults().objectForKey(kDeviceToken) != nil {
+                let registrationID = NSUserDefaults.standardUserDefaults().objectForKey(kDeviceToken) as! String
+                
+                let paramtersDict: Dictionary<String, AnyObject> = ["userName" : usernameStr, "fromUserName" : registrationID]
+                NetRequest.sharedInstance.POST(pushIdURL, parameters: paramtersDict, success: { (content, message) -> Void in
+                    
+                    }, failed: { (content, message) -> Void in
+                        
+                })
+            }
             return true
         }
         else{

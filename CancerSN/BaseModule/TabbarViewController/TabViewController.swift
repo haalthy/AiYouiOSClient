@@ -16,6 +16,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
+    var curIndex: Int = 0
     
     var redDotBadge: UIView = UIView()
 
@@ -34,9 +35,11 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         let feedItem = feedSB.instantiateInitialViewController() as! UINavigationController
         feedItem.delegate = self
         feedItem.tabBarItem = UITabBarItem.init(title: "智囊团", image: UIImage(named: "icon_home"), selectedImage: UIImage(named: "icon_homeSelected"))
+        feedItem.tabBarItem.tag = 0
         
         let postVC = PostViewController()
         postVC.tabBarItem = UITabBarItem.init()
+        postVC.tabBarItem.tag = 1
         postVC.tabBarItem.enabled = false
         
         let profile : UIStoryboard = UIStoryboard.init(name: "User", bundle: nil)
@@ -44,6 +47,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         let profileItem  = profile.instantiateInitialViewController() as! UINavigationController
         profileItem.delegate = self
         profileItem.tabBarItem = UITabBarItem.init(title: "我的奇迹", image: UIImage(named: "icon_profile"), selectedImage: UIImage(named: "icon_profileSelected"))
+        profileItem.tabBarItem.tag = 2
         
         self.viewControllers = [feedItem, postVC, profileItem]
         
@@ -219,6 +223,11 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         // 添加红点view
         self.redDotBadge.frame = CGRECT(x, y, 5, 5)
         self.tabBar.addSubview(self.redDotBadge)
+    }
+    
+    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+        
+        self.curIndex = item.tag
     }
     
     // MARK: - Navigation 

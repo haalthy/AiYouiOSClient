@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var tabVC: TabViewController = TabViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
@@ -31,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabViewController : TabViewController = TabViewController()
         self.window!.rootViewController = tabViewController
         
+        self.tabVC = tabViewController
         // 初始化导航栏
         self.initNavigationBar()
         
@@ -38,6 +40,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkUserStatus()
         screenHeight = (self.window?.bounds.height)!
         screenWidth = (self.window?.bounds.width)!
+        
+
+        // 注册远程通知
+        
+        self.registerRemoteNotificaiton(application)
+        
+        JPUSHService.setupWithOption(launchOptions, appKey: appKey, channel: channel, apsForProduction: isProduction)
 
         return true
     }
@@ -80,6 +89,143 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
+    func registerRemoteNotificaiton(application: UIApplication) {
+        let device = UIDevice.currentDevice().systemVersion
+        
+        if String(UTF8String: UIDevice.currentDevice().systemVersion)! >= "8.0" {
+        
+
+        application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+        }
+        else {
+        
+        application.registerForRemoteNotificationTypes ([UIRemoteNotificationType.Alert, UIRemoteNotificationType.Sound, UIRemoteNotificationType.Badge])
+
+        }
+        
+    }
+    
+    // MARK: - 获取deviceToken
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        
+        let token: NSString = NSString(format: "%@", deviceToken)
+        
+        JPUSHService.registerDeviceToken(deviceToken)
+        
+        let registrationID = JPUSHService.registrationID()
+        
+        print(registrationID)
+        
+        if registrationID != nil {
+        
+            self.submitRegistrationIDToServer(registrationID)
+        }
+        
+        NSUserDefaults.standardUserDefaults().setValue(registrationID, forKey:kDeviceToken)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print(error)
+    }
+    
+    
+    // MARK: 更新registrationID 
+    
+    func submitRegistrationIDToServer(registrationID: String) {
+    
+        let keychainAccess = KeychainAccess()
+        
+        let username = keychainAccess.getPasscode(usernameKeyChain)
+        if username != nil {
+        
+            let paramtersDict: Dictionary<String, AnyObject> = ["userName" : username!, "fromUserName" : registrationID]
+            NetRequest.sharedInstance.POST(pushIdURL, parameters: paramtersDict, success: { (content, message) -> Void in
+                
+                }, failed: { (content, message) -> Void in
+                    
+            })
+        }
+
+    }
+    
+    // MARK: - 跳转功能
+    
+    // MARK: 跳转到消息中心
+    
+    func enterMessageView() {
+    
+        // 判断用户是否登录
+        
+        let keychainAccess = KeychainAccess()
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let postVC: PostsViewController = profileSB.instantiateViewControllerWithIdentifier("PostView") as! PostsViewController
+        postVC.username = keychainAccess.getPasscode(usernameKeyChain) as! String
+        postVC.commentCount = 0
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(postVC, animated: true)
+    }
+    
+    // MARK: 跳转到关注
+    
+    func enterFollowView() {
+    
+        // 判断用户是否登录
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let followVC: UserFollowViewController = profileSB.instantiateViewControllerWithIdentifier("FollowView") as! UserFollowViewController
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(followVC, animated: true)
+    }
+    
+    // MARK: 跳转到@我的
+    
+    func enterMentionedView() {
+    
+        // 判断用户是否登录
+        
+        let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
+        
+        let mentionedVC: MentionedViewController = profileSB.instantiateViewControllerWithIdentifier("MentionedView") as! MentionedViewController
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(mentionedVC, animated: true)
+    }
+    
+    // MARK: 跳转到内容详情
+    
+    func enterFeedDetailView() {
+    
+        let feedSB: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
+        
+        let feedDetailVC: FeedDetailViewController = feedSB.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        feedDetailVC.feedId = 0
+
+        (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(feedDetailVC, animated: true)
+    }
+
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        
+        
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+        JPUSHService.handleRemoteNotification(userInfo)
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        
+        JPUSHService.handleRemoteNotification(userInfo)
+
+    }
+    
+    
+
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -88,10 +234,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        application.applicationIconBadgeNumber = 0
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
+        application.applicationIconBadgeNumber = 0
+        application.cancelAllLocalNotifications()
+
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

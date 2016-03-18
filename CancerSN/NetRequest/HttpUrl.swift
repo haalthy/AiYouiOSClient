@@ -67,6 +67,10 @@ let getNewCommentCountURL = haalthyServiceRestfulURL + "security/comment/unreadc
 // 重置未读新评论接口为0接口
 let refreshNewCommentURL = haalthyServiceRestfulURL + "security/comment/readallcomments"
 
+// 更新pushId
+
+let pushIdURL = haalthyServiceRestfulURL + "open/push/jpushlogin"
+
 let addNewUserURL = haalthyServiceRestfulURL + "open/user/add"
 let getOauthTokenURL = haalthyServiceRestfulURL + "oauth/token"
 let addFollowingURL = haalthyServiceRestfulURL + "security/user/follow/add/"
