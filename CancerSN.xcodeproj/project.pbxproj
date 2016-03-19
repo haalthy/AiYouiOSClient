@@ -358,6 +358,7 @@
 		2AAC215B1C72FD18009E4734 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		2AAC215C1C72FD18009E4734 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		2AAC21631C733163009E4734 /* WXApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WXApiManager.swift; sourceTree = "<group>"; };
+		2AB633EF1C9D5E5600FBEE46 /* CancerSN.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = CancerSN.entitlements; sourceTree = "<group>"; };
 		2ABEFDB01C523FD7004D8EE9 /* AddPatientStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusViewController.swift; sourceTree = "<group>"; };
 		2ABEFDB21C524260004D8EE9 /* AddPatientStatusFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientStatusFrame.swift; sourceTree = "<group>"; };
 		2AC529561C4F85AE00076368 /* AddTreatmentFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentFrame.swift; sourceTree = "<group>"; };
@@ -871,6 +872,7 @@
 		2AC59C101B5D77C600C4FE36 /* CancerSN */ = {
 			isa = PBXGroup;
 			children = (
+				2AB633EF1C9D5E5600FBEE46 /* CancerSN.entitlements */,
 				6BA46E3B1C31434C00DCBD11 /* Extension */,
 				6B93FC9D1C1E5CBE00A81EA9 /* Utils */,
 				6B93FC8A1C1E5C9500A81EA9 /* Resources */,
@@ -1954,7 +1956,18 @@
 				TargetAttributes = {
 					2AC59C0D1B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = CZG7PM9NVL;
+						DevelopmentTeam = 3Q3R8F55RD;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2AC59C221B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
@@ -2426,8 +2439,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2447,10 +2461,11 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
+				PRODUCT_BUNDLE_IDENTIFIER = fili99.CancerSN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "84c2043f-23dc-4395-afbb-b0db2e2400aa";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -2458,8 +2473,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2479,10 +2495,11 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aiyou.haalthy.com;
+				PRODUCT_BUNDLE_IDENTIFIER = fili99.CancerSN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "84c2043f-23dc-4395-afbb-b0db2e2400aa";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

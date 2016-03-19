@@ -30,9 +30,6 @@
 #import "ZLPhoto.h"
 #import "JPUSHService.h"
 #import "UIView+WZLBadge.h"
-<<<<<<< HEAD
 #import "Growing.h"
-=======
 #import "JPUSHService.h"
 
->>>>>>> master

@@ -582,16 +582,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
-<<<<<<< HEAD
 
-        if abs(endContentOffsetX - startContentOffsetX) > SCREEN_WIDTH / 2 - 60 && scrollView == self.scrollView  {
-=======
         
         print(endContentOffsetX - startContentOffsetX)
         
         if abs(endContentOffsetX - startContentOffsetX) > 40 && scrollView == self.scrollView {
         
->>>>>>> master
             if self.curSelectedBtn == treatmentHeaderBtn {
                 
                 headerBtnFormatBeSelected(postHeaderBtn)

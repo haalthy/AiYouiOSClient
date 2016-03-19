@@ -124,6 +124,7 @@ class PostTableViewCell: UITableViewCell {
         
         //post Content
         let postLabel = UILabel()
+        postContent.removeAllSubviews()
         let postContentWidth = screenWidth - postContentLeftSpace - postContentRightSpace
         if post.hasImage > 0 {
             postContent.frame = CGRect(x: postContentLeftSpace, y: postContentTopSpace, width: postContentWidth, height: postImageLength)
