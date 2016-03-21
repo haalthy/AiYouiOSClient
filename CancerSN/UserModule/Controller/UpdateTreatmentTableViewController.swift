@@ -30,17 +30,22 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        for treatment in treatmentList{
-            let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
-            treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as? String
-            treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
-            treatmentLabel.sizeToFit()
-            let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
-            dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as? String
-            dosageLabel.font = UIFont(name: fontStr, size: 12.0)
-            dosageLabel.sizeToFit()
-            heightForRowForTreatmentList.addObject(treatmentLabel.frame.height + dosageLabel.frame.height)
-            isEditForRow.addObject(0)
+        if treatmentList.count == 0 {
+            HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "您目前没有添加任何治疗方案")
+        }
+        else{
+            for treatment in treatmentList{
+                let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
+                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as? String
+                treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
+                treatmentLabel.sizeToFit()
+                let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
+                dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as? String
+                dosageLabel.font = UIFont(name: fontStr, size: 12.0)
+                dosageLabel.sizeToFit()
+                heightForRowForTreatmentList.addObject(treatmentLabel.frame.height + dosageLabel.frame.height)
+                isEditForRow.addObject(0)
+            }
         }
     }
     

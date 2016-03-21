@@ -20,6 +20,7 @@ class GeneticMutationViewController: UIViewController {
     let pieChartCenterLabel = UILabel()
     var pieChartOuter = PNPieChart()
     var descriptionLabel = UILabel()
+    var newPieChartOuter = PNPieChart()
     
     var haalthyService = HaalthyService()
     
@@ -154,6 +155,7 @@ class GeneticMutationViewController: UIViewController {
         descriptionLabel.font = UIFont.systemFontOfSize(12)
         descriptionLabel.textAlignment = NSTextAlignment.Center
         self.view.addSubview(descriptionLabel)
+        
     }
     
     func previousView(sender: UIButton){
@@ -178,9 +180,11 @@ class GeneticMutationViewController: UIViewController {
         let value3: CGFloat = 100 - value1 - value2
 
         let outerItems = [PNPieChartDataItem(value: value1, color: UIColor.clearColor()), PNPieChartDataItem(value: value2 - 0.2, color: headerColor, description: "ALK"), PNPieChartDataItem(value: 0.2, color: pieChartDarkGrayColor), PNPieChartDataItem(value: value3, color: UIColor.clearColor())]
+//        let newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
+        newPieChartOuter.removeFromSuperview()
+        newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
 
-        let newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
-        newPieChartOuter.duration = 0
+        pieChartOuter.duration = 0
         pieChartCenterLabel.text = String(value2) + "%"
         self.view.addSubview(newPieChartOuter)
         descriptionLabel.text = String(value2) + "%的患者为" + (sender.titleLabel?.text)! + "基因变异"

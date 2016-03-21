@@ -266,6 +266,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.relatedTableView.tableFooterView = UIView(frame: CGRectZero)
         
         scrollView.addSubview(self.tableView)
+        self.relatedTableView.separatorStyle = .None
         scrollView.addSubview(self.relatedTableView)
 
         scrollView.userInteractionEnabled = true
