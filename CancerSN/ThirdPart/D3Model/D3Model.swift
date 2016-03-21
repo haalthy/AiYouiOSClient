@@ -74,9 +74,8 @@ public class D3Model:NSObject{
                     }
                     break
                     
-                default:     //unknow
+                default:      //unknow
                     let otherType = Mirror(reflecting: type).subjectType
-                    
                     switch otherType{
                     case is Optional<String>.Type,is Optional<NSNumber>.Type,is Optional<NSInteger>.Type,is Optional<Array<String>>.Type,is Optional<Array<Int>>.Type:
                         obj.setValue(dic?.objectForKey(key!), forKey: key!)
@@ -86,7 +85,7 @@ public class D3Model:NSObject{
                         let name:NSString = String(otherType)
                         let className = getClassName(name) as String
                         let clz:AnyClass! = NSClassFromString(className)
-                        
+                    
                         if clz != nil{
                             if let data = dic.objectForKey(key!) as? NSArray{
                                 let value = clz.jsonToModelList(data)

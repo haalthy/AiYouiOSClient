@@ -369,14 +369,17 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func getResult(searchStr: String){
+        var username: String = ""
+        
+        if keychainAccess.getPasscode(usernameKeyChain) != nil {
+            username = keychainAccess.getPasscode(usernameKeyChain) as! String
+        }
         let parameters: Dictionary<String, AnyObject> = [
             "searchString" : searchStr,
             "page" : page,
             "count" : count,
-            "username": keychainAccess.getPasscode(usernameKeyChain)!
+            "username": username
         ]
-        
-        
         
         switch self.searchType {
             

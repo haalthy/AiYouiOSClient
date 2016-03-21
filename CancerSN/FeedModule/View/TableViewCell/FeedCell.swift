@@ -223,8 +223,17 @@ class FeedCell: UITableViewCell {
         
         // 6.病人状态
         let statusLabel = UILabel()
-        
-        statusLabel.text = (feedModel?.cancerType)! + " " + (feedModel?.pathological)! + " " + getPatientNum((feedModel?.stage)!)
+        var statusStr: String = ""
+        if  (feedModel?.cancerType)! != "<null>" {
+            statusStr += (feedModel?.cancerType)!
+        }
+        if (feedModel?.pathological)! != "<null>" {
+            statusStr += " " + (feedModel?.pathological)!
+        }
+        if (feedModel?.stage)! != "<null>" {
+            statusStr += " " + (feedModel?.stage)!
+        }
+        statusLabel.text = statusStr
         statusLabel.frame = (self.feedOriginFrame?.userStatusFrame)!
         statusLabel.textColor = kAgeColor
         self.addSubview(statusLabel)

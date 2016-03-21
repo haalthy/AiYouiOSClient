@@ -139,6 +139,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         lookaroundBtn.titleLabel?.font = lookaroundBtnFont
         lookaroundBtn.addTarget(self, action: "ignore:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(lookaroundBtn)
+        
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func resetPassword(){

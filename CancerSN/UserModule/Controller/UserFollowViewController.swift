@@ -178,7 +178,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
             cell.addBtn.setImage(UIImage(named: "icon_followY"), forState: .Normal)
         }
         
-        let imageURL = followModel!.imageURL! + "@80h_80w_1e"
+        let imageURL = followModel!.imageURL + "@80h_80w_1e"
         cell.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         
         cell.nameLabel.text = followModel!.displayname

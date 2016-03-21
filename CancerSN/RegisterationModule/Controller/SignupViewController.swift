@@ -89,9 +89,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         //portrait view
         let appIconLeftSpace: CGFloat = (screenWidth - appIconLength)/2
         appIconImageView.frame = CGRECT(0, 0, appIconLength, appIconLength)
-        appIconImageView.image = UIImage(named: "img_appIcon")
-        portraitBtn.backgroundColor = UIColor.clearColor()
-        portraitBtn.layer.cornerRadius = 16
+        appIconImageView.image = UIImage(named: "defaultUserImage")
+        portraitBtn.backgroundColor = UIColor.whiteColor()
+        portraitBtn.layer.cornerRadius = appIconLength/2
         portraitBtn.layer.masksToBounds = true
         portraitBtn.frame = CGRECT(appIconLeftSpace, appIconTopSpace, appIconLength, appIconLength)
         portraitBtn.addTarget(self, action: "selectImage:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -187,6 +187,12 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         loginBtn.addTarget(self, action: "login:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginBtn)
         
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func selectImage(sender: UIButton){

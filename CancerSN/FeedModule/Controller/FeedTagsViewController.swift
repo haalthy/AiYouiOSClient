@@ -117,7 +117,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.tableView.frame = CGRECT(0, signUpTitleTopSpace + signUpTitleHeight, self.tableView.frame.width, screenHeight - signUpTitleTopSpace - signUpTitleHeight - 50)
             
             //
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - 10, width: screenWidth, height: nextViewBtnHeight + 20))
             nextViewBtn.setTitle("确定", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
@@ -313,8 +313,16 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func selectedNextView(sender: UIButton){
-        saveTagList()
-        self.performSegueWithIdentifier("signupSegue", sender: self)
+        let selectTagList = saveTagList()
+        let profileSet = NSUserDefaults.standardUserDefaults()
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else {
+            NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
+            haalthyService.updateUserTag(selectTagList)
+            let tabViewController : TabViewController = TabViewController()
+            self.presentViewController(tabViewController, animated: true, completion: nil)
+        }
     }
     
     func saveTagList()->NSArray{
