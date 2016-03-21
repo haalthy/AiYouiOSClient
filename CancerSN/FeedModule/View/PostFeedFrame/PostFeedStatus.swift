@@ -66,7 +66,7 @@ class PostFeedStatus: D3Model {
     var metastasis: String = ""
     
     // 初诊分期
-    var stage: Int = 0
+    var stage: String = ""
     
     // 图片数量
     var hasImage: Int = 0

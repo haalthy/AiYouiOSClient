@@ -117,7 +117,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.tableView.frame = CGRECT(0, signUpTitleTopSpace + signUpTitleHeight, self.tableView.frame.width, screenHeight - signUpTitleTopSpace - signUpTitleHeight - 50)
             
             //
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - 10, width: screenWidth, height: nextViewBtnHeight + 20))
             nextViewBtn.setTitle("确定", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont

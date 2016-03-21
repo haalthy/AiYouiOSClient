@@ -187,6 +187,12 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         loginBtn.addTarget(self, action: "login:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginBtn)
         
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func selectImage(sender: UIButton){
