@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="tqO-f3-1cm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="tqO-f3-1cm">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -344,7 +344,7 @@
             </objects>
             <point key="canvasLocation" x="4375" y="2016"/>
         </scene>
-        <!--发布的帖子-->
+        <!--我发布的-->
         <scene sceneID="Jeh-zI-8ua">
             <objects>
                 <viewController storyboardIdentifier="PostView" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="PPI-W0-wg9" customClass="PostsViewController" customModule="CancerSN" customModuleProvider="target" sceneMemberID="viewController">
@@ -411,7 +411,7 @@
                             <constraint firstItem="MjI-c9-2L2" firstAttribute="top" secondItem="dqQ-Lp-feu" secondAttribute="bottom" id="ugu-NO-Fav"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="发布的帖子" id="B21-V8-LcX"/>
+                    <navigationItem key="navigationItem" title="我发布的" id="B21-V8-LcX"/>
                     <connections>
                         <outlet property="commentListBtn" destination="miq-3Q-3kz" id="k8l-6r-p3J"/>
                         <outlet property="tableView" destination="r4g-dk-8wI" id="vbR-4S-KgA"/>

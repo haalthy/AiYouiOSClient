@@ -300,9 +300,16 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         if treatmentList.count > 0 {
             for treatment in treatmentList{
                 treatment.setObject(isPosted, forKey:"isPosted")
-                treatment.setObject((profileSet.objectForKey(newTreatmentBegindate) as! Int)*1000, forKey: "beginDate")
+                let beginDate: Int = profileSet.objectForKey(newTreatmentBegindate) as! Int
+                
+                let doubleBeginDate: Double = Double(beginDate) * 1000
+                
+                let endDate: Int = profileSet.objectForKey(newTreatmentBegindate) as! Int
+                
+                let doubleEndDate: Double = Double(endDate) * 1000
+                treatment.setObject(doubleBeginDate, forKey: "beginDate")
                 if profileSet.objectForKey(newTreatmentEnddate) != nil {
-                    treatment.setObject((profileSet.objectForKey(newTreatmentEnddate) as! Int)*1000, forKey: "endDate")
+                    treatment.setObject(doubleEndDate, forKey: "endDate")
                 }
             }
             addTreatment(treatmentList)

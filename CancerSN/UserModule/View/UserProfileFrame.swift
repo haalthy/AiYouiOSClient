@@ -10,8 +10,8 @@ import Foundation
 
 //segment section
 let myProfileStr: String = String("与我相关")
-let herProfileStr: String = String("与她相关")
-let hisProfileStr: String = String("与他相关")
+let herProfileStr: String = String("她发布的")
+let hisProfileStr: String = String("他发布的")
 let processHeaderStr: String = String("治疗过程")
 
 //nickname

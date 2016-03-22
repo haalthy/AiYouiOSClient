@@ -381,7 +381,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         if self.scanReportText.textColor != textInputViewPlaceholderColor {
             scanReportStr = self.scanReportText.text
         }
-        
         let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
         getClinicDataStr()
         var clinicReportStr: String = ""

@@ -50,7 +50,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var screenWidth = CGFloat()
     var clinicChartItemList = NSMutableDictionary()
     var isSelectedTreatment:Bool = true
-    let relatedToMe: NSArray = ["我的信息列表", "@我的", "关注", "基本资料"]
+    let relatedToMe: NSArray = ["我发布的", "@我的", "关注", "基本资料"]
     var relatedToOther:NSArray?
     
     var otherPeoplesPosts: NSArray?
