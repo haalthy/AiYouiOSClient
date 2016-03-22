@@ -11,7 +11,7 @@ import Foundation
 //restful service URL setting
 
 //let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
-let haalthyServiceRestfulURL : String = "http://content.haalthy.com/"
+let haalthyServiceRestfulURL : String = "http://service.haalthy.com/"
 
 // MARK: - 智囊圈模块
 
