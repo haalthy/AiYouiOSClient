@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol UserVCDelegate{
+    func unlogin()
+}
+
 class UserCell: UITableViewCell {
+    
+    var userVCDelegate: UserVCDelegate?
 
     let getAccessToken = GetAccessToken()
     let keychainAccess = KeychainAccess()
@@ -84,24 +90,28 @@ class UserCell: UITableViewCell {
     func addFollowing(sender: UIButton){
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
-        
-        let requestBody = NSMutableDictionary()
-        requestBody.setObject(userObj.username, forKey: "followingUser")
-        requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-        sender.enabled = false
-        let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
-        followedImageView.image = UIImage(named: "btn_Followed")
-        sender.removeAllSubviews()
-        sender.addSubview(followedImageView)
-        NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
-            success: { (content , message) -> Void in
-//                HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
-
-//                HudProgressManager.sharedInstance.dismissHud()
-            }) { (content, message) -> Void in
-//                HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")
-//                HudProgressManager.sharedInstance.dismissHud()
+        if accessToken != nil {
+            let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
+            
+            let requestBody = NSMutableDictionary()
+            requestBody.setObject(userObj.username, forKey: "followingUser")
+            requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+            sender.enabled = false
+            let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
+            followedImageView.image = UIImage(named: "btn_Followed")
+            sender.removeAllSubviews()
+            sender.addSubview(followedImageView)
+            NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
+                success: { (content , message) -> Void in
+                    //                HudProgressManager.sharedInstance.showHudProgress(self, title: "已关注")
+                    
+                    //                HudProgressManager.sharedInstance.dismissHud()
+                }) { (content, message) -> Void in
+                    //                HudProgressManager.sharedInstance.showHudProgress(self, title: "Oops，失败了，稍后再试:(")
+                    //                HudProgressManager.sharedInstance.dismissHud()
+            }
+        }else{
+            userVCDelegate?.unlogin()
         }
     }
 

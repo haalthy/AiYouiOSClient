@@ -220,8 +220,9 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         let pickerLabel = pickerView.viewForRow(row, forComponent: 0) as! UILabel
         pickerLabel.textColor = pickerSelectedColor
         pickerLabel.font = pickerSelectedFont
+        print(pickerLabel.text)
         if (pickerView == topPickerView)  {
-            if (row == 5){
+            if ((pickerLabel.text)! == "肺癌")  {
                 buttomSection.hidden = false
             }else {
                 buttomSection.hidden = true

@@ -139,6 +139,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         lookaroundBtn.titleLabel?.font = lookaroundBtnFont
         lookaroundBtn.addTarget(self, action: "ignore:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(lookaroundBtn)
+        
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func tapDismiss(){
+        self.view.endEditing(true)
     }
     
     func resetPassword(){
@@ -233,6 +240,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         if (usernameStr != "no user in database") && (usernameStr != ""){
             hudProcessManager.dismissHud()
             keychainAccess.setPasscode(usernameKeyChain, passcode: usernameStr)
+            if NSUserDefaults.standardUserDefaults().objectForKey(kDeviceToken) != nil {
+                let registrationID = NSUserDefaults.standardUserDefaults().objectForKey(kDeviceToken) as! String
+                
+                let paramtersDict: Dictionary<String, AnyObject> = ["userName" : usernameStr, "fromUserName" : registrationID]
+                NetRequest.sharedInstance.POST(pushIdURL, parameters: paramtersDict, success: { (content, message) -> Void in
+                    
+                    }, failed: { (content, message) -> Void in
+                        
+                })
+            }
             return true
         }
         else{

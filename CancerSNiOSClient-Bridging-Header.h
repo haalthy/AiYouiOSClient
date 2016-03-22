@@ -30,5 +30,6 @@
 #import "ZLPhoto.h"
 #import "JPUSHService.h"
 #import "UIView+WZLBadge.h"
+#import "Growing.h"
 #import "JPUSHService.h"
 

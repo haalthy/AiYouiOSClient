@@ -117,4 +117,7 @@ let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/usernam
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
 let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"
 
+let getCinicTrialDrugType = haalthyServiceRestfulURL + "open/clinictrail/drugtype"
+
+let getCinicTrialSubGroup = haalthyServiceRestfulURL + "open/clinictrail/subgroup"
 

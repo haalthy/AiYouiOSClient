@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -17,6 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var tabVC: TabViewController = TabViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    
+        Growing.startWithAccountId("81234af7e631c255")
+        
         let publicSerice = PublicService()
         print(publicSerice.passwordEncode("password"))
 //        let keychainAccess = KeychainAccess()
@@ -86,9 +90,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func registerRemoteNotificaiton(application: UIApplication) {
-    
+        let device = UIDevice.currentDevice().systemVersion
         
-        if Float(UIDevice.currentDevice().systemVersion)! >= 8.0 {
+        if String(UTF8String: UIDevice.currentDevice().systemVersion)! >= "8.0" {
         
 
         application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))

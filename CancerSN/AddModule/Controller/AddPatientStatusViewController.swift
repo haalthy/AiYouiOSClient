@@ -49,12 +49,36 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
-        initVariables()
-        initContentView()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
-        clinicTableView.delegate = self
-        clinicTableView.dataSource = self
+        getAccessToken.getAccessToken()
+        
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        
+        if accessToken != nil {
+            initVariables()
+            initContentView()
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
+            clinicTableView.delegate = self
+            clinicTableView.dataSource = self
+        }else{
+            let alertController = UIAlertController(title: "需要登录才能添加信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
     }
     
     func initVariables(){

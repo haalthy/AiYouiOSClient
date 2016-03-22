@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kProfileTimeInterval = 0.5
+let kProfileTimeInterval = 0.25
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
     // 控件关联
@@ -121,9 +121,24 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.relatedTableView.dataSource = self
 //            }
         }else{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let loginController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
-            self.presentViewController(loginController, animated: true, completion: nil)
+            let alertController = UIAlertController(title: "需要登录才能更新您的信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
 
     }
@@ -153,36 +168,38 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     
     override func viewDidAppear(animated: Bool) {
-        
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
+        let access_token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if access_token != nil {
             
-            // 展示未读@我的红点
-            self.getUnreadMentionedCountFromServer()
+            if keychainAccess.getPasscode(accessNSUserData) != nil {
+                
+                // 展示未读@我的红点
+                self.getUnreadMentionedCountFromServer()
+                
+                // 展示未读关注的红点
+                self.getUnreadFollowCountFromServer()
+                
+                // 展示未读消息的红点
+                self.getUnreadCommentCountFromServer()
+                
+            }
             
-            // 展示未读关注的红点
-            self.getUnreadFollowCountFromServer()
-            
-            // 展示未读消息的红点
-            self.getUnreadCommentCountFromServer()
-        
+            self.getTreatmentsData()
+            self.reloadHeader()
+            self.tableView.reloadData()
+            self.view.addSubview(userProfileHeaderView)
+            self.view.addSubview(scrollView)
+            //        HudProgressManager.sharedInstance.dismissHud()
+            let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+            titleLabel.textAlignment = NSTextAlignment.Center
+            if username != profileOwnername {
+                titleLabel.text = "他的奇迹"
+            }else{
+                titleLabel.text = "我的奇迹"
+            }
+            titleLabel.textColor = UIColor.whiteColor()
+            self.navigationItem.titleView = titleLabel
         }
-
-        self.getTreatmentsData()
-        self.reloadHeader()
-        self.tableView.reloadData()
-        self.view.addSubview(userProfileHeaderView)
-        self.view.addSubview(scrollView)
-//        HudProgressManager.sharedInstance.dismissHud()
-        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
-        titleLabel.textAlignment = NSTextAlignment.Center
-        if username != profileOwnername {
-            titleLabel.text = "他的奇迹"
-        }else{
-            titleLabel.text = "我的奇迹"
-        }
-        titleLabel.textColor = UIColor.whiteColor()
-        self.navigationItem.titleView = titleLabel
-
     }
     
     // MARK: - Init Variables
@@ -249,6 +266,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.relatedTableView.tableFooterView = UIView(frame: CGRectZero)
         
         scrollView.addSubview(self.tableView)
+        self.relatedTableView.separatorStyle = .None
         scrollView.addSubview(self.relatedTableView)
 
         scrollView.userInteractionEnabled = true
@@ -565,6 +583,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
+
         
         print(endContentOffsetX - startContentOffsetX)
         

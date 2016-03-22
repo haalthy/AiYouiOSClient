@@ -174,7 +174,7 @@ class FeedCell: UITableViewCell {
         let portraitButton = UIButton(frame: CGRect(x: (feedOriginFrame?.portraitFrame)!.origin.x - 5, y: (feedOriginFrame?.portraitFrame)!.origin.y - 5, width: (feedOriginFrame?.portraitFrame)!.width + 10, height: (feedOriginFrame?.portraitFrame)!.height + 10))
         let portraitView = UIImageView()
         let imageURL = (feedModel?.portraitURL)! + "@80h_80w_1e"
-        portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
+        portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
         portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
         portraitButton.addSubview(portraitView)
         
@@ -223,8 +223,17 @@ class FeedCell: UITableViewCell {
         
         // 6.病人状态
         let statusLabel = UILabel()
-        
-        statusLabel.text = (feedModel?.cancerType)! + " " + (feedModel?.pathological)! + " " + getPatientNum((feedModel?.stage)!)
+        var statusStr: String = ""
+        if  (feedModel?.cancerType)! != "<null>" {
+            statusStr += (feedModel?.cancerType)!
+        }
+        if (feedModel?.pathological)! != "<null>" {
+            statusStr += " " + (feedModel?.pathological)!
+        }
+        if (feedModel?.stage)! != "<null>" {
+            statusStr += " " + (feedModel?.stage)!
+        }
+        statusLabel.text = statusStr
         statusLabel.frame = (self.feedOriginFrame?.userStatusFrame)!
         statusLabel.textColor = kAgeColor
         self.addSubview(statusLabel)

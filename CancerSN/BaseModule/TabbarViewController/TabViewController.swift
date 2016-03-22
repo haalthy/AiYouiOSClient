@@ -13,8 +13,10 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     var screenWidth = CGFloat()
     var screenHeight = CGFloat()
     var blurView = UIView()
+    
+    let keychainAccess = KeychainAccess()
+    let getAccessToken = GetAccessToken()
     var curIndex: Int = 0
-    var keychainAccess = KeychainAccess()
     
     var redDotBadge: UIView = UIView()
 

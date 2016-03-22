@@ -239,11 +239,37 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func checkUserProfile(username: String) {
-
-        let storyboard = UIStoryboard(name: "User", bundle: nil)
-        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
-        userProfileController.profileOwnername = username
-        self.navigationController?.pushViewController(userProfileController, animated: true)
+        
+        getAccessToken.getAccessToken()
+        
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        
+        if accessToken != nil {
+            
+            let storyboard = UIStoryboard(name: "User", bundle: nil)
+            let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            userProfileController.profileOwnername = username
+            self.navigationController?.pushViewController(userProfileController, animated: true)
+        }else{
+            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
     }
     
     func checkPostComment(postID: Int) {

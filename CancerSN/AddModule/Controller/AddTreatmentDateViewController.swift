@@ -23,13 +23,39 @@ class AddTreatmentDateViewController: CalenderViewController {
     @IBOutlet weak var currentcalendarView: CVCalendarView!
     
     override func viewDidLoad() {
-        super.calendarView = self.currentcalendarView
-        super.menuView = self.currentmenuView
-        super.monthLabel = self.currentmonthLabel
-        super.viewDidLoad()
-
-        username = keychainAccess.getPasscode(usernameKeyChain) as? String
-        profileSet.removeObjectForKey(newTreatmentBegindate)
+        let getAccessToken = GetAccessToken()
+        getAccessToken.getAccessToken()
+        
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        
+        if accessToken != nil {
+            super.calendarView = self.currentcalendarView
+            super.menuView = self.currentmenuView
+            super.monthLabel = self.currentmonthLabel
+            super.viewDidLoad()
+            
+            username = keychainAccess.getPasscode(usernameKeyChain) as? String
+            profileSet.removeObjectForKey(newTreatmentBegindate)
+        }else{
+            let alertController = UIAlertController(title: "需要登录才能添加信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
     }
     
     func dateChanged(){

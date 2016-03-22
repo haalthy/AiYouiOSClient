@@ -75,9 +75,47 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
-        super.viewDidLoad()
-        initVariables()
-        initContentView()
+        
+        getAccessToken.getAccessToken()
+        
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        
+        if accessToken != nil {
+            super.viewDidLoad()
+            initVariables()
+            initContentView()
+        }else{
+            let alertController = UIAlertController(title: "需要登录才能添加信息", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, view.frame.size.width - 120, 44))
+        titleLabel.textAlignment = NSTextAlignment.Center
+        if self.isQuestion {
+            titleLabel.text = "提出问题"
+        }else{
+            titleLabel.text = "发表心得"
+        }
+        titleLabel.textColor = UIColor.whiteColor()
+        self.navigationItem.titleView = titleLabel
     }
     
     func initVariables(){

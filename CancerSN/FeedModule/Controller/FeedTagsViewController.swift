@@ -117,7 +117,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.tableView.frame = CGRECT(0, signUpTitleTopSpace + signUpTitleHeight, self.tableView.frame.width, screenHeight - signUpTitleTopSpace - signUpTitleHeight - 50)
             
             //
-            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight, width: screenWidth, height: nextViewBtnHeight + 10))
+            let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - 10, width: screenWidth, height: nextViewBtnHeight + 20))
             nextViewBtn.setTitle("确定", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
@@ -128,8 +128,10 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             let headerTopSpace = UIApplication.sharedApplication().statusBarFrame.height
             let header = UIView(frame: CGRect(x: 0, y: headerTopSpace, width: screenWidth, height: headerHeight))
             
+            let btnMargin: CGFloat = 9
+            
             //cancel Btn
-            let cancelBtn = UIButton(frame: CGRect(x: cancelBtnLeftSpace, y: 9, width: cancelBtnWidth, height: 15))
+            let cancelBtn = UIButton(frame: CGRect(x: cancelBtnLeftSpace - btnMargin, y: 9 - btnMargin, width: cancelBtnWidth + btnMargin * 2, height: 15 + btnMargin * 2))
             cancelBtn.setTitle("取消", forState: UIControlState.Normal)
             cancelBtn.setTitleColor(cancelBtnColor, forState: UIControlState.Normal)
             cancelBtn.titleLabel?.font = cancelBtnFont
@@ -311,8 +313,16 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func selectedNextView(sender: UIButton){
-        saveTagList()
-        self.performSegueWithIdentifier("signupSegue", sender: self)
+        let selectTagList = saveTagList()
+        let profileSet = NSUserDefaults.standardUserDefaults()
+        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+            self.performSegueWithIdentifier("signupSegue", sender: self)
+        }else {
+            NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
+            haalthyService.updateUserTag(selectTagList)
+            let tabViewController : TabViewController = TabViewController()
+            self.presentViewController(tabViewController, animated: true, completion: nil)
+        }
     }
     
     func saveTagList()->NSArray{

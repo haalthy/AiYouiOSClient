@@ -83,7 +83,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         treatmentTypeBtnW = (screenWidth - treatmentTypeSectionLeftSpace - treatmentTypeSectionRightSpace)/CGFloat(treatmentTypeArr.count)
         for var typeIndex = 0; typeIndex < treatmentTypeArr.count; typeIndex++ {
             let treatmentTypeBtn = UIButton(frame: CGRect(x: treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, y: 0, width: treatmentTypeBtnW, height: treatmentTypeSectionHeight))
-            treatmentTypeBtn.setTitle(treatmentTypeArr[typeIndex] as! String, forState: UIControlState.Normal)
+            treatmentTypeBtn.setTitle(treatmentTypeArr[typeIndex] as? String, forState: UIControlState.Normal)
             treatmentTypeBtn.setTitleColor(treatmentTypeSectionTextColor, forState: UIControlState.Normal)
             treatmentTypeBtn.titleLabel?.font = treatmentTypeSectionUIFont
             treatmentTypeBtn.addTarget(self, action: "selectedTreatmentType:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -223,6 +223,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                 treatmentNameBtn.layer.borderColor = treatmentBtnBorderColor.CGColor
                 treatmentNameBtn.layer.borderWidth = treatmentBtnBorderWidth
                 treatmentNameBtn.layer.cornerRadius = treatmentBtnCornerRadius
+                treatmentNameBtn.backgroundColor = UIColor.whiteColor()
                 treatmentNameBtn.addTarget(self, action: "selectTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
                 treatmentFormatSectionView.addSubview(treatmentNameBtn)
                 treatmentBtnX += treatmentNameBtn.frame.width + treatmentBtnHorizonSpace
