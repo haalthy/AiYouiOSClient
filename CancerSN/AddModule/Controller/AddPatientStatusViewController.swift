@@ -366,11 +366,12 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         
         for symptonButton in symptomsSection.subviews {
             if symptonButton is UIButton && symptonButton.backgroundColor == headerColor{
-                patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + " "
+                patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text!
             }
         }
+        patientStatusDetail += "::"
         if symptomDesp.textColor != textInputViewPlaceholderColor{
-            patientStatusDetail += "::" + symptomDesp.text
+            patientStatusDetail += symptomDesp.text
         }
         
         let dateFormatter = NSDateFormatter()

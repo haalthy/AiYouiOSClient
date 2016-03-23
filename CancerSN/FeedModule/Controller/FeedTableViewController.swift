@@ -220,8 +220,6 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
 
         cell.feedOriginFrame = feedFrame.feedOriginalFrame
         
-        
-        
         return cell
     }
     
