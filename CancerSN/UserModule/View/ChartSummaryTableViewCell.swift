@@ -100,8 +100,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
 
         dataPointsXArr.removeAllObjects()
         dataPointsYArr.removeAllObjects()
-        let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Int
-        let endDate = clinicDataList[0].objectForKey("insertDate") as! Int
+        let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Double
+        let endDate = clinicDataList[0].objectForKey("insertDate") as! Double
         chartWidth = 0
         let maxItemsInScreen: Int = Int(self.frame.width/spaceBetweenClinicItems)
         
@@ -138,7 +138,10 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
                     var coordinateX = CGFloat()
                     if endDate != beginDate {
-                        coordinateX = CGFloat(Int(chartWidth - chartDateLabelWidth * 2) * ((clinicData.objectForKey("insertDate") as! Int) - beginDate)/(endDate - beginDate) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2))
+                        let ration:Double = ((clinicData.objectForKey("insertDate") as! Double) - beginDate)/(endDate - beginDate)
+                        let segmentLength: Double = Double(chartWidth - chartDateLabelWidth * 2) * ration
+                        let segmentLengthInt: Int =  Int(segmentLength) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2)
+                        coordinateX = CGFloat(segmentLengthInt)
                     }else{
                         coordinateX = 100
                     }
@@ -205,10 +208,10 @@ class ChartSummaryTableViewCell: UITableViewCell {
         if beginDate != endDate {
             var ceaTreatmentCount = 0
             for treatment in treatmentList {
-                let treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Int
-                let treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Int
-                var ceaTreatmentBeginDate = 0
-                var ceaTreatmentEndDate = 0
+                let treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Double
+                let treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Double
+                var ceaTreatmentBeginDate:Double = 0
+                var ceaTreatmentEndDate:Double = 0
                 if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
                     ceaTreatmentBeginDate = treatmentBeginDate
                     ceaTreatmentEndDate = (treatmentEndDate < endDate) ? treatmentEndDate : endDate
@@ -221,8 +224,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     ceaTreatmentBeginDate = beginDate
                     ceaTreatmentEndDate = endDate
                 }
-                let coordinateBeginX = (Int(chartWidth)-80) * (ceaTreatmentBeginDate - beginDate)/(endDate - beginDate) + 10
-                let coordinateEndX = (Int(chartWidth)-80) * (ceaTreatmentEndDate - beginDate)/(endDate - beginDate) + 50
+                let coordinateBeginX = (Double(chartWidth)-80) * Double(ceaTreatmentBeginDate - beginDate)/Double(endDate - beginDate) + 10
+                let coordinateEndX = (Double(chartWidth)-80) * Double(ceaTreatmentEndDate - beginDate)/Double(endDate - beginDate) + 50
                 
                 let coordinateY = Int(self.chartScrollView.frame.height) - 37
                 let treatmentMarkView = UIView(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY), CGFloat(coordinateEndX - coordinateBeginX), 5))
