@@ -18,6 +18,7 @@
 		2A410A421BB9E79C00E4272B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A411BB9E79C00E4272B /* SystemConfiguration.framework */; };
 		2A410A441BB9E7A800E4272B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A410A431BB9E7A800E4272B /* CoreGraphics.framework */; };
 		2A6836DE1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */; };
+		2A705B7F1CA24AB4008DBD60 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A705B7E1CA24AB4008DBD60 /* Default.png */; };
 		2A7FB6A41C5B5971007030DC /* tabbarAddFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7FB6A31C5B5971007030DC /* tabbarAddFrame.swift */; };
 		2A8DCFA31C6B3E74000CCDFE /* UpdatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */; };
 		2A8E43E91C4CAC4C003FAADC /* AddTreatmentDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E43E81C4CAC4C003FAADC /* AddTreatmentDateViewController.swift */; };
@@ -337,6 +338,7 @@
 		2A410A471BB9E7C100E4272B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		2A410A4D1BB9E94100E4272B /* CancerSNiOSClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CancerSNiOSClient-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		2A6836DD1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPostNavigationViewController.swift; sourceTree = "<group>"; };
+		2A705B7E1CA24AB4008DBD60 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		2A7FB6A31C5B5971007030DC /* tabbarAddFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabbarAddFrame.swift; sourceTree = "<group>"; };
 		2A8DCFA21C6B3E74000CCDFE /* UpdatePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePasswordViewController.swift; sourceTree = "<group>"; };
 		2A8E43E81C4CAC4C003FAADC /* AddTreatmentDateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTreatmentDateViewController.swift; sourceTree = "<group>"; };
@@ -835,6 +837,7 @@
 		2AC59C051B5D77C600C4FE36 = {
 			isa = PBXGroup;
 			children = (
+				2A705B7E1CA24AB4008DBD60 /* Default.png */,
 				2A410A381BB9E71100E4272B /* Frameworks */,
 				2AC59C101B5D77C600C4FE36 /* CancerSN */,
 				2AC59C261B5D77C600C4FE36 /* CancerSNTests */,
@@ -2037,6 +2040,7 @@
 				6B8A47561C434E940001F164 /* emoji_recent_s@2x.png in Resources */,
 				6B8A473C1C434E940001F164 /* emoji_characters_n@2x.png in Resources */,
 				6B8A47491C434E940001F164 /* emoji_face_n.png in Resources */,
+				2A705B7F1CA24AB4008DBD60 /* Default.png in Resources */,
 				6B93FCDF1C1E682300A81EA9 /* grayline.png in Resources */,
 				6BBFD90B1C3273F900282573 /* MJRefresh.bundle in Resources */,
 				6B8412351C4F7C9F00BE54B0 /* 37x-Checkmark@2x.png in Resources */,
@@ -2409,7 +2413,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2444,7 +2448,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
