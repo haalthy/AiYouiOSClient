@@ -369,10 +369,13 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
                 patientStatusDetail += ((symptonButton as! UIButton).titleLabel!).text! + " "
             }
         }
+        patientStatusDetail += "::"
         if symptomDesp.textColor != textInputViewPlaceholderColor{
-            patientStatusDetail += "::" + symptomDesp.text
+            patientStatusDetail += symptomDesp.text
         }
-        
+        if patientStatusDetail == "::" {
+            patientStatusDetail = ""
+        }
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
         let date:NSDate = dateFormatter.dateFromString((dateBtn.titleLabel?.text)!)!
