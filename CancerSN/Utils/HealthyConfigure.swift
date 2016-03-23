@@ -75,7 +75,7 @@ let addTabbarRedDotBadge = "addTabbarRedDotBadge"
 
 // Remote Notification
 
-let appKey = "399fbda4ffa9d6acf43c53b0"
+let appKey = "659e4023ae5d594b3ab2cf81"
 
 let channel = "Publish channel"
 
