@@ -304,7 +304,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
                 
                 let doubleBeginDate: Double = Double(beginDate) * 1000
                 
-                let endDate: Int = profileSet.objectForKey(newTreatmentBegindate) as! Int
+                let endDate: Int = profileSet.objectForKey(newTreatmentEnddate) as! Int
                 
                 let doubleEndDate: Double = Double(endDate) * 1000
                 treatment.setObject(doubleBeginDate, forKey: "beginDate")
