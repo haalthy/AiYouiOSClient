@@ -90,16 +90,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func registerRemoteNotificaiton(application: UIApplication) {
-        let device = UIDevice.currentDevice().systemVersion
         
         if String(UTF8String: UIDevice.currentDevice().systemVersion)! >= "8.0" {
         
 
-        application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+        //application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+            
+            JPUSHService.registerForRemoteNotificationTypes(UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Alert.rawValue , categories: nil)
         }
         else {
-        
-        application.registerForRemoteNotificationTypes ([UIRemoteNotificationType.Alert, UIRemoteNotificationType.Sound, UIRemoteNotificationType.Badge])
+            
+            JPUSHService.registerForRemoteNotificationTypes(UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Alert.rawValue , categories: nil)
 
         }
         
@@ -117,7 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(registrationID)
         
-        if registrationID != nil {
+        if registrationID != nil || registrationID != ""  {
         
             self.submitRegistrationIDToServer(registrationID)
         }
