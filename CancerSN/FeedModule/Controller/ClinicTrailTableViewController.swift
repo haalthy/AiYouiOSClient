@@ -19,10 +19,10 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     var pickerDataSource = [String]()
     var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
     var cancerTypeSelectionData = ["腺癌", "鳞癌", "非小细胞癌症", "弥漫性大B细胞淋巴瘤"]
-    var stageSelectionData = ["I","II","IV","V"]
+//    var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
-    var stageBtn = UIButton()
+//    var stageBtn = UIButton()
     
     //
     var headerHeight: CGFloat = 0
@@ -122,22 +122,25 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         selectionPicker.delegate = self
         selectionPicker.dataSource = self
         self.selectionPickerContainerView.addSubview(selectionPicker)
+        
+        let selectBtnWidth: CGFloat = (screenWidth - 60)/2
+        let selectBtnHeight: CGFloat = 30
+        treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
+        typeBtn = UIButton(frame: CGRectMake(30 + selectBtnWidth, 7, selectBtnWidth, selectBtnHeight))
+        formatSelectBtn(treatmentBtn, title: "PD-1")
+        formatSelectBtn(typeBtn, title: "选择癌症类型")
+        treatmentBtn.addTarget(self, action: "selectTreatment", forControlEvents: UIControlEvents.TouchUpInside)
+        typeBtn.addTarget(self, action: "selectCancerType", forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     func cancelSelectionPicker(){
-//        let durationTime: NSTimeInterval = 0.5
-//        UIView.animateWithDuration(durationTime, animations: {
-//            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
-//        })
+
         selectionPickerContainerAppear = false
         selectionPickerContainerView.removeFromSuperview()
     }
     
     func submitSelectionPicker(){
-//        let durationTime: NSTimeInterval = 0.5
-//        UIView.animateWithDuration(durationTime, animations: {
-//            self.selectionPickerContainerView.center.y += self.selectionPickerContainerViewHeight
-//        })
+
         let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
@@ -147,6 +150,9 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
                 if (cinicTrialItem as! ClinicTrailObj).drugType == selectStr {
                     self.searchDataArr.addObject(cinicTrialItem)
                 }
+            }
+            if self.searchDataArr.count == 0 {
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "没有与此药物类型和癌症类型的临床信息")
             }
             self.tableView.reloadData()
         }
@@ -159,12 +165,15 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
                     self.searchDataArr.addObject(cinicTrialItem)
                 }
             }
+            if self.searchDataArr.count == 0 {
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "没有与此药物类型和癌症类型的临床信息")
+            }
             self.tableView.reloadData()
 
         }
-        if (stageSelectionData as NSArray).containsObject(selectStr) {
-            stageBtn.setTitle(selectStr, forState: UIControlState.Normal)
-        }
+//        if (stageSelectionData as NSArray).containsObject(selectStr) {
+//            stageBtn.setTitle(selectStr, forState: UIControlState.Normal)
+//        }
         selectionPickerContainerAppear = false
 
         selectionPickerContainerView.removeFromSuperview()
@@ -205,14 +214,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         if indexPath.section == 0{
             let cell = tableView.dequeueReusableCellWithIdentifier("clinicTrailHeader", forIndexPath: indexPath)
             cell.removeAllSubviews()
-            let selectBtnWidth: CGFloat = (cell.frame.width - 60)/2
-            let selectBtnHeight: CGFloat = 30
-            treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
-            typeBtn = UIButton(frame: CGRectMake(30 + selectBtnWidth, 7, selectBtnWidth, selectBtnHeight))
-            formatSelectBtn(treatmentBtn, title: "PD-1 v")
-            formatSelectBtn(typeBtn, title: "选择癌症类型v")
-            treatmentBtn.addTarget(self, action: "selectTreatment", forControlEvents: UIControlEvents.TouchUpInside)
-            typeBtn.addTarget(self, action: "selectCancerType", forControlEvents: UIControlEvents.TouchUpInside)
+            
             cell.addSubview(treatmentBtn)
             cell.addSubview(typeBtn)
             return cell
@@ -250,7 +252,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         selectBtn.backgroundColor = UIColor.whiteColor()
         selectBtn.layer.borderColor = mainColor.CGColor
         selectBtn.layer.borderWidth = 1.5
-        selectBtn.layer.cornerRadius = 5
+        selectBtn.layer.cornerRadius = 2
         selectBtn.layer.masksToBounds = true
         selectBtn.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
     }
