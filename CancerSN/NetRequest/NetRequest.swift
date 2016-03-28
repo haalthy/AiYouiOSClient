@@ -184,9 +184,9 @@ class NetRequest: NSObject {
             if error == nil {
                 
                 // 解析json
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-                json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-//                self.callbackWithResult(json, success: success, failed: failed)
+                if data != nil {
+                    json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                }
                 
             }
             else {
