@@ -140,7 +140,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         self.view.addSubview(seperateLine)
         
         //buttom section
-        print(screenHeight)
         if screenHeight < 600 {
             buttomViewHeight = 240
         }
@@ -220,7 +219,6 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
         let pickerLabel = pickerView.viewForRow(row, forComponent: 0) as! UILabel
         pickerLabel.textColor = pickerSelectedColor
         pickerLabel.font = pickerSelectedFont
-        print(pickerLabel.text)
         if (pickerView == topPickerView)  {
             if ((pickerLabel.text)! == "肺癌")  {
                 buttomSection.hidden = false

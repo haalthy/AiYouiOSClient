@@ -188,7 +188,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     }
     
     func selectSymptom(sender: UIButton){
-        print(sender.backgroundColor)
         if (sender.backgroundColor == nil) || (sender.backgroundColor == UIColor.whiteColor()){
             sender.backgroundColor = headerColor
             sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -409,7 +408,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-                print(content)
                 
             }) { (content, message) -> Void in
                 
@@ -580,7 +578,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             clinicItemValueTextField.delegate = self
             cell.addSubview(clinicItemValueTextField)
             //delete button
-            print(cell.frame.width)
             let clinicReportDelBtnWidthMargin: CGFloat = 15
             let deleteBtn = UIButton(frame: CGRect(x: cell.frame.width - clinicReportDelBtnWidth - 30 - clinicReportDelBtnWidthMargin * 2, y: 16 - clinicReportDelBtnWidthMargin, width: clinicReportDelBtnWidth + clinicReportDelBtnWidthMargin * 2, height: clinicReportDelBtnWidth + clinicReportDelBtnWidthMargin * 2))
             deleteBtn.backgroundColor = UIColor.clearColor()

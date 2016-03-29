@@ -216,7 +216,6 @@ class FeedCell: UITableViewCell {
         // 5.年龄
         let ageLabel = UILabel()
         ageLabel.text = String.intToString((feedModel?.age)!)
-        //print(String(feedModel?.age))
         ageLabel.frame = (self.feedOriginFrame?.ageFrame)!
         ageLabel.textColor = kAgeColor
         self.addSubview(ageLabel)

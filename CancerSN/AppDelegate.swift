@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Growing.startWithAccountId("81234af7e631c255")
         
         let publicSerice = PublicService()
-        print(publicSerice.passwordEncode("password"))
 //        let keychainAccess = KeychainAccess()
 //        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
 //        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
@@ -115,8 +114,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let registrationID = JPUSHService.registrationID()
         
-        print(registrationID)
-        
         if registrationID != nil {
         
             self.submitRegistrationIDToServer(registrationID)
@@ -126,7 +123,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        print(error)
     }
     
     
@@ -334,7 +330,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onReq(req: BaseReq!) {
-        print("on req")
     }
     
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
@@ -343,14 +338,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onResp(resp: BaseResp!) {
-        print("on resp")
-//        if ([resp isKindOfClass:[SendAuthResp class]]) {
-//            if (_delegate
-//            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
-//                SendAuthResp *authResp = (SendAuthResp *)resp;
-//                [_delegate managerDidRecvAuthResponse:authResp];
-//            }
-//        }
         if resp.isKindOfClass(SendAuthResp) {
             
         }
