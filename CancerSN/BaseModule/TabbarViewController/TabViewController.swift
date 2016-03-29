@@ -293,7 +293,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadMentionedCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
@@ -315,7 +315,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadFollowCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
@@ -337,7 +337,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadCommentCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
