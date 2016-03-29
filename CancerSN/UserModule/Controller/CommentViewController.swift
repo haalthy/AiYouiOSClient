@@ -44,9 +44,11 @@ class CommentViewController: UIViewController {
             initVariables()
             initRefresh()
             initContentView()
+            self.resetUnreadMentionedCountFromServer()
         }
     }
-
+    
+    
     // MARK: - 初始化变量
     
     func initVariables() {
