@@ -61,7 +61,12 @@ class UserCell: UITableViewCell {
         self.addBtn.addSubview(addFollowingImage)
         self.addBtn.enabled = true
         if userObj.isFollowedByCurrentUser == 1 {
-            self.addBtn.hidden = true
+//            self.addBtn.hidden = true
+            self.addBtn.enabled = false
+            let followedImageView = UIImageView(frame: CGRECT(0, 0, self.addBtn.frame.width, self.addBtn.frame.height))
+            followedImageView.image = UIImage(named: "btn_Followed")
+            self.addBtn.removeAllSubviews()
+            self.addBtn.addSubview(followedImageView)
         }else{
             self.addBtn.hidden = false
         }
@@ -88,6 +93,7 @@ class UserCell: UITableViewCell {
     }
     
     func addFollowing(sender: UIButton){
+        userObj.isFollowedByCurrentUser = 1
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken != nil {

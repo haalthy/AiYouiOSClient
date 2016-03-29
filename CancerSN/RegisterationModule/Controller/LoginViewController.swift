@@ -117,7 +117,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         wechatLoginImgView.image = UIImage(named: "btn_wechat")
         wechatLoginBtn.addSubview(wechatLoginImgView)
         wechatLoginBtn.addTarget(self, action: "loginViaWechat:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(wechatLoginBtn)
+//        self.view.addSubview(wechatLoginBtn)
         
         //qq Login
         let qqLoginBtnRgithSpace = wechatLoginBtnLeftSpace
@@ -128,7 +128,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         qqLoginImgView.image = UIImage(named: "btn_qq")
         qqLoginBtn.addSubview(qqLoginImgView)
         qqLoginBtn.addTarget(self, action: "loginViaQQ:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(qqLoginBtn)
+//        self.view.addSubview(qqLoginBtn)
         
         //look around
         
