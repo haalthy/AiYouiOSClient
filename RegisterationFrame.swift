@@ -14,7 +14,7 @@ let appIconTopSpace: CGFloat = CGFloat(58)
 let appIconLength: CGFloat = CGFloat(71)
 //let appIconCornerRadius: CGFloat = CGFloat(
 //用户名密码输入
-let inputViewTopSpace: CGFloat = CGFloat(187)
+var inputViewTopSpace: CGFloat = CGFloat(187)
 let inputViewHeight: CGFloat = CGFloat(90)
 let inputViewMargin: CGFloat = CGFloat(15)
 let inputViewFont: UIFont = UIFont.systemFontOfSize(15)

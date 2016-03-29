@@ -68,6 +68,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     override func viewDidLoad() {
+        print(screenHeight)
         initVariables()
         initContentView()
     }
@@ -83,6 +84,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func initContentView(){
+        if screenHeight < 600 {
+            inputViewTopSpace = 150
+        }
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")
         self.view.addSubview(backgroudImgView)

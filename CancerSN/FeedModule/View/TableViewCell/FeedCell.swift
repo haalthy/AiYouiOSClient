@@ -176,6 +176,7 @@ class FeedCell: UITableViewCell {
         let imageURL = (feedModel?.portraitURL)! + "@80h_80w_1e"
         portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
         portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
+        portraitButton.backgroundColor = UIColor.whiteColor()
         portraitButton.addSubview(portraitView)
         
         portraitView.layer.cornerRadius = portraitView.bounds.size.height / 2

@@ -93,7 +93,8 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                     portraitView.image = UIImage(data: NSData(base64EncodedString: (self.userProfile?.portraitData)!, options: [])!)
                 } else if self.userProfile?.portraitUrl != nil {
                     let imageURL = (self.userProfile?.portraitUrl)! + "@80h_80w_1e"
-                    portraitView.addImageCache(imageURL, placeHolder: "icon_profile")
+                    portraitView.backgroundColor = UIColor.whiteColor()
+                    portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
 
                 }else{
                     portraitView.image = UIImage(named: "Mario.jpg")
