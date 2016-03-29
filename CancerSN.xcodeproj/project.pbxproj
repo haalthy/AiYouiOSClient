@@ -668,6 +668,7 @@
 		6BC05A101C882B2A006F0A65 /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DALabeledCircularProgressView.h; sourceTree = "<group>"; };
 		6BC05A111C882B2A006F0A65 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
 		6BC05A121C882B2A006F0A65 /* ZLPhotoLib.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZLPhotoLib.bundle; sourceTree = "<group>"; };
+		6BCE6F5B1CA22EFE00A5720B /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		6BD5FFD21C9002B7003170C1 /* jpush-ios-2.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.0.a"; sourceTree = "<group>"; };
 		6BD5FFD31C9002B7003170C1 /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
 		6BD5FFD51C9004A1003170C1 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -779,6 +780,7 @@
 		2A410A381BB9E71100E4272B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6BCE6F5B1CA22EFE00A5720B /* AssetsLibrary.framework */,
 				A5946BCD1C97A9AA0065A30A /* libicucore.tbd */,
 				6BD5FFD91C9004C8003170C1 /* Foundation.framework */,
 				6BD5FFD71C9004B0003170C1 /* CoreFoundation.framework */,
@@ -1938,7 +1940,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -2436,7 +2438,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2471,7 +2473,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

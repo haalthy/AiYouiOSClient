@@ -19,6 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
+        if UIScreen.mainScreen().currentMode!.size.height == 568 {
+        
+            self.window = UIWindow(frame: CGRECT(0, 0, UIScreen.mainScreen().bounds.size.width, 568))
+        }
+        
+        print(UIScreen.mainScreen().currentMode!.size)
+        
         Growing.startWithAccountId("81234af7e631c255")
         
         let publicSerice = PublicService()
@@ -29,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         WXApi.registerApp(WXAppID)
         let tabViewController : TabViewController = TabViewController()
+                
         self.window!.rootViewController = tabViewController
         
         self.tabVC = tabViewController
@@ -89,16 +97,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func registerRemoteNotificaiton(application: UIApplication) {
-        let device = UIDevice.currentDevice().systemVersion
         
         if String(UTF8String: UIDevice.currentDevice().systemVersion)! >= "8.0" {
         
 
-        application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+        //application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
+            
+            JPUSHService.registerForRemoteNotificationTypes(UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Alert.rawValue , categories: nil)
         }
         else {
-        
-        application.registerForRemoteNotificationTypes ([UIRemoteNotificationType.Alert, UIRemoteNotificationType.Sound, UIRemoteNotificationType.Badge])
+            
+            JPUSHService.registerForRemoteNotificationTypes(UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Alert.rawValue , categories: nil)
 
         }
         
@@ -114,8 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let registrationID = JPUSHService.registrationID()
         
-        if registrationID != nil {
-        
+        if registrationID != nil || registrationID != ""  {
             self.submitRegistrationIDToServer(registrationID)
         }
         
@@ -149,7 +157,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: 跳转到消息中心
     
-    func enterMessageView() {
+    func enterMessageView(count: Int) {
     
         // 判断用户是否登录
         
@@ -159,7 +167,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let postVC: PostsViewController = profileSB.instantiateViewControllerWithIdentifier("PostView") as! PostsViewController
         postVC.username = keychainAccess.getPasscode(usernameKeyChain) as! String
-        postVC.commentCount = 0
+        postVC.commentCount = count
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(postVC, animated: true)
     }
     
@@ -189,12 +197,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: 跳转到内容详情
     
-    func enterFeedDetailView() {
+    func enterFeedDetailView(feedId: Int) {
     
         let feedSB: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
         
         let feedDetailVC: FeedDetailViewController = feedSB.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
-        feedDetailVC.feedId = 0
+        feedDetailVC.feedId = feedId
 
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(feedDetailVC, animated: true)
     }
@@ -211,15 +219,132 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
         JPUSHService.handleRemoteNotification(userInfo)
+        
+        print(userInfo)
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         
         JPUSHService.handleRemoteNotification(userInfo)
+        
+        if application.applicationState == .Active {
+        
+            self.judgeRemoteIsActive(userInfo)
+        }
+        else {
+        
+            self.judgeRemoteTypeFromParam(userInfo)
+
+        }
+        
+    }
+    
+    func judgeRemoteIsActive(userInfo: [NSObject : AnyObject]) {
+    
+        let type: String = userInfo["type"] as! String
+        
+        switch (type) {
+            
+        case "commented":
+            
+
+            let alertController = UIAlertController(title: "收到了新的评论，马上看看", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+            
+            }
+            alertController.addAction(cancelAction)
+            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+                
+                self.enterMessageView(userInfo["count"] as! Int)
+            })
+            
+            
+            
+            alertController.addAction(confirmAction)
+            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            
+            break
+        case "followed":
+            
+            let alertController = UIAlertController(title: "收到了新的@我的，马上看看", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+                
+            }
+            alertController.addAction(cancelAction)
+            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+                
+                self.enterMentionedView()
+            })
+            alertController.addAction(confirmAction)
+            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            break
+        case "mentioned":
+            
+            let alertController = UIAlertController(title: "收到了新的关注信息，马上看看", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+                
+            }
+            alertController.addAction(cancelAction)
+            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+                
+                self.enterFollowView()
+            })
+            alertController.addAction(confirmAction)
+            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            break
+        case "feed":
+            
+            let alertController = UIAlertController(title: "收到了新的推荐，马上看看", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+                
+            }
+            alertController.addAction(cancelAction)
+            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+                
+                self.enterFeedDetailView(userInfo["id"] as! Int)
+            })
+            alertController.addAction(confirmAction)
+            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            break
+            
+        default:
+            break
+        }
 
     }
     
+    func judgeRemoteTypeFromParam(userInfo: [NSObject : AnyObject]) {
     
+        let type: String = userInfo["type"] as! String
+        
+        switch (type) {
+        
+            case "commented":
+            
+                self.enterMessageView(userInfo["count"] as! Int)
+            break
+            case "followed":
+                
+                self.enterFollowView()
+            break
+            case "mentioned":
+                
+                self.enterMentionedView()
+            break
+            case "feed":
+                
+                self.enterFeedDetailView(userInfo["id"] as! Int)
+            break
+            
+        default:
+            break
+        }
+        
+    }
 
     
     func applicationWillResignActive(application: UIApplication) {
@@ -243,6 +368,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        let keychainAccess: KeychainAccess = KeychainAccess()
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
+            self.tabVC.getUnreadCommentCountFromServer()
+            self.tabVC.getUnreadFollowCountFromServer()
+            self.tabVC.getUnreadMentionedCountFromServer()
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {

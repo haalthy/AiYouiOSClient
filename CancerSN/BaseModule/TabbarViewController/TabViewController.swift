@@ -64,8 +64,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         self.initNotification()
         
         // 初始化加红点状态（个数）
-        
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
             
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
             
@@ -293,7 +292,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadMentionedCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
@@ -315,7 +314,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadFollowCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewFollowCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
@@ -337,7 +336,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func getUnreadCommentCountFromServer() {
         
-        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
+        NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
