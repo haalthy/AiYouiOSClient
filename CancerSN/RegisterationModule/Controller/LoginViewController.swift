@@ -57,12 +57,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         username.font = inputViewFont
         username.placeholder = "邮箱／手机"
         username.delegate = self
+        username.returnKeyType = UIReturnKeyType.Done
         textInputView.addSubview(username)
         password.frame = CGRect(x: 15, y: textInputView.frame.height/2, width: textInputView.frame.width, height: textInputView.frame.height/2)
         password.font = inputViewFont
         password.placeholder = "密码"
         password.secureTextEntry = true
         password.delegate = self
+        password.returnKeyType = UIReturnKeyType.Done
         textInputView.addSubview(password)
         let seperateLine: UIView = UIView(frame: CGRect(x: 0, y: textInputView.frame.height/2, width: textInputView.frame.width, height: 0.5))
         seperateLine.backgroundColor = seperateLineColor

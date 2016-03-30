@@ -386,35 +386,56 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
         getClinicDataStr()
         var clinicReportStr: String = ""
+        var isClinicDataFloat: Bool = true
         for clinicData in clinicDataList {
             let clinicDataDic = clinicData as! NSDictionary
-            clinicReportStr += "[" + ((clinicDataDic.allKeys as NSArray).objectAtIndex(0)as! String) + ":" + ((clinicDataDic.allValues as NSArray).objectAtIndex(0)as! String) + "]"
-        }
-        let clinicReportDic = NSDictionary(objects: [clinicReportStr, self.isPosted], forKeys: [ "clinicReport", "isPosted"])
-        
-        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        if accessToken == nil {
-            getAccessToken.getAccessToken()
-            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
-        }
-        
-        let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
-
-        let requestBody = NSMutableDictionary()
-        requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
-        requestBody.setValue(clinicReportDic, forKey: "clinicReport")
-        requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
-        
-        NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
-            
-            success: { (content , message) -> Void in
-                
-            }) { (content, message) -> Void in
-                
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            let clinicDataValueStr = (clinicDataDic.allValues as NSArray).objectAtIndex(0)as! NSString
+            let clinicValue:Float = clinicDataValueStr.floatValue
+            if (clinicDataValueStr != "0") && (clinicDataValueStr != "0.0") && (clinicValue == 0.0) {
+                isClinicDataFloat = false
+            }else{
+                isClinicDataFloat = true
+                clinicReportStr += "[" + ((clinicDataDic.allKeys as NSArray).objectAtIndex(0)as! String) + ":" + ((clinicDataDic.allValues as NSArray).objectAtIndex(0)as! String) + "]"
             }
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        if isClinicDataFloat {
+            let clinicReportDic = NSDictionary(objects: [clinicReportStr, self.isPosted], forKeys: [ "clinicReport", "isPosted"])
+            
+            var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            if accessToken == nil {
+                getAccessToken.getAccessToken()
+                accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            }
+            
+            let urlPath:String = (addPatientStatusURL as String) + "?access_token=" + (accessToken as! String);
+            
+            let requestBody = NSMutableDictionary()
+            requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
+            requestBody.setValue(clinicReportDic, forKey: "clinicReport")
+            requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
+            
+            NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
+                
+                success: { (content , message) -> Void in
+                    
+                }) { (content, message) -> Void in
+                    
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            }
+            
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }else {
+            let alertController = UIAlertController(title: "检测数据必须为数值", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+            }
+            
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -569,6 +590,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
                 clinicItemNameTextField.placeholder = "其他指标:"
                 clinicItemNameTextField.font = reportListTitleFont
                 clinicItemNameTextField.delegate = self
+                clinicItemNameTextField.returnKeyType = UIReturnKeyType.Done
                 cell.addSubview(clinicItemNameTextField)
             }
             //textField
@@ -576,6 +598,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             clinicItemValueTextField.placeholder = reportListItemPlaceholder
             clinicItemValueTextField.font = reportListTitleFont
             clinicItemValueTextField.delegate = self
+            clinicItemValueTextField.returnKeyType = UIReturnKeyType.Done
             cell.addSubview(clinicItemValueTextField)
             //delete button
             let clinicReportDelBtnWidthMargin: CGFloat = 15
