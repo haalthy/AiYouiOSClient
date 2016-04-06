@@ -34,7 +34,8 @@ class UserCell: UITableViewCell {
     
     func updateUI(){
         let imageURL = userObj.imageURL + "@80h_80w_1e"
-        portraitImage.addImageCache(imageURL, placeHolder: "icon_profile")
+        portraitImage.backgroundColor = UIColor.whiteColor()
+        portraitImage.addImageCache(imageURL, placeHolder: "defaultUserImage")
         nameLabel.text = userObj.displayname
         var userInfo: String = ""
         if userObj.gender != "<null>" {

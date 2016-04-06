@@ -64,8 +64,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         self.initNotification()
         
         // 初始化加红点状态（个数）
-        
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
             
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
             

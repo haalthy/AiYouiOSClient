@@ -68,6 +68,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     override func viewDidLoad() {
+        print(screenHeight)
         initVariables()
         initContentView()
     }
@@ -83,6 +84,9 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func initContentView(){
+        if screenHeight < 600 {
+            inputViewTopSpace = 150
+        }
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")
         self.view.addSubview(backgroudImgView)
@@ -106,6 +110,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         id.frame = CGRect(x: textFieldLeftSpace, y: 0, width: textInputView.frame.width, height: textFieldHeight )
         id.font = inputViewFont
         id.placeholder = "邮箱／手机"
+        id.returnKeyType = UIReturnKeyType.Done
         let seperateLine1 = UIView(frame: CGRect(x: 0, y: textFieldHeight, width: textInputView.frame.width, height: 1))
         seperateLine1.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine1)
@@ -118,6 +123,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         authCode.font = inputViewFont
         authCode.placeholder = "验证码"
         authCode.delegate = self
+        authCode.returnKeyType = UIReturnKeyType.Done
         textInputView.addSubview(authCode)
         let getAuthBtn = UIButton(frame: CGRect(x: textInputView.frame.width - getAuthCodeBtnW, y: textFieldHeight + 1, width: getAuthCodeBtnW, height: textFieldHeight))
         getAuthBtn.setTitle("获取验证码", forState: UIControlState.Normal)
@@ -137,6 +143,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         nick.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*2, width: textInputView.frame.width, height: textFieldHeight )
         nick.font = inputViewFont
         nick.placeholder = "昵称"
+        nick.returnKeyType = UIReturnKeyType.Done
         let seperateLine3 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*3 - 1, width: textInputView.frame.width, height: 1))
         seperateLine3.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine3)
@@ -150,16 +157,8 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         textInputView.addSubview(password)
         password.secureTextEntry = true
         password.delegate = self
-//        let seperateLine4: UIView = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*4 - 1, width: textInputView.frame.width, height: 1))
-//        seperateLine4.backgroundColor = seperateLineColor
-//        textInputView.addSubview(seperateLine4)
-//        
-//        //re enter password
-//        reenterPassword.frame = CGRect(x: textFieldLeftSpace, y: (textFieldHeight + 1)*4, width: textInputView.frame.width, height: textFieldHeight)
-//        reenterPassword.font = inputViewFont
-//        reenterPassword.placeholder = "再次输入密码"
-//        textInputView.addSubview(reenterPassword)
-//        
+        password.returnKeyType = UIReturnKeyType.Done
+       
         self.view.addSubview(textInputView)
         
         //sign up Btn

@@ -136,8 +136,6 @@ extension CalenderViewController: CVCalendarViewAppearanceDelegate {
     
     func didSelectDayView(dayView: CVCalendarDayView) {
         let date = dayView.date
-        print("\(calendarView.presentedDate.commonDescription) is selected!")
-//        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
     }
     
     

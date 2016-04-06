@@ -20,7 +20,8 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var tableView: UITableView!
     
     // 自定义变量
-    
+    let keychainAccess = KeychainAccess()
+
     var feedId: Int!
     var feedDetailFrame: PostFeedFrame!
     var commentListData: NSMutableArray!
@@ -199,7 +200,6 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func commentToFeedDetail(commentStr: String) {
-        let keychainAccess = KeychainAccess()
         let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil {
@@ -315,10 +315,41 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: - 发送评论代理
     
     func sendCommentAction(commentStr: String) {
-
-        // 判断用户是否登录
         
-        self.commentToFeedDetail(commentStr)
+        // 判断用户是否登录
+        if (keychainAccess.getPasscode(usernameKeyChain) == nil){
+            let alertController = UIAlertController(title: "需要登录才能添加评论", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            
+            alertController.addAction(cancelAction)
+            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            alertController.addAction(loginAction)
+            
+            self.presentViewController(alertController, animated: true) {
+            }
+        }else{
+            if commentStr == ""{
+                let alertController = UIAlertController(title: "评论不能为空", message: nil, preferredStyle: .Alert)
+                
+                let cancelAction = UIAlertAction(title: "确定", style: .Default) { (action) in
+                }
+                
+                alertController.addAction(cancelAction)
+                
+                self.presentViewController(alertController, animated: true) {
+                }
+            }else{
+                //发送评论
+                self.commentToFeedDetail(commentStr)
+            }
+        }
     }
     /*
     // MARK: - Navigation

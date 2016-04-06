@@ -216,8 +216,6 @@ class FeedTableViewCell: UITableViewCell {
     }
     
     func imageTapHandler(sender: UITapGestureRecognizer){
-        
-        print(feed["insertUsername"])
         self.imageTapDelegate?.imageTap(feed["insertUsername"] as! String)
     }
     

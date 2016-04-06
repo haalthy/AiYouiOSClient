@@ -17,7 +17,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     let viewHorizonMargin = CGFloat(15)
     let textViewVerticalMargin = CGFloat(15)
-    let textViewHeight = CGFloat(115)
+    let textViewHeight = CGFloat(170)
     let textViewFont = UIFont.systemFontOfSize(15)
     let textViewTextColor: UIColor = defaultTextColor
     
@@ -141,7 +141,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         textView.font = textViewFont
         textView.delegate = self
-        textView.returnKeyType = UIReturnKeyType.Done
+        textView.returnKeyType = UIReturnKeyType.Default
         self.view.addSubview(textView)
         
         //imageSection
@@ -234,6 +234,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         //ButtomSection
         buttomSection.frame = CGRECT(0, screenHeight - buttomSectionHeight, screenWidth, buttomSectionHeight)
         buttomSection.backgroundColor = buttomSectionColor
+
         let mentionedBtn = UIButton(frame: CGRECT(buttomSectionItemLeftSpace, 11, buttomItemIconLength, buttomItemIconLength))
         let mentionedImageView = UIImageView(frame: CGRECT(0, 0, buttomItemIconLength, buttomItemIconLength))
         mentionedImageView.image = UIImage(named: "btn_mentioned")
@@ -267,6 +268,9 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
             
             self.buttomSection.center = CGPoint(x: self.buttomSection.center.x, y: self.buttomSection.center.y - keyboardheight)
+            
+            self.view.bringSubviewToFront(buttomSection)
+
         }
     }
     
@@ -617,75 +621,86 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func submit(sender: UIButton) {
-        if((self.isQuestion == false) || ((self.isQuestion == true)&&(self.selectTagLabel.count>0))){
-            let post = NSMutableDictionary()
-            post.setObject(textView.text, forKey: "body")
-            post.setObject(0, forKey: "closed")
-            if self.isQuestion {
-                post.setObject(1, forKey: "isBroadcast")
-            }else{
-                post.setObject(0, forKey: "isBroadcast")
-            }
-            post.setObject("TXT", forKey: "type")
-            post.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
-            //get mentioned user List
-            let postContentStr = textView.text
-            let firstRange = postContentStr.rangeOfString("@")
-
-            if firstRange != nil {
-                let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
-                for subStr in postContentArr{
-                    if (subStr as NSString).length > 0{
-                        var subStrArr = (subStr ).componentsSeparatedByString(" ")
-                        if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
-                            let getMentionedUsernamesRequest = NSMutableDictionary()
-                            getMentionedUsernamesRequest.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-                            getMentionedUsernamesRequest.setObject(subStrArr[0], forKey: "mentionedDisplayname")
-                            let mentionedUsers = haalthyService.getUsersByDisplayname(getMentionedUsernamesRequest)
-                            for user in mentionedUsers{
-                                mentionUsernameList.addObject(user.objectForKey("username")!)
+        if textView.text != "" {
+            if((self.isQuestion == false) || ((self.isQuestion == true)&&(self.selectTagLabel.count>0))){
+                let post = NSMutableDictionary()
+                post.setObject(textView.text, forKey: "body")
+                post.setObject(0, forKey: "closed")
+                if self.isQuestion {
+                    post.setObject(1, forKey: "isBroadcast")
+                }else{
+                    post.setObject(0, forKey: "isBroadcast")
+                }
+                post.setObject("TXT", forKey: "type")
+                post.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
+                //get mentioned user List
+                let postContentStr = textView.text
+                let firstRange = postContentStr.rangeOfString("@")
+                
+                if firstRange != nil {
+                    let postContentArr = postContentStr.substringFromIndex((firstRange!).startIndex).componentsSeparatedByString("@")
+                    for subStr in postContentArr{
+                        if (subStr as NSString).length > 0{
+                            var subStrArr = (subStr ).componentsSeparatedByString(" ")
+                            if (subStrArr.count > 0) && (subStrArr[0] as NSString).length > 0{
+                                let getMentionedUsernamesRequest = NSMutableDictionary()
+                                getMentionedUsernamesRequest.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+                                getMentionedUsernamesRequest.setObject(subStrArr[0], forKey: "mentionedDisplayname")
+                                let mentionedUsers = haalthyService.getUsersByDisplayname(getMentionedUsernamesRequest)
+                                for user in mentionedUsers{
+                                    mentionUsernameList.addObject(user.objectForKey("username")!)
+                                }
                             }
                         }
                     }
+                    
+                    if mentionUsernameList.count > 0 {
+                        post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
+                    }
+                }
+                //            post.setObject(self.makeImageToCorrespondingFormat(self.imageInfoList), forKey: "imageInfos")
+                post.setObject(self.imageInfoList.count, forKey: "hasImage")
+                
+                if(self.isQuestion == true){
+                    post.setObject(self.getSelectedTagList(), forKey: "tags")
                 }
                 
-                if mentionUsernameList.count > 0 {
-                    post.setObject(self.mentionUsernameList, forKey: "mentionUsers")
-                }
-            }
-//            post.setObject(self.makeImageToCorrespondingFormat(self.imageInfoList), forKey: "imageInfos")
-            post.setObject(self.imageInfoList.count, forKey: "hasImage")
-
-            if(self.isQuestion == true){
-                post.setObject(self.getSelectedTagList(), forKey: "tags")
-            }
-            
-            let result:Int = haalthyService.addPost(post as NSDictionary)
-//            dispatch_async(dispatch_get_main_queue()) {
-//                self.submitImages(result)
-//            }
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                self.submitImages(result)
-                dispatch_async(dispatch_get_main_queue(), {
-
+                let result:Int = haalthyService.addPost(post as NSDictionary)
+                //            dispatch_async(dispatch_get_main_queue()) {
+                //                self.submitImages(result)
+                //            }
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                    self.submitImages(result)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        
+                    })
                 })
-            })
-            HudProgressManager.sharedInstance.dismissHud()
-            if result > 0 {
-                HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "提交成功")
-            }else {
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "提交失败")
+                HudProgressManager.sharedInstance.dismissHud()
+                if result > 0 {
+                    HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "提交成功")
+                }else {
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "提交失败")
+                }
+                self.dismissViewControllerAnimated(false, completion: nil)
+                
+            }else{
+                let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
+                tagViewController.isSelectedByPost = true
+                tagViewController.postDelegate = self
+                self.presentViewController(tagViewController, animated: true, completion: nil)
             }
-            self.dismissViewControllerAnimated(false, completion: nil)
-
-            
         }else{
-            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let tagViewController = storyboard.instantiateViewControllerWithIdentifier("TagEntry") as! FeedTagsViewController
-            tagViewController.isSelectedByPost = true
-            tagViewController.postDelegate = self
-            self.presentViewController(tagViewController, animated: true, completion: nil)
+            let alertController = UIAlertController(title: "内容不能为空", message: nil, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+            }
+            
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController, animated: true) {
+            }
         }
     }
 

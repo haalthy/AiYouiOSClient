@@ -114,11 +114,6 @@ class FeedPhotosView: UIView {
     
     // MARK: 点击图片查看
     
-    func addPhotoOnTap(gesture: UITapGestureRecognizer) {
-        print("tap photo")
-        
-    }
-    
     func showImage(sender: UITapGestureRecognizer){
         self.backgroundScrollView.removeAllSubviews()
         let tapLocation = sender.locationInView(self)
@@ -138,7 +133,6 @@ class FeedPhotosView: UIView {
                     //
                     self.progressHUD.removeFromSuperview()
                     if err == nil{
-                        print(urltest.absoluteString)
                         self.showSlideImage()
                     }else{
                         print("加载失败")
@@ -179,7 +173,6 @@ class FeedPhotosView: UIView {
             imageView.contentMode = .ScaleAspectFit
             self.backgroundScrollView.alpha = 1
             }, completion: {(finished:Bool) in
-                print(self.subviews.count)
                 if self.tapedPhotoViewTag > 0 {
                     for index in 0...(self.tapedPhotoViewTag - 1){
                         let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))

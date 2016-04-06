@@ -29,7 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Growing.startWithAccountId("81234af7e631c255")
         
         let publicSerice = PublicService()
-        print(publicSerice.passwordEncode("password"))
 //        let keychainAccess = KeychainAccess()
 //        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
 //        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
@@ -124,10 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let registrationID = JPUSHService.registrationID()
         
-        print(registrationID)
-        
         if registrationID != nil || registrationID != ""  {
-        
             self.submitRegistrationIDToServer(registrationID)
         }
         
@@ -135,7 +131,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        print(error)
     }
     
     
@@ -373,9 +368,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+<<<<<<< HEAD
         let keychainAccess = KeychainAccess()
         if keychainAccess.getPasscode(accessNSUserData) != nil {
             
+=======
+        let keychainAccess: KeychainAccess = KeychainAccess()
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
+>>>>>>> 87f305b8d4cbc2dd4490a24e656a9eaf1504b9fe
             self.tabVC.getUnreadCommentCountFromServer()
             self.tabVC.getUnreadFollowCountFromServer()
             self.tabVC.getUnreadMentionedCountFromServer()
@@ -467,7 +467,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onReq(req: BaseReq!) {
-        print("on req")
     }
     
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
@@ -476,14 +475,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onResp(resp: BaseResp!) {
-        print("on resp")
-//        if ([resp isKindOfClass:[SendAuthResp class]]) {
-//            if (_delegate
-//            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
-//                SendAuthResp *authResp = (SendAuthResp *)resp;
-//                [_delegate managerDidRecvAuthResponse:authResp];
-//            }
-//        }
         if resp.isKindOfClass(SendAuthResp) {
             
         }
