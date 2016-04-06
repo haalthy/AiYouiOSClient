@@ -93,10 +93,10 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                     portraitView.image = UIImage(data: NSData(base64EncodedString: (self.userProfile?.portraitData)!, options: [])!)
                 } else if self.userProfile?.portraitUrl != nil {
                     let imageURL = (self.userProfile?.portraitUrl)! + "@80h_80w_1e"
-                    portraitView.addImageCache(imageURL, placeHolder: "icon_profile")
+                    portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
 
                 }else{
-                    portraitView.image = UIImage(named: "Mario.jpg")
+                    portraitView.image = UIImage(named: "defaultUserImage")
                 }
                 cell.addSubview(portraitView)
                 cell.detailTextLabel?.text = ""
@@ -562,19 +562,12 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
         let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         var selectedImage = UIImage()
         let publicService = PublicService()
-        selectedImage = publicService.cropToSquare(image: chosenImage)
         
-        let newSize = CGSizeMake(128.0, 128.0)
-        UIGraphicsBeginImageContext(newSize)
-        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
-        let portraitImage = UIGraphicsGetImageFromCurrentImageContext()
+        let newSize = CGSizeMake(256.0, 256.0)
         
+        selectedImage = publicService.resizeImage(chosenImage, newSize: newSize)
         let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
-        let imageDataStr:String = imageData.base64EncodedStringWithOptions([])
-        
-        userProfile!.portraitData = imageDataStr
-        
-        UIGraphicsEndImageContext()
+        userProfile!.portraitData = imageData.base64EncodedStringWithOptions([])
         
         getAccessToken.getAccessToken()
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)

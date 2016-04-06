@@ -201,11 +201,11 @@ class FeedDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     func commentToFeedDetail(commentStr: String) {
         let keychainAccess = KeychainAccess()
         let getAccessToken = GetAccessToken()
-        let insertUsername: String = keychainAccess.getPasscode(usernameKeyChain) as! String
         getAccessToken.getAccessToken()
         if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil {
             let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
-            
+            let insertUsername: String = keychainAccess.getPasscode(usernameKeyChain) as! String
+
             NetRequest.sharedInstance.POST(addCommentsURL + "?access_token=" + accessToken, parameters:[
                 "body":commentStr,
                 "postID":self.feedId,
