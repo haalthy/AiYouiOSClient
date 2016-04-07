@@ -368,14 +368,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-<<<<<<< HEAD
-        let keychainAccess = KeychainAccess()
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
-            
-=======
         let keychainAccess: KeychainAccess = KeychainAccess()
         if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
->>>>>>> 87f305b8d4cbc2dd4490a24e656a9eaf1504b9fe
             self.tabVC.getUnreadCommentCountFromServer()
             self.tabVC.getUnreadFollowCountFromServer()
             self.tabVC.getUnreadMentionedCountFromServer()

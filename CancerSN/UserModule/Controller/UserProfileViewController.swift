@@ -584,9 +584,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         endContentOffsetX = scrollView.contentOffset.x
 
-        
-        print(endContentOffsetX - startContentOffsetX)
-        
         if abs(endContentOffsetX - startContentOffsetX) > 40 && scrollView == self.scrollView {
         
             if self.curSelectedBtn == treatmentHeaderBtn {
@@ -764,7 +761,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 self.userProfile = userDetail!.objectForKey("userProfile") as! NSDictionary
                 self.userProfileObj = UserProfile()
                 self.userProfileObj?.initVariables(self.userProfile)
-                var timeList = [Int]()
+                var timeList = [Double]()
                 let timeSet = NSMutableSet()
                 for var i = 0; i < treatmentList.count; i++ {
                     treatmentList[i] = treatmentList[i] as! NSMutableDictionary
@@ -779,24 +776,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     }
 
                     if timeSet.containsObject(treatment.objectForKey("endDate")!) == false {
-                        timeSet.addObject((treatment.objectForKey("endDate") as! NSNumber).integerValue)
+                        timeSet.addObject(treatment.objectForKey("endDate") as! Double)
                     }
                     if timeSet.containsObject(treatment.objectForKey("beginDate")!) == false {
-                        timeSet.addObject((treatment.objectForKey("beginDate") as! NSNumber).integerValue)
+                        timeSet.addObject(treatment.objectForKey("beginDate") as! Double)
                     }
                 }
 
                 for timeSt in timeSet {
-                    timeList.append(timeSt as! Int)
+                    timeList.append(timeSt as! Double)
                 }
                 timeList.sortInPlace(>)
 
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
-                for time in timeList{
-                    let dateInserted = NSDate(timeIntervalSince1970: Double(time)/1000 as NSTimeInterval)
-                    let dateStr = dateFormatter.stringFromDate(dateInserted)
-                }
 
                 var index = 0
                 var patientStatusIndex = 0
@@ -806,7 +799,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
                     treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
                     treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                    while ((patientStatusIndex < patientStatusList.count) && (patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index] as Int)) {
+                    while ((patientStatusIndex < patientStatusList.count) && (patientStatusList[patientStatusIndex]["insertedDate"] as! Double) > (timeList[index] as Double)) {
                         patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
                         patientStatusIndex++
                     }
@@ -820,44 +813,53 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     let patientStatusInTreatmentSection = NSMutableArray()
                     treatmentSection.setObject(timeList[index+1] as AnyObject, forKey: "beginDate")
                     treatmentSection.setObject(timeList[index] as AnyObject, forKey: "endDate")
-                    var treatmentStr = ""
-                    var dosageStr = ""
-                    for var treatmentIndex = 0; treatmentIndex < treatmentList.count; treatmentIndex++ {
-                        let treatment = treatmentList[treatmentIndex] as! NSDictionary
-                        
-                        if ((treatment.objectForKey("endDate") as? Int) >= (timeList[index] as Int)) && ((treatment.objectForKey("beginDate") as? Int) <= (timeList[index+1] as Int)) {
-                            treatmentStr += (treatment["treatmentName"] as! String) + " "
-                            if treatment["dosage"] != nil{
-                                dosageStr += treatment["dosage"] as! String
+                    var onedayInterval: Double = 0
+                    if strideof(Int) == strideof(Int32) {
+                        onedayInterval = 865000
+                    }else if strideof(Int) == strideof(Int64) {
+                        onedayInterval = 865000000
+                    }
+                    if (treatmentSection.objectForKey("beginDate") as! Double) + onedayInterval < (treatmentSection.objectForKey("endDate") as! Double){
+                        var treatmentStr = ""
+                        var dosageStr = ""
+                        for var treatmentIndex = 0; treatmentIndex < treatmentList.count; treatmentIndex++ {
+                            let treatment = treatmentList[treatmentIndex] as! NSDictionary
+                            
+                            if ((treatment.objectForKey("endDate") as? Double) >= (timeList[index] as Double)) && ((treatment.objectForKey("beginDate") as? Double) <= (timeList[index+1] as Double)) {
+                                treatmentStr += (treatment["treatmentName"] as! String) + " "
+                                if treatment["dosage"] != nil{
+                                    dosageStr += treatment["dosage"] as! String
+                                }
                             }
                         }
-                    }
-                    if treatmentStr == "" {
-                        treatmentStr = "空窗期"
-                    }
-                    treatmentSection.setObject(treatmentStr, forKey: "treatmentTitle")
-                    treatmentSection.setObject(dosageStr, forKey: "dosage")
-                    if patientStatusIndex < patientStatusList.count{
-                        while ((patientStatusIndex < patientStatusList.count) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) > (timeList[index+1] as Int)) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Int) < (timeList[index] as Int))) {
-                            patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
-                            patientStatusIndex++
+                        if treatmentStr == "" {
+                            treatmentStr = "空窗期"
                         }
-                        treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+                        treatmentSection.setObject(treatmentStr, forKey: "treatmentTitle")
+                        treatmentSection.setObject(dosageStr, forKey: "dosage")
+                        if patientStatusIndex < patientStatusList.count{
+                            while ((patientStatusIndex < patientStatusList.count) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Double) > (timeList[index+1] as Double)) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Double) < (timeList[index] as Double))) {
+                                patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
+                                patientStatusIndex++
+                            }
+                            treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+                        }
+                        treatmentSections.addObject(treatmentSection)
                     }
                     index++
-                    treatmentSections.addObject(treatmentSection)
-                }
-                if patientStatusIndex < patientStatusList.count{
-                    let treatmentSection = NSMutableDictionary()
-                    let patientStatusInTreatmentSection = NSMutableArray()
-                    treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Int), forKey: "endDate")
-                    treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Int), forKey: "beginDate")
-                    treatmentSection.setObject(noTreatmentTimeStr, forKey: "treatmentTitle")
-                    for var i = patientStatusIndex; i < patientStatusList.count; i++ {
-                        patientStatusInTreatmentSection.addObject(patientStatusList[i])
+
+                    if patientStatusIndex < patientStatusList.count{
+                        let treatmentSection = NSMutableDictionary()
+                        let patientStatusInTreatmentSection = NSMutableArray()
+                        treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Int), forKey: "endDate")
+                        treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Int), forKey: "beginDate")
+                        treatmentSection.setObject(noTreatmentTimeStr, forKey: "treatmentTitle")
+                        for var i = patientStatusIndex; i < patientStatusList.count; i++ {
+                            patientStatusInTreatmentSection.addObject(patientStatusList[i])
+                        }
+                        treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+                        treatmentSections.addObject(treatmentSection)
                     }
-                    treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                    treatmentSections.addObject(treatmentSection)
                 }
             }
         }
