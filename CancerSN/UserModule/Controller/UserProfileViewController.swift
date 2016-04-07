@@ -790,7 +790,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
 
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
-
                 var index = 0
                 var patientStatusIndex = 0
                 if (patientStatusIndex < patientStatusList.count) && (timeList.count>0){
@@ -851,8 +850,8 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                     if patientStatusIndex < patientStatusList.count{
                         let treatmentSection = NSMutableDictionary()
                         let patientStatusInTreatmentSection = NSMutableArray()
-                        treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Int), forKey: "endDate")
-                        treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Int), forKey: "beginDate")
+                        treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Double), forKey: "endDate")
+                        treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Double), forKey: "beginDate")
                         treatmentSection.setObject(noTreatmentTimeStr, forKey: "treatmentTitle")
                         for var i = patientStatusIndex; i < patientStatusList.count; i++ {
                             patientStatusInTreatmentSection.addObject(patientStatusList[i])
