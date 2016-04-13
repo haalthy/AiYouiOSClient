@@ -80,8 +80,8 @@ let femaleWidth: CGFloat = CGFloat(52)
 let femaleRightSpace: CGFloat = CGFloat(78)
 //picker
 let pickerMargin: CGFloat = CGFloat(82)
-let pickerUnselectedFont: UIFont = UIFont.systemFontOfSize(18)
-let pickerUnselectedColor: UIColor = UIColor(red: 201/255, green: 201/255, blue: 201/255, alpha: 1)
+let pickerUnselectedFont: UIFont = UIFont.systemFontOfSize(16)
+let pickerUnselectedColor: UIColor = UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1)
 let pickerSelectedFont: UIFont = UIFont.systemFontOfSize(22)
 let pickerSelectedColor: UIColor = headerColor
 let pickerComponentHeight: CGFloat = CGFloat(32)

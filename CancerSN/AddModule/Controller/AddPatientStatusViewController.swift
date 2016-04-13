@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate{
+class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate{
     
     //global variable
     let getAccessToken = GetAccessToken()
@@ -47,6 +47,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     
     var scrollViewOffset: CGFloat = 0
     
+    var addReportBtn = UIButton()
+    
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
         getAccessToken.getAccessToken()
@@ -82,6 +84,7 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     }
     
     func initVariables(){
+        scrollView.delegate = self
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         dateInserted = NSDate()
         getPatientStatusFormat()
@@ -163,23 +166,26 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         symptomDesp.delegate = self
         symptomDesp.returnKeyType = UIReturnKeyType.Done
         self.scrollView.addSubview(symptomDesp)
-        
+    
         //add "more" button
         let addReportBtnW = screenWidth - 2 * addReportButtonLeftSpace
-        let addReportBtnH = addReportBtnW * 90 / 690
-        let addReportBtn = UIButton(frame: CGRect(x: addReportButtonLeftSpace, y: symptomDespTextTopSpace + symptomsSection.frame.height + symptomDesp.frame.height + 50, width: addReportBtnW, height: addReportBtnH))
-        let addReportImgView = UIImageView(frame: CGRECT(0, 0, addReportBtnW, addReportBtnH))
-        addReportImgView.image = UIImage(named: "btn_addReport")
+        let addReportBtnH = addReportBtnW * 90 / 690 + 40
+        addReportBtn = UIButton(frame: CGRect(x: addReportButtonLeftSpace, y: symptomDespTextTopSpace + symptomsSection.frame.height + symptomDesp.frame.height + 50, width: addReportBtnW, height: addReportBtnH))
+        let addReportImgView = UIImageView(frame: CGRECT(addReportBtnW / 2 - 15, 0, 31, 23))
+        addReportImgView.image = UIImage(named: "addReportDragUp")
         addReportBtn.addSubview(addReportImgView)
         addReportBtn.setTitle(addReportButtonText, forState: UIControlState.Normal)
         addReportBtn.setTitleColor(addReportButtonTextColor, forState: UIControlState.Normal)
         addReportBtn.titleLabel?.font = addReportButtonFont
         addReportBtn.addTarget(self, action: "addReport:", forControlEvents: UIControlEvents.TouchUpInside)
+        addReportBtn.titleLabel?.textAlignment = .Center
         self.scrollView.addSubview(addReportBtn)
         
         scrollView.frame = CGRECT(0, headerHeight + dateSection.frame.height, screenWidth, UIScreen.mainScreen().bounds.height)
         self.view.addSubview(self.scrollView)
-        
+        scrollView.contentSize = CGSize(width: screenWidth, height: UIScreen.mainScreen().bounds.height + 10)
+        scrollView.pagingEnabled = false
+
         //add footer
         let privateCheckUIView = PrivateCheckUIView()
         checkedView = privateCheckUIView.createCheckedSection()
@@ -626,6 +632,16 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             cell.addSubview(addMoreClinicDataBtn)
         }
         return cell
+    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        print("begin dragging")
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentSize.height < UIScreen.mainScreen().bounds.height + 15 {
+            addReport(addReportBtn)
+        }
     }
     
 }

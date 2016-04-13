@@ -929,6 +929,7 @@
 				2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */,
 			);
 			name = ClinicTrailModel;
+			path = ../../Model;
 			sourceTree = "<group>";
 		};
 		6B0A0BB91C2E5FF500E01585 /* NetRequest */ = {
@@ -1010,6 +1011,7 @@
 		6B8412371C4F7E2900BE54B0 /* HudProgressManager */ = {
 			isa = PBXGroup;
 			children = (
+				2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */,
 				6B8412381C4F7E5900BE54B0 /* HudProgressManager.swift */,
 			);
 			path = HudProgressManager;
@@ -1088,7 +1090,8 @@
 				6B8A47271C434E940001F164 /* emoji_unselected_center_bg@2x.png */,
 				6B8A47281C434E940001F164 /* EmojisList.plist */,
 			);
-			path = faceResouces;
+			name = faceResouces;
+			path = ../Resources/faceResouces;
 			sourceTree = "<group>";
 		};
 		6B93FBF71C1E58A000A81EA9 /* Model */ = {
@@ -1096,7 +1099,6 @@
 			children = (
 				6B25A3BE1C97A98F00138043 /* UserCommentModel */,
 				2AC54CF91C849CED00CFFA85 /* TreatmentModel */,
-				2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */,
 				6B9D04691C83D73300248681 /* FollowModel */,
 				6B25C4571C72B55900CFFDD0 /* CommentModel */,
 				6BA14E7F1C4CB34D00B6FDD1 /* TagModel */,
@@ -1264,7 +1266,6 @@
 		6B93FC8A1C1E5C9500A81EA9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6B8A46F31C434E410001F164 /* faceResouces */,
 				6B93FCD41C1E682300A81EA9 /* Images */,
 				6B93FCE71C1E685E00A81EA9 /* CancerSN.xcdatamodeld */,
 			);
@@ -1274,6 +1275,7 @@
 		6B93FC9D1C1E5CBE00A81EA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6B8A46F31C434E410001F164 /* faceResouces */,
 				6BD5FFE61C9014C3003170C1 /* RedBadgeManager */,
 				6B8412371C4F7E2900BE54B0 /* HudProgressManager */,
 				6BA46E351C31145800DCBD11 /* UtilsFunction */,

@@ -107,19 +107,16 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if self.profileOwnername == nil{
                 profileOwnername = self.username
             }
-//            getTreatmentsData()
-
-                initVariables()
-                initContentView()
+            initVariables()
+            initContentView()
             
-                self.tableView.registerClass(ChartSummaryTableViewCell.self, forCellReuseIdentifier: "ChartSummaryIdentifier")
-                self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
-                self.tableView.delegate = self
-                self.tableView.dataSource = self
-                self.relatedTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-                self.relatedTableView.delegate = self
-                self.relatedTableView.dataSource = self
-//            }
+            self.tableView.registerClass(ChartSummaryTableViewCell.self, forCellReuseIdentifier: "ChartSummaryIdentifier")
+            self.tableView.registerClass(PatientStatusTableViewCell.self, forCellReuseIdentifier: "patientstatusIdentifier")
+            self.tableView.delegate = self
+            self.tableView.dataSource = self
+            self.relatedTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+            self.relatedTableView.delegate = self
+            self.relatedTableView.dataSource = self
         }else{
             let alertController = UIAlertController(title: "需要登录才能更新您的信息", message: nil, preferredStyle: .Alert)
             

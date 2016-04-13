@@ -50,13 +50,20 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
+        print("load view")
         self.initVariables()
         self.initContentView()
-//        self.addItem()
+        print("init variable")
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBar.hidden = true
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         self.getAllTagsFromServer()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -71,20 +78,6 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         if screenHeight < 600 {
             heightForHeaderInSection = 20
         }
-        
-        if (isNavigationPop == false) && (isSelectedByPost == false) {
-            if (keychainAccess.getPasscode(usernameKeyChain) != nil)  {
-                   self.defaultSelectTagNameList = haalthyService.getUserFavTags()
-            }
-            if (self.defaultSelectTagNameList.count == 0) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil) {
-                defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
-            }
-        }
-    }
-    
-    
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.hidden = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -204,8 +197,14 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: 获取所有标签
     
     func getAllTagsFromServer() {
-    
         HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中")
+        if (isNavigationPop == false) && (isSelectedByPost == false) {
+            if (self.defaultSelectTagNameList.count == 0) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil) {
+                defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
+            }else if (keychainAccess.getPasscode(usernameKeyChain) != nil)  {
+                self.defaultSelectTagNameList = haalthyService.getUserFavTags()
+            }
+        }
         NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
             
             self.dict = content as! NSArray

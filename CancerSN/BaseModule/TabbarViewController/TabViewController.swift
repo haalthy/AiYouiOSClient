@@ -120,6 +120,11 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         blurView.addSubview(addBtn("addQuestionBtn"))
         blurView.addSubview(addBtn("addMoodBtn"))
         blurView.addSubview(addBtn("cancelBtn"))
+        
+        blurView.addSubview(addLabel("addTreatmentBtn"))
+        blurView.addSubview(addLabel("addStatusBtn"))
+        blurView.addSubview(addLabel("addQuestionBtn"))
+        blurView.addSubview(addLabel("addMoodBtn"))
     }
     
     func addBtn(btnName: String)->UIButton{
@@ -134,35 +139,39 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
              btn4RightSpace = CGFloat(55)
         }
         let btn = UIButton()
-        btn.backgroundColor = headerColor
+//        btn.backgroundColor = headerColor
         let backgroundImgView = UIImageView()
         if btnName == "addTreatmentBtn"{
             btn.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addTreatment")
             btn.addTarget(self, action: "addTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.backgroundColor = UIColor.init(red: 64 / 255, green: 125 / 255, blue: 201 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addStatusBtn" {
             btn.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addStatus")
             btn.addTarget(self, action: "addStatus:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.backgroundColor = UIColor.init(red: 61 / 255, green: 208 / 255, blue: 221 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addQuestionBtn" {
             btn.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addQuestion")
             btn.addTarget(self, action: "addQuestion:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.backgroundColor = UIColor.init(red: 89 / 255, green: 200 / 255, blue: 121 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addMoodBtn" {
             btn.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addMood")
             btn.addTarget(self, action: "addMood:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.backgroundColor = UIColor.init(red: 255 / 255, green: 173 / 255, blue: 56 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "cancelBtn" {
-            let cancelBtnMargin: CGFloat = 10
+            let cancelBtnMargin: CGFloat = 2
             let cancelBtnX: CGFloat = (screenWidth - cancelBtnW)/2.0
             btn.frame = CGRect(x: cancelBtnX - cancelBtnMargin, y: screenHeight - cancelBtnButtomSpace - cancelBtnW - cancelBtnMargin, width: cancelBtnW + cancelBtnMargin * 2, height: cancelBtnW + cancelBtnMargin * 2)
             backgroundImgView.frame = CGRECT(cancelBtnMargin + cancelBtnW/4, cancelBtnMargin + cancelBtnW/4, cancelBtnW/2, cancelBtnW/2)
             backgroundImgView.image = UIImage(named: "btn_cancelAdd")
-            btn.backgroundColor = UIColor.clearColor()
+            btn.backgroundColor = textInputViewPlaceholderColor
             btn.addTarget(self, action: "cancel:", forControlEvents: UIControlEvents.TouchUpInside)
         }
         btn.layer.cornerRadius = btn.frame.width/2
@@ -170,6 +179,27 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         backgroundImgView.contentMode = UIViewContentMode.ScaleAspectFit
         btn.addSubview(backgroundImgView)
         return btn
+    }
+    
+    func addLabel(labelname: String)->UILabel{
+        let lbl = UILabel()
+        lbl.textColor = UIColor.init(red: 151 / 255, green: 151 / 255, blue: 151 / 255, alpha: 1)
+        lbl.font = UIFont.systemFontOfSize(9)
+        if labelname == "addTreatmentBtn"{
+            lbl.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "治疗方案"
+        }else if labelname == "addStatusBtn" {
+            lbl.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "病人状态"
+        }else if labelname == "addQuestionBtn" {
+            lbl.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "提出问题"
+        }else if labelname == "addMoodBtn" {
+            lbl.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "发表心得"
+        }
+
+        return lbl
     }
     
     func addTreatment(sender: UIButton){

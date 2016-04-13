@@ -14,20 +14,20 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     var selectionPicker = UIPickerView()
     var selectionPickerContainerView = UIView()
-    var selectionPickerContainerViewHeight: CGFloat = 200
+    var selectionPickerContainerViewHeight: CGFloat = 250
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
     var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
     var cancerTypeSelectionData = ["腺癌", "鳞癌", "非小细胞癌症", "弥漫性大B细胞淋巴瘤"]
-//    var stageSelectionData = ["I","II","IV","V"]
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
-//    var stageBtn = UIButton()
     
     //
     var headerHeight: CGFloat = 0
     let btnInPickerWidth: CGFloat = 70
     let btnInPickerHeight: CGFloat = 30
+    
+    let transparentView = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +59,6 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
                 self.treatmentSelectionData = (content as! NSDictionary).objectForKey("results") as! [String]
             }
             }) { (content, message) -> Void in
-                
         }
         
     }
@@ -99,6 +98,11 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     func initContentView(){
+        //设置透明层
+        transparentView.frame = CGRECT(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
+        transparentView.backgroundColor = UIColor.lightGrayColor()
+        transparentView.alpha = 0.6
+        
         //init pickerView
         selectionPickerContainerView = UIView(frame: CGRectMake(0, screenHeight - selectionPickerContainerViewHeight - headerHeight, screenWidth, selectionPickerContainerViewHeight))
         selectionPickerContainerView.backgroundColor = chartBackgroundColor
@@ -117,30 +121,42 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         selectionPickerContainerView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(1.0)
 //        self.view.addSubview(selectionPickerContainerView)
         
-        selectionPicker = UIPickerView(frame: CGRectMake(10.0, 40.0, UIScreen.mainScreen().bounds.width - 20, 150.0))
+        selectionPicker = UIPickerView(frame: CGRectMake(10.0, btnInPickerHeight, UIScreen.mainScreen().bounds.width - 20, 220.0))
         
         selectionPicker.delegate = self
         selectionPicker.dataSource = self
         self.selectionPickerContainerView.addSubview(selectionPicker)
         
-        let selectBtnWidth: CGFloat = (screenWidth - 60)/2
-        let selectBtnHeight: CGFloat = 30
-        treatmentBtn = UIButton(frame: CGRectMake(20, 7, selectBtnWidth, selectBtnHeight))
-        typeBtn = UIButton(frame: CGRectMake(30 + selectBtnWidth, 7, selectBtnWidth, selectBtnHeight))
-        formatSelectBtn(treatmentBtn, title: "PD-1")
+        treatmentBtn = UIButton(frame: CGRectMake(0, 0, screenWidth / 2 - 1, 43))
+        typeBtn = UIButton(frame: CGRectMake(screenWidth / 2 + 1, 0, screenWidth / 2 - 1, 43))
+
+        
+        let dropdownImageWidht: CGFloat = 15
+        let dropdownImageview = UIImageView(frame: CGRect(x: screenWidth / 2 - 30, y: 0, width: dropdownImageWidht, height: 43))
+        dropdownImageview.image = UIImage(named: "dropdown")
+        dropdownImageview.contentMode = UIViewContentMode.ScaleAspectFit
+        let anotherdropdownImageView: UIImageView = UIImageView(frame: CGRect(x: screenWidth / 2 - 30, y: 0, width: dropdownImageWidht, height: 43))
+        anotherdropdownImageView.image = UIImage(named: "dropdown")
+        anotherdropdownImageView.contentMode = UIViewContentMode.ScaleAspectFit
+        
+        treatmentBtn.addSubview(dropdownImageview)
+        typeBtn.addSubview(anotherdropdownImageView)
+        
+        formatSelectBtn(treatmentBtn, title: "选择药物种类")
         formatSelectBtn(typeBtn, title: "选择癌症类型")
+        
         treatmentBtn.addTarget(self, action: "selectTreatment", forControlEvents: UIControlEvents.TouchUpInside)
         typeBtn.addTarget(self, action: "selectCancerType", forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     func cancelSelectionPicker(){
-
+        transparentView.removeFromSuperview()
         selectionPickerContainerAppear = false
         selectionPickerContainerView.removeFromSuperview()
     }
     
     func submitSelectionPicker(){
-
+        transparentView.removeFromSuperview()
         let selectStr = pickerDataSource[selectionPicker.selectedRowInComponent(0)]
         if (treatmentSelectionData as NSArray).containsObject(selectStr) {
             treatmentBtn.setTitle(selectStr, forState: UIControlState.Normal)
@@ -217,6 +233,12 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             
             cell.addSubview(treatmentBtn)
             cell.addSubview(typeBtn)
+            let seperateLine = UIView(frame: CGRect(x: 0, y: 43, width: screenWidth, height: 1))
+            seperateLine.backgroundColor = seperateLineColor
+            cell.addSubview(seperateLine)
+            let verticalSeperateLine = UIView(frame: CGRect(x: screenWidth / 2, y: 15, width: 1, height: 13))
+            verticalSeperateLine.backgroundColor = seperateLineColor
+            cell.addSubview(verticalSeperateLine)
             return cell
         }else{
             let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchClinicTrailIdentifier, forIndexPath: indexPath) as! ClinicCell
@@ -229,18 +251,22 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     func selectTreatment(){
         if selectionPickerContainerAppear == false{
+            self.view.addSubview(transparentView)
             pickerDataSource = treatmentSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
+            selectionPicker.selectRow(3, inComponent: 0, animated: false)
             self.view.addSubview(selectionPickerContainerView)
         }
     }
     
     func selectCancerType(){
         if selectionPickerContainerAppear == false{
+            self.view.addSubview(transparentView)
             pickerDataSource = cancerTypeSelectionData
             self.selectionPicker.reloadAllComponents()
             selectionPickerContainerAppear = true
+            selectionPicker.selectRow(3, inComponent: 0, animated: false)
             self.view.addSubview(selectionPickerContainerView)
         }
     }
@@ -248,12 +274,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     func formatSelectBtn(selectBtn: UIButton, title: String){
         selectBtn.setTitle(title, forState: UIControlState.Normal)
-        selectBtn.setTitleColor(mainColor, forState: UIControlState.Normal)
-        selectBtn.backgroundColor = UIColor.whiteColor()
-        selectBtn.layer.borderColor = mainColor.CGColor
-        selectBtn.layer.borderWidth = 1.5
-        selectBtn.layer.cornerRadius = 2
-        selectBtn.layer.masksToBounds = true
+        selectBtn.setTitleColor(defaultTextColor, forState: UIControlState.Normal)
         selectBtn.titleLabel?.font = UIFont(name: fontStr, size: 12.0)
     }
     
@@ -263,17 +284,23 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
-            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))
+            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 36))
         }else{
             pickerLabel = view as! UILabel
         }
         pickerLabel.textAlignment = NSTextAlignment.Center
-        pickerLabel.textColor = textColor
+        pickerLabel.textColor = pickerUnselectedColor
         pickerLabel.text = pickerDataSource[row]
-        pickerLabel.font = UIFont.boldSystemFontOfSize(15)
+        pickerLabel.font = pickerUnselectedFont
         return pickerLabel
     }
-
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let pickerLabel = pickerView.viewForRow(row, forComponent: 0) as! UILabel
+        pickerLabel.textColor = pickerSelectedColor
+        pickerLabel.font = pickerSelectedFont
+    }
+    
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -286,7 +313,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         if indexPath.section == 0 {
-            return 40
+            return 44
         }else{
             
             let clinicTrial = self.searchDataArr[indexPath.row] as! ClinicTrailObj

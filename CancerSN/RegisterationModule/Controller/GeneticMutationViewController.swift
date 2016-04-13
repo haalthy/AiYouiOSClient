@@ -32,6 +32,8 @@ class GeneticMutationViewController: UIViewController {
     var isUpdate = false
     var geneticMutationVCDelegate: GeneticMutationVCDelegate?
     
+    var marginpieChartOuter  = PNPieChart()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initVariables()
@@ -155,7 +157,7 @@ class GeneticMutationViewController: UIViewController {
         descriptionLabel.font = UIFont.systemFontOfSize(12)
         descriptionLabel.textAlignment = NSTextAlignment.Center
         self.view.addSubview(descriptionLabel)
-        
+
     }
     
     func previousView(sender: UIButton){
@@ -166,35 +168,49 @@ class GeneticMutationViewController: UIViewController {
         if sender.backgroundColor == UIColor.whiteColor() {
             sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             sender.backgroundColor = headerColor
+            
+            //fill piechart
+            let itemIndex: Int = geneticList.indexOfObject((sender.titleLabel?.text)!)
+            var value1: CGFloat = 0
+            for var index = 0; index < itemIndex; index++ {
+                value1 += geneticValueList[index] as! CGFloat
+            }
+            let value2: CGFloat = geneticValueList.objectAtIndex(itemIndex) as! CGFloat
+            let value3: CGFloat = 100 - value1 - value2
+            
+            let outerItems = [PNPieChartDataItem(value: value1, color: UIColor.clearColor()), PNPieChartDataItem(value: value2, color: headerColor), PNPieChartDataItem(value: value3, color: UIColor.clearColor())]
+            newPieChartOuter.removeFromSuperview()
+            newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
+            pieChartOuter.duration = 0
+            pieChartCenterLabel.text = String(value2) + "%"
+            self.view.addSubview(newPieChartOuter)
+            descriptionLabel.text = String(value2) + "%的患者为" + (sender.titleLabel?.text)! + "基因变异"
+            self.view.bringSubviewToFront(pieChartOuter)
         }else{
             sender.setTitleColor(headerColor, forState: UIControlState.Normal)
             sender.backgroundColor = UIColor.whiteColor()
         }
         
-        let itemIndex: Int = geneticList.indexOfObject((sender.titleLabel?.text)!)
-        var value1: CGFloat = 0
-        for var index = 0; index < itemIndex; index++ {
-            value1 += geneticValueList[index] as! CGFloat
-        }
-        let value2: CGFloat = geneticValueList.objectAtIndex(itemIndex) as! CGFloat
-        let value3: CGFloat = 100 - value1 - value2
 
-        let outerItems = [PNPieChartDataItem(value: value1, color: UIColor.clearColor()), PNPieChartDataItem(value: value2 - 0.2, color: headerColor, description: "ALK"), PNPieChartDataItem(value: 0.2, color: pieChartDarkGrayColor), PNPieChartDataItem(value: value3, color: UIColor.clearColor())]
-//        let newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
-        newPieChartOuter.removeFromSuperview()
-        newPieChartOuter = PNPieChart(frame: CGRectMake(pieChartOuter.frame.origin.x, pieChartOuter.frame.origin.y, pieChartOuter.frame.height, pieChartOuter.frame.height), items: outerItems as [AnyObject])
-
-        pieChartOuter.duration = 0
-        pieChartCenterLabel.text = String(value2) + "%"
-        self.view.addSubview(newPieChartOuter)
-        descriptionLabel.text = String(value2) + "%的患者为" + (sender.titleLabel?.text)! + "基因变异"
     }
 
     func PieChart(){
-        let outerItems = [PNPieChartDataItem(value: 100, color: pieChartLightGrayColor)]
         let pieChartW: CGFloat = 219
+
+        let piechartFrame = PNPieChart(frame: CGRectMake((screenWidth - pieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height, pieChartW, pieChartW), items: [PNPieChartDataItem(value: 100, color: pieChartLightGrayColor)])
+        self.view.addSubview(piechartFrame)
+        let outerItems = [PNPieChartDataItem(value: geneticValueList.objectAtIndex(0) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(0) as! String),PNPieChartDataItem(value: geneticValueList.objectAtIndex(1) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(1) as! String), PNPieChartDataItem(value: geneticValueList.objectAtIndex(2) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(2) as! String), PNPieChartDataItem(value: geneticValueList.objectAtIndex(3) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(3) as! String),PNPieChartDataItem(value: geneticValueList.objectAtIndex(4) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(4) as! String), PNPieChartDataItem(value: geneticValueList.objectAtIndex(5) as! CGFloat, color: UIColor.clearColor(), description: geneticList.objectAtIndex(5) as! String)]
         pieChartOuter = PNPieChart(frame: CGRectMake((screenWidth - pieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height, pieChartW, pieChartW), items: outerItems)
+        pieChartOuter.descriptionTextColor = UIColor.whiteColor()
+        pieChartOuter.descriptionTextFont = UIFont.systemFontOfSize(13)
+        pieChartOuter.descriptionTextShadowColor = UIColor.clearColor()
+        
+        //piechart 边界
+        let marginouterItems = [PNPieChartDataItem(value: geneticValueList.objectAtIndex(0) as! CGFloat - 0.2, color: UIColor.clearColor()), PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor()),PNPieChartDataItem(value: geneticValueList.objectAtIndex(1) as! CGFloat - 0.2, color: UIColor.clearColor()),PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor()), PNPieChartDataItem(value: geneticValueList.objectAtIndex(2) as! CGFloat - 0.2, color: UIColor.clearColor()),PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor()),PNPieChartDataItem(value: geneticValueList.objectAtIndex(3) as! CGFloat - 0.2, color: UIColor.clearColor()),PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor()),PNPieChartDataItem(value: geneticValueList.objectAtIndex(4) as! CGFloat - 0.2, color: UIColor.clearColor()),PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor()),PNPieChartDataItem(value: geneticValueList.objectAtIndex(5) as! CGFloat - 0.2, color: UIColor.clearColor()),PNPieChartDataItem(value: 0.2, color: UIColor.whiteColor())]
+        marginpieChartOuter = PNPieChart(frame: CGRectMake((screenWidth - pieChartW)/2, buttonSection.frame.origin.y + buttonSection.frame.height, pieChartW, pieChartW), items: marginouterItems)
         self.view.addSubview(pieChartOuter)
+        self.view.addSubview(marginpieChartOuter)
+
     }
 
     @IBAction func selectedNextView(sender: UIButton){

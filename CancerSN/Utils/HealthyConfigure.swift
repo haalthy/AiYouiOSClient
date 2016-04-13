@@ -79,7 +79,7 @@ let appKey = "659e4023ae5d594b3ab2cf81"
 
 let channel = "Publish channel"
 
-let isProduction: Bool = false
+let isProduction: Bool = true
 
 let kDeviceToken = "kDeviceToken"
 
