@@ -28,11 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Growing.startWithAccountId("81234af7e631c255")
         
-        let publicSerice = PublicService()
-//        let keychainAccess = KeychainAccess()
-//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
-//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
-        
         // Override point for customization after application launch.
         WXApi.registerApp(WXAppID)
         let tabViewController : TabViewController = TabViewController()
@@ -74,12 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - 是否进入到主页界面
     
     func checkUserStatus() {
-
-        let keychainAccess = KeychainAccess()
-
         if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
-//            keychainAccess.deletePasscode(usernameKeyChain)
-//            keychainAccess.deletePasscode(passwordKeyChain)
             let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
             let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)

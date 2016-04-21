@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate{
+    //context For LocalDB
+    var context:NSManagedObjectContext?
     
     //global variable
     let getAccessToken = GetAccessToken()
@@ -49,8 +52,12 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
     
     var addReportBtn = UIButton()
     
+    var date:NSDate = NSDate()
+    
     @IBOutlet weak var submitBtn: UIButton!
     override func viewDidLoad() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        context = appDel.managedObjectContext!
         getAccessToken.getAccessToken()
         
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
@@ -383,13 +390,14 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         }
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
-        let date:NSDate = dateFormatter.dateFromString((dateBtn.titleLabel?.text)!)!
+        date = dateFormatter.dateFromString((dateBtn.titleLabel?.text)!)!
         
         var scanReportStr: String = ""
         if self.scanReportText.textColor != textInputViewPlaceholderColor {
             scanReportStr = self.scanReportText.text
         }
         let pateintStatusDic  = NSDictionary(objects: [date.timeIntervalSince1970 * 1000, self.isPosted, patientStatusDetail, scanReportStr], forKeys: [ "insertedDate", "isPosted", "statusDesc", "scanData"])
+
         getClinicDataStr()
         var clinicReportStr: String = ""
         var isClinicDataFloat: Bool = true
@@ -419,7 +427,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             requestBody.setValue(pateintStatusDic, forKey: "patientStatus")
             requestBody.setValue(clinicReportDic, forKey: "clinicReport")
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "insertUsername")
-            
+            saveClinicDataToLocalDB(clinicDataList)
+            savePatientStatusToLocalDB(pateintStatusDic)
             NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
                 
                 success: { (content , message) -> Void in
@@ -428,6 +437,8 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
                     
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
             }
+            
+
             
             self.dismissViewControllerAnimated(true, completion: nil)
         }else {
@@ -441,6 +452,42 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
             self.presentViewController(alertController, animated: true) {
                 // ...
             }
+        }
+    }
+    
+    func savePatientStatusToLocalDB(patientStatus: NSDictionary){
+        let patientstatusLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tablePatientStatus, inManagedObjectContext: context!)
+//        let patientStatusObj = PatientStatusObj.jsonToModel(PatientStatus) as PatientStatusObj
+//        patientstatusLocalDBItem.setValue(patientStatusObj.statusID , forKey: propertyStatusID)
+        let keychainAccess = KeychainAccess()
+        patientstatusLocalDBItem.setValue(keychainAccess.getPasscode(usernameKeyChain)! , forKey: propertyPatientStatusUsername)
+        patientstatusLocalDBItem.setValue(patientStatus.objectForKey("statusDesc") , forKey: propertyStatusDesc)
+        patientstatusLocalDBItem.setValue(patientStatus.objectForKey("insertedDate") , forKey: propertyInsertedDate)
+        patientstatusLocalDBItem.setValue(patientStatus.objectForKey("imageURL") , forKey: propertyPatientStatusImageURL)
+        patientstatusLocalDBItem.setValue(patientStatus.objectForKey("scanData") , forKey: propertyScanData)
+        patientstatusLocalDBItem.setValue(patientStatus.objectForKey("hasImage") , forKey: propertyHasImage)
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func saveClinicDataToLocalDB(clinicDataList: NSArray){
+        let keychainAccess = KeychainAccess()
+        for clinicData in clinicDataList {
+            let clinicDataLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableClinicData, inManagedObjectContext: context!)
+            let keys = (clinicData as! NSDictionary).allKeys
+            if (keys.count > 0) {
+                let key:String = (keys as NSArray).objectAtIndex(0) as! String
+                clinicDataLocalDBItem.setValue( key, forKey: propertyClinicItemName)
+                clinicDataLocalDBItem.setValue(Int(clinicData.objectForKey(key) as! String), forKey: propertyClinicItemValue)
+                clinicDataLocalDBItem.setValue(date.timeIntervalSince1970 * 1000, forKey: propertyClinicDataInsertDate)
+                clinicDataLocalDBItem.setValue(keychainAccess.getPasscode(usernameKeyChain)!, forKey: propertyClinicDataUsername)
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
         }
     }
     

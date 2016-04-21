@@ -20,7 +20,7 @@ class PatientStatusFrame: NSObject {
 //    
 //    var detailFrame: CGRect?
 //    
-    var patientStatus = NSDictionary(){
+    var patientStatus = PatientStatusObj(){
         didSet{
             getHeight()
         }
@@ -33,11 +33,11 @@ class PatientStatusFrame: NSObject {
         var detailStr: String?
         var scanDataStr: String?
         
-        if ( patientStatus.objectForKey("scanData") != nil ) && ((patientStatus.objectForKey("scanData") is NSNull) == false) && ((patientStatus.objectForKey("scanData") as! String) != ""){
-            scanDataStr = patientStatus.objectForKey("scanData") as! String
+        if ( patientStatus.scanData != ""){
+            scanDataStr = patientStatus.scanData
         }
-        if ( patientStatus.objectForKey("statusDesc") != nil ) && ((patientStatus.objectForKey("statusDesc") is NSNull) == false) && ((patientStatus.objectForKey("statusDesc") as! String) != ""){
-            let patientstatusHighlightStr = (patientStatus.objectForKey("statusDesc") as! String)
+        if ( patientStatus.statusDesc != ""){
+            let patientstatusHighlightStr = patientStatus.statusDesc
             let patientstatusHighlightAndDesp = patientstatusHighlightStr.componentsSeparatedByString(patientstatusSeperateStr)
             if patientstatusHighlightAndDesp.count > 1 {
                 highlightStr = patientstatusHighlightAndDesp[0]
@@ -93,8 +93,8 @@ class PatientStatusFrame: NSObject {
             patientstatusY += patientstatusDetail.frame.height
         }
         
-        if (patientStatus.objectForKey("imageURL") != nil) && ((patientStatus.objectForKey("imageURL") is NSNull) == false) && ((patientStatus.objectForKey("imageURL") as! String) != ""){
-            let imageURLStr: String = patientStatus.objectForKey("imageURL") as! String
+        if (patientStatus.imageURL != "") && (patientStatus.imageURL != "<null>"){
+            let imageURLStr: String = patientStatus.imageURL
             let imageURLArr = imageURLStr.componentsSeparatedByString(";")
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace

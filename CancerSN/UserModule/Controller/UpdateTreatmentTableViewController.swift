@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import CoreData
 
 class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+    //context For LocalDB
+    var context:NSManagedObjectContext?
+    var setUserProfileTimeStamp = "setUserProfileTimeStamp"
     
     var treatmentList = NSMutableArray()
     let dateLabelWidth:CGFloat = 50.0
@@ -30,17 +34,19 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        context = appDel.managedObjectContext!
         if treatmentList.count == 0 {
             HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "您目前没有添加任何治疗方案")
         }
         else{
             for treatment in treatmentList{
                 let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, UIScreen.mainScreen().bounds.width - marginWidth * 2, 60))
-                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as? String
+                treatmentLabel.text = (treatment as! TreatmentObj).treatmentName
                 treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
                 treatmentLabel.sizeToFit()
                 let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, UIScreen.mainScreen().bounds.width - marginWidth * 2, 100))
-                dosageLabel.text = (treatment as! NSDictionary).objectForKey("dosage") as? String
+                dosageLabel.text = (treatment as! TreatmentObj).dosage
                 dosageLabel.font = UIFont(name: fontStr, size: 12.0)
                 dosageLabel.sizeToFit()
                 heightForRowForTreatmentList.addObject(treatmentLabel.frame.height + dosageLabel.frame.height)
@@ -92,8 +98,8 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         endDateLabel.font = UIFont(name: fontStr, size: 12.0)
         
         let dateFormatter = NSDateFormatter()
-        let beginDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("beginDate") as! Double)/1000 as NSTimeInterval)
-        let endDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! NSDictionary).objectForKey("endDate") as! Double)/1000 as NSTimeInterval)
+        let beginDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! TreatmentObj).beginDate)/1000 as NSTimeInterval)
+        let endDate = NSDate(timeIntervalSince1970: ((treatmentList[indexPath.row] as! TreatmentObj).endDate)/1000 as NSTimeInterval)
         dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
         let beginDateStr = dateFormatter.stringFromDate(beginDate)
         var endDateStr = String()
@@ -101,9 +107,9 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         formatUpdateDateButton(beginDateButton, title: beginDateStr)
         formatUpdateDateButton(endDateButton, title: endDateStr)
         let treatmentNameTextField = UITextField(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, treatmentNameTextFieldHeight))
-        treatmentNameTextField.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as? String
+        treatmentNameTextField.text = (treatmentList[indexPath.row] as! TreatmentObj).treatmentName
         let dosageTextView = UITextView(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth + treatmentNameTextFieldHeight + marginWidth, cell.frame.width - marginWidth * 2, dosageTextViewHeight))
-        dosageTextView.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as? String
+        dosageTextView.text = (treatmentList[indexPath.row] as! TreatmentObj).dosage
         treatmentNameTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
         treatmentNameTextField.layer.borderWidth = 1.5
         treatmentNameTextField.layer.cornerRadius = 2
@@ -115,12 +121,12 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         
         let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, 60))
         treatmentLabel.textColor = headerColor
-        treatmentLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("treatmentName") as? String
+        treatmentLabel.text = (treatmentList[indexPath.row] as! TreatmentObj).treatmentName
         treatmentLabel.font = UIFont(name: fontStr, size: 13.0)
         treatmentLabel.sizeToFit()
         let dosageLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth*3 + dateLabelHeight + treatmentLabel.frame.height, cell.frame.width - marginWidth * 2, 100))
         dosageLabel.textColor = headerColor
-        dosageLabel.text = (treatmentList[indexPath.row] as! NSDictionary).objectForKey("dosage") as? String
+        dosageLabel.text = (treatmentList[indexPath.row] as! TreatmentObj).dosage
         dosageLabel.font = UIFont(name: fontStr, size: 12.0)
         dosageLabel.sizeToFit()
         
@@ -189,11 +195,41 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         self.tableView.reloadData()
     }
     
+    func deleteTreatmentFromLocalDB(treamentID: Int) {
+        let predicate = NSPredicate(format: "treatmentID == %d", treamentID)
+        
+        let fetchRequest = NSFetchRequest(entityName: tableTreatment)
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedEntities: NSArray = try self.context!.executeFetchRequest(fetchRequest) as NSArray
+            if fetchedEntities.count > 0{
+                let entityToDelete = fetchedEntities[0]
+                self.context!.deleteObject(entityToDelete as! NSManagedObject)
+            }
+        } catch {
+            // Do something in response to error condition
+        }
+        
+        do {
+            try self.context!.save()
+        } catch {
+            // Do something in response to error condition
+        }
+    }
+    
+    func updateTreatmentInLocalDB() {
+    
+    }
+    
     func deleteItem(sender: UIButton){
         let buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
         let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
-        haalthyService.deleteTreatment(treatmentList[indexPath.row] as! NSDictionary)
+        let deletedTreatmentObj = treatmentList.objectAtIndex(indexPath.row) as! TreatmentObj
+        let deletedTreatment: NSDictionary = NSDictionary(objects: [deletedTreatmentObj.treatmentID, deletedTreatmentObj.username], forKeys: ["treatmentID", "username"])
+        haalthyService.deleteTreatment(deletedTreatment)
         treatmentList.removeObjectAtIndex(indexPath.row)
+        deleteTreatmentFromLocalDB(deletedTreatmentObj.treatmentID)
         self.tableView.reloadData()
     }
     
@@ -201,7 +237,13 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let buttonPositon = sender.convertPoint(CGPointZero, toView: self.tableView)
         let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         isEditForRow[indexPath.row] = 0
-        let updateTreatment = treatmentList[indexPath.row] as! NSMutableDictionary
+        let updateTreatmentObj = treatmentList[indexPath.row] as! TreatmentObj
+        let updateTreatment = NSMutableDictionary()
+        updateTreatment.setObject(updateTreatmentObj.treatmentID, forKey: "treatmentID")
+        updateTreatment.setObject(updateTreatmentObj.username, forKey: "username")
+        updateTreatment.setObject(updateTreatmentObj.beginDate, forKey: "beginDate")
+        updateTreatment.setObject(updateTreatmentObj.endDate, forKey: "endDate")
+
         let cell = self.tableView.cellForRowAtIndexPath(indexPath)
         let views = cell?.subviews as! NSArray
         for view in views{
@@ -260,9 +302,9 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let buttonPositon = editDateButton!.convertPoint(CGPointZero, toView: self.tableView)
         let indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(buttonPositon)!
         if buttonPositon.x < 100 {
-            (treatmentList[indexPath.row] as! NSMutableDictionary).setObject(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "beginDate")
+            (treatmentList[indexPath.row] as! TreatmentObj).beginDate = self.datePicker.date.timeIntervalSince1970 * 1000
         }else{
-            (treatmentList[indexPath.row] as! NSMutableDictionary).setObject(self.datePicker.date.timeIntervalSince1970 * 1000, forKey: "endDate")
+            (treatmentList[indexPath.row] as! TreatmentObj).beginDate = self.datePicker.date.timeIntervalSince1970 * 1000
             
         }
         editDateButton?.titleLabel?.text = selectDateStr

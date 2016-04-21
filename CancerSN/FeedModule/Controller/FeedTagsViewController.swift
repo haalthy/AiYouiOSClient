@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 // 重用cell identifier
 let cellTagIdentifier = "TagCell"
@@ -192,7 +193,94 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
+    
+    //get Tag List from local DB
+    func getTagListFromLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let tagTypeRequest = NSFetchRequest(entityName: tableTag)
+        tagTypeRequest.propertiesToFetch = [propertyTypeRank, propertyTypeName]
+        tagTypeRequest.returnsDistinctResults = true
+        tagTypeRequest.returnsObjectsAsFaults = false
+        tagTypeRequest.sortDescriptors = [NSSortDescriptor(key: propertyTypeRank, ascending: true)]
+        
+        tagTypeRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        let tagTypeList = try! context.executeFetchRequest(tagTypeRequest)
+        let tagArr = TagModel.jsonToModelList(tagTypeList as Array) as! Array<TagModel>
+        
+        tagTypeRequest.propertiesToFetch = [propertyTypeRank, propertyTypeName, propertyTagId, propertyTagName, propertyTagRank]
+
+        let fullTagTypeList = try! context.executeFetchRequest(tagTypeRequest)
+        let fullTagArr = SubTagModel.jsonToModelList(fullTagTypeList as Array) as! Array<SubTagModel>
+        for tag in tagArr {
+            let tagsInType = NSMutableArray()
+            for subTag in fullTagArr {
+                if (tag.typeRank == subTag.typeRank){
+                    tagsInType.addObject(subTag)
+                }
+            }
+            tag.tags = (tagsInType as NSArray) as! Array
+        }
+        
+        let tagDictArr = NSMutableArray()
+        for tagType in tagTypeList {
+            let tagDict = NSMutableDictionary()
+            tagDict.setObject((tagType as! NSDictionary).objectForKey("typeRank")!, forKey: "typeRank")
+            tagDict.setObject((tagType as! NSDictionary).objectForKey("typeName")!, forKey: "typeName")
+
+            let tagsInTypeDic = NSMutableArray()
+            for tag in fullTagTypeList {
+                if ((tag as! NSDictionary).objectForKey("typeRank") as! Int) == ((tagType as! NSDictionary).objectForKey("typeRank") as! Int) {
+                    tagsInTypeDic.addObject(tag as! NSDictionary)
+                }
+            }
+            tagDict.setObject(tagsInTypeDic, forKey: "tags")
+            tagDictArr.addObject(tagDict)
+        }
+        self.dict = tagDictArr
+        self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
+    }
+    
+    //save Tag List to Local DB
+    func saveTagListToLacalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        for tagType in self.dataTagsArr {
+            let tagTypeItem = (tagType as! TagModel).tags
+            for tag in tagTypeItem {
+                let tagItem = tag 
+                let tagLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableTag, inManagedObjectContext: context)
+                tagLocalDBItem.setValue(tagItem.tagId, forKey: propertyTagId)
+                tagLocalDBItem.setValue(tagItem.name, forKey: propertyTagName)
+                tagLocalDBItem.setValue(tagItem.rankInType, forKey: propertyTagRank)
+                tagLocalDBItem.setValue(tagItem.typeName, forKey: propertyTypeName)
+                tagLocalDBItem.setValue(tagItem.typeRank, forKey: propertyTypeRank)
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+    //clear Tag List From LocalDB
+    func clearTagListFromLacalDB(){
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deletePostsRequet = NSFetchRequest(entityName: tableTag)
+        if let results = try? context.executeFetchRequest(deletePostsRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
     // MARK: - 网络请求
+
     
     // MARK: 获取所有标签
     
@@ -205,19 +293,41 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.defaultSelectTagNameList = haalthyService.getUserFavTags()
             }
         }
-        NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
+        
+        let currentTimeStamp: Double = NSDate().timeIntervalSince1970
+        var previousStoreTimestamp: Double = 0
+        if  NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) != nil {
+            previousStoreTimestamp = NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) as! Double
             
-            self.dict = content as! NSArray
-            let tagArr = TagModel.jsonToModelList(self.dict as Array) as! Array<TagModel>
-            self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
+        }
+        if (currentTimeStamp - previousStoreTimestamp) > (28 * 86400) {
+            clearTagListFromLacalDB()
+        }else{
+            getTagListFromLocalDB()
+        }
+        
+        if self.dataTagsArr.count == 0 {
+            
+            NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
+                
+                self.dict = content as! NSArray
+                let tagArr = TagModel.jsonToModelList(self.dict as Array) as! Array<TagModel>
+                self.dataTagsArr = NSMutableArray(array: tagArr as NSArray)
+                self.tableView.reloadData()
+                self.setDefaultSelectedTagBtn()
+                self.saveTagListToLacalDB()
+                NSUserDefaults.standardUserDefaults().setObject(NSDate().timeIntervalSince1970, forKey: setTagListTimeStamp)
+                HudProgressManager.sharedInstance.dismissHud()
+                }) { (content, message) -> Void in
+                    
+                    HudProgressManager.sharedInstance.dismissHud()
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+                    
+            }
+        }else{
             self.tableView.reloadData()
             self.setDefaultSelectedTagBtn()
             HudProgressManager.sharedInstance.dismissHud()
-            }) { (content, message) -> Void in
-               
-                HudProgressManager.sharedInstance.dismissHud()
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-            
         }
     }
     
@@ -326,7 +436,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func saveTagList()->NSArray{
         let selectTagList = NSMutableArray()
-        for tagType in dict {
+        for tagType in self.dict {
             for tag in (tagType as! NSDictionary).objectForKey("tags") as! NSArray{
                 if selectedTagNameList.containsObject((tag as! NSDictionary).objectForKey("name") as! String) {
                     selectTagList.addObject(tag)

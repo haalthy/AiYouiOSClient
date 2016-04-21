@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 class PublicService:NSObject{
-    func getProfileStrByDictionary(user:NSDictionary)->String{
+    func getProfileStrByDictionary(user:UserProfile)->String{
         
         var userProfileStr : String
         var gender = ""
-        if (user["gender"] != nil) && (user["gender"] is String){
-            gender = user["gender"] as! String
+        if (user.gender != nil) && (user.gender != ""){
+            gender = user.gender!
         }
         var displayGender:String = ""
         if(gender == "M"){
@@ -28,31 +28,19 @@ class PublicService:NSObject{
         var cancerType = String()
         var pathological = String()
         
-        if user["age"] != nil{
-            age = (user["age"] as! NSNumber).stringValue
+        if user.age != nil{
+            age = String(user.age!)
         }
-        if (user["stage"] != nil) && !(user["stage"] is NSNull) {
-//            let stages = stageMapping.allKeysForObject(user["stage"]! as! Int) as NSArray
-//            if stages.count > 0 {
-//                stage = stages[0] as! String
-//            }
-            stage = user["stage"] as! String
+        if (user.stage != nil) && (user.stage != "") {
+            stage = user.stage!
         }
         
-        if (user["cancerType"] != nil) && !(user["cancerType"] is NSNull) {
-//            var cancerKeysForObject = cancerTypeMapping.allKeysForObject(user["cancerType"]!)
-//            if cancerKeysForObject.count > 0 {
-//                cancerType = (cancerKeysForObject)[0] as! String
-//            }
-            cancerType = user["cancerType"] as! String
+        if (user.cancerType != nil) && !(user.cancerType != "") {
+            cancerType = user.cancerType!
         }
         
-        if user["pathological"] != nil && !(user["pathological"] is NSNull){
-//            var pathologicalKeysForObject = pathologicalMapping.allKeysForObject(user["pathological"]!)
-//            if pathologicalKeysForObject.count > 0 {
-//                pathological = pathologicalKeysForObject[0] as! String
-//            }
-            pathological = user["pathological"] as! String
+        if user.pathological != nil && !(user.pathological != ""){
+            pathological = user.pathological!
         }
         
         userProfileStr = displayGender + " " + age + "岁 " + cancerType + " " + pathological + " " + stage + "期"
@@ -63,7 +51,6 @@ class PublicService:NSObject{
         let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
         keychain.deletePasscode(passwordKeyChain)
-        let username = keychain.getPasscode(usernameKeyChain)
         let profileSet = NSUserDefaults.standardUserDefaults()
         profileSet.removeObjectForKey(favTagsNSUserData)
         profileSet.removeObjectForKey(genderNSUserData)
@@ -249,10 +236,6 @@ class PublicService:NSObject{
     }
     
     func resizeImage(image: UIImage, newSize: CGSize) -> UIImage{
-        let imgRef: CGImageRef = image.CGImage!;
-        
-//        let width: CGFloat = CGFloat(CGImageGetWidth(imgRef))
-//        let height: CGFloat = CGFloat(CGImageGetHeight(imgRef))
         let width: CGFloat = image.size.width
         let height: CGFloat = image.size.height
         

@@ -241,7 +241,7 @@ class FeedCell: UITableViewCell {
         if (feedModel?.highlight) != "" {
             
             // 6.标签
-            var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
+            let highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
             var newHighlightTagsArr: [String] = []
             for highTag in highTagsArr {
                 if (highTag != "") && (highTag != "<null>") {

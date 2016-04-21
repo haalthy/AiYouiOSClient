@@ -12,7 +12,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
     
     var chartHearderScrollView: UIScrollView!
     var chartScrollView: UIScrollView!
-    var treatmentList = NSArray()
+    var treatmentList = Array<TreatmentObj>()
     var chartHeaderCoordinateX = NSMutableArray()
     var chartWidth = CGFloat()
     //初始化变量
@@ -24,7 +24,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
     //
     let chartItemBottomLine = UIView()
     
-    var clinicReportList = NSArray(){
+    var clinicReportList = Array<ClinicDataObj>(){
         didSet{
             updateUI()
         }
@@ -51,15 +51,16 @@ class ChartSummaryTableViewCell: UITableViewCell {
         initContentView()
         initVariable()
         selectedItemIndex(buttonIndexPair.objectForKey(0) as! String, index: 0)
-        setClinicReport((clinicReportList.objectAtIndex(0) as! NSDictionary).objectForKey("clinicDataList") as! NSArray)
+        let data = clinicReportList[0].clinicDataList
+        setClinicReport(clinicReportList[0].clinicDataList)
     }
     
     func initVariable(){
         var index: Int = 0
         chartHeaderCoordinateX.addObject(chartHeaderLeftSpace)
         for clinicReportItem in clinicReportList {
-            buttonIndexPair.setObject((clinicReportItem as! NSDictionary).objectForKey("clinicItemName")!, forKey: index)
-            createHeaderBtn((clinicReportItem as! NSDictionary).objectForKey("clinicItemName") as! String, index: index)
+            buttonIndexPair.setObject((clinicReportItem as! ClinicDataObj).clinicItemName, forKey: index)
+            createHeaderBtn((clinicReportItem as! ClinicDataObj).clinicItemName, index: index)
             index++
         }
     }
@@ -79,7 +80,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
         var senderIndex = buttonIndexPair.allKeysForObject((sender.titleLabel?.text)!)
         if senderIndex.count > 0 {
             selectedItemIndex((sender.titleLabel?.text)!, index: senderIndex[0] as! Int)
-            setClinicReport((clinicReportList.objectAtIndex(senderIndex[0] as! Int) as! NSDictionary).objectForKey("clinicDataList") as! NSArray)
+            setClinicReport((clinicReportList[senderIndex[0] as! Int]).clinicDataList)
         }
     }
     
@@ -100,8 +101,11 @@ class ChartSummaryTableViewCell: UITableViewCell {
 
         dataPointsXArr.removeAllObjects()
         dataPointsYArr.removeAllObjects()
-        let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Double
-        let endDate = clinicDataList[0].objectForKey("insertDate") as! Double
+//        let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Double
+//        let endDate = clinicDataList[0].objectForKey("insertDate") as! Double
+        let beginDate = (clinicDataList[clinicDataList.count-1] as! SubClinicDataObj).insertDate
+        let endDate = (clinicDataList[clinicDataList.count-1] as! SubClinicDataObj).insertDate
+
         chartWidth = 0
         let maxItemsInScreen: Int = Int(self.frame.width/spaceBetweenClinicItems)
         
@@ -120,25 +124,27 @@ class ChartSummaryTableViewCell: UITableViewCell {
             
             var dataMax: Float = 0
             var dataMin: Float = 10000
-            for clinicItem in clinicDataList {
-                if dataMax < (clinicItem.objectForKey("clinicItemValue") as! Float){
-                    dataMax = clinicItem.objectForKey("clinicItemValue") as! Float
+            for clinicData in clinicDataList {
+                let clinicItem = clinicData as! SubClinicDataObj
+                if dataMax < clinicItem.clinicItemValue{
+                    dataMax = clinicItem.clinicItemValue
                 }
-                if dataMin > (clinicItem.objectForKey("clinicItemValue") as! Float) {
-                    dataMin = (clinicItem.objectForKey("clinicItemValue") as! Float)
+                if dataMin > clinicItem.clinicItemValue {
+                    dataMin = clinicItem.clinicItemValue
                 }
             }
 
             if clinicDataList.count >= 2 {
                 var index = 0
                 for clinicData in clinicDataList {
-                    let insertedDate = NSDate(timeIntervalSince1970: (clinicData.objectForKey("insertDate") as! Double)/1000 as NSTimeInterval)
+                    let clinicItem = clinicData as! SubClinicDataObj
+                    let insertedDate = NSDate(timeIntervalSince1970: (clinicItem.insertDate)/1000 as NSTimeInterval)
                     let dateFormatter = NSDateFormatter()
                     dateFormatter.dateFormat = "MM/dd" // superset of OP's format
                     let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
                     var coordinateX = CGFloat()
                     if endDate != beginDate {
-                        let ration:Double = ((clinicData.objectForKey("insertDate") as! Double) - beginDate)/(endDate - beginDate)
+                        let ration:Double = ((clinicItem.insertDate) - beginDate)/(endDate - beginDate)
                         let segmentLength: Double = Double(chartWidth - chartDateLabelWidth * 2) * ration
                         let segmentLengthInt: Int =  Int(segmentLength) + Int(chartLeftSpace) + Int(chartDateLabelWidth/2)
                         coordinateX = CGFloat(segmentLengthInt)
@@ -153,7 +159,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dateLabel.font = chartDateFont
                     self.chartScrollView.addSubview(dateLabel)
                     
-                    let dataValue = clinicDataList[index].objectForKey("clinicItemValue") as! Float
+//                    let dataValue = clinicDataList[index].objectForKey("clinicItemValue") as! Float
+                    let dataValue = clinicItem.clinicItemValue
                     index++
                     var coordinateY:CGFloat = (dataValueMaxY - dataValueMinY)/2
                     if dataMax != dataMin{
@@ -172,8 +179,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dataPointsYArr.addObject(coordinateY + 4)
                 }
             }else{
-                let clinicData = clinicDataList[0]
-                let insertedDate = NSDate(timeIntervalSince1970: (clinicData.objectForKey("insertDate") as! Double)/1000 as NSTimeInterval)
+                let clinicData = clinicDataList[0] as! SubClinicDataObj
+                let insertedDate = NSDate(timeIntervalSince1970: (clinicData.insertDate)/1000 as NSTimeInterval)
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "MM/dd" // superset of OP's format
                 let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
@@ -184,7 +191,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
                 dateLabel.font = chartDateFont
                 self.chartScrollView.addSubview(dateLabel)
                 
-                let dataValue = clinicData.objectForKey("clinicItemValue") as! Float
+                let dataValue = clinicData.clinicItemValue
                 let coordinateY:CGFloat = 100
                 
                 let dataMarkView = UIButton(frame: CGRectMake(CGFloat(coordinateX), CGFloat(coordinateY), dataMarkWidth, dataMarkWidth))
@@ -208,8 +215,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
         if beginDate != endDate {
             var ceaTreatmentCount = 0
             for treatment in treatmentList {
-                let treatmentBeginDate = (treatment as! NSDictionary).objectForKey("beginDate") as! Double
-                let treatmentEndDate = (treatment as! NSDictionary).objectForKey("endDate") as! Double
+                let treatmentBeginDate = treatment.beginDate
+                let treatmentEndDate = treatment.endDate
                 var ceaTreatmentBeginDate:Double = 0
                 var ceaTreatmentEndDate:Double = 0
                 if (treatmentBeginDate > beginDate) && (treatmentBeginDate < endDate) {
@@ -248,7 +255,9 @@ class ChartSummaryTableViewCell: UITableViewCell {
                 
                 //add treatmentLabel
                 let treatmentLabel = UILabel(frame: CGRectMake(CGFloat(coordinateBeginX), CGFloat(coordinateY - 10), 60, 10))
-                treatmentLabel.text = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
+                if treatment.treatmentName != "" {
+                    treatmentLabel.text = treatment.treatmentName
+                }
                 treatmentLabel.font = UIFont(name: "Helvetica", size: 11.0)
                 treatmentLabel.backgroundColor = UIColor.whiteColor()
                 treatmentLabel.alpha = 1
@@ -306,7 +315,7 @@ class ChartSummaryTableViewCell: UITableViewCell {
         progressLayer.path = path
         self.chartScrollView.layer.addSublayer(progressLayer)
         
-        var gradientLayer2 = CAGradientLayer()
+        let gradientLayer2 = CAGradientLayer()
         gradientLayer2.startPoint = CGPointMake(0.5, 1.0)
         gradientLayer2.endPoint = CGPointMake(0.5, 0.0)
         gradientLayer2.frame = CGRectMake(0, 0, rect.width, rect.height)

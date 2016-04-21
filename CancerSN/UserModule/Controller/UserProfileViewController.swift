@@ -7,16 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
 let kProfileTimeInterval = 0.25
 
 class UserProfileViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
+    //context For LocalDB
+    var context:NSManagedObjectContext?
+    var setUserProfileTimeStamp = "setUserProfileTimeStamp"
+    
     // 控件关联
     var tableView = UITableView()
     var relatedTableView = UITableView()
-    
     var userProfileHeaderView = UIView()
-
+    
     // 自定义变量 old
     //显示他人的profile
     var profileOwnername: NSString?
@@ -26,14 +30,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     var getAccessToken = GetAccessToken()
     var publicService = PublicService()
     
-    var treatmentList = NSMutableArray()
+    var treatmentList = NSArray()
+    var treatmentObjList = NSMutableArray()
+    
     var patientStatusList = NSArray()
+    var patientStatusObjList = NSMutableArray()
+    
+    var clinicReportList = NSArray()
+    var clinicReportObjList = NSMutableArray()
+    
     var treatmentSections = NSMutableArray()
     var sectionHeaderHeightList = NSMutableArray()
-    var clinicReportList = NSArray()
     var ceaList = NSArray()
     var userProfile = NSDictionary()
-    var userProfileObj: UserProfile?
+    var userProfileObj = UserProfile()
     var broadcastList = NSArray()
     var heightForQuestionRow = NSMutableDictionary()
     var usedToBeInLoginView = false
@@ -97,7 +107,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.removeAllSubviews()
-//        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+        //        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         username = keychainAccess.getPasscode(usernameKeyChain)
         password = keychainAccess.getPasscode(passwordKeyChain)
         getAccessToken.getAccessToken()
@@ -137,15 +147,18 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 // ...
             }
         }
-
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        context = appDel.managedObjectContext!
     }
     
     
     
     func initRefresh(){
         self.tableView.mj_header = MJRefreshNormalHeader.init(refreshingBlock: { () -> Void in
+            self.userProfileObj.username = ""
             self.getTreatmentsData()
-            if self.userProfile.count == 0 {
+            self.tableView.mj_header.endRefreshing()
+            if self.userProfileObj.username == "" {
                 let alert = UIAlertController(title: "提示", message: "oops....网络不给力", preferredStyle: UIAlertControllerStyle.Alert)
                 alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
@@ -160,7 +173,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
     }
     
     
@@ -205,11 +217,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         screenWidth = UIScreen.mainScreen().bounds.width
         segmentSectionBtnHeight = 43
-
+        
     }
     
     func reloadHeader(){
-        if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F") {
+        if (self.userProfileObj.gender != nil) && (((self.userProfileObj.gender)!) == "F") {
             relatedToOther = NSArray(array: [herProfileStr])
         }else{
             relatedToOther = NSArray(array: [hisProfileStr])
@@ -220,7 +232,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if (self.username == self.profileOwnername) {
             self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
         }else{
-            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
+            if (self.userProfileObj.gender != nil) && (((self.userProfileObj.gender)!) == "F"){
                 self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
             }else{
                 self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
@@ -229,18 +241,18 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         var imageURL = ""
         
-        if self.userProfileObj?.portraitUrl != nil {
-            imageURL = (self.userProfileObj?.portraitUrl)! + "@80h_80w_1e"
+        if self.userProfileObj.portraitUrl != nil {
+            imageURL = (self.userProfileObj.portraitUrl)! + "@80h_80w_1e"
         }
         
         self.portraitView.addImageCache(imageURL, placeHolder: placeHolderStr)
-        if self.userProfileObj?.nick != nil {
-            nicknameLabel.text = (self.userProfileObj?.nick)!
+        if self.userProfileObj.nick != nil {
+            nicknameLabel.text = (self.userProfileObj.nick)!
         }
         
-        let profileStr = publicService.getProfileStrByDictionary(self.userProfile)
+        let profileStr = publicService.getProfileStrByDictionary(self.userProfileObj)
         profileLabel.text = profileStr
-
+        
     }
     
     // MARK: - Init Related ContentView
@@ -252,7 +264,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         self.selectedBtnLine.backgroundColor = headerColor
         
         self.userProfileHeaderView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: profileHeaderH))
-
+        
         scrollView.frame = CGRECT(0, headerHeight + profileHeaderH, screenWidth, screenHeight - headerHeight - profileHeaderH - (self.tabBarController?.tabBar.frame.height)! )
         scrollView.contentSize = CGSize(width: screenWidth * 2, height: scrollView.frame.height)
         
@@ -265,7 +277,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         scrollView.addSubview(self.tableView)
         self.relatedTableView.separatorStyle = .None
         scrollView.addSubview(self.relatedTableView)
-
+        
         scrollView.userInteractionEnabled = true
         scrollView.pagingEnabled = true
         scrollView.delegate = self
@@ -275,13 +287,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         //初始化“治疗和方案”
         self.treatmentHeaderBtn.frame = CGRectMake(0, 1, screenWidth/2 , segmentSectionBtnHeight)
-
+        
         self.selectedBtnLine.frame = CGRectMake(0, segmentSectionBtnHeight - 2, screenWidth/2, 2)
         self.treatmentHeaderBtn.addSubview(self.selectedBtnLine)
         self.treatmentHeaderBtn.addTarget(self, action: "selectSegment:", forControlEvents: UIControlEvents.TouchUpInside)
         self.userProfileHeaderView.addSubview(treatmentHeaderBtn)
         
-
+        
         //初始化“与我相关”
         self.postHeaderBtn.frame = CGRectMake(screenWidth/2, 1, screenWidth/2, segmentSectionBtnHeight)
         
@@ -291,7 +303,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if (self.username == self.profileOwnername) {
             self.postHeaderBtn.setTitle(myProfileStr, forState: UIControlState.Normal)
         }else{
-            if (self.userProfileObj?.gender != nil) && (((self.userProfileObj?.gender)!) == "F"){
+            if (self.userProfileObj.gender != nil) && (((self.userProfileObj.gender)!) == "F"){
                 self.postHeaderBtn.setTitle(herProfileStr, forState: UIControlState.Normal)
             }else{
                 self.postHeaderBtn.setTitle(hisProfileStr, forState: UIControlState.Normal)
@@ -314,7 +326,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         portraitView.frame = CGRectMake(15, 20 + self.segmentSectionBtnHeight + 2, 40, 40)
         portraitView.layer.cornerRadius = 20
         portraitView.layer.masksToBounds = true
-
+        
         self.userProfileHeaderView.addSubview(portraitView)
         
         //关注
@@ -330,9 +342,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         profileLabel.frame = CGRectMake(65,  90, profileLabelWidth, 12)
         profileLabel.textColor = UIColor.lightGrayColor()
         profileLabel.font = UIFont(name: fontStr, size: 12.0)
-
+        
         self.userProfileHeaderView.addSubview(profileLabel)
-
+        
     }
     
     // MARK: - 网络请求
@@ -340,19 +352,19 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // MARK: 获取未读@我的数量
     
     func getUnreadMentionedCountFromServer() {
-    
+        
         NetRequest.sharedInstance.POST(getNewMentionedCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
             
             if dict["count"] as! Int > 0 {
-            
+                
                 self.mentionedBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
                 self.headerBadgeView.showBadgeWithShowType(WBadgeShowStyle.Middle)
                 judgeIsAddCount(1)
             }
             else {
-            
+                
                 self.mentionedBadgeView.clearBadge()
                 judgeIsDecCount(1)
                 self.judgeIsDeleteRedBadge()
@@ -363,7 +375,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
     }
     
-        
+    
     // MARK: 获取未读关注的数量
     
     func getUnreadFollowCountFromServer() {
@@ -379,12 +391,12 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 judgeIsAddCount(2)
             }
             else {
-            
+                
                 self.followBadgeView.clearBadge()
                 judgeIsDecCount(2)
                 self.judgeIsDeleteRedBadge()
             }
-
+            
             
             }) { (content, message) -> Void in
                 
@@ -394,7 +406,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
     // 获取未读评论的数量
     
     func getUnreadCommentCountFromServer() {
-    
+        
         NetRequest.sharedInstance.POST(getNewCommentCountURL , isToken: false, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
             let dict: NSDictionary = content as! NSDictionary
@@ -505,7 +517,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         sender.titleLabel?.font = UIFont(name: fontBoldStr, size: 13.0)
         
         self.curSelectedBtn = sender
-
+        
         if firstInit {
             
             firstInit = false
@@ -519,7 +531,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 let frame: CGRect = self.selectedBtnLine.frame
                 self.selectedBtnLine.frame = CGRECT(0, frame.origin.y, frame.size.width, frame.size.height)
             })
-
+            
         }
         if sender == postHeaderBtn {
             
@@ -530,20 +542,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 let frame: CGRect = self.selectedBtnLine.frame
                 self.selectedBtnLine.frame = CGRECT(x, frame.origin.y, frame.size.width, frame.size.height)
             })
-
+            
         }
     }
     
     func headerBtnFormatBeDeselected(sender: UIButton){
         sender.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
         sender.titleLabel?.font = UIFont(name: fontBoldStr, size: 13.0)
-
+        
     }
     
     // 判断是否删除我的奇迹红点
     
     func judgeIsDeleteRedBadge() {
-    
+        
         let isComment: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadCommentBadgeCount)
         
         let isFollow: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadFollowBadgeCount)
@@ -557,7 +569,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         else {
             self.headerBadgeView.clearBadge()
         }
-
+        
     }
     
     // MARK: - Table view data source
@@ -576,13 +588,13 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         
         startContentOffsetX = scrollView.contentOffset.x
     }
-
+    
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         endContentOffsetX = scrollView.contentOffset.x
-
-        if abs(endContentOffsetX - startContentOffsetX) > 40 && scrollView == self.scrollView {
         
+        if abs(endContentOffsetX - startContentOffsetX) > 40 && scrollView == self.scrollView {
+            
             if self.curSelectedBtn == treatmentHeaderBtn {
                 
                 headerBtnFormatBeSelected(postHeaderBtn)
@@ -604,7 +616,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         var numberOfRows: Int = 0
         if tableView == self.tableView{
             if section == 0 {
-                if self.clinicReportList.count > 0 {
+                if self.clinicReportObjList.count > 0 {
                     numberOfRows = 1
                 }else{
                     numberOfRows = 0
@@ -635,14 +647,14 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         if isSelectedTreatment {
             if indexPath.section == 0{
                 if indexPath.row == 0{
-                    rowHeight = self.clinicReportList.count > 0 ? 234 : 0
+                    rowHeight = self.clinicReportObjList.count > 0 ? 234 : 0
                 }
             }
             if indexPath.section > 1{
                 let patientStatusListInSection = (treatmentSections[indexPath.section - 2] as! NSDictionary).objectForKey("patientStatus") as! NSArray
                 let patientStatusFrame = PatientStatusFrame()
                 patientStatusFrame.cellWidth = screenWidth
-                patientStatusFrame.patientStatus = patientStatusListInSection[indexPath.row] as! NSDictionary
+                patientStatusFrame.patientStatus = patientStatusListInSection[indexPath.row] as! PatientStatusObj
                 rowHeight = patientStatusFrame.cellHeight
             }
         }else{
@@ -658,7 +670,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         }
         return rowHeight
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier:String = "cell"
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: cellIdentifier)
@@ -666,9 +678,9 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             if indexPath.section == 0 {
                 if indexPath.row == 0{
                     let treatmentSummaryCell = tableView.dequeueReusableCellWithIdentifier("ChartSummaryIdentifier", forIndexPath: indexPath) as! ChartSummaryTableViewCell
-                    if clinicReportList.count > 0{
-                        treatmentSummaryCell.treatmentList = treatmentList
-                        treatmentSummaryCell.clinicReportList = clinicReportList
+                    if clinicReportObjList.count > 0{
+                        treatmentSummaryCell.treatmentList = treatmentObjList as! Array<TreatmentObj>
+                        treatmentSummaryCell.clinicReportList = clinicReportObjList as! Array<ClinicDataObj>
                     }
                     return treatmentSummaryCell
                 }
@@ -677,10 +689,10 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 patientstatusCell.selectionStyle = UITableViewCellSelectionStyle.None
                 let patientStatusListInSection = (treatmentSections[indexPath.section - 2] as! NSDictionary).objectForKey("patientStatus") as! NSArray
                 patientstatusCell.indexPath = indexPath
-                patientstatusCell.patientStatus = patientStatusListInSection[indexPath.row] as! NSDictionary
+                patientstatusCell.patientStatus = patientStatusListInSection[indexPath.row] as! PatientStatusObj
                 return patientstatusCell
             }
-
+            
         }else{
             if (self.username == self.profileOwnername) {
                 if indexPath.row < relatedToMe.count{
@@ -695,20 +707,20 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                         cell.addSubview(self.messageBadgeView)
                     }
                     else if indexPath.row == 1 {
-                    
+                        
                         self.mentionedBadgeView.frame = CGRECT(SCREEN_WIDTH - 70, cell.frame.size.height / 2 - 7, 20, 20)
                         cell.addSubview(self.mentionedBadgeView)
                     }
                     else if indexPath.row == 2 {
-                    
+                        
                         self.followBadgeView.frame = CGRECT(SCREEN_WIDTH - 70, cell.frame.size.height / 2 - 7, 20, 20)
                         cell.addSubview(self.followBadgeView)
-
+                        
                     }
                     else {
-                    
+                        
                     }
-
+                    
                 }else{
                     //退出登录
                     let logoutBtn = UIButton(frame: CGRect(x: logoutBtnLeftSpace, y: logoutBtnTopSpace, width: screenWidth - logoutBtnLeftSpace - logoutBtnRightSpce, height: logoutBtnHeight))
@@ -735,132 +747,362 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
         return cell
     }
     
-    func getTreatmentsData(){
-        treatmentSections.removeAllObjects()
-        if (username != nil) && (password != nil){
-            var jsonResult:AnyObject? = nil
-            
-            getAccessToken.getAccessToken()
-            if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil{
-                let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
-                let urlPath:String = getUserDetailURL + "?access_token=" + accessToken
-                let requestBody = NSDictionary(object: self.profileOwnername!, forKey: "username")
-                jsonResult = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
+    func getUserFromLocalDB(){
+        let userRequest = NSFetchRequest(entityName: tableUser)
+        userRequest.returnsDistinctResults = true
+        userRequest.returnsObjectsAsFaults = false
+        userRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        let users = (try! context!.executeFetchRequest(userRequest)) as NSArray
+        if users.count > 0{
+            let user = users.objectAtIndex(0)
+            self.userProfileObj.initVariables(user as! NSDictionary)
+        }
+    }
+    
+    func getTreatmentListFromLocalDB(){
+        let treatmentRequest = NSFetchRequest(entityName: tableTreatment)
+        treatmentRequest.returnsDistinctResults = true
+        treatmentRequest.returnsObjectsAsFaults = false
+        treatmentRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        treatmentRequest.sortDescriptors = [NSSortDescriptor(key: propertyBeginDate, ascending: false)]
+        let treatmentList = try! context!.executeFetchRequest(treatmentRequest)
+        let homeData = TreatmentObj.jsonToModelList(treatmentList as Array) as! Array<TreatmentObj>
+        self.treatmentObjList.removeAllObjects()
+        self.treatmentObjList.addObjectsFromArray(homeData)
+    }
+    
+    func getPatientStatusFromLocalDB(){
+        let patientStatusRequest = NSFetchRequest(entityName: tablePatientStatus)
+        patientStatusRequest.returnsDistinctResults = true
+        patientStatusRequest.returnsObjectsAsFaults = false
+        patientStatusRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        patientStatusRequest.sortDescriptors = [NSSortDescriptor(key: propertyInsertedDate, ascending: false)]
+        let patientStatusList = try! context!.executeFetchRequest(patientStatusRequest)
+        let homeData = PatientStatusObj.jsonToModelList(patientStatusList as Array) as! Array<PatientStatusObj>
+        self.patientStatusObjList.removeAllObjects()
+        self.patientStatusObjList.addObjectsFromArray(homeData)
+    }
+    
+    func getClinicDataFromLocalDB(){
+        let clinicDataRequest = NSFetchRequest(entityName: tableClinicData)
+        clinicDataRequest.propertiesToFetch = [propertyClinicItemName]
+        clinicDataRequest.returnsDistinctResults = true
+        clinicDataRequest.returnsObjectsAsFaults = false
+        clinicDataRequest.sortDescriptors = [NSSortDescriptor(key: propertyClinicItemName, ascending: true)]
+        
+        clinicDataRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        let clinicTypeResult = try! context!.executeFetchRequest(clinicDataRequest)
+        let clinicTypeList = ClinicDataObj.jsonToModelList(clinicTypeResult as Array) as! Array<ClinicDataObj>
+        
+        clinicDataRequest.propertiesToFetch = [propertyClinicDataID, propertyClinicItemName, propertyClinicItemValue, propertyClinicDataStatusID, propertyClinicDataInsertDate, propertyClinicDataUsername]
+        clinicDataRequest.sortDescriptors = [NSSortDescriptor(key: propertyClinicDataInsertDate, ascending: false)]
+        
+        let fullClinicDataList = try! context!.executeFetchRequest(clinicDataRequest)
+        let fullClinicDataArr = SubClinicDataObj.jsonToModelList(fullClinicDataList as Array) as! Array<SubClinicDataObj>
+        for clinicData in clinicTypeList {
+            let clinicDataInType = NSMutableArray()
+            for subClinicData in fullClinicDataArr {
+                if (subClinicData.clinicItemName == clinicData.clinicItemName){
+                    clinicDataInType.addObject(subClinicData)
+                }
             }
-
+            clinicData.clinicDataList = (clinicDataInType as NSArray) as! Array
+        }
+        
+        self.clinicReportObjList = NSMutableArray(array: clinicTypeList as NSArray)
+    }
+    
+    //save userProfile to Local database
+    func saveUserToLocalDB(){
+        let userLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableUser, inManagedObjectContext: context!)
+        userLocalDBItem.setValue(userProfileObj.username, forKey: propertyUsername)
+        userLocalDBItem.setValue(userProfileObj.email, forKey: propertyEmail)
+        userLocalDBItem.setValue(userProfileObj.nick, forKey: propertyDisplayname)
+        userLocalDBItem.setValue(userProfileObj.gender, forKey: propertyGender)
+        userLocalDBItem.setValue(userProfileObj.pathological, forKey: propertyPathological)
+        userLocalDBItem.setValue(userProfileObj.stage, forKey: propertyStage)
+        userLocalDBItem.setValue(userProfileObj.age, forKey: propertyAge)
+        userLocalDBItem.setValue(userProfileObj.cancerType, forKey: propertyCancerType)
+        userLocalDBItem.setValue(userProfileObj.metastics, forKey: propertyMetastasis)
+        userLocalDBItem.setValue(userProfileObj.geneticMutation, forKey: propertyGeneticMutation)
+        userLocalDBItem.setValue(userProfileObj.portraitUrl, forKey: propertyImageURL)
+        userLocalDBItem.setValue(userProfileObj.phone, forKey: propertyPhone)
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func saveTreatmentListToLocalDB(){
+        for treatment in treatmentObjList {
+            let treatmentLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableTreatment, inManagedObjectContext: context!)
+            let treatmentObj = treatment as! TreatmentObj
+            treatmentLocalDBItem.setValue(treatmentObj.treatmentName , forKey: propertyTreatmentName)
+            treatmentLocalDBItem.setValue(treatmentObj.username , forKey: propertyTreatmentUsername)
+            treatmentLocalDBItem.setValue(treatmentObj.dosage , forKey: propertyDosage)
+            treatmentLocalDBItem.setValue(treatmentObj.beginDate , forKey: propertyBeginDate)
+            treatmentLocalDBItem.setValue(treatmentObj.endDate , forKey: propertyEndDate)
+            treatmentLocalDBItem.setValue(treatmentObj.treatmentID, forKey: propertyTreatmentID)
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func savePatientStatusToLocalDB(){
+        for patientStatus in patientStatusObjList {
+            let patientstatusLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tablePatientStatus, inManagedObjectContext: context!)
+            let patientStatusObj = patientStatus as! PatientStatusObj
+            patientstatusLocalDBItem.setValue(patientStatusObj.statusID , forKey: propertyStatusID)
+            patientstatusLocalDBItem.setValue(patientStatusObj.username , forKey: propertyPatientStatusUsername)
+            patientstatusLocalDBItem.setValue(patientStatusObj.statusDesc , forKey: propertyStatusDesc)
+            patientstatusLocalDBItem.setValue(patientStatusObj.insertedDate , forKey: propertyInsertedDate)
+            patientstatusLocalDBItem.setValue(patientStatusObj.imageURL , forKey: propertyPatientStatusImageURL)
+            patientstatusLocalDBItem.setValue(patientStatusObj.scanData , forKey: propertyScanData)
+            patientstatusLocalDBItem.setValue(patientStatusObj.hasImage , forKey: propertyHasImage)
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func saveClinicDataToLocalDB(){
+        for clinicReport in self.clinicReportObjList {
+            let clinicDataList = (clinicReport as! ClinicDataObj).clinicDataList
+            for clinicData in clinicDataList {
+                let clinicDataLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableClinicData, inManagedObjectContext: context!)
+                clinicDataLocalDBItem.setValue(clinicData.clinicItemName, forKey: propertyClinicItemName)
+                clinicDataLocalDBItem.setValue(clinicData.clinicItemValue, forKey: propertyClinicItemValue)
+                clinicDataLocalDBItem.setValue(clinicData.statusID, forKey: propertyClinicDataStatusID)
+                clinicDataLocalDBItem.setValue(clinicData.insertDate, forKey: propertyClinicDataInsertDate)
+                clinicDataLocalDBItem.setValue(clinicData.insertUsername, forKey: propertyClinicDataUsername)
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func clearUserFromLocalDB() {
+        let deleteUserRequet = NSFetchRequest(entityName: tableUser)
+        if let results = try? context!.executeFetchRequest(deleteUserRequet) {
+            for param in results {
+                context!.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func clearTreatmentFromLocalDB() {
+        let deleteTreatmentRequet = NSFetchRequest(entityName: tableTreatment)
+        if let results = try? context!.executeFetchRequest(deleteTreatmentRequet) {
+            for param in results {
+                context!.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func clearPatientStatusFromLocalDB() {
+        let deletePatientStatusRequet = NSFetchRequest(entityName: tablePatientStatus)
+        if let results = try? context!.executeFetchRequest(deletePatientStatusRequet) {
+            for param in results {
+                context!.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func clearClinicDataFromLocalDB() {
+        let deleteClinicDataRequet = NSFetchRequest(entityName: tableClinicData)
+        if let results = try? context!.executeFetchRequest(deleteClinicDataRequet) {
+            for param in results {
+                context!.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func getTreatmentsData(){
+        self.treatmentSections.removeAllObjects()
+        if self.username == self.profileOwnername {
             
-            if (jsonResult != nil) && (jsonResult is NSDictionary) && ((jsonResult as! NSDictionary).objectForKey("content") != nil){
-                let userDetail = (jsonResult as! NSDictionary).objectForKey("content")
-                treatmentList = userDetail!.objectForKey("treatments") as! NSMutableArray
-
-                self.patientStatusList = userDetail!.objectForKey("patientStatus") as! NSArray
-                self.clinicReportList = userDetail!.objectForKey("clinicReport") as! NSArray
-                self.userProfile = userDetail!.objectForKey("userProfile") as! NSDictionary
-                self.userProfileObj = UserProfile()
-                self.userProfileObj?.initVariables(self.userProfile)
-                var timeList = [Double]()
-                let timeSet = NSMutableSet()
-                for var i = 0; i < treatmentList.count; i++ {
-                    treatmentList[i] = treatmentList[i] as! NSMutableDictionary
-                    treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("beginDate") as! Double), forKey:"beginDate")
-                    treatmentList[i].setObject(getNSDateMod(treatmentList[i].objectForKey("endDate") as! Double), forKey:"endDate")
-                    let defaultEndDateMod: Double = getNSDateMod(defaultTreatmentEndDate * 1000)
-
-                    let treatment = treatmentList[i] as! NSMutableDictionary
-
-                    if (treatment.objectForKey("endDate") as! Double) == (defaultEndDateMod){
-                        treatment.setObject(((NSDate().timeIntervalSince1970 as NSNumber).integerValue * 1000) as AnyObject, forKey:"endDate")
-                    }
-
-                    if timeSet.containsObject(treatment.objectForKey("endDate")!) == false {
-                        timeSet.addObject(treatment.objectForKey("endDate") as! Double)
-                    }
-                    if timeSet.containsObject(treatment.objectForKey("beginDate")!) == false {
-                        timeSet.addObject(treatment.objectForKey("beginDate") as! Double)
-                    }
+            let currentTimeStamp: Double = NSDate().timeIntervalSince1970
+            var previousStoreTimestamp: Double = 0
+            if  NSUserDefaults.standardUserDefaults().objectForKey(setUserProfileTimeStamp) != nil {
+                previousStoreTimestamp = NSUserDefaults.standardUserDefaults().objectForKey(setUserProfileTimeStamp) as! Double
+                
+            }
+            if (currentTimeStamp - previousStoreTimestamp) > 86400 * 15 {
+                clearUserFromLocalDB()
+                clearTreatmentFromLocalDB()
+                clearPatientStatusFromLocalDB()
+                clearClinicDataFromLocalDB()
+            }else{
+                getUserFromLocalDB()
+                getTreatmentListFromLocalDB()
+                getPatientStatusFromLocalDB()
+                getClinicDataFromLocalDB()
+            }
+        }
+        
+        if (self.userProfileObj.username == "") || (self.userProfileObj.username == nil) {
+            if (username != nil) && (password != nil){
+                var jsonResult:AnyObject? = nil
+                
+                getAccessToken.getAccessToken()
+                if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) != nil{
+                    let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
+                    let urlPath:String = getUserDetailURL + "?access_token=" + accessToken
+                    let requestBody = NSDictionary(object: self.profileOwnername!, forKey: "username")
+                    jsonResult = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
                 }
+                
+                if (jsonResult != nil) && (jsonResult is NSDictionary) && ((jsonResult as! NSDictionary).objectForKey("content") != nil){
+                    NSUserDefaults.standardUserDefaults().setObject(NSDate().timeIntervalSince1970, forKey: setTagListTimeStamp)
+                    let userDetail = (jsonResult as! NSDictionary).objectForKey("content")
+                    self.treatmentList = userDetail!.objectForKey("treatments") as! NSArray
+                    let treatmentObjectList = TreatmentObj.jsonToModelList(treatmentList) as! Array<TreatmentObj>
+                    self.treatmentObjList.removeAllObjects()
+                    self.treatmentObjList.addObjectsFromArray(treatmentObjectList)
+                    
+                    self.patientStatusList = userDetail!.objectForKey("patientStatus") as! NSArray
+                    self.patientStatusObjList.removeAllObjects()
+                    self.patientStatusObjList.addObjectsFromArray(PatientStatusObj.jsonToModelList(patientStatusList) as! Array<PatientStatusObj>)
+                    
+                    let clinicReportList = userDetail!.objectForKey("clinicReport") as! NSArray
+                    self.clinicReportObjList.removeAllObjects()
+                    let dataList: Array = ClinicDataObj.jsonToModelList(((userDetail as! NSDictionary).objectForKey("clinicReport") as! NSArray) as Array) as! Array<ClinicDataObj>
+                    var index = 0
+                    for data in dataList {
+                        data.clinicDataList = SubClinicDataObj.jsonToModelList(((clinicReportList[index] as! NSDictionary).objectForKey("clinicDataList") as! NSArray) as Array) as! Array<SubClinicDataObj>
+                        index++
+                    }
+                    self.clinicReportObjList.addObjectsFromArray(dataList)
 
-                for timeSt in timeSet {
-                    timeList.append(timeSt as! Double)
-                }
-                timeList.sortInPlace(>)
-
-                let dateFormatter = NSDateFormatter()
-                dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
-                var index = 0
-                var patientStatusIndex = 0
-                if (patientStatusIndex < patientStatusList.count) && (timeList.count>0){
-                    let treatmentSection = NSMutableDictionary()
-                    let patientStatusInTreatmentSection = NSMutableArray()
-                    treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
-                    treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
-                    treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                    while ((patientStatusIndex < patientStatusList.count) && (patientStatusList[patientStatusIndex]["insertedDate"] as! Double) > (timeList[index] as Double)) {
-                        patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
-                        patientStatusIndex++
-                    }
-                    if patientStatusInTreatmentSection.count > 0{
-                        treatmentSections.addObject(treatmentSection)
-                    }
-                }
-
-                while index < timeList.count-1 {
-                    let treatmentSection = NSMutableDictionary()
-                    let patientStatusInTreatmentSection = NSMutableArray()
-                    treatmentSection.setObject(timeList[index+1] as AnyObject, forKey: "beginDate")
-                    treatmentSection.setObject(timeList[index] as AnyObject, forKey: "endDate")
-                    var onedayInterval: Double = 0
-                    if strideof(Int) == strideof(Int32) {
-                        onedayInterval = 865000
-                    }else if strideof(Int) == strideof(Int64) {
-                        onedayInterval = 865000000
-                    }
-                    if (treatmentSection.objectForKey("beginDate") as! Double) + onedayInterval < (treatmentSection.objectForKey("endDate") as! Double){
-                        var treatmentStr = ""
-                        var dosageStr = ""
-                        for var treatmentIndex = 0; treatmentIndex < treatmentList.count; treatmentIndex++ {
-                            let treatment = treatmentList[treatmentIndex] as! NSDictionary
-                            
-                            if ((treatment.objectForKey("endDate") as? Double) >= (timeList[index] as Double)) && ((treatment.objectForKey("beginDate") as? Double) <= (timeList[index+1] as Double)) {
-                                treatmentStr += (treatment["treatmentName"] as! String) + " "
-                                if treatment["dosage"] != nil{
-                                    dosageStr += treatment["dosage"] as! String
-                                }
-                            }
-                        }
-                        if treatmentStr == "" {
-                            treatmentStr = "空窗期"
-                        }
-                        treatmentSection.setObject(treatmentStr, forKey: "treatmentTitle")
-                        treatmentSection.setObject(dosageStr, forKey: "dosage")
-                        if patientStatusIndex < patientStatusList.count{
-                            while ((patientStatusIndex < patientStatusList.count) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Double) > (timeList[index+1] as Double)) && ((patientStatusList[patientStatusIndex]["insertedDate"] as! Double) < (timeList[index] as Double))) {
-                                patientStatusInTreatmentSection.addObject(patientStatusList[patientStatusIndex])
-                                patientStatusIndex++
-                            }
-                            treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                        }
-                        treatmentSections.addObject(treatmentSection)
-                    }
-                    index++
-
-                    if patientStatusIndex < patientStatusList.count{
-                        let treatmentSection = NSMutableDictionary()
-                        let patientStatusInTreatmentSection = NSMutableArray()
-                        treatmentSection.setObject((patientStatusList[patientStatusIndex]["insertedDate"] as! Double), forKey: "endDate")
-                        treatmentSection.setObject((patientStatusList[patientStatusList.count - 1]["insertedDate"] as! Double), forKey: "beginDate")
-                        treatmentSection.setObject(noTreatmentTimeStr, forKey: "treatmentTitle")
-                        for var i = patientStatusIndex; i < patientStatusList.count; i++ {
-                            patientStatusInTreatmentSection.addObject(patientStatusList[i])
-                        }
-                        treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
-                        treatmentSections.addObject(treatmentSection)
-                    }
+                    self.userProfile = userDetail!.objectForKey("userProfile") as! NSDictionary
+                    self.userProfileObj.initVariables(self.userProfile)
+                    saveUserToLocalDB()
+                    saveTreatmentListToLocalDB()
+                    savePatientStatusToLocalDB()
+                    saveClinicDataToLocalDB()
+                    NSUserDefaults.standardUserDefaults().setObject(NSDate().timeIntervalSince1970, forKey: setUserProfileTimeStamp)
                 }
             }
         }
-        self.tableView.mj_header.endRefreshing()
-
+        var timeList = [Double]()
+        let timeSet = NSMutableSet()
+        for var i = 0; i < treatmentObjList.count; i++ {
+            (treatmentObjList.objectAtIndex(i) as! TreatmentObj).beginDate = getNSDateMod((treatmentObjList.objectAtIndex(i) as! TreatmentObj).beginDate )
+            (treatmentObjList.objectAtIndex(i) as! TreatmentObj).endDate = getNSDateMod((treatmentObjList.objectAtIndex(i) as! TreatmentObj).endDate)
+            let defaultEndDateMod: Double = getNSDateMod(defaultTreatmentEndDate * 1000)
+            
+            let treatment = treatmentObjList.objectAtIndex(i) as! TreatmentObj
+            
+            if treatment.endDate == defaultEndDateMod{
+                treatment.endDate = NSDate().timeIntervalSince1970 * 1000
+            }
+            
+            if timeSet.containsObject(treatment.endDate) == false {
+                timeSet.addObject(treatment.endDate)
+            }
+            if timeSet.containsObject(treatment.beginDate) == false {
+                timeSet.addObject(treatment.beginDate)
+            }
+        }
+        
+        for timeSt in timeSet {
+            timeList.append(timeSt as! Double)
+        }
+        timeList.sortInPlace(>)
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
+        var index = 0
+        var patientStatusIndex = 0
+        if (patientStatusIndex < patientStatusObjList.count) && (timeList.count>0){
+            let treatmentSection = NSMutableDictionary()
+            let patientStatusInTreatmentSection = NSMutableArray()
+            treatmentSection.setObject((NSDate().timeIntervalSince1970)*1000, forKey: "endDate")
+            treatmentSection.setObject((timeList[index] as AnyObject), forKey: "beginDate")
+            treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+            while ((patientStatusIndex < patientStatusObjList.count) && ((patientStatusObjList[patientStatusIndex] as! PatientStatusObj).insertedDate) > (timeList[index] as Double)) {
+                patientStatusInTreatmentSection.addObject(patientStatusObjList[patientStatusIndex])
+                patientStatusIndex++
+            }
+            if patientStatusInTreatmentSection.count > 0{
+                treatmentSections.addObject(treatmentSection)
+            }
+        }
+        
+        while index < timeList.count-1 {
+            let treatmentSection = NSMutableDictionary()
+            let patientStatusInTreatmentSection = NSMutableArray()
+            treatmentSection.setObject(timeList[index+1] as AnyObject, forKey: "beginDate")
+            treatmentSection.setObject(timeList[index] as AnyObject, forKey: "endDate")
+            var onedayInterval: Double = 0
+            if strideof(Int) == strideof(Int32) {
+                onedayInterval = 86500
+            }else if strideof(Int) == strideof(Int64) {
+                onedayInterval = 86500000
+            }
+            if (treatmentSection.objectForKey("beginDate") as! Double) + onedayInterval < (treatmentSection.objectForKey("endDate") as! Double){
+                var treatmentStr = ""
+                var dosageStr = ""
+                
+                for var treatmentIndex = 0; treatmentIndex < treatmentObjList.count; treatmentIndex++ {
+                    let treatment = treatmentObjList.objectAtIndex(treatmentIndex) as! TreatmentObj
+                    
+                    if ((treatment.endDate) >= (timeList[index] as Double)) && ((treatment.beginDate) <= (timeList[index+1] as Double)) {
+                        treatmentStr += (treatment.treatmentName) + " "
+                        if treatment.dosage != "" {
+                            dosageStr += treatment.dosage
+                        }
+                    }
+                }
+                if treatmentStr == "" {
+                    treatmentStr = "空窗期"
+                }
+                treatmentSection.setObject(treatmentStr, forKey: "treatmentTitle")
+                treatmentSection.setObject(dosageStr, forKey: "dosage")
+                
+                while ((patientStatusIndex < patientStatusObjList.count) && (((patientStatusObjList[patientStatusIndex] as! PatientStatusObj).insertedDate) >= (timeList[index+1] as Double)) && (((patientStatusObjList[patientStatusIndex] as! PatientStatusObj).insertedDate) < (timeList[index] as Double))) {
+                    patientStatusInTreatmentSection.addObject(patientStatusObjList[patientStatusIndex])
+                    patientStatusIndex++
+                }
+                treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+            }
+            treatmentSections.addObject(treatmentSection)
+            index++
+        }
+        
+        if patientStatusIndex < patientStatusObjList.count{
+            let treatmentSection = NSMutableDictionary()
+            let patientStatusInTreatmentSection = NSMutableArray()
+            treatmentSection.setObject(((patientStatusObjList[patientStatusIndex] as! PatientStatusObj).insertedDate), forKey: "endDate")
+            treatmentSection.setObject(((patientStatusObjList[patientStatusObjList.count - 1] as! PatientStatusObj).insertedDate), forKey: "beginDate")
+            treatmentSection.setObject(noTreatmentTimeStr, forKey: "treatmentTitle")
+            for var i = patientStatusIndex; i < patientStatusObjList.count; i++ {
+                patientStatusInTreatmentSection.addObject(patientStatusObjList[i])
+            }
+            treatmentSection.setObject(patientStatusInTreatmentSection, forKey: "patientStatus")
+            treatmentSections.addObject(treatmentSection)
+        }
     }
     
     func getNSDateMod(date: Double)->Double{
@@ -891,6 +1133,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
+        print(heightForHeader)
         return heightForHeader
     }
     
@@ -974,7 +1217,7 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             let seperatorLine:UIView = UIView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: seperatorLineH))
             seperatorLine.backgroundColor = seperateLineColor
             headerView.addSubview(seperatorLine)
-
+            
         }
         headerView.backgroundColor = UIColor.whiteColor()
         return headerView
@@ -1008,10 +1251,11 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
             let userBasicViewController = segue.destinationViewController as! UserBasicInfoTableViewController
             userBasicViewController.userProfile = self.userProfileObj
         }
-
+        
         if segue.identifier == "updateTreatment" {
             let viewController = segue.destinationViewController as! UpdateTreatmentTableViewController
-            viewController.treatmentList = self.treatmentList
+            viewController.treatmentList.removeAllObjects()
+            viewController.treatmentList.addObjectsFromArray(self.treatmentObjList as [AnyObject])
         }
         
         if segue.identifier == "showPostsSegue" {

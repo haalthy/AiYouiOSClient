@@ -12,7 +12,7 @@ import Foundation
 
 class TagModel: D3Model {
 
-    var typeRank: Int64 = 0
+    var typeRank: Int = 0
     var typeName: String!
     var tags: Array<SubTagModel>!
 }

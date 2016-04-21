@@ -19,7 +19,7 @@ class PatientStatusTableViewCell: UITableViewCell {
     //自定义变量
     var cellWidth: CGFloat = CGFloat()
     
-    var patientStatus = NSDictionary(){
+    var patientStatus = PatientStatusObj(){
         didSet{
             updateUI()
         }
@@ -32,11 +32,11 @@ class PatientStatusTableViewCell: UITableViewCell {
         var detailStr: String?
         var scanDataStr: String?
 
-        if ( patientStatus.objectForKey("scanData") != nil ) && ((patientStatus.objectForKey("scanData") is NSNull) == false) && ((patientStatus.objectForKey("scanData") as! String) != ""){
-            scanDataStr = patientStatus.objectForKey("scanData") as! String
+        if (patientStatus.scanData != ""){
+            scanDataStr = patientStatus.scanData
         }
-        if ( patientStatus.objectForKey("statusDesc") != nil ) && ((patientStatus.objectForKey("statusDesc") is NSNull) == false) && ((patientStatus.objectForKey("statusDesc") as! String) != ""){
-            let patientstatusHighlightStr = (patientStatus.objectForKey("statusDesc") as! String)
+        if ( patientStatus.statusDesc != ""){
+            let patientstatusHighlightStr = patientStatus.statusDesc
             let patientstatusHighlightAndDesp = patientstatusHighlightStr.componentsSeparatedByString(patientstatusSeperateStr)
             if patientstatusHighlightAndDesp.count > 1 {
                 highlightStr = patientstatusHighlightAndDesp[0]
@@ -58,7 +58,7 @@ class PatientStatusTableViewCell: UITableViewCell {
         let patientsDetailMaxW = cellWidth - patientstatusDetailLeftSpace - patientstatusDetailRightSpace
         
         let dateLabel = UILabel(frame: CGRect(x: cellWidth - patientstatusDateW - patientstatusDateRightSpace, y: patientstatusY, width: patientstatusDateW, height: patientstatusDateH))
-        let insertedDate = NSDate(timeIntervalSince1970: (patientStatus.objectForKey("insertedDate") as! Double)/1000 as NSTimeInterval)
+        let insertedDate = NSDate(timeIntervalSince1970: (patientStatus.insertedDate)/1000 as NSTimeInterval)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yy/MM/dd" // superset of OP's format
         let insertedDateStr = dateFormatter.stringFromDate(insertedDate)
@@ -112,8 +112,8 @@ class PatientStatusTableViewCell: UITableViewCell {
         }
         let seperatorLine:UIView = UIView(frame: CGRect(x: treatmentTitleLeftSpace, y: 0, width: cellWidth - treatmentTitleLeftSpace, height: seperatorLineH))
         seperatorLine.backgroundColor = seperateLineColor
-        if (patientStatus.objectForKey("imageURL") != nil) && ((patientStatus.objectForKey("imageURL") is NSNull) == false) && ((patientStatus.objectForKey("imageURL") as! String) != ""){
-            let imageURLStr: String = patientStatus.objectForKey("imageURL") as! String
+        if (patientStatus.imageURL != "") && (patientStatus.imageURL != "<null>"){
+            let imageURLStr: String = patientStatus.imageURL
             var imageURLArr = imageURLStr.componentsSeparatedByString(";")
             var imageIndex: Int = 0
             for imageURL in imageURLArr{
@@ -126,7 +126,7 @@ class PatientStatusTableViewCell: UITableViewCell {
             }
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace
-            var feedModel = PostFeedStatus()
+            let feedModel = PostFeedStatus()
             feedModel.imageURL = imageURLStr
 //            feedModel.picArr = imageURLArr
             

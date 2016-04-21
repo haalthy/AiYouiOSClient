@@ -45,7 +45,7 @@ class HaalthyService:NSObject{
         var cancerType  = String()
         var metastasis  = String()
 //        var image       = String()
-        var imageInfo = NSMutableDictionary()
+        let imageInfo = NSMutableDictionary()
         var geneticMutation = String()
         var phone = String()
         if profileSet.objectForKey(emailNSUserData) != nil{
@@ -89,7 +89,6 @@ class HaalthyService:NSObject{
         if profileSet.objectForKey(imageNSUserData) != nil{
             imageInfo.setObject(profileSet.objectForKey(imageNSUserData)!, forKey: "data")
             imageInfo.setObject("jpg", forKey: "type")
-//            image = (profileSet.objectForKey(imageNSUserData))! as! String
         }
         if profileSet.objectForKey(geneticMutationNSUserData) != nil{
             geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String

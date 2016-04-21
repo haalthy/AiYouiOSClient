@@ -84,6 +84,7 @@ let isProduction: Bool = true
 let kDeviceToken = "kDeviceToken"
 
 //store info in NSUserData
+let setTagListTimeStamp = "setTagListTimeStamp"
 let favTagsNSUserData = "favoriteTags"
 let genderNSUserData = "haalthyUserGender"
 let ageNSUserData = "haalthyUserAge"

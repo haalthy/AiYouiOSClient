@@ -150,7 +150,7 @@ class FeedTableViewCell: UITableViewCell {
                         dosageLabel.font = UIFont(name: "Helvetica-Bold", size: 12.0)
                         dosageLabel.numberOfLines = 0
                         dosageLabel.sizeToFit()
-                        var height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
+                        let height:CGFloat = dosageLabel.frame.height > treatmentNameLabel.frame.height ? dosageLabel.frame.height : treatmentNameLabel.frame.height
                         treatmentY += height + 5
                         dosageLabel.textColor = mainColor
                     }else{

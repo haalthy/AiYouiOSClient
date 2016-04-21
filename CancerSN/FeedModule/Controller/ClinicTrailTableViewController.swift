@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+    let setClinicTrialListTimeStamp = "setClinicTrialListTimeStamp"
+    
     var searchDataArr = NSMutableArray()
     var originalDataArr = NSMutableArray()
     
@@ -17,8 +20,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     var selectionPickerContainerViewHeight: CGFloat = 250
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
-    var treatmentSelectionData =  ["PD-1", "CTLA-4", "Vaccine", "CART",]
-    var cancerTypeSelectionData = ["腺癌", "鳞癌", "非小细胞癌症", "弥漫性大B细胞淋巴瘤"]
+    var treatmentSelectionData =  [String]()
+    var cancerTypeSelectionData = [String]()
     var treatmentBtn = UIButton()
     var typeBtn = UIButton()
     
@@ -37,9 +40,9 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             
             "searchString" : "",
             "page" : 0,
-            "count" : 10
+            "count" : 50
         ]
-        getPatientDataFromServer(parameters)
+        getClinicTrialDataFromServer(parameters)
     }
     
     func initVariables(){
@@ -50,6 +53,60 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         getDrugTypeFromServer()
         
         getSubGroupFromServer()
+    }
+    
+    //get ClinicTrial From Local DB
+    func getClinicTrailFromLocalDB(){
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let clinicTrialRequest = NSFetchRequest(entityName: tableClinicTrial)
+        clinicTrialRequest.returnsDistinctResults = true
+        clinicTrialRequest.returnsObjectsAsFaults = false
+        
+        clinicTrialRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        let clinicTrialList = try! context.executeFetchRequest(clinicTrialRequest)
+        let homeData = ClinicTrailObj.jsonToModelList(clinicTrialList as Array) as! Array<ClinicTrailObj>
+        self.searchDataArr.removeAllObjects()
+        self.searchDataArr.addObjectsFromArray(homeData)
+//        self.searchDataArr.addObjectsFromArray(clinicTrialList)
+    }
+    
+    //save ClinicTrial to Local DB
+    func saveClinicTrialToLocalDB(){
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        for clinicTrial in self.searchDataArr {
+            let clinicTrialItem = clinicTrial as! ClinicTrailObj
+            let clinicTrialLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableClinicTrial, inManagedObjectContext: context)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.drugType, forKey: propertyDrugType)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.subGroup, forKey: propertySubGroup)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.drugName, forKey: propertyDrugName)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.stage, forKey: propertyStage)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.effect, forKey: propertyEffect)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.sideEffect, forKey: propertySideEffect)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.researchInfo, forKey: propertyResearchInfo)
+            clinicTrialLocalDBItem.setValue(clinicTrialItem.original, forKey: propertyOriginal)
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+    //func clear ClinicTrial From LocalDB
+    func clearClinicTrialLocalDB(){
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deletePostsRequet = NSFetchRequest(entityName: tableClinicTrial)
+        if let results = try? context.executeFetchRequest(deletePostsRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
     }
     
     func getDrugTypeFromServer() {
@@ -75,24 +132,41 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         
     }
     
-    func getPatientDataFromServer(parameters: Dictionary<String, AnyObject>) {
+    func getClinicTrialDataFromServer(parameters: Dictionary<String, AnyObject>) {
         
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
-        
-        NetRequest.sharedInstance.POST(searchClinicURL, parameters: parameters, success: { (content, message) -> Void in
-            self.searchDataArr.removeAllObjects()
-            let dict: NSArray = content as! NSArray
-            let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
+        let currentTimeStamp: Double = NSDate().timeIntervalSince1970
+        var previousStoreTimestamp: Double = 0
+        if  NSUserDefaults.standardUserDefaults().objectForKey(setClinicTrialListTimeStamp) != nil {
+            previousStoreTimestamp = NSUserDefaults.standardUserDefaults().objectForKey(setClinicTrialListTimeStamp) as! Double
             
-            self.searchDataArr.addObjectsFromArray(homeData)
-            self.originalDataArr.addObjectsFromArray(self.searchDataArr as [AnyObject])
-            self.tableView.reloadData()
-            HudProgressManager.sharedInstance.dismissHud()
-            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
-            }) { (content, message) -> Void in
+        }
+        if (currentTimeStamp - previousStoreTimestamp) > (28 * 86400) {
+            clearClinicTrialLocalDB()
+        }else{
+            getClinicTrailFromLocalDB()
+        }
                 
+        if self.searchDataArr.count == 0 {
+            
+            HudProgressManager.sharedInstance.showHudProgress(self, title: "")
+            
+            NetRequest.sharedInstance.POST(searchClinicURL, parameters: parameters, success: { (content, message) -> Void in
+                self.searchDataArr.removeAllObjects()
+                let dict: NSArray = content as! NSArray
+                let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
+                
+                self.searchDataArr.addObjectsFromArray(homeData)
+                self.originalDataArr.addObjectsFromArray(self.searchDataArr as [AnyObject])
+                self.tableView.reloadData()
+                self.saveClinicTrialToLocalDB()
+                NSUserDefaults.standardUserDefaults().setObject(NSDate().timeIntervalSince1970, forKey: self.setClinicTrialListTimeStamp)
                 HudProgressManager.sharedInstance.dismissHud()
-                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+                HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
+                }) { (content, message) -> Void in
+                    
+                    HudProgressManager.sharedInstance.dismissHud()
+                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
+            }
         }
         
     }

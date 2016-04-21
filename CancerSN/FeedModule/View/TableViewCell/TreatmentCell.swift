@@ -81,8 +81,8 @@ class TreatmentCell: UITableViewCell {
         
         //date label
         // add date button
-        let beginDateStr = (treatmentObj.beginDate as! NSString).substringToIndex(10)
-        let endDateStr = (treatmentObj.endDate as! NSString).substringToIndex(10)
+        let beginDateStr = (treatmentObj.beginDate as NSString).substringToIndex(10)
+        let endDateStr = (treatmentObj.endDate as NSString).substringToIndex(10)
         let dateLabel = UILabel(frame: CGRect(x: profileLeftSpace, y: dosageLabel.frame.origin.y + dosageLabel.frame.height, width: screenWidth - profileLeftSpace, height: 13))
         dateLabel.text = beginDateStr + "-" + endDateStr
         dateLabel.textColor = lightTextColor

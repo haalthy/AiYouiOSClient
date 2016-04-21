@@ -107,7 +107,7 @@ class GeneticMutationViewController: UIViewController {
         var buttonX: CGFloat = 0
         var buttonY: CGFloat = 0
         let buttonHeight: CGFloat = CGFloat(29)
-        var buttonsBeMoved = NSMutableArray()
+        let buttonsBeMoved = NSMutableArray()
         for genetic in geneticList {
             
             let textSize: CGSize = (genetic as! String).sizeWithFont(buttonTitleLabelFont, maxSize: CGSize(width: buttonSection.frame.width - buttonX, height: buttonHeight))

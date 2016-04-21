@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     
@@ -317,6 +318,25 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func saveTreatmentToLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context: NSManagedObjectContext = appDel.managedObjectContext!
+        for treatment in treatmentList {
+            let treatmentLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableTreatment, inManagedObjectContext: context)
+            let treatmentObjItem = treatment as! NSDictionary
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("treatmentName") , forKey: propertyTreatmentName)
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("username") , forKey: propertyTreatmentUsername)
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("dosage") , forKey: propertyDosage)
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("beginDate") , forKey: propertyBeginDate)
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("endDate") , forKey: propertyEndDate)
+            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("treatmentID"), forKey: propertyTreatmentID)
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
     func addTreatment(treatmentList: NSArray){
         var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         if accessToken == nil {
@@ -337,7 +357,14 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-                
+                let dict: NSDictionary = content as! NSDictionary
+                let treatmentIdList = dict.objectForKey("treatmentIDList") as! [Int]
+                var index  = 0
+                for treatment in self.treatmentList {
+                    (treatment as! NSMutableDictionary).setObject(treatmentIdList[index], forKey: "treatmentID")
+                    index++
+                }
+                self.saveTreatmentToLocalDB()
             }) { (content, message) -> Void in
                 
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
