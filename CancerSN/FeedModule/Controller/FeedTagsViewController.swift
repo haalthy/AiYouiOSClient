@@ -51,10 +51,19 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        print("load view")
         self.initVariables()
         self.initContentView()
-        print("init variable")
+        let currentTimeStamp: Double = NSDate().timeIntervalSince1970
+        var previousStoreTimestamp: Double = 0
+        if  NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) != nil {
+            previousStoreTimestamp = NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) as! Double
+            
+        }
+        if (currentTimeStamp - previousStoreTimestamp) > (28 * 86400) {
+            clearTagListFromLacalDB()
+        }else{
+            getTagListFromLocalDB()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -73,9 +82,11 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - 初始化变量
     
     func initVariables() {
+        dataTagsArr = NSMutableArray()
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        dataTagsArr = NSMutableArray()
+        self.tableView.registerClass(TagCell.self, forCellReuseIdentifier: cellTagIdentifier)
+        self.tagCell = self.tableView.dequeueReusableCellWithIdentifier(cellTagIdentifier) as! TagCell
         if screenHeight < 600 {
             heightForHeaderInSection = 20
         }
@@ -87,8 +98,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - 初始化相关view
     
     func initContentView() {
-        self.tableView.registerClass(TagCell.self, forCellReuseIdentifier: cellTagIdentifier)
-        self.tagCell = self.tableView.dequeueReusableCellWithIdentifier(cellTagIdentifier) as! TagCell
+
         if isNavigationPop {
             //previous Btn
             let btnMargin: CGFloat = 15
@@ -175,6 +185,12 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     func cancel(sender: UIButton){
+        if !isSelectedByPost {
+            if NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil {
+                let selectTagList = saveTagList()
+                NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
+            }
+        }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -285,7 +301,6 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: 获取所有标签
     
     func getAllTagsFromServer() {
-        HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中")
         if (isNavigationPop == false) && (isSelectedByPost == false) {
             if (self.defaultSelectTagNameList.count == 0) && (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) != nil) {
                 defaultSelectTagNameList = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSMutableArray
@@ -294,20 +309,8 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
         
-        let currentTimeStamp: Double = NSDate().timeIntervalSince1970
-        var previousStoreTimestamp: Double = 0
-        if  NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) != nil {
-            previousStoreTimestamp = NSUserDefaults.standardUserDefaults().objectForKey(setTagListTimeStamp) as! Double
-            
-        }
-        if (currentTimeStamp - previousStoreTimestamp) > (28 * 86400) {
-            clearTagListFromLacalDB()
-        }else{
-            getTagListFromLocalDB()
-        }
-        
         if self.dataTagsArr.count == 0 {
-            
+            HudProgressManager.sharedInstance.showHudProgress(self, title: "加载中")
             NetRequest.sharedInstance.GET(getTagListURL, success: { (content, message) -> Void in
                 
                 self.dict = content as! NSArray
@@ -322,12 +325,10 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
                     
                     HudProgressManager.sharedInstance.dismissHud()
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)
-                    
             }
-        }else{
-            self.tableView.reloadData()
+        }
+        else{
             self.setDefaultSelectedTagBtn()
-            HudProgressManager.sharedInstance.dismissHud()
         }
     }
     
@@ -351,7 +352,6 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
         for indexSection in 0...(self.tableView.numberOfSections - 1){
             let indexPath = NSIndexPath(forRow: 0, inSection: indexSection)
             let cell = self.tableView.cellForRowAtIndexPath(indexPath)
-            print(cell?.subviews.count)
             let buttonsContainer = ((cell?.subviews)!)[0].subviews
             for subView in buttonsContainer {
                 if (subView is UIButton) {
