@@ -107,7 +107,7 @@ class PostTableViewCell: UITableViewCell {
     
     func updateUI(){
         self.removeAllSubviews()
-        let dateInserted = NSDate.createDate(post.dateInserted / 1000)
+        let dateInserted = NSDate.createDate((post.dateInserted as! Int64) / 1000)
         getDayAndMonth(dateInserted!)
         //add day label
         dayLabel.frame = CGRect(x: dayLabelLeftSpace, y: dayLabelTopSpace, width: dayLabelWidth, height: dayLabelHeight)

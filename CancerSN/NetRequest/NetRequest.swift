@@ -190,7 +190,6 @@ class NetRequest: NSObject {
                 
             }
             else {
-                print("网络异常")
 //                HudProgressManager.sharedInstance.sh
 //                failed(content: ["": ""], message: "网络异常")
             }

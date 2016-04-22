@@ -35,8 +35,8 @@ class PostFeedToolBar: UIView {
     }
     
     func initVariables(feedModel: PostFeedStatus) {
-    
-        self.updateTime = feedModel.dateInserted / 1000
+        let thround:Double = 1000
+        self.updateTime = Int64(feedModel.dateInserted / thround)
         self.commentCount = feedModel.countComments
     
     }

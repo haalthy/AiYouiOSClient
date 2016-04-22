@@ -109,7 +109,6 @@ class TagCell: UITableViewCell {
             if i == (tagArr?.count)! - 1 {
             
                 self.tagCellHeight = tagY + tagH + 10
-                print(self.tagCellHeight)
             }
             
         }

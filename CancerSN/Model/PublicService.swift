@@ -8,8 +8,11 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class PublicService:NSObject{
+
+    
     func getProfileStrByDictionary(user:UserProfile)->String{
         
         var userProfileStr : String
@@ -47,6 +50,77 @@ class PublicService:NSObject{
         return userProfileStr
     }
     
+    
+    
+    func clearUserFromLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deleteUserRequet = NSFetchRequest(entityName: tableUser)
+        if let results = try? context.executeFetchRequest(deleteUserRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+    func clearTreatmentFromLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deleteTreatmentRequet = NSFetchRequest(entityName: tableTreatment)
+        if let results = try? context.executeFetchRequest(deleteTreatmentRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+    func clearPatientStatusFromLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deletePatientStatusRequet = NSFetchRequest(entityName: tablePatientStatus)
+        if let results = try? context.executeFetchRequest(deletePatientStatusRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+    func clearClinicDataFromLocalDB() {
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        let deleteClinicDataRequet = NSFetchRequest(entityName: tableClinicData)
+        if let results = try? context.executeFetchRequest(deleteClinicDataRequet) {
+            for param in results {
+                context.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
+
+    
+    func cleanLocalDB(){
+        clearUserFromLocalDB()
+        clearTreatmentFromLocalDB()
+        clearPatientStatusFromLocalDB()
+        clearClinicDataFromLocalDB()
+    }
+    
     func logOutAccount(){
         let keychain = KeychainAccess()
         keychain.deletePasscode(usernameKeyChain)
@@ -65,7 +139,7 @@ class PublicService:NSObject{
         profileSet.removeObjectForKey(refreshNSUserData)
         profileSet.removeObjectForKey(userTypeUserData)
         profileSet.removeObjectForKey(geneticMutationNSUserData)
-
+        cleanLocalDB()
     }
     
     func cropToSquare(image originalImage: UIImage) -> UIImage {
@@ -187,7 +261,6 @@ class PublicService:NSObject{
             }
         }
         catch {
-            print(error)
             return false
         }
     }

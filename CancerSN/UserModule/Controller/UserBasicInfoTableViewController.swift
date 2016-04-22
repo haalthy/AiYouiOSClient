@@ -657,7 +657,6 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
             NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
                 
                 success: { (content , message) -> Void in
-                    print(content)
                     
                 }) { (content, message) -> Void in
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)

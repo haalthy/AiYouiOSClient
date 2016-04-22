@@ -83,7 +83,6 @@ class NetRequestManager: NSObject {
             }
             catch {
             
-                print("error")
             }
             //self.request.HTTPBody = buildParameters(self.parameters).dataUsingEncoding(NSUTF8StringEncoding)!
         }

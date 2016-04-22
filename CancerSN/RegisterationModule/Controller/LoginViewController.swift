@@ -119,7 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         wechatLoginImgView.image = UIImage(named: "btn_wechat")
         wechatLoginBtn.addSubview(wechatLoginImgView)
         wechatLoginBtn.addTarget(self, action: "loginViaWechat:", forControlEvents: UIControlEvents.TouchUpInside)
-//        self.view.addSubview(wechatLoginBtn)
+        self.view.addSubview(wechatLoginBtn)
         
         //qq Login
         let qqLoginBtnRgithSpace = wechatLoginBtnLeftSpace
@@ -130,7 +130,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         qqLoginImgView.image = UIImage(named: "btn_qq")
         qqLoginBtn.addSubview(qqLoginImgView)
         qqLoginBtn.addTarget(self, action: "loginViaQQ:", forControlEvents: UIControlEvents.TouchUpInside)
-//        self.view.addSubview(qqLoginBtn)
+        self.view.addSubview(qqLoginBtn)
         
         //look around
         
@@ -206,8 +206,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let openId = tencentOAuth!.openId
         let resp: NSDictionary = response.jsonResponse
         
-        print(resp.objectForKey("nickname"))
-        print(resp.objectForKey("figureurl_2"))
         keychainAccess.setPasscode(usernameKeyChain, passcode: openId)
         keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
         getAccessToken.getAccessToken()
@@ -279,7 +277,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             }
         }
         catch {
-            print(error)
             return false
         }
     }

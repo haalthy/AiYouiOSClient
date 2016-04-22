@@ -51,7 +51,6 @@ class ChartSummaryTableViewCell: UITableViewCell {
         initContentView()
         initVariable()
         selectedItemIndex(buttonIndexPair.objectForKey(0) as! String, index: 0)
-        let data = clinicReportList[0].clinicDataList
         setClinicReport(clinicReportList[0].clinicDataList)
     }
     
@@ -59,8 +58,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
         var index: Int = 0
         chartHeaderCoordinateX.addObject(chartHeaderLeftSpace)
         for clinicReportItem in clinicReportList {
-            buttonIndexPair.setObject((clinicReportItem as! ClinicDataObj).clinicItemName, forKey: index)
-            createHeaderBtn((clinicReportItem as! ClinicDataObj).clinicItemName, index: index)
+            buttonIndexPair.setObject(clinicReportItem.clinicItemName, forKey: index)
+            createHeaderBtn(clinicReportItem.clinicItemName, index: index)
             index++
         }
     }
@@ -101,10 +100,8 @@ class ChartSummaryTableViewCell: UITableViewCell {
 
         dataPointsXArr.removeAllObjects()
         dataPointsYArr.removeAllObjects()
-//        let beginDate = clinicDataList[clinicDataList.count-1].objectForKey("insertDate") as! Double
-//        let endDate = clinicDataList[0].objectForKey("insertDate") as! Double
         let beginDate = (clinicDataList[clinicDataList.count-1] as! SubClinicDataObj).insertDate
-        let endDate = (clinicDataList[clinicDataList.count-1] as! SubClinicDataObj).insertDate
+        let endDate = (clinicDataList[0] as! SubClinicDataObj).insertDate
 
         chartWidth = 0
         let maxItemsInScreen: Int = Int(self.frame.width/spaceBetweenClinicItems)
@@ -159,7 +156,6 @@ class ChartSummaryTableViewCell: UITableViewCell {
                     dateLabel.font = chartDateFont
                     self.chartScrollView.addSubview(dateLabel)
                     
-//                    let dataValue = clinicDataList[index].objectForKey("clinicItemValue") as! Float
                     let dataValue = clinicItem.clinicItemValue
                     index++
                     var coordinateY:CGFloat = (dataValueMaxY - dataValueMinY)/2

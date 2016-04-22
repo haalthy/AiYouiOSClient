@@ -248,12 +248,9 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let views = cell?.subviews as! NSArray
         for view in views{
             if view is UITextField{
-                
-                print("疗程名称"+(view as! UITextField).text!)
                 updateTreatment.setObject((view as! UITextField).text!, forKey: "treatmentName")
             }
             if view is UITextView{
-                print("剂量"+(view as! UITextView).text)
                 updateTreatment.setObject((view as! UITextView).text, forKey: "dosage")
             }
         }

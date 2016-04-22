@@ -76,5 +76,28 @@ let propertyClinicDataStatusID = "statusID"
 let propertyClinicDataInsertDate = "insertDate"
 let propertyClinicDataUsername = "insertUsername"
 
+//feed
+let tableFeed = "Feed"
+let propertyPostID = "postID"
+let propertyInsertUsername = "insertUsername"
+let propertyBody = "body"
+let propertyTags = "tags"
+let propertyCountComments = "countComments"
+let propertyCountBookmarks = "countBookmarks"
+let propertyCountViews = "countViews"
+let propertyClosed = "closed"
+let propertyIsBroadcast = "isBroadcast"
+let propertyDateInserted = "dateInserted"
+let propertyDateUpdated = "dateUpdated"
+let propertyIsActive = "isActive"
+let propertyType = "type"
+let propertyFeedTreatmentID = "treatmentID"
+let propertyFeedPatientStatusID = "patientStatusID"
+let propertyFeedHasImage = "hasImage"
+let propertyHighlight = "highlight"
+let propertyClinicReport = "clinicReport"
+let propertyFeedImageURL = "imageURL"
+let propertyPortraitURL = "portraitURL"
+
 
 

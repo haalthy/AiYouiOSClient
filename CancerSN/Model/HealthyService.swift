@@ -198,10 +198,8 @@ class HaalthyService:NSObject{
             let parameters = NSDictionary(objects: [keychainAccess.getPasscode(usernameKeyChain)!,selectedTags], forKeys: ["username", "tags"])
             NetRequest.sharedInstance.POST(urlPath, parameters: parameters as! Dictionary<String, AnyObject>,
                 success: { (content , message) -> Void in
-                    print(content)
                     
                 }) { (content, message) -> Void in
-                    print(content)
             }
         }
     }

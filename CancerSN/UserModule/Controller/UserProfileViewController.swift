@@ -1133,7 +1133,6 @@ class UserProfileViewController: UIViewController , UITableViewDataSource, UITab
                 }
             }
         }
-        print(heightForHeader)
         return heightForHeader
     }
     

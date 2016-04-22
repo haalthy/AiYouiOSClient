@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 let cellFeedIdentifier = "FeedCell"
 
 class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FeedTableCellDelegate  {
+    
+    //
+    var context: NSManagedObjectContext?
 
     // 控件关联
     @IBOutlet weak var tableView: UITableView!
@@ -27,7 +31,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     let defaultMaxID: Int = 99999999
     var pageIndex: Int = 0
-    var countPerPage: Int  = 5
+    var countPerPage: Int  = 10
     var maxID: Int = 0
 
     override func viewDidLoad() {
@@ -41,12 +45,78 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
 
     // MARK: - Init Variables
     
+    func getFeedsFromLocalDB() {
+        let feedRequest = NSFetchRequest(entityName: tableFeed)
+        feedRequest.returnsDistinctResults = true
+        feedRequest.returnsObjectsAsFaults = false
+        feedRequest.sortDescriptors = [NSSortDescriptor(key: propertyDateInserted, ascending: false)]
+        feedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        let feedList = try! context!.executeFetchRequest(feedRequest)
+        let homeData = PostFeedStatus.jsonToModelList(feedList as Array) as! Array<PostFeedStatus>
+        self.dataArr.removeAllObjects()
+        self.changeDataToFrame(homeData)
+    }
+    
+    func saveFeedToLocalDB(feedList: Array<PostFeedStatus>) {
+        for feed in feedList {
+//            let feed = data as! PostFeedStatus
+            let feedLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableFeed, inManagedObjectContext: context!)
+            feedLocalDBItem.setValue(feed.dateUpdated, forKey: propertyDateUpdated)
+            feedLocalDBItem.setValue(feed.isActive, forKey: propertyIsActive)
+            feedLocalDBItem.setValue(feed.treatmentID, forKey: propertyFeedTreatmentID)
+            feedLocalDBItem.setValue(feed.countComments, forKey: propertyCountComments)
+            feedLocalDBItem.setValue(feed.countBookmarks, forKey: propertyCountBookmarks)
+            feedLocalDBItem.setValue(feed.countViews, forKey: propertyCountViews)
+            feedLocalDBItem.setValue(feed.closed, forKey: propertyClosed)
+            feedLocalDBItem.setValue(feed.isBroadcast, forKey: propertyIsBroadcast)
+            feedLocalDBItem.setValue(feed.dateInserted, forKey: propertyDateInserted)
+            feedLocalDBItem.setValue(feed.type, forKey: propertyType)
+            feedLocalDBItem.setValue(feed.patientStatusID, forKey: propertyFeedPatientStatusID)
+            feedLocalDBItem.setValue(feed.gender, forKey: propertyGender)
+            feedLocalDBItem.setValue(feed.pathological, forKey: propertyPathological)
+            feedLocalDBItem.setValue(feed.age, forKey: propertyAge)
+            feedLocalDBItem.setValue(feed.cancerType, forKey: propertyCancerType)
+            feedLocalDBItem.setValue(feed.metastasis, forKey: propertyMetastasis)
+            feedLocalDBItem.setValue(feed.stage, forKey: propertyStage)
+            feedLocalDBItem.setValue(feed.hasImage, forKey: propertyHasImage)
+            feedLocalDBItem.setValue(feed.highlight, forKey: propertyHighlight)
+            feedLocalDBItem.setValue(feed.clinicReport, forKey: propertyClinicReport)
+            feedLocalDBItem.setValue(feed.imageURL, forKey: propertyImageURL)
+            feedLocalDBItem.setValue(feed.portraitURL, forKey: propertyPortraitURL)
+            feedLocalDBItem.setValue(feed.body, forKey: propertyBody)
+            feedLocalDBItem.setValue(feed.tags, forKey: propertyTags)
+            feedLocalDBItem.setValue(feed.postID, forKey: propertyPostID)
+            feedLocalDBItem.setValue(feed.insertUsername, forKey: propertyInsertUsername)
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func cleanFeedInLocalDB() {
+        let deleteFeedRequet = NSFetchRequest(entityName: tableFeed)
+        if let results = try? context!.executeFetchRequest(deleteFeedRequet) {
+            for param in results {
+                context!.deleteObject(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
     func initVariables() {
 
         dataArr = NSMutableArray()
 
         getAccessToken.getAccessToken()
-
+        
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        context = appDel.managedObjectContext!
+        
+        getFeedsFromLocalDB()
     }
     
     func getFeedListURL()->String{
@@ -130,7 +200,8 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
                 }
                 self.changeDataToFrame(homeData)
                 self.tableView.reloadData()
-
+                self.cleanFeedInLocalDB()
+                self.saveFeedToLocalDB(homeData)
                 
             }) { (content, message) -> Void in
                 
@@ -156,6 +227,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 self.changeDataToFrame(homeData)
                 self.tableView.reloadData()
+                self.saveFeedToLocalDB(homeData)
                 
             }) { (content, message) -> Void in
                 
@@ -271,6 +343,5 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func checkPostComment(postID: Int) {
-        print(postID)
     }
 }

@@ -101,13 +101,11 @@ class MetasticViewController: UIViewController {
         
         //metastic button section
         buttonSection.frame = CGRect(x: buttonSectionLeftSpace, y: buttonSectionTopSpace + offsetHeightForNavigation, width: screenWidth - buttonSectionLeftSpace * 2, height: buttonSectionHeight)
-        print(buttonSection.frame.origin.y)
         var buttonX: CGFloat = 0
         var buttonY: CGFloat = 0
         let buttonHeight: CGFloat = CGFloat(29)
         let buttonsBeMoved = NSMutableArray()
         for metastic in metasticList {
-            print(metastic)
             let textSize: CGSize = metastic.sizeWithFont(buttonTitleLabelFont, maxSize: CGSize(width: CGFloat.max, height: buttonHeight))
             let buttonW: CGFloat = textSize.width + buttonTitleLabelHorizonMargin * 2
             if (buttonW + buttonX) > buttonSection.frame.width {
