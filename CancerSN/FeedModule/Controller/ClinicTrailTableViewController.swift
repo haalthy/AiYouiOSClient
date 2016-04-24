@@ -17,7 +17,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     
     var selectionPicker = UIPickerView()
     var selectionPickerContainerView = UIView()
-    var selectionPickerContainerViewHeight: CGFloat = 250
+    var selectionPickerContainerViewHeight: CGFloat = 270
     var selectionPickerContainerAppear = false
     var pickerDataSource = [String]()
     var treatmentSelectionData =  [String]()
@@ -28,7 +28,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
     //
     var headerHeight: CGFloat = 0
     let btnInPickerWidth: CGFloat = 70
-    let btnInPickerHeight: CGFloat = 30
+    let btnInPickerHeight: CGFloat = 40
     
     let transparentView = UIView()
 
@@ -68,6 +68,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         let homeData = ClinicTrailObj.jsonToModelList(clinicTrialList as Array) as! Array<ClinicTrailObj>
         self.searchDataArr.removeAllObjects()
         self.searchDataArr.addObjectsFromArray(homeData)
+        self.originalDataArr.addObjectsFromArray(self.searchDataArr as [AnyObject])
 //        self.searchDataArr.addObjectsFromArray(clinicTrialList)
     }
     
@@ -180,8 +181,8 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         //init pickerView
         selectionPickerContainerView = UIView(frame: CGRectMake(0, screenHeight - selectionPickerContainerViewHeight - headerHeight, screenWidth, selectionPickerContainerViewHeight))
         selectionPickerContainerView.backgroundColor = chartBackgroundColor
-        let cancelBtnInPicker = UIButton(frame: CGRectMake(10, 10, btnInPickerWidth, btnInPickerHeight))
-        let submitBtnInPicker = UIButton(frame: CGRectMake(screenWidth - 10 - btnInPickerWidth, 10, btnInPickerWidth, btnInPickerHeight))
+        let cancelBtnInPicker = UIButton(frame: CGRectMake(10, 5, btnInPickerWidth, btnInPickerHeight))
+        let submitBtnInPicker = UIButton(frame: CGRectMake(screenWidth - 10 - btnInPickerWidth, 5, btnInPickerWidth, btnInPickerHeight))
         cancelBtnInPicker.setTitle("取消", forState: UIControlState.Normal)
         submitBtnInPicker.setTitle("确定", forState: UIControlState.Normal)
         cancelBtnInPicker.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
@@ -195,7 +196,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         selectionPickerContainerView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(1.0)
 //        self.view.addSubview(selectionPickerContainerView)
         
-        selectionPicker = UIPickerView(frame: CGRectMake(10.0, btnInPickerHeight, UIScreen.mainScreen().bounds.width - 20, 220.0))
+        selectionPicker = UIPickerView(frame: CGRectMake(10.0, btnInPickerHeight + 10, UIScreen.mainScreen().bounds.width - 20, 220.0))
         
         selectionPicker.delegate = self
         selectionPicker.dataSource = self
