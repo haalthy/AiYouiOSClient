@@ -11,11 +11,15 @@ import CoreData
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate{
 
     var window: UIWindow?
 
     var tabVC: TabViewController = TabViewController()
+    
+    var profileSet = NSUserDefaults.standardUserDefaults()
+    let haalthyService = HaalthyService()
+    let keychainAccess = KeychainAccess()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
@@ -30,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         WXApi.registerApp(WXAppID)
+        
         let tabViewController : TabViewController = TabViewController()
                 
         self.window!.rootViewController = tabViewController
@@ -128,7 +133,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func submitRegistrationIDToServer(registrationID: String) {
     
-        let keychainAccess = KeychainAccess()
         
         let username = keychainAccess.getPasscode(usernameKeyChain)
         if username != nil {
@@ -443,25 +447,103 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
-        return TencentOAuth.HandleOpenURL(url)
-        
-    }
-    
-    func onReq(req: BaseReq!) {
-    }
-    
-    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
-        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
+        WXApi.handleOpenURL(url, delegate: self)
         return TencentOAuth.HandleOpenURL(url)
     }
     
     func onResp(resp: BaseResp!) {
-        if resp.isKindOfClass(SendAuthResp) {
-            
+        if resp is SendAuthResp {
+            let authResp = resp as! SendAuthResp
+            if authResp.code != nil {
+                let code: String = authResp.code
+                let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&grant_type=authorization_code&code=" + code
+                let result = NetRequest.sharedInstance.GET_A(url, parameters: [:])
+                if (result.objectForKey("access_token") != nil) &&  (result.objectForKey("openid") != nil) {
+                    let username = result.objectForKey("openid") as! String
+                    let password = result.objectForKey("openid") as! String
+                    let userType = "WC"
+                    let keychainAccess = KeychainAccess()
+                    keychainAccess.setPasscode(usernameKeyChain, passcode: username)
+                    keychainAccess.setPasscode(passwordKeyChain, passcode: password)
+                    profileSet.setObject(userType, forKey: userTypeUserData)
+                    let getAccessToken = GetAccessToken()
+                    getAccessToken.getAccessToken()
+
+                    if profileSet.objectForKey(accessNSUserData) != nil {
+                        let tabViewController : TabViewController = TabViewController()
+                        
+                        self.window!.rootViewController = tabViewController
+                    }else{
+                        let getWXUserInfoURL = "https://api.weixin.qq.com/sns/userinfo?access_token=" + (result.objectForKey("access_token") as! String) + "&openid=" + (result.objectForKey("openid") as! String)
+                        let userinfo: NSDictionary = NetRequest.sharedInstance.GET_A(getWXUserInfoURL, parameters: [:])
+                        profileSet.setObject(userinfo.objectForKey("nickname") as! String, forKey: displaynameUserData)
+                        if (userinfo.objectForKey("sex") as! Int) == 1 {
+                            profileSet.setObject("M", forKey: genderNSUserData)
+                        }else{
+                            profileSet.setObject("F", forKey: genderNSUserData)
+                        }
+                        let addUserResult: NSDictionary = haalthyService.addUser(userType)
+                        if (addUserResult.objectForKey("result") != nil) && (((addUserResult.objectForKey("result") as! Int) == -4) || ((addUserResult.objectForKey("result") as! Int) == 1)) {
+                            getWXImage(userinfo.objectForKey("headimgurl") as! String)
+                            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                            let rootController = storyboard.instantiateViewControllerWithIdentifier("RegisterEntry") as! UINavigationController
+                            if self.window != nil {
+                                self.window!.rootViewController = rootController
+                                //                    rootController.isRootViewController = true
+                            }
+//                            let genderSettingViewController : GenderSettingViewController = GenderSettingViewController()
+//                            self.window!.rootViewController = genderSettingViewController
+                            
+                        }else{
+                            keychainAccess.deletePasscode(passwordKeyChain)
+                            keychainAccess.deletePasscode(usernameKeyChain)
+                        }
+                    }
+                }
+            }
         }
     }
+    
+    func getWXImage(urlPath: String){
+        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: urlPath)!, completionHandler: {(data, response, error) -> Void in
+            // 返回任务结果
+            if (error == nil) && (data != nil) {
+                let imageDataStr = data!.base64EncodedStringWithOptions([])
+                
+                self.profileSet.setObject(imageDataStr, forKey: imageNSUserData)
+                self.updatePortrait()
+            }
+        }).resume()
+    }
+    
+    func updatePortrait(){
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken != nil {
+            let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
+            let url : NSURL = NSURL(string: urlPath)!
+            let request = NSMutableURLRequest(URL: url)
+            request.HTTPMethod = "POST"
+            let requestBody = NSMutableDictionary()
+            requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
+            
+            if profileSet.objectForKey(imageNSUserData) != nil {
+                let imageInfo = NSDictionary(objects: [(profileSet.objectForKey(imageNSUserData) as! String),"jpg"], forKeys: ["data", "type"])
+                requestBody.setValue(imageInfo, forKey: "imageInfo")
+            }
+            
+            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,success: { (content , message) -> Void in
+                print("upload wx portrait sucessful")
+            }) { (content, message) -> Void in
+                print("failed")
+            }
+        }
+    }
+
 }
 

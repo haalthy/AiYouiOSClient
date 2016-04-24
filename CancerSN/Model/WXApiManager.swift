@@ -8,7 +8,12 @@
 
 import Foundation
 
+//protocol WXReturnDelegate {
+//    func getWXAccessToken(result: String)
+//}
+
 class WXApiManager: NSObject, WXApiDelegate {
+//    var wxReturnDelegate: WXReturnDelegate?
     class var sharedInstance: WXApiManager {
         
         get {
@@ -29,20 +34,6 @@ class WXApiManager: NSObject, WXApiDelegate {
     }
     
     func onResp(resp: BaseResp!) {
-        print("on resp")
-        //        if ([resp isKindOfClass:[SendAuthResp class]]) {
-        //            if (_delegate
-        //            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
-        //                SendAuthResp *authResp = (SendAuthResp *)resp;
-        //                [_delegate managerDidRecvAuthResponse:authResp];
-        //            }
-        //        }
-        if resp.isKindOfClass(SendAuthResp) {
-            let authResp = resp as! SendAuthResp
-            let code: String = authResp.code
-            let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&grant_type=authorization_code&code=" + code
-            NetRequest.sharedInstance.GET_A(url, parameters: [:])
-        }
     }
 
 }

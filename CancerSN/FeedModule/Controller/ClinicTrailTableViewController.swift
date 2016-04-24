@@ -395,7 +395,7 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
             let otherInfoStr: String = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
             
             let strHeight = otherInfoStr.sizeWithFont(UIFont.systemFontOfSize(13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.max)).height
-            return strHeight + 45
+            return strHeight + 80
         }
     }
     

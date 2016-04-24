@@ -224,12 +224,12 @@ class GeneticMutationViewController: UIViewController {
             self.navigationController?.popViewControllerAnimated(true)
         }else{
             profileSet.setObject(selectGeneticMutationStr, forKey: geneticMutationNSUserData)
-            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-                let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+//            if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                let result: NSDictionary = haalthyService.updateUser()
                 if (result.objectForKey("result") as! Int) != 1 {
                     HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
                 }
-            }
+//            }
             self.performSegueWithIdentifier("selectTagSegue", sender: self)
         }
     }

@@ -2461,7 +2461,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2497,7 +2497,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

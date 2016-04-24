@@ -17,6 +17,11 @@ class SignUpSucessfulViewController: UIViewController {
         initContentView()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBarHidden = true
+    }
+    
     func initContentView(){
         let backgroudImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         backgroudImgView.image = UIImage(named: "img_background")

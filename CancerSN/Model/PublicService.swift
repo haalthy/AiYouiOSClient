@@ -139,6 +139,7 @@ class PublicService:NSObject{
         profileSet.removeObjectForKey(refreshNSUserData)
         profileSet.removeObjectForKey(userTypeUserData)
         profileSet.removeObjectForKey(geneticMutationNSUserData)
+        profileSet.removeObjectForKey(imageNSUserData)
         cleanLocalDB()
     }
     

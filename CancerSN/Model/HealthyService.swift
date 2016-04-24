@@ -94,8 +94,66 @@ class HaalthyService:NSObject{
             geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String
         }
         let passwordStr = publicService.passwordEncode(password)
-        let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone"])
+        let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone, userType], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone", "userType"])
         return NetRequest.sharedInstance.POST_A(addNewUserURL, parameters: addUserBody as! Dictionary<String, AnyObject>)
+    }
+    
+    func updateUser()->NSDictionary {
+        //upload UserInfo to Server
+        let keychainAccess = KeychainAccess()
+        let profileSet = NSUserDefaults.standardUserDefaults()
+        
+        var gender   = String()
+        var age     = Int()
+        var cancerType  = String()
+        var pathological = String()
+        
+        var stage   = String()
+        var metastasis  = String()
+        var geneticMutation = String()
+        
+        if profileSet.objectForKey(genderNSUserData) != nil{
+            gender = (profileSet.objectForKey(genderNSUserData))! as! String
+        }
+        if profileSet.objectForKey(pathologicalNSUserData) != nil{
+            pathological = (profileSet.objectForKey(pathologicalNSUserData))! as! String
+        }
+        if profileSet.objectForKey(stageNSUserData) != nil{
+            stage = (profileSet.objectForKey(stageNSUserData))! as! String
+        }
+        if profileSet.objectForKey(ageNSUserData) != nil{
+            age = (profileSet.objectForKey(ageNSUserData))! as! Int
+        }
+        if profileSet.objectForKey(cancerTypeNSUserData) != nil {
+            cancerType = (profileSet.objectForKey(cancerTypeNSUserData))! as! String
+        }
+        if profileSet.objectForKey(metastasisNSUserData) != nil{
+            metastasis = (profileSet.objectForKey(metastasisNSUserData))! as! String
+        }
+        if profileSet.objectForKey(geneticMutationNSUserData) != nil{
+            geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String
+        }
+        
+        getAccessToken.getAccessToken()
+        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        if accessToken != nil {
+            let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
+            let url : NSURL = NSURL(string: urlPath)!
+            let request = NSMutableURLRequest(URL: url)
+            request.HTTPMethod = "POST"
+            let requestBody = NSDictionary(objects: [gender, age, cancerType, pathological, stage, metastasis, geneticMutation, keychainAccess.getPasscode(usernameKeyChain)!], forKeys: ["gender", "age", "cancerType", "pathological", "stage", "metastasis", "geneticMutation", "username"])
+            
+            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            return NetRequest.sharedInstance.POST_A(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>)
+            
+            
+        }else{
+            return NSDictionary()
+        }
+        
     }
     
     func getAuthCode(id: String)->Bool{

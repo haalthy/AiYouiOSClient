@@ -424,14 +424,17 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     func selectedNextView(sender: UIButton){
         let selectTagList = saveTagList()
         let profileSet = NSUserDefaults.standardUserDefaults()
-        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
-            self.performSegueWithIdentifier("signupSegue", sender: self)
-        }else {
-            NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
-            haalthyService.updateUserTag(selectTagList)
-            let tabViewController : TabViewController = TabViewController()
-            self.presentViewController(tabViewController, animated: true, completion: nil)
-        }
+        //        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
+        //update user info
+        
+        //        }else {
+        NSUserDefaults.standardUserDefaults().setObject(selectTagList, forKey: favTagsNSUserData)
+        haalthyService.updateUserTag(selectTagList)
+//        let tabViewController : TabViewController = TabViewController()
+//        self.presentViewController(tabViewController, animated: true, completion: nil)
+        self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
+        
+        //        }
     }
     
     func saveTagList()->NSArray{

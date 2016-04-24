@@ -49,12 +49,12 @@ class CancerTypeSettingViewController: UIViewController, UIPickerViewDataSource,
                 self.performSegueWithIdentifier("stageSegue", sender: nil)
             }else{
                 profileSet.setObject(cancerType, forKey: cancerTypeNSUserData)
-                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
-                    let result: NSDictionary = haalthyService.addUser(profileSet.objectForKey(userTypeUserData) as! String)
+//                if (profileSet.objectForKey(userTypeUserData) as! String) != aiyouUserType{
+                    let result: NSDictionary = haalthyService.updateUser()
                     if (result.objectForKey("result") as! Int) != 1 {
                         HudProgressManager.sharedInstance.showHudProgress(self, title: result.objectForKey("resultDesp") as! String)
                     }
-                }
+//                }
                 self.performSegueWithIdentifier("selectTagSegue", sender: self)
             }
         }

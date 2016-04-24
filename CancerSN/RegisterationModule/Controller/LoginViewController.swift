@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate, TencentSessionDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, TencentSessionDelegate  {
     
     //global variable
     var screenWidth: CGFloat = 0
@@ -33,6 +33,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
     func initVariables(){
         screenWidth = UIScreen.mainScreen().bounds.width
         screenHeight = UIScreen.mainScreen().bounds.height
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        
     }
     
     func initContentView(){
@@ -170,12 +172,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let req: SendAuthReq = SendAuthReq()
         req.scope = "snsapi_userinfo"
         req.state = "123"
-        WXApi.sendReq(req)
+        let wxApi = WXApi.sendReq(req)
+        print("send")
+//        wxApi.wx
     }
     
     func signUp(sender: UIButton) {
         profileSet.setObject(aiyouUserType, forKey: userTypeUserData)
-        self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
+        self.performSegueWithIdentifier("signUpSegue", sender: self)
     }
     
     func tencentDidLogin(){
@@ -328,4 +332,5 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         textField.resignFirstResponder()
         return true
     }
+    
 }

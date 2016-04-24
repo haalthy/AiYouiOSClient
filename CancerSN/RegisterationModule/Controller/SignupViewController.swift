@@ -257,17 +257,19 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             profileSet.setObject(portraitImgStr, forKey: imageNSUserData)
             keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
             let result = haalthyService.addUser("AY")
+            profileSet.setObject(userTypeUserData, forKey: "AY")
             if (result.count > 0) && (result.objectForKey("result") as! Int) == 1 {
                 keychainAccess.setPasscode(passwordKeyChain, passcode: password.text!)
                 keychainAccess.setPasscode(usernameKeyChain, passcode: (result.objectForKey("content") as! NSDictionary).objectForKey("result") as! String)
-                if (profileSet.objectForKey(favTagsNSUserData) != nil) &&
-                    (profileSet.objectForKey(favTagsNSUserData) is NSArray){
-                        haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
-                }
-                self.performSegueWithIdentifier("signUpSucessfulSegue", sender: self)
+//                if (profileSet.objectForKey(favTagsNSUserData) != nil) &&
+//                    (profileSet.objectForKey(favTagsNSUserData) is NSArray){
+//                        haalthyService.updateUserTag(profileSet.objectForKey(favTagsNSUserData) as! NSArray)
+//                }
+                self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
             }else{
-                    HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: result.objectForKey("resultDesp") as! String)
-                    HudProgressManager.sharedInstance.dismissHud()
+                keychainAccess.deletePasscode(passwordKeyChain)
+                HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: result.objectForKey("resultDesp") as! String)
+                HudProgressManager.sharedInstance.dismissHud()
             }
         }else{
             HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "验证码错误")

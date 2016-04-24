@@ -40,6 +40,13 @@ class ClinicCell: UITableViewCell {
         }
     }
     
+    func openUrl(sender:UIButton) {
+        let url: String = (sender.titleLabel?.text)!
+        let targetURL=NSURL(string: url)
+        let application=UIApplication.sharedApplication()
+        application.openURL(targetURL!);
+    }
+    
     func initVariables(){
         otherInfoStr = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
     }
@@ -61,6 +68,32 @@ class ClinicCell: UITableViewCell {
         otherInfoLabel.numberOfLines = 0
         otherInfoLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
         self.addSubview(otherInfoLabel)
+        
+        let sourceLabel = UIButton(frame: CGRect(x: 15, y: drugnameLabel.frame.height + otherInfoLabel.frame.height + 30, width: screenWidth - 30, height: 20))
+        sourceLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        var attrs = [:]
+        if NSURL(string: clinicTrial.original) != nil {
+            sourceLabel.addTarget(self, action: "openUrl:", forControlEvents: UIControlEvents.TouchUpInside)
+            
+            attrs = [
+                NSFontAttributeName : UIFont.systemFontOfSize(12.0),
+                NSForegroundColorAttributeName : UIColor.blueColor(),
+                NSUnderlineStyleAttributeName : 1]
+
+        }else{
+            attrs = [
+            NSFontAttributeName: UIFont.systemFontOfSize(12.0),
+            NSForegroundColorAttributeName : defaultTextColor,
+            NSUnderlineStyleAttributeName : 0]
+        }
+        let labelAttrs = [
+            NSFontAttributeName: UIFont.systemFontOfSize(12.0),
+            NSForegroundColorAttributeName : defaultTextColor]
+        var attributedString = NSMutableAttributedString(string:"来源:", attributes: labelAttrs)
+        let buttonTitleStr = NSMutableAttributedString(string:clinicTrial.original, attributes:attrs as! [String : AnyObject])
+        attributedString.appendAttributedString(buttonTitleStr)
+        sourceLabel.setAttributedTitle(attributedString, forState: UIControlState.Normal)
+        self.addSubview(sourceLabel)
         
 //        getMoreBtn.frame = CGRect(x: labelLeftSpace, y: otherInfoTopSpace + otherInfoLabel.frame.height, width: 50, height: 29)
 //        getMoreBtn.setTitle("更多...", forState: UIControlState.Normal)

@@ -59,7 +59,6 @@ class AddPatientStatusViewController: UIViewController, UITextViewDelegate, UITe
         let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         context = appDel.managedObjectContext!
         getAccessToken.getAccessToken()
-        
         let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
         
         if accessToken != nil {
