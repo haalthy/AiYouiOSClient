@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F1713" minimumToolsVersion="Xcode 4.3">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 4.3">
     <entity name="ClinicData" syncable="YES">
         <attribute name="clinicDataID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="clinicItemName" optional="YES" attributeType="String" syncable="YES"/>
@@ -81,6 +81,11 @@
         <attribute name="treatmentName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="TreatmentFormat" syncable="YES">
+        <attribute name="treatmentID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="treatmentName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="treatmentType" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="User" syncable="YES">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="cancerType" optional="YES" attributeType="String" syncable="YES"/>
@@ -109,5 +114,6 @@
         <element name="Tag" positionX="-45" positionY="144" width="128" height="120"/>
         <element name="Treatment" positionX="-54" positionY="126" width="128" height="148"/>
         <element name="User" positionX="-54" positionY="135" width="128" height="298"/>
+        <element name="TreatmentFormat" positionX="9" positionY="171" width="128" height="90"/>
     </elements>
 </model>
