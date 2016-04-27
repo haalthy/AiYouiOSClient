@@ -115,8 +115,11 @@ let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
 let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"
+let addPatientImageURL =  haalthyServiceRestfulURL + "security/patient/appendimage"
 
 let getCinicTrialDrugType = haalthyServiceRestfulURL + "open/clinictrail/drugtype"
 
 let getCinicTrialSubGroup = haalthyServiceRestfulURL + "open/clinictrail/subgroup"
+
+let getPatientStatusByID = haalthyServiceRestfulURL + "open/patient/patientstatus"
 

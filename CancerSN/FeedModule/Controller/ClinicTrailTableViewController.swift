@@ -37,7 +37,6 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         initVariables()
         initContentView()
         let parameters: Dictionary<String, AnyObject> = [
-            
             "searchString" : "",
             "page" : 0,
             "count" : 50
@@ -220,8 +219,13 @@ class ClinicTrailTableViewController: UITableViewController, UIPickerViewDataSou
         formatSelectBtn(treatmentBtn, title: "选择药物种类")
         formatSelectBtn(typeBtn, title: "选择癌症类型")
         
-        treatmentBtn.addTarget(self, action: "selectTreatment", forControlEvents: UIControlEvents.TouchUpInside)
-        typeBtn.addTarget(self, action: "selectCancerType", forControlEvents: UIControlEvents.TouchUpInside)
+        treatmentBtn.addTarget(self, action: #selector(ClinicTrailTableViewController.selectTreatment), forControlEvents: UIControlEvents.TouchUpInside)
+        typeBtn.addTarget(self, action: #selector(ClinicTrailTableViewController.selectCancerType), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        self.transparentView.userInteractionEnabled = true
+        let tapTransparentView = UITapGestureRecognizer(target: self, action: #selector(self.cancelSelectionPicker))
+        self.transparentView.addGestureRecognizer(tapTransparentView)
+        
     }
     
     func cancelSelectionPicker(){

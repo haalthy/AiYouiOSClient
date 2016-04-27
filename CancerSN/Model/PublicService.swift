@@ -341,4 +341,25 @@ class PublicService:NSObject{
         UIGraphicsEndImageContext()
         return newimage
     }
+    
+    func savePatientStatusToLocalDB(patientStatusObjList: NSArray){
+        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        for patientStatus in patientStatusObjList {
+            let patientstatusLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tablePatientStatus, inManagedObjectContext: context)
+            let patientStatusObj = patientStatus as! PatientStatusObj
+            patientstatusLocalDBItem.setValue(patientStatusObj.statusID , forKey: propertyStatusID)
+            patientstatusLocalDBItem.setValue(patientStatusObj.username , forKey: propertyPatientStatusUsername)
+            patientstatusLocalDBItem.setValue(patientStatusObj.statusDesc , forKey: propertyStatusDesc)
+            patientstatusLocalDBItem.setValue(patientStatusObj.insertedDate , forKey: propertyInsertedDate)
+            patientstatusLocalDBItem.setValue(patientStatusObj.imageURL , forKey: propertyPatientStatusImageURL)
+            patientstatusLocalDBItem.setValue(patientStatusObj.scanData , forKey: propertyScanData)
+            patientstatusLocalDBItem.setValue(patientStatusObj.hasImage , forKey: propertyHasImage)
+        }
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
+    
 }

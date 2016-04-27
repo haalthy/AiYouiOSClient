@@ -37,7 +37,7 @@ class PrivateCheckUIView: UIView {
         let privateLbl = UILabel(frame: CGRect(x: privateLabelLeftSpace, y: 0, width: screenWidth - privateLabelLeftSpace, height: buttomSectionHeight))
         privateLbl.textAlignment = NSTextAlignment.Left
         privateLbl.textColor = privateLabelColor
-        privateLbl.text = "不发送到我的智囊圈"
+        privateLbl.text = "发送到我的智囊圈"
         checkedSectionView.addSubview(privateLbl)
         return checkedSectionView
     }

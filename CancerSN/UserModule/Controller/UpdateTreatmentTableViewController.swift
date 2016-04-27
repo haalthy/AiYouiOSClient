@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UITextViewDelegate, UITextFieldDelegate {
     //context For LocalDB
     var context:NSManagedObjectContext?
     var setUserProfileTimeStamp = "setUserProfileTimeStamp"
@@ -32,6 +32,8 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     
     var isSelectedDate: Bool = false
     
+    let transparentView = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
@@ -53,6 +55,14 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
                 isEditForRow.addObject(0)
             }
         }
+        //设置透明层
+        transparentView.frame = CGRECT(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
+        transparentView.backgroundColor = UIColor.lightGrayColor()
+        transparentView.alpha = 0.6
+        
+        self.transparentView.userInteractionEnabled = true
+        let tapTransparentView = UITapGestureRecognizer(target: self, action: #selector(self.dateCancel))
+        self.transparentView.addGestureRecognizer(tapTransparentView)
     }
     
     override func didReceiveMemoryWarning() {
@@ -86,10 +96,10 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let cell = tableView.dequeueReusableCellWithIdentifier("treatmentIdentifier", forIndexPath: indexPath)
         let beginDateLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth, dateLabelWidth, dateLabelHeight))
         let beginDateButton = UIButton(frame: CGRectMake(marginWidth*2+dateLabelWidth, marginWidth, dateButtonWidth, dateLabelHeight))
-        beginDateButton.addTarget(self, action: "selectDate:", forControlEvents: UIControlEvents.TouchUpInside)
+        beginDateButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.selectDate(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         let endDateLabel = UILabel(frame: CGRectMake(cell.frame.width - marginWidth*2 - dateLabelWidth - dateButtonWidth, marginWidth, dateLabelWidth, dateLabelHeight))
         let endDateButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - dateButtonWidth, marginWidth, dateButtonWidth, dateLabelHeight))
-        endDateButton.addTarget(self, action: "selectDate:", forControlEvents: UIControlEvents.TouchUpInside)
+        endDateButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.selectDate(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         beginDateLabel.text = "开始时间"
         beginDateLabel.textColor = UIColor.grayColor()
         beginDateLabel.font = UIFont(name: fontStr, size: 12.0)
@@ -114,10 +124,15 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         treatmentNameTextField.layer.borderWidth = 1.5
         treatmentNameTextField.layer.cornerRadius = 2
         treatmentNameTextField.font = UIFont(name: fontStr, size: 14.0)
+        treatmentNameTextField.delegate = self
+        treatmentNameTextField.returnKeyType = UIReturnKeyType.Done
+        
         dosageTextView.font = UIFont(name: fontStr, size: 12.0)
         dosageTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
         dosageTextView.layer.borderWidth = 1.5
         dosageTextView.layer.cornerRadius = 2
+        dosageTextView.delegate = self
+        dosageTextView.returnKeyType = UIReturnKeyType.Done
         
         let treatmentLabel = UILabel(frame: CGRectMake(marginWidth, marginWidth + dateLabelHeight + marginWidth, cell.frame.width - marginWidth * 2, 60))
         treatmentLabel.textColor = headerColor
@@ -135,8 +150,8 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         
         formatButton(editButton, title: "编辑")
         formatButton(deleteButton, title: "删除")
-        editButton.addTarget(self, action: "editItem:", forControlEvents: UIControlEvents.TouchUpInside)
-        deleteButton.addTarget(self, action: "deleteItem:", forControlEvents: UIControlEvents.TouchUpInside)
+        editButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.editItem(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        deleteButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.deleteItem(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         
         let saveButton = UIButton(frame: CGRectMake(cell.frame.width - marginWidth - editButtonWidth, marginWidth * 4 + treatmentNameTextFieldHeight + dosageTextViewHeight + dateLabelHeight, editButtonWidth, 25))
         saveButton.layer.borderColor = headerColor.CGColor
@@ -146,7 +161,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         saveButton.setTitle("保存", forState: UIControlState.Normal)
         saveButton.setTitleColor(headerColor, forState: UIControlState.Normal)
         saveButton.titleLabel?.font = UIFont(name: fontStr, size: 13.0)
-        saveButton.addTarget(self, action: "saveItem:", forControlEvents: UIControlEvents.TouchUpInside)
+        saveButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.saveItem(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         let seperateLine = UIView()
         if (isEditForRow[indexPath.row] as! Int) == 1{
             cell.removeAllSubviews()
@@ -218,8 +233,30 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         }
     }
     
-    func updateTreatmentInLocalDB() {
-    
+    func updateTreatmentInLocalDB(treatmentDic: NSDictionary) {
+        let predicate = NSPredicate(format: "treatmentID == %d", treatmentDic.objectForKey("treatmentID") as! Int)
+        
+        let fetchRequest = NSFetchRequest(entityName: tableTreatment)
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedEntities: NSArray = try self.context!.executeFetchRequest(fetchRequest) as NSArray
+            if fetchedEntities.count > 0{
+                let entityToUpdated = fetchedEntities[0]
+                entityToUpdated.setValue(treatmentDic.objectForKey("beginDate") as! Double, forKey: "beginDate")
+                entityToUpdated.setValue(treatmentDic.objectForKey("endDate") as! Double, forKey: "endDate")
+                entityToUpdated.setValue(treatmentDic.objectForKey("treatmentName") as! String, forKey: "treatmentName")
+                entityToUpdated.setValue(treatmentDic.objectForKey("dosage") as! String, forKey: "dosage")
+            }
+        } catch {
+            // Do something in response to error condition
+        }
+        
+        do {
+            try self.context!.save()
+        } catch {
+            // Do something in response to error condition
+        }
     }
     
     func deleteItem(sender: UIButton){
@@ -248,18 +285,22 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         let views = cell?.subviews as! NSArray
         for view in views{
             if view is UITextField{
+                updateTreatmentObj.treatmentName = (view as! UITextField).text!
                 updateTreatment.setObject((view as! UITextField).text!, forKey: "treatmentName")
             }
             if view is UITextView{
+                updateTreatmentObj.dosage = (view as! UITextView).text
                 updateTreatment.setObject((view as! UITextView).text, forKey: "dosage")
             }
         }
         haalthyService.updateTreatment(updateTreatment)
+        updateTreatmentInLocalDB(updateTreatment)
         self.tableView.reloadData()
     }
     
     func selectDate(sender:UIButton){
         if isSelectedDate == false {
+            self.view.addSubview(transparentView)
             let datePickerHeight:CGFloat = 200
             let confirmButtonWidth:CGFloat = 100
             let confirmButtonHeight:CGFloat = 30
@@ -270,10 +311,10 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
             let confirmButton = UIButton(frame: CGRectMake(UIScreen.mainScreen().bounds.width - confirmButtonWidth, 0, confirmButtonWidth, confirmButtonHeight))
             confirmButton.setTitle("确定", forState: UIControlState.Normal)
             confirmButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-            confirmButton.addTarget(self, action: "dateChanged", forControlEvents: UIControlEvents.TouchUpInside)
+            confirmButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.dateChanged), forControlEvents: UIControlEvents.TouchUpInside)
             let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: confirmButtonWidth, height: confirmButtonHeight))
             cancelButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-            cancelButton.addTarget(self, action: "dateCancel", forControlEvents: UIControlEvents.TouchUpInside)
+            cancelButton.addTarget(self, action: #selector(UpdateTreatmentTableViewController.dateCancel), forControlEvents: UIControlEvents.TouchUpInside)
             datePickerContainerView!.addSubview(self.datePicker)
             datePickerContainerView?.addSubview(confirmButton)
             self.view.addSubview(datePickerContainerView!)
@@ -286,6 +327,8 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     }
     
     func dateCancel(){
+        transparentView.removeFromSuperview()
+        isSelectedDate = false
         self.datePickerContainerView?.removeFromSuperview()
     }
     
@@ -293,6 +336,7 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
         return .None
     }
     func dateChanged(){
+        transparentView.removeFromSuperview()
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
         let selectDateStr = dateFormatter.stringFromDate(self.datePicker.date)
@@ -319,5 +363,18 @@ class UpdateTreatmentTableViewController: UITableViewController, UIPopoverPresen
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return (heightForRowForTreatmentList[indexPath.row] as! CGFloat) + 70
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
     }
 }

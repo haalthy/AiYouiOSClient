@@ -95,7 +95,17 @@ class PatientStatusFrame: NSObject {
         
         if (patientStatus.imageURL != "") && (patientStatus.imageURL != "<null>"){
             let imageURLStr: String = patientStatus.imageURL
-            let imageURLArr = imageURLStr.componentsSeparatedByString(";")
+            var imageURLArr = imageURLStr.componentsSeparatedByString(";")
+            var imageIndex: Int = 0
+            for imageURL in imageURLArr{
+                let whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet()
+                imageURL.stringByTrimmingCharactersInSet(whitespace)
+                if imageURL == ""{
+                    imageURLArr.removeAtIndex(imageIndex)
+                }else{
+                    imageIndex += 1
+                }
+            }
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace
             
@@ -105,7 +115,7 @@ class PatientStatusFrame: NSObject {
             
             //配图
             
-            let photosSize: CGSize = FeedPhotosView.layoutForPhotos(imageURLArr.count)
+            let photosSize: CGSize = FeedPhotosView.layoutForPhotos(imageIndex)
             patientstatusY += photosSize.height + imageTopSpace
         }
         

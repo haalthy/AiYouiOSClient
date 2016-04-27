@@ -99,7 +99,6 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             }
             alertController.addAction(loginAction)
             
-            
             self.presentViewController(alertController, animated: true) {
                 // ...
             }
@@ -119,8 +118,8 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func initVariables(){
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddPostViewController.keyboardWillAppear(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddPostViewController.keyboardWillDisappear(_:)), name:UIKeyboardWillHideNotification, object: nil)
         imagePicker.delegate = self
         imageCountPerLine = Int((screenWidth - viewHorizonMargin * 2) / imageLength)
         
@@ -150,7 +149,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         let defaultAddImageView = UIImageView(frame: CGRECT(0, 0, imageLength, imageLength))
         defaultAddImageView.image = UIImage(named: "btn_addImage")
         defaultAddImageBtn.addSubview(defaultAddImageView)
-        defaultAddImageBtn.addTarget(self, action: "selectImages", forControlEvents: UIControlEvents.TouchUpInside)
+        defaultAddImageBtn.addTarget(self, action: #selector(AddPostViewController.selectImages), forControlEvents: UIControlEvents.TouchUpInside)
         imageSection.addSubview(defaultAddImageBtn)
         self.view.addSubview(imageSection)
         
@@ -182,7 +181,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                         break
                     }
                     tagBtnX += tagTextSize.width + self.tagSectionBtnTextVerticalMargin * 2 + self.tagSectionBtnHorizonMargin
-                    displayTagCount++
+                    displayTagCount += 1
                 }
                 displayTagCount = displayTagCount-2
                 //        var tagIndex: Int = 0
@@ -204,7 +203,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                     tagButton.layer.borderWidth = 1
                     tagButton.layer.cornerRadius = 2
                     tagBtnX += tagButton.frame.width + self.tagSectionBtnHorizonMargin
-                    tagButton.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
+                    tagButton.addTarget(self, action: #selector(AddPostViewController.selectedTag(_:)), forControlEvents: UIControlEvents.TouchUpInside)
                     self.tagSection.addSubview(tagButton)
                 }
                 
@@ -239,11 +238,11 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         let mentionedImageView = UIImageView(frame: CGRECT(0, 0, buttomItemIconLength, buttomItemIconLength))
         mentionedImageView.image = UIImage(named: "btn_mentioned")
         mentionedBtn.addSubview(mentionedImageView)
-        mentionedBtn.addTarget(self, action: "selectContacts", forControlEvents: UIControlEvents.TouchUpInside)
+        mentionedBtn.addTarget(self, action: #selector(AddPostViewController.selectContacts), forControlEvents: UIControlEvents.TouchUpInside)
         buttomSection.addSubview(mentionedBtn)
         self.view.addSubview(buttomSection)
         
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddPostViewController.tapDismiss))
         self.view.addGestureRecognizer(tapGesture)
     }
     
@@ -484,14 +483,14 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         let imageView = UIImageView(frame: CGRectMake(0, 0, imageLength, imageLength))
         imageView.tag = index - 1
         self.imageViewArr.addObject(imageView)
-        let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setupPhotoBrowser:")
+        let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddPostViewController.setupPhotoBrowser(_:)))
         imageView.userInteractionEnabled = true
         imageView.addGestureRecognizer(gesgure)
         let imageDeleteBtn = UIButton(frame: CGRECT(imageLength - imageDeleteBtnLength, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
         imageDeleteView.image = UIImage(named: "btn_imageDelete")
         imageDeleteBtn.addSubview(imageDeleteView)
-        imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
+        imageDeleteBtn.addTarget(self, action: #selector(AddPostViewController.deleteImage(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         
         defaultAddImageBtn.frame = CGRectMake(coordinateX, addNextImageLinePositionY, imageLength, imageLength)
         
@@ -550,7 +549,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             
             imageView.tag = imageIndex
             self.imageViewArr.addObject(imageView)
-            let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setupPhotoBrowser:")
+            let gesgure: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddPostViewController.setupPhotoBrowser(_:)))
             imageView.userInteractionEnabled = true
             imageView.addGestureRecognizer(gesgure)
             
@@ -558,7 +557,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             let imageDeleteView = UIImageView(frame: CGRECT(0, 0, imageDeleteBtnLength, imageDeleteBtnLength))
             imageDeleteView.image = UIImage(named: "btn_imageDelete")
             imageDeleteBtn.addSubview(imageDeleteView)
-            imageDeleteBtn.addTarget(self, action: "deleteImage:", forControlEvents: UIControlEvents.TouchUpInside)
+            imageDeleteBtn.addTarget(self, action: #selector(AddPostViewController.deleteImage(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             
             var image = UIImage()
             let publicService = PublicService()
@@ -580,7 +579,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.imageSection.addSubview(imageViewContainer)
             imageViewContainer.addSubview(imageView)
             imageViewContainer.addSubview(imageDeleteBtn)
-            imageIndex++
+            imageIndex += 1
         }
         
         defaultAddImageBtn.frame = CGRectMake(CGFloat((imageInfoList.count) % imageCountPerLine) * (imageLength + imageMargin), CGFloat((imageInfoList.count) / imageCountPerLine) * (imageLength + imageMargin), imageLength, imageLength)
@@ -719,7 +718,7 @@ class AddPostViewController: UIViewController, UIImagePickerControllerDelegate, 
             requestBody.setValue(index, forKey: "imageIndex")
             requestBody.setValue(imgeInfo, forKey: "imageInfo")
             NetRequest.sharedInstance.POST_A(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>)
-            index++
+            index += 1
         }
     }
     

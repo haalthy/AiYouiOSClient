@@ -121,8 +121,9 @@ class PatientStatusTableViewCell: UITableViewCell {
                 imageURL.stringByTrimmingCharactersInSet(whitespace)
                 if imageURL == ""{
                     imageURLArr.removeAtIndex(imageIndex)
+                }else{
+                    imageIndex += 1
                 }
-                imageIndex++
             }
             patientstatusX = imageLeftSpace
             patientstatusY += imageTopSpace
@@ -134,7 +135,7 @@ class PatientStatusTableViewCell: UITableViewCell {
             let photosX: CGFloat = patientstatusX
             let photosY: CGFloat = patientstatusY
             
-            let photosSize: CGSize = FeedPhotosView.layoutForPhotos((imageURLArr.count))
+            let photosSize: CGSize = FeedPhotosView.layoutForPhotos(imageIndex)
             let photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
             
             let picsView = FeedPhotosView(feedModel: feedModel, frame: photosFrame)

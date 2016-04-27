@@ -22,7 +22,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     var selectedIndex: Int = Int()
     var selectedTreatmentList: NSArray = NSArray()
     var treatmentList = NSMutableArray()
-    var isPosted: Int = 1
+    var isPosted: Int = 0
     var keyboardheight:CGFloat = 0
     let profileSet = NSUserDefaults.standardUserDefaults()
 
@@ -179,17 +179,17 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     func checkedPrivate(sender: UIButton){
         if isPosted == 0 {
             isPosted = 1
-            sender.backgroundColor = UIColor.whiteColor()
-            sender.layer.borderColor = privateLabelColor.CGColor
-            sender.removeAllSubviews()
-        }else{
-            isPosted = 0
             sender.backgroundColor = headerColor
             let checkImgView = UIImageView(image: UIImage(named: "btn_check"))
             checkImgView.frame = CGRECT(0, 0, sender.frame.width, sender.frame.height)
             checkImgView.contentMode = UIViewContentMode.ScaleAspectFit
             sender.layer.borderColor = headerColor.CGColor
             sender.addSubview(checkImgView)
+        }else{
+            isPosted = 0
+            sender.backgroundColor = UIColor.whiteColor()
+            sender.layer.borderColor = privateLabelColor.CGColor
+            sender.removeAllSubviews()
         }
     }
     
