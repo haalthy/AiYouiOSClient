@@ -221,8 +221,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
             let keychainAccess = KeychainAccess()
             keychainAccess.setPasscode(usernameKeyChain, passcode: openId)
             keychainAccess.setPasscode(passwordKeyChain, passcode: openId)
+            haalthyService.addUser(qqUserType)
             self.performSegueWithIdentifier("signUpQestionsSegue", sender: self)
+            
         }else{
+            //已注册的qq用户
             let tabViewController : TabViewController = TabViewController()
             self.presentViewController(tabViewController, animated: true, completion: nil)
         }

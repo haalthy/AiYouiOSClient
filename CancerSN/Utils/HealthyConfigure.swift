@@ -156,7 +156,7 @@ var screenHeight = CGFloat()
 
 let uploadImageSize: CGSize = CGSize(width: 400, height: 600)
 
-let qqAppID: String = "1104886596"
+let qqAppID: String = "1105273097"
 
 let WXAppID: String = "wx1606d9f1f10de6b4"
 

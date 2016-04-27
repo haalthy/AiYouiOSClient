@@ -141,7 +141,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="2648" y="-1350"/>
+            <point key="canvasLocation" x="2648" y="-1504"/>
         </scene>
         <!--Sign Up Sucessful View Controller-->
         <scene sceneID="LIt-ov-PFV">
@@ -180,7 +180,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uGB-5z-cQh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3444" y="-1350"/>
+            <point key="canvasLocation" x="2648" y="-803"/>
         </scene>
         <!--Stage View Controller-->
         <scene sceneID="rS5-Os-Cxp">
@@ -320,6 +320,7 @@
                     <connections>
                         <segue destination="kGD-fx-jPH" kind="show" identifier="resetPwdSegue" id="Alu-aC-udl"/>
                         <segue destination="0jg-kO-r66" kind="show" identifier="signUpSegue" id="Wxd-Kh-d76"/>
+                        <segue destination="MIc-0o-Hdm" kind="show" identifier="signUpQestionsSegue" id="Wr7-Ew-Ge9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="55w-85-LZV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -365,6 +366,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="Wr7-Ew-Ge9"/>
         <segue reference="QGR-US-LG1"/>
         <segue reference="ioc-dO-eJT"/>
     </inferredMetricsTieBreakers>
