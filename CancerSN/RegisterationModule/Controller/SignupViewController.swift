@@ -98,7 +98,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         portraitBtn.layer.cornerRadius = appIconLength/2
         portraitBtn.layer.masksToBounds = true
         portraitBtn.frame = CGRECT(appIconLeftSpace, appIconTopSpace, appIconLength, appIconLength)
-        portraitBtn.addTarget(self, action: "selectImage:", forControlEvents: UIControlEvents.TouchUpInside)
+        portraitBtn.addTarget(self, action: #selector(SignupViewController.selectImage(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         portraitBtn.addSubview(appIconImageView)
         self.view.addSubview(portraitBtn)
         //textInputView
@@ -129,7 +129,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         getAuthBtn.setTitle("获取验证码", forState: UIControlState.Normal)
         getAuthBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
         getAuthBtn.titleLabel?.font = getAuthCodeBtnFont
-        getAuthBtn.addTarget(self, action: "getAuthCode:", forControlEvents: UIControlEvents.TouchUpInside)
+        getAuthBtn.addTarget(self, action: #selector(SignupViewController.getAuthCode(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         textInputView.addSubview(getAuthBtn)
         let seperateLine2 = UIView(frame: CGRect(x: 0, y: textFieldHeight*2 + 1, width: textInputView.frame.width, height: 1))
         seperateLine2.backgroundColor = seperateLineColor
@@ -173,7 +173,7 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         signUpBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         signUpBtn.layer.cornerRadius = 4
         signUpBtn.layer.masksToBounds = true
-        signUpBtn.addTarget(self, action: "signUp:", forControlEvents: UIControlEvents.TouchUpInside)
+        signUpBtn.addTarget(self, action: #selector(SignupViewController.signUp(_:)), forControlEvents: UIControlEvents.TouchUpInside)
 
         self.view.addSubview(signUpBtn)
         
@@ -183,10 +183,10 @@ class SignupViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         loginBtn.setTitle("登录", forState: UIControlState.Normal)
         loginBtn.titleLabel?.font = loginBtnFont
         loginBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        loginBtn.addTarget(self, action: "login:", forControlEvents: UIControlEvents.TouchUpInside)
+        loginBtn.addTarget(self, action: #selector(SignupViewController.login(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginBtn)
         
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(SignupViewController.tapDismiss))
         self.view.addGestureRecognizer(tapGesture)
     }
     

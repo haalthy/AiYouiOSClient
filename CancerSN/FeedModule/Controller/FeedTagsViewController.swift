@@ -423,7 +423,7 @@ class FeedTagsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func selectedNextView(sender: UIButton){
         let selectTagList = saveTagList()
-        let profileSet = NSUserDefaults.standardUserDefaults()
+//        let profileSet = NSUserDefaults.standardUserDefaults()
         //        if (profileSet.objectForKey(userTypeUserData) as! String) == aiyouUserType{
         //update user info
         

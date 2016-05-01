@@ -41,7 +41,7 @@ class SignUpSucessfulViewController: UIViewController {
         loginBtn.setTitle("立即发现", forState: UIControlState.Normal)
         loginBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         loginBtn.titleLabel?.font = UIFont.systemFontOfSize(15)
-        loginBtn.addTarget(self, action: "start:", forControlEvents: UIControlEvents.TouchUpInside)
+        loginBtn.addTarget(self, action: #selector(SignUpSucessfulViewController.start(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginBtn)
     }
     

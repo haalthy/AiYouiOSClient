@@ -75,14 +75,14 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         let maleImageView = UIImageView(frame: CGRECT(0, 0, maleWidth, genderBtnHeight))
         maleImageView.image = UIImage(named: "btn_maleUnselected")
         maleBtn.addSubview(maleImageView)
-        maleBtn.addTarget(self, action: "selectGender:", forControlEvents: UIControlEvents.TouchUpInside)
+        maleBtn.addTarget(self, action: #selector(GenderSettingViewController.selectGender(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(maleBtn)
         //female
         femaleBtn.frame = CGRect(x: screenWidth - femaleWidth - femaleRightSpace, y: genderBtnTopSpace + offsetHeightForNavigation, width: femaleWidth, height: genderBtnHeight)
         let femaleImageView = UIImageView(frame: CGRECT(0, 0, femaleWidth, genderBtnHeight))
         femaleImageView.image = UIImage(named: "btn_femaleUnselected")
         femaleBtn.addSubview(femaleImageView)
-        femaleBtn.addTarget(self, action: "selectGender:", forControlEvents: UIControlEvents.TouchUpInside)
+        femaleBtn.addTarget(self, action: #selector(GenderSettingViewController.selectGender(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(femaleBtn)
         
         //top Item Name
@@ -123,7 +123,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(GenderSettingViewController.selectedNextView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(nextViewBtn)
         }
     }

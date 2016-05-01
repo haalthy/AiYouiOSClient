@@ -60,7 +60,7 @@ class MetasticViewController: UIViewController {
         let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
         let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: #selector(MetasticViewController.previousView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
@@ -127,7 +127,7 @@ class MetasticViewController: UIViewController {
             newButton.layer.masksToBounds = true
             newButton.layer.borderWidth = 1
             newButton.backgroundColor = UIColor.whiteColor()
-            newButton.addTarget(self, action: "selectMetastic:", forControlEvents: UIControlEvents.TouchUpInside)
+            newButton.addTarget(self, action: #selector(MetasticViewController.selectMetastic(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             buttonsBeMoved.addObject(newButton)
             buttonSection.addSubview(newButton)
         }

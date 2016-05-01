@@ -85,7 +85,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         loginBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         loginBtn.layer.cornerRadius = 4
         loginBtn.layer.masksToBounds = true
-        loginBtn.addTarget(self, action: "login:", forControlEvents: UIControlEvents.TouchUpInside)
+        loginBtn.addTarget(self, action: #selector(LoginViewController.login(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginBtn)
         
         //registerationBtn
@@ -94,7 +94,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         registerationBtn.setTitle("注册账号", forState: UIControlState.Normal)
         registerationBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         registerationBtn.titleLabel?.font = registerationBtnFont
-        registerationBtn.addTarget(self, action: "signUp:", forControlEvents: UIControlEvents.TouchUpInside)
+        registerationBtn.addTarget(self, action: #selector(LoginViewController.signUp(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(registerationBtn)
         
         //forget password Btn
@@ -103,7 +103,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         forgetPwdBtn.setTitle("忘记密码", forState: UIControlState.Normal)
         forgetPwdBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         forgetPwdBtn.titleLabel?.font = forgetBtnFont
-        forgetPwdBtn.addTarget(self, action: "resetPassword", forControlEvents: UIControlEvents.TouchUpInside)
+        forgetPwdBtn.addTarget(self, action: #selector(LoginViewController.resetPassword), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(forgetPwdBtn)
         
         //seperate Line
@@ -120,8 +120,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let wechatLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
         wechatLoginImgView.image = UIImage(named: "btn_wechat")
         wechatLoginBtn.addSubview(wechatLoginImgView)
-        wechatLoginBtn.addTarget(self, action: "loginViaWechat:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(wechatLoginBtn)
+        wechatLoginBtn.addTarget(self, action: #selector(LoginViewController.loginViaWechat(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         
         //qq Login
         let qqLoginBtnRgithSpace = wechatLoginBtnLeftSpace
@@ -131,8 +130,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         let qqLoginImgView = UIImageView(frame: CGRect(x: 0, y: 0, width: otherLoginBtnLength, height: otherLoginBtnLength))
         qqLoginImgView.image = UIImage(named: "btn_qq")
         qqLoginBtn.addSubview(qqLoginImgView)
-        qqLoginBtn.addTarget(self, action: "loginViaQQ:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(qqLoginBtn)
+        qqLoginBtn.addTarget(self, action: #selector(LoginViewController.loginViaQQ(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        //is thirdparty login
+        let result = NetRequest.sharedInstance.GET_A("http://content.haalthy.com/open/user/isthirdpartylogin", parameters: [:])
+        if (result.objectForKey("result") as! NSNumber) == 1{
+            self.view.addSubview(wechatLoginBtn)
+            self.view.addSubview(qqLoginBtn)
+        }
         
         //look around
         
@@ -141,10 +146,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         lookaroundBtn.setTitle("随便逛逛看最新的治疗方案", forState: UIControlState.Normal)
         lookaroundBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         lookaroundBtn.titleLabel?.font = lookaroundBtnFont
-        lookaroundBtn.addTarget(self, action: "ignore:", forControlEvents: UIControlEvents.TouchUpInside)
+        lookaroundBtn.addTarget(self, action: #selector(LoginViewController.ignore(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(lookaroundBtn)
         
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.tapDismiss))
         self.view.addGestureRecognizer(tapGesture)
     }
     
@@ -173,8 +178,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, TencentSession
         req.scope = "snsapi_userinfo"
         req.state = "123"
         let wxApi = WXApi.sendReq(req)
-        print("send")
-//        wxApi.wx
     }
     
     func signUp(sender: UIButton) {

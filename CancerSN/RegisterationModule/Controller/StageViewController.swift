@@ -45,7 +45,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
         let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: #selector(StageViewController.previousView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
@@ -86,7 +86,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(StageViewController.selectedNextView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(nextViewBtn)
         }
     }

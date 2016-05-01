@@ -58,7 +58,7 @@ class GeneticMutationViewController: UIViewController {
         let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
         let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: #selector(GeneticMutationViewController.previousView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
@@ -95,7 +95,7 @@ class GeneticMutationViewController: UIViewController {
             nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
             nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(GeneticMutationViewController.selectedNextView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(nextViewBtn)
         }
         
@@ -131,7 +131,7 @@ class GeneticMutationViewController: UIViewController {
             newButton.layer.masksToBounds = true
             newButton.layer.borderWidth = 1
             newButton.backgroundColor = UIColor.whiteColor()
-            newButton.addTarget(self, action: "selectGenetic:", forControlEvents: UIControlEvents.TouchUpInside)
+            newButton.addTarget(self, action: #selector(GeneticMutationViewController.selectGenetic(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             buttonsBeMoved.addObject(newButton)
             buttonSection.addSubview(newButton)
         }
