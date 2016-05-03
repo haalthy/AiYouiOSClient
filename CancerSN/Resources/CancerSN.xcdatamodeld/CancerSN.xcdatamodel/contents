@@ -33,18 +33,21 @@
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="geneticMutation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hasImage" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="header" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="highlight" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="insertUsername" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isActive" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="isBroadcast" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="metastasis" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="moreInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pathological" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="patientStatusID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="portraitURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="postID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="stage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topCommentBody" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="treatmentID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
@@ -66,6 +69,7 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Tag" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rankInType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="tagId" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -108,12 +112,12 @@
     <elements>
         <element name="ClinicData" positionX="9" positionY="189" width="128" height="135"/>
         <element name="ClinicTrial" positionX="-36" positionY="153" width="128" height="163"/>
-        <element name="Feed" positionX="-63" positionY="-18" width="128" height="465"/>
+        <element name="Feed" positionX="-63" positionY="-18" width="128" height="510"/>
         <element name="Following" positionX="-54" positionY="81" width="128" height="120"/>
         <element name="PatientStatus" positionX="-54" positionY="126" width="128" height="163"/>
-        <element name="Tag" positionX="-45" positionY="144" width="128" height="120"/>
+        <element name="Tag" positionX="-45" positionY="144" width="128" height="135"/>
         <element name="Treatment" positionX="-54" positionY="126" width="128" height="148"/>
-        <element name="User" positionX="-54" positionY="135" width="128" height="298"/>
         <element name="TreatmentFormat" positionX="9" positionY="171" width="128" height="90"/>
+        <element name="User" positionX="-54" positionY="135" width="128" height="298"/>
     </elements>
 </model>
