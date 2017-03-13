@@ -38,7 +38,7 @@ class PatientStatusFrame: NSObject {
         }
         if ( patientStatus.statusDesc != ""){
             let patientstatusHighlightStr = patientStatus.statusDesc
-            let patientstatusHighlightAndDesp = patientstatusHighlightStr.componentsSeparatedByString(patientstatusSeperateStr)
+            let patientstatusHighlightAndDesp = patientstatusHighlightStr.components(separatedBy: patientstatusSeperateStr)
             if patientstatusHighlightAndDesp.count > 1 {
                 highlightStr = patientstatusHighlightAndDesp[0]
                 detailStr = patientstatusHighlightAndDesp[1]
@@ -59,14 +59,14 @@ class PatientStatusFrame: NSObject {
         let patientsDetailMaxW = cellWidth! - patientstatusDetailLeftSpace - patientstatusDetailRightSpace
         
         if highlightStr != nil && highlightStr != "" {
-            let  patientstatusHighlightArr = highlightStr!.componentsSeparatedByString(" ")
+            let  patientstatusHighlightArr = highlightStr!.components(separatedBy: " ")
             var patientstatusHighlightButtonX = patientstatusHighlightLeftSpace
             var patientstatusHighlightButtonY = patientstatusHighlightTopSpace
             for patientstatusHighlightItemStr in patientstatusHighlightArr{
-                let whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-                patientstatusHighlightItemStr.stringByTrimmingCharactersInSet(whitespace)
+                let whitespace = CharacterSet.whitespacesAndNewlines
+                patientstatusHighlightItemStr.trimmingCharacters(in: whitespace)
                 if patientstatusHighlightItemStr != "" {
-                    let patientstatusHighlightStrSize = patientstatusHighlightItemStr.sizeWithFont(patientstatusHighlightFont, maxSize: CGSize(width: patientstatusHighlightMaxW, height: CGFloat.max))
+                    let patientstatusHighlightStrSize = patientstatusHighlightItemStr.sizeWithFont(patientstatusHighlightFont, maxSize: CGSize(width: patientstatusHighlightMaxW, height: CGFloat.greatestFiniteMagnitude))
                     let patientstatusHighlightButtonW: CGFloat = patientstatusHighlightStrSize.width + patientstatusHighlightButtonHorizonEdge * 2
                     let patientstatusHighlightButtonH: CGFloat = patientstatusHighlightStrSize.height + patientstatusHighlightButtonVerticalEdge * 2
                     if (patientstatusHighlightButtonX + patientstatusHighlightButtonW) > patientstatusHighlightMaxW {
@@ -74,8 +74,8 @@ class PatientStatusFrame: NSObject {
                         patientstatusHighlightButtonY += patientstatusHighlightButtonHeight
                     }
                     let patientstatusHighlightButton = UIButton(frame: CGRect(x: patientstatusHighlightButtonX, y: patientstatusHighlightButtonY, width: patientstatusHighlightButtonW, height: patientstatusHighlightButtonH))
-                    patientstatusHighlightButton.setTitle(patientstatusHighlightItemStr, forState: UIControlState.Normal)
-                    patientstatusHighlightButton.setTitleColor(patientstatusHighlightColor, forState: UIControlState.Normal)
+                    patientstatusHighlightButton.setTitle(patientstatusHighlightItemStr, for: UIControlState())
+                    patientstatusHighlightButton.setTitleColor(patientstatusHighlightColor, for: UIControlState())
                     patientstatusHighlightButton.titleLabel?.font = patientstatusHighlightFont
                     patientstatusHighlightButtonX += patientstatusHighlightButtonW + patientstatusHighlightSpaceBetweenItems
                 }
@@ -87,7 +87,7 @@ class PatientStatusFrame: NSObject {
             if patientstatusY < patientstatusHighlightTopSpace + 1 {
                 detailWidth = patientstatusHighlightMaxW
             }
-            let patientstatusDetailStrSize = detailStr?.sizeWithFont(patientstatusDetailFont, maxSize: CGSize(width: detailWidth, height: CGFloat.max))
+            let patientstatusDetailStrSize = detailStr?.sizeWithFont(patientstatusDetailFont, maxSize: CGSize(width: detailWidth, height: CGFloat.greatestFiniteMagnitude))
             let patientstatusDetail = UILabel(frame: CGRect(x: patientstatusX, y: patientstatusY, width: (patientstatusDetailStrSize?.width)!, height: (patientstatusDetailStrSize?.height)!))
             patientstatusDetail.numberOfLines = 0
             patientstatusY += patientstatusDetail.frame.height
@@ -95,13 +95,13 @@ class PatientStatusFrame: NSObject {
         
         if (patientStatus.imageURL != "") && (patientStatus.imageURL != "<null>"){
             let imageURLStr: String = patientStatus.imageURL
-            var imageURLArr = imageURLStr.componentsSeparatedByString(";")
+            var imageURLArr = imageURLStr.components(separatedBy: ";")
             var imageIndex: Int = 0
             for imageURL in imageURLArr{
-                let whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-                imageURL.stringByTrimmingCharactersInSet(whitespace)
+                let whitespace = CharacterSet.whitespacesAndNewlines
+                imageURL.trimmingCharacters(in: whitespace)
                 if imageURL == ""{
-                    imageURLArr.removeAtIndex(imageIndex)
+                    imageURLArr.remove(at: imageIndex)
                 }else{
                     imageIndex += 1
                 }

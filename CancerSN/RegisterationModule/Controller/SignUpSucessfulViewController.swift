@@ -17,9 +17,9 @@ class SignUpSucessfulViewController: UIViewController {
         initContentView()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     func initContentView(){
@@ -30,24 +30,24 @@ class SignUpSucessfulViewController: UIViewController {
         //add title
         let sucessfulLabel = UILabel(frame: CGRect(x: 0, y: 160, width: screenWidth, height: 24))
         sucessfulLabel.text = "恭喜您注册成功"
-        sucessfulLabel.font = UIFont.systemFontOfSize(24)
-        sucessfulLabel.textColor = UIColor.whiteColor()
-        sucessfulLabel.textAlignment = NSTextAlignment.Center
+        sucessfulLabel.font = UIFont.systemFont(ofSize: 24)
+        sucessfulLabel.textColor = UIColor.white
+        sucessfulLabel.textAlignment = NSTextAlignment.center
         self.view.addSubview(sucessfulLabel)
         
         //add login button
         let loginBtn = UIButton(frame: CGRect(x: 0, y: 200, width: screenWidth, height: 44))
-        loginBtn.backgroundColor = UIColor.clearColor()
-        loginBtn.setTitle("立即发现", forState: UIControlState.Normal)
-        loginBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        loginBtn.titleLabel?.font = UIFont.systemFontOfSize(15)
-        loginBtn.addTarget(self, action: #selector(SignUpSucessfulViewController.start(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        loginBtn.backgroundColor = UIColor.clear
+        loginBtn.setTitle("立即发现", for: UIControlState())
+        loginBtn.setTitleColor(UIColor.white, for: UIControlState())
+        loginBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        loginBtn.addTarget(self, action: #selector(SignUpSucessfulViewController.start(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(loginBtn)
     }
     
-    func start(sender: UIButton){
+    func start(_ sender: UIButton){
         let tabViewController : TabViewController = TabViewController()
-        self.presentViewController(tabViewController, animated: true, completion: nil)
+        self.present(tabViewController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

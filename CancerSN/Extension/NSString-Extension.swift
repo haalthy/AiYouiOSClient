@@ -11,18 +11,18 @@ import UIKit
 
 extension String {
 
-    static func intToString(intValue: Int) -> String {
+    static func intToString(_ intValue: Int) -> String {
         
         return String(format: "%i", intValue)
     }
     
     // 动态计算字符串长度
 
-    func sizeWithFont(font: UIFont, maxSize: CGSize) -> CGSize {
+    func sizeWithFont(_ font: UIFont, maxSize: CGSize) -> CGSize {
     
         
         let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        paragraphStyle.lineBreakMode = NSLineBreakMode.byWordWrapping
 
         let dict = [NSFontAttributeName : font,
             NSParagraphStyleAttributeName : paragraphStyle.copy()
@@ -30,7 +30,7 @@ extension String {
                 
         let str = self as NSString
         
-        let size: CGSize = str.boundingRectWithSize(maxSize, options:.UsesLineFragmentOrigin, attributes: dict, context: nil).size
+        let size: CGSize = str.boundingRect(with: maxSize, options:.usesLineFragmentOrigin, attributes: dict, context: nil).size
 
         return size
     }

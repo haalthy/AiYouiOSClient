@@ -9,12 +9,12 @@
 import UIKit
 
 // 时间字体大小
-let kToolBarDateFont: UIFont = UIFont.systemFontOfSize(16)
+let kToolBarDateFont: UIFont = UIFont.systemFont(ofSize: 16)
 // 时间字体颜色
 let kToolBarDateColor: UIColor = RGB(153, 153, 153)
 
 // 评论数量字体大小
-let kToolBarcommentFont: UIFont = UIFont.systemFontOfSize(16)
+let kToolBarcommentFont: UIFont = UIFont.systemFont(ofSize: 16)
 // 评论数量字体颜色
 let kToolBarcommentColor: UIColor = RGB(166, 191, 190)
 
@@ -27,14 +27,14 @@ class PostFeedToolBar: UIView {
     // 评论数量
     var commentCount: Int?
    
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Drawing code
         
-        super.drawRect(rect)
-        self.backgroundColor = UIColor.clearColor()
+        super.draw(rect)
+        self.backgroundColor = UIColor.clear
     }
     
-    func initVariables(feedModel: PostFeedStatus) {
+    func initVariables(_ feedModel: PostFeedStatus) {
         let thround:Double = 1000
         self.updateTime = Int64(feedModel.dateInserted / thround)
         self.commentCount = feedModel.countComments
@@ -44,14 +44,14 @@ class PostFeedToolBar: UIView {
     
         // 添加时间label
         let dateLabel: UILabel = UILabel()
-        let date: String = NSDate.createDate(self.updateTime!)!.fullDescription()
+        let date: String = Foundation.Date.createDate(self.updateTime!)!.fullDescription()
     
         let dateX: CGFloat = 0
         let dateY: CGFloat = 0
-        let dateW: CGFloat = date.sizeWithFont(kToolBarDateFont, maxSize: CGSize(width: CGFloat.max, height: 20)).width
+        let dateW: CGFloat = date.sizeWithFont(kToolBarDateFont, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 20)).width
         let dateH: CGFloat = 15
         dateLabel.frame = CGRECT(dateX, dateY, dateW, dateH)
-        dateLabel.font = UIFont.systemFontOfSize(16)
+        dateLabel.font = UIFont.systemFont(ofSize: 16)
         dateLabel.center.y = self.frame.size.height / 2
         dateLabel.text = date
         dateLabel.textColor = kToolBarDateColor
@@ -61,12 +61,12 @@ class PostFeedToolBar: UIView {
         let commentCountLabel: UILabel = UILabel()
         let commentContent: String = setCommentCount(self.commentCount!)
         
-        let commentW: CGFloat = commentContent.sizeWithFont(kToolBarcommentFont, maxSize: CGSize(width: CGFloat.max, height: 15)).width
+        let commentW: CGFloat = commentContent.sizeWithFont(kToolBarcommentFont, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 15)).width
         let commentX: CGFloat = self.frame.size.width - kCellLeftInside - commentW
         let commentY: CGFloat = 0
         let commentH: CGFloat = 15
         commentCountLabel.textColor = kToolBarcommentColor
-        commentCountLabel.font = UIFont.systemFontOfSize(16)
+        commentCountLabel.font = UIFont.systemFont(ofSize: 16)
         commentCountLabel.text = commentContent
         commentCountLabel.frame = CGRECT(commentX, commentY, commentW, commentH)
         commentCountLabel.center.y = self.frame.size.height / 2
@@ -86,7 +86,7 @@ class PostFeedToolBar: UIView {
         
     }
     
-    func setCommentCount(commentCount: Int) -> String {
+    func setCommentCount(_ commentCount: Int) -> String {
     
         if commentCount > 10000 {
         

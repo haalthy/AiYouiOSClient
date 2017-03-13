@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MentionVCDelegate {
-    func updateMentionList(username: String)
+    func updateMentionList(_ username: String)
 }
 
 class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
@@ -45,7 +45,7 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
         for contact in contactList {
             let userObj = UserProfile()
             userObj.initVariables(contact as! NSDictionary)
-            self.userObjList.addObject(userObj)
+            self.userObjList.add(userObj)
         }
     }
     
@@ -60,12 +60,12 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return numberOfSections
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numberOfRowsInSection: Int = 0
         switch section {
         case 0:
@@ -80,7 +80,7 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
         return numberOfRowsInSection
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var heightForRow: CGFloat = 0
         switch indexPath.section {
         case 1:
@@ -92,29 +92,29 @@ class ContactTableViewController: UITableViewController, CheckedBtnDelegate {
         return heightForRow
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("contactListCell", forIndexPath: indexPath) as! ContactsTableViewCell
-        let user = userObjList.objectAtIndex(indexPath.row) as! UserProfile
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "contactListCell", for: indexPath) as! ContactsTableViewCell
+        let user = userObjList.object(at: indexPath.row) as! UserProfile
         // Configure the cell...
         cell.userObj = user
         cell.checkBtnDelegate = self
         return cell
     }
     
-    func checked(displayname: String) {
-        checkedUserList.addObject(displayname)
+    func checked(_ displayname: String) {
+        checkedUserList.add(displayname)
     }
     
-    func unchecked(displayname: String) {
-        checkedUserList.removeObject(displayname)
+    func unchecked(_ displayname: String) {
+        checkedUserList.remove(displayname)
     }
 
-    @IBAction func submit(sender: AnyObject) {
+    @IBAction func submit(_ sender: AnyObject) {
         var usernameListStr = String()
         for user in checkedUserList {
-            usernameListStr.appendContentsOf("@" + (user as! String) + " ")
+            usernameListStr.append("@" + (user as! String) + " ")
         }
         mentionVCDelegate?.updateMentionList(usernameListStr)
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
 }

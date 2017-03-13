@@ -12,19 +12,19 @@ import UIKit
 
 // MARK: 判断是否增加数量
 
-func judgeIsAddCount(type: Int) {
+func judgeIsAddCount(_ type: Int) {
     
     switch type {
         
     case 0:
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: unreadCommentBadgeCount)
+        UserDefaults.standard.set(true, forKey: unreadCommentBadgeCount)
         break
     case 1:
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: unreadMentionedBadgeCount)
+        UserDefaults.standard.set(true, forKey: unreadMentionedBadgeCount)
         
         break
     case 2:
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: unreadFollowBadgeCount)
+        UserDefaults.standard.set(true, forKey: unreadFollowBadgeCount)
         break
     default: break
         
@@ -36,19 +36,19 @@ func judgeIsAddCount(type: Int) {
 
 // MARK: 判断是否减少数量
 
-func judgeIsDecCount(type: Int) {
+func judgeIsDecCount(_ type: Int) {
     
     switch type {
         
     case 0:
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
+        UserDefaults.standard.set(false, forKey: unreadCommentBadgeCount)
         break
     case 1:
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadMentionedBadgeCount)
+        UserDefaults.standard.set(false, forKey: unreadMentionedBadgeCount)
 
         break
     case 2:
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadFollowBadgeCount)
+        UserDefaults.standard.set(false, forKey: unreadFollowBadgeCount)
         break
     default: break
         

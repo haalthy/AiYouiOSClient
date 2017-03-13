@@ -20,7 +20,7 @@ class AddImageView: UIView {
         let defaultAddImageView = UIImageView(frame: CGRECT(0, 0, imageLength, imageLength))
         defaultAddImageView.image = UIImage(named: "btn_addImage")
         defaultAddImageBtn.addSubview(defaultAddImageView)
-        defaultAddImageBtn.addTarget(target, action: action, forControlEvents: UIControlEvents.TouchUpInside)
+        defaultAddImageBtn.addTarget(target, action: action, for: UIControlEvents.touchUpInside)
         self.addSubview(defaultAddImageBtn)
     }
 

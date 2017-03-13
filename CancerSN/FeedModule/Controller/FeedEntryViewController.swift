@@ -17,7 +17,7 @@ class FeedEntryViewController: UIViewController {
         let controller = storyboard.instantiateInitialViewController()!
         addChildViewController(controller)
         view.addSubview(controller.view)
-        controller.didMoveToParentViewController(self)
+        controller.didMove(toParentViewController: self)
     }
 
     override func didReceiveMemoryWarning() {

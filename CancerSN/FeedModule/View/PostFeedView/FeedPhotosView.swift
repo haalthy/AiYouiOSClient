@@ -14,7 +14,7 @@ import UIKit
 let kPhotosMaxCount: Int = 9
 
 // 图片列数
-func getPhotosMaxCols(photoCount: Int) -> Int {
+func getPhotosMaxCols(_ photoCount: Int) -> Int {
 
     return photoCount == 4 ? 2 : 3
 }
@@ -44,7 +44,7 @@ class FeedPhotosView: UIView {
             let picsCount = self.picsUrl.count
         
             
-            for var i = 0; i < ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count); i++ {
+            for i in 0 ..< ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count) {
             
                 let photoView: UIImageView = self.subviews[i] as! UIImageView                
                 if i < picsCount {
@@ -52,11 +52,11 @@ class FeedPhotosView: UIView {
                         let imageURL = self.picsUrl[i] + "@100h_100w_1e_1c"
                         photoView.addImageCache(imageURL, placeHolder: placeHolderStr)
                     }
-                    photoView.hidden = false
+                    photoView.isHidden = false
                 }
                 else {
                 
-                    photoView.hidden = true
+                    photoView.isHidden = true
                 }
             }
             
@@ -67,7 +67,7 @@ class FeedPhotosView: UIView {
     init(feedModel: PostFeedStatus, frame: CGRect) {
         
 
-        let originPicArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
+        let originPicArr: Array<String> = ((feedModel.imageURL).components(separatedBy: ";"))
 
         var picArr: Array<String> = []
         for picurl in originPicArr {
@@ -82,7 +82,7 @@ class FeedPhotosView: UIView {
 
         super.init(frame: frame)
         
-        self.userInteractionEnabled = true
+        self.isUserInteractionEnabled = true
 
 
     }
@@ -95,7 +95,7 @@ class FeedPhotosView: UIView {
     
     func addFeedPhotos() {
     
-        for var i = 0; i < ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count); i++ {
+        for i in 0 ..< ((kPhotosMaxCount < self.picsUrl.count) ? kPhotosMaxCount : self.picsUrl.count) {
             
             let photoImageView: UIImageView = UIImageView()
             photoImageView.backgroundColor = seperateLineColor
@@ -104,19 +104,19 @@ class FeedPhotosView: UIView {
             
             // 添加手势
             
-            let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "showImage:")
+            let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(FeedPhotosView.showImage(_:)))
             
             photoImageView.addGestureRecognizer(gesture)
-            photoImageView.userInteractionEnabled = true
+            photoImageView.isUserInteractionEnabled = true
 
         }
     }
     
     // MARK: 点击图片查看
     
-    func showImage(sender: UITapGestureRecognizer){
+    func showImage(_ sender: UITapGestureRecognizer){
         self.backgroundScrollView.removeAllSubviews()
-        let tapLocation = sender.locationInView(self)
+        let tapLocation = sender.location(in: self)
         
         let xIndex = Int((tapLocation.x)/( kPhotosWidth + CGFloat(kPhotosMargin)))
         let yIndex = Int((tapLocation.y)/( kPhotosWidth + CGFloat(kPhotosMargin)))
@@ -129,7 +129,7 @@ class FeedPhotosView: UIView {
                 self.superview?.addSubview(progressHUD)
                 progressHUD.labelText = "加载图片"
                 progressHUD.show(true)
-                photoView.sd_setImageWithURL(NSURL(string: self.picsUrl[tapedPhotoViewTag] + "@800h"), placeholderImage: photoView.image, options: SDWebImageOptions.CacheMemoryOnly) { (imageTest, err, type , urltest) -> Void in
+                photoView.sd_setImage(with: URL(string: self.picsUrl[tapedPhotoViewTag] + "@800h"), placeholderImage: photoView.image, options: SDWebImageOptions.cacheMemoryOnly) { (imageTest, err, type , urltest) -> Void in
                     //
                     self.progressHUD.removeFromSuperview()
                     if err == nil{
@@ -149,15 +149,15 @@ class FeedPhotosView: UIView {
         let photoView = self.subviews[self.tapedPhotoViewTag] as! UIImageView
         let image = (self.subviews[self.tapedPhotoViewTag] as! UIImageView).image
         
-        let window = UIApplication.sharedApplication().keyWindow
-        self.backgroundScrollView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+        let window = UIApplication.shared.keyWindow
+        self.backgroundScrollView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
         //config scroll view
         self.backgroundScrollView.contentSize = CGSize(width: screenWidth * CGFloat(self.picsUrl.count), height: screenHeight)
         self.backgroundScrollView.contentOffset = CGPoint(x: screenWidth * CGFloat(self.tapedPhotoViewTag), y: 0)
-        self.backgroundScrollView.pagingEnabled = true
-        self.backgroundScrollView.userInteractionEnabled = true
+        self.backgroundScrollView.isPagingEnabled = true
+        self.backgroundScrollView.isUserInteractionEnabled = true
         
-        self.backgroundScrollView.backgroundColor = UIColor.blackColor()
+        self.backgroundScrollView.backgroundColor = UIColor.black
         self.backgroundScrollView.alpha = 0
         let imageView = UIImageView(frame: CGRECT(photoView.frame.origin.x + screenWidth * CGFloat(self.tapedPhotoViewTag), (screenHeight - photoView.frame.height)/2, photoView.frame.width, photoView.frame.height))
         
@@ -165,34 +165,34 @@ class FeedPhotosView: UIView {
         imageView.tag = 1
         self.backgroundScrollView.addSubview(imageView)
         window?.addSubview(self.backgroundScrollView)
-        let hide = UITapGestureRecognizer(target: self, action: "hideImage:")
+        let hide = UITapGestureRecognizer(target: self, action: #selector(FeedPhotosView.hideImage(_:)))
         self.backgroundScrollView.addGestureRecognizer(hide)
-        UIView.animateWithDuration(0.3, animations:{ () in
-            let vsize = UIScreen.mainScreen().bounds.size
+        UIView.animate(withDuration: 0.3, animations:{ () in
+            let vsize = UIScreen.main.bounds.size
             imageView.frame = CGRect(x:screenWidth * CGFloat(self.tapedPhotoViewTag), y: 0.0, width: vsize.width, height: vsize.height)
-            imageView.contentMode = .ScaleAspectFit
+            imageView.contentMode = .scaleAspectFit
             self.backgroundScrollView.alpha = 1
             }, completion: {(finished:Bool) in
                 if self.tapedPhotoViewTag > 0 {
                     for index in 0...(self.tapedPhotoViewTag - 1){
                         let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
-                        imageView.sd_setImageWithURL(NSURL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.CacheMemoryOnly)
-                        imageView.contentMode = .ScaleAspectFit
+                        imageView.sd_setImage(with: URL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.cacheMemoryOnly)
+                        imageView.contentMode = .scaleAspectFit
                         self.backgroundScrollView.addSubview(imageView)
                     }
                 }
                 if (self.tapedPhotoViewTag + 1) < (self.subviews.count ) {
                     for index in (self.tapedPhotoViewTag+1)...(self.subviews.count - 1){
                         let imageView = UIImageView(frame: CGRECT(screenWidth * CGFloat(index), 0.0, screenWidth, screenHeight))
-                        imageView.sd_setImageWithURL(NSURL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.CacheMemoryOnly)
-                        imageView.contentMode = .ScaleAspectFit
+                        imageView.sd_setImage(with: URL(string: self.picsUrl[index] + "@800h"), placeholderImage: UIImage(contentsOfFile: placeHolderStr), options: SDWebImageOptions.cacheMemoryOnly)
+                        imageView.contentMode = .scaleAspectFit
                         self.backgroundScrollView.addSubview(imageView)
                     }
                 }
         })
     }
     
-    func hideImage(sender: UITapGestureRecognizer){
+    func hideImage(_ sender: UITapGestureRecognizer){
         if sender.view == backgroundScrollView {
             self.backgroundScrollView.removeFromSuperview()
         }
@@ -204,7 +204,7 @@ class FeedPhotosView: UIView {
         let count = self.picsUrl.count
         let maxCols = getPhotosMaxCols(count)
         
-        for var i = 0; i < count; i++ {
+        for i in 0 ..< count {
         
             let imageView: UIImageView = self.subviews[i] as! UIImageView
             
@@ -219,7 +219,7 @@ class FeedPhotosView: UIView {
     
     // MARK: - 图片布局
     
-        class func layoutForPhotos(photoCount: Int) -> CGSize {
+        class func layoutForPhotos(_ photoCount: Int) -> CGSize {
     
         let maxCols = getPhotosMaxCols(photoCount)
         
@@ -233,6 +233,6 @@ class FeedPhotosView: UIView {
         let width: CGFloat = CGFloat(totalCols * Int(kPhotosWidth) + (totalCols - 1) * kPhotosMargin)
         let height = CGFloat(totalRows * Int(kPhotosHeight) + (totalRows - 1) * kPhotosMargin)
 
-        return CGSizeMake(width, height)
+        return CGSize(width: width, height: height)
     }
 }

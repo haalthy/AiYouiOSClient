@@ -28,18 +28,18 @@ class UserProfile: NSObject {
 //        }
 //    }
     
-    func initVariables(userProfileDic: NSDictionary){
-        username = userProfileDic.objectForKey("username") as? String
-        portraitUrl = userProfileDic.objectForKey("imageURL") as? String
-        email = userProfileDic.objectForKey("email") as? String
-        phone = userProfileDic.objectForKey("phone") as? String
-        nick = userProfileDic.objectForKey("displayname") as? String
-        gender = userProfileDic.objectForKey("gender") as? String
-        age = userProfileDic.objectForKey("age") as? Int
-        cancerType = userProfileDic.objectForKey("cancerType") as? String
-        pathological = userProfileDic.objectForKey("pathological") as? String
-        geneticMutation = userProfileDic.objectForKey("geneticMutation") as? String
-        stage = userProfileDic.objectForKey("stage") as? String
-        metastics = userProfileDic.objectForKey("metastasis") as? String
+    func initVariables(_ userProfileDic: NSDictionary){
+        username = userProfileDic.object(forKey: "username") as? String
+        portraitUrl = userProfileDic.object(forKey: "imageURL") as? String
+        email = userProfileDic.object(forKey: "email") as? String
+        phone = userProfileDic.object(forKey: "phone") as? String
+        nick = userProfileDic.object(forKey: "displayname") as? String
+        gender = userProfileDic.object(forKey: "gender") as? String
+        age = userProfileDic.object(forKey: "age") as? Int
+        cancerType = userProfileDic.object(forKey: "cancerType") as? String
+        pathological = userProfileDic.object(forKey: "pathological") as? String
+        geneticMutation = userProfileDic.object(forKey: "geneticMutation") as? String
+        stage = userProfileDic.object(forKey: "stage") as? String
+        metastics = userProfileDic.object(forKey: "metastasis") as? String
     }
 }

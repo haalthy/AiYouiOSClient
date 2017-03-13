@@ -34,7 +34,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         self.getFollowDataFromServer()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // 重置未读个数为0
@@ -61,7 +61,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     func registerCell() {
         
-        self.tableView.registerNib(UINib(nibName: cellFollowIdentifier, bundle: nil), forCellReuseIdentifier: cellFollowIdentifier)
+        self.tableView.register(UINib(nibName: cellFollowIdentifier, bundle: nil), forCellReuseIdentifier: cellFollowIdentifier)
     }
     
     // MARK: - 初始化刷新
@@ -96,21 +96,21 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
             let friends: NSArray = content["friends"] as! NSArray
             if friends.count != 0 {
                 
-                let friendsArr = FollowModel.jsonToModelList(friends as Array) as! Array<FollowModel>
+                let friendsArr = FollowModel.jsonToModelList(friends as NSObject) as! Array<FollowModel>
                 self.friendData =  NSMutableArray(array: friendsArr as NSArray)
             }
             
             let follow: NSArray = content["followingUsers"] as! NSArray
             if follow.count != 0 {
                 
-                let followArr = FollowModel.jsonToModelList(follow as Array) as! Array<FollowModel>
+                let followArr = FollowModel.jsonToModelList(follow as NSObject) as! Array<FollowModel>
                 self.followData =  NSMutableArray(array: followArr as NSArray)
             }
             
             let follower: NSArray = content["followerUsers"] as! NSArray
             if follower.count != 0 {
                 
-                let followerArr = FollowModel.jsonToModelList(follower as Array) as! Array<FollowModel>
+                let followerArr = FollowModel.jsonToModelList(follower as NSObject) as! Array<FollowModel>
                 self.followrData =  NSMutableArray(array: followerArr as NSArray)
             }
             
@@ -140,42 +140,42 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: - Table view data source
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.followData.count + self.followrData.count + self.friendData.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         return 70
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellFollowIdentifier)! as! UserCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellFollowIdentifier)! as! UserCell
         var followModel: FollowModel?
         if indexPath.row < self.friendData.count {
             
             followModel = self.friendData[indexPath.row] as? FollowModel
-            cell.addBtn.setImage(UIImage(named: "icon_follow"), forState: .Normal)
+            cell.addBtn.setImage(UIImage(named: "icon_follow"), for: UIControlState())
             
         }
             
         else if indexPath.row < self.followData.count + self.friendData.count {
             
             followModel = self.followData[indexPath.row - self.friendData.count] as? FollowModel
-            cell.addBtn.setImage(UIImage(named: "icon_followM"), forState: .Normal)
+            cell.addBtn.setImage(UIImage(named: "icon_followM"), for: UIControlState())
         }
             
         else if indexPath.row < self.followrData.count + self.friendData.count + self.followData.count {
             
             followModel = self.followrData[indexPath.row - self.friendData.count - self.followData.count] as? FollowModel
-            cell.addBtn.setImage(UIImage(named: "icon_followY"), forState: .Normal)
+            cell.addBtn.setImage(UIImage(named: "icon_followY"), for: UIControlState())
         }
         
         let imageURL = followModel!.imageURL + "@80h_80w_1e"
@@ -208,22 +208,22 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         var user: FollowModel?
         if indexPath.row < self.friendData.count {
-            user = self.friendData.objectAtIndex(indexPath.row) as? FollowModel
+            user = self.friendData.object(at: indexPath.row) as? FollowModel
         }
         if (indexPath.row < self.friendData.count + self.followData.count) && (indexPath.row >= self.friendData.count){
-            user = self.followData.objectAtIndex(indexPath.row - self.friendData.count) as? FollowModel
+            user = self.followData.object(at: indexPath.row - self.friendData.count) as? FollowModel
         }
         if indexPath.row > (self.friendData.count + self.followData.count) {
-            user = self.followrData.objectAtIndex(indexPath.row - self.friendData.count - self.followData.count) as? FollowModel
+            user = self.followrData.object(at: indexPath.row - self.friendData.count - self.followData.count) as? FollowModel
         }
         let storyboard = UIStoryboard(name: "User", bundle: nil)
-        let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
-        userProfileController.profileOwnername = user?.username
+        let userProfileController = storyboard.instantiateViewController(withIdentifier: "UserContent") as! UserProfileViewController
+        userProfileController.profileOwnername = user?.username as NSString?
         self.navigationController?.pushViewController(userProfileController, animated: true)
         
     }
@@ -232,7 +232,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: 获取性别
     
-    func getGenderAction(type: String) -> String {
+    func getGenderAction(_ type: String) -> String {
         
         var gender: String = "男"
         
@@ -251,7 +251,7 @@ class UserFollowViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: - Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         
         

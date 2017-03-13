@@ -8,7 +8,7 @@
 
 import UIKit
 protocol MetastasisSettingVCDelegate{
-    func updateMetastasis(metastasis: String)
+    func updateMetastasis(_ metastasis: String)
 }
 class MetasticViewController: UIViewController {
     
@@ -26,9 +26,9 @@ class MetasticViewController: UIViewController {
         initContentView()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if isUpdate == false {
-            self.navigationController?.navigationBar.hidden = true
+            self.navigationController?.navigationBar.isHidden = true
         }
     }
 
@@ -60,7 +60,7 @@ class MetasticViewController: UIViewController {
         let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
         let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: #selector(MetasticViewController.previousView(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: #selector(MetasticViewController.previousView(_:)), for: UIControlEvents.touchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
@@ -69,7 +69,7 @@ class MetasticViewController: UIViewController {
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的转移情况"
-        signUpTitle.textAlignment = NSTextAlignment.Center
+        signUpTitle.textAlignment = NSTextAlignment.center
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
@@ -85,17 +85,17 @@ class MetasticViewController: UIViewController {
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "转移部位"
-        topItemNameLbl.textAlignment = NSTextAlignment.Center
+        topItemNameLbl.textAlignment = NSTextAlignment.center
         self.view.addSubview(topItemNameLbl)
         
         if isUpdate == false {
             //next view button
             let btnMargin: CGFloat = 15
             let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
-            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.setTitle("下一题", for: UIControlState())
+            nextViewBtn.setTitleColor(nextViewBtnColor, for: UIControlState())
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(MetasticViewController.selectedNextView(_:)), for: UIControlEvents.touchUpInside)
             self.view.addSubview(nextViewBtn)
         }
         
@@ -106,7 +106,7 @@ class MetasticViewController: UIViewController {
         let buttonHeight: CGFloat = CGFloat(29)
         let buttonsBeMoved = NSMutableArray()
         for metastic in metasticList {
-            let textSize: CGSize = metastic.sizeWithFont(buttonTitleLabelFont, maxSize: CGSize(width: CGFloat.max, height: buttonHeight))
+            let textSize: CGSize = metastic.sizeWithFont(buttonTitleLabelFont, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: buttonHeight))
             let buttonW: CGFloat = textSize.width + buttonTitleLabelHorizonMargin * 2
             if (buttonW + buttonX) > buttonSection.frame.width {
                 let distanceBeMoved: CGFloat = (buttonSection.frame.width - buttonX)/2
@@ -119,16 +119,16 @@ class MetasticViewController: UIViewController {
             }
             let newButton = UIButton(frame: CGRect(x: buttonX, y: buttonY, width: buttonW, height: buttonHeight))
             buttonX += newButton.frame.width + 7
-            newButton.setTitle(metastic, forState: UIControlState.Normal)
+            newButton.setTitle(metastic, for: UIControlState())
             newButton.titleLabel?.font = buttonTitleLabelFont
-            newButton.setTitleColor(headerColor, forState: UIControlState.Normal)
-            newButton.layer.borderColor = headerColor.CGColor
+            newButton.setTitleColor(headerColor, for: UIControlState())
+            newButton.layer.borderColor = headerColor.cgColor
             newButton.layer.cornerRadius = 2
             newButton.layer.masksToBounds = true
             newButton.layer.borderWidth = 1
-            newButton.backgroundColor = UIColor.whiteColor()
-            newButton.addTarget(self, action: #selector(MetasticViewController.selectMetastic(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            buttonsBeMoved.addObject(newButton)
+            newButton.backgroundColor = UIColor.white
+            newButton.addTarget(self, action: #selector(MetasticViewController.selectMetastic(_:)), for: UIControlEvents.touchUpInside)
+            buttonsBeMoved.add(newButton)
             buttonSection.addSubview(newButton)
         }
         for button in buttonsBeMoved {
@@ -138,21 +138,21 @@ class MetasticViewController: UIViewController {
         self.view.addSubview(buttonSection)
     }
     
-    func selectMetastic(sender: UIButton){
-        if sender.backgroundColor == UIColor.whiteColor() {
-            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+    func selectMetastic(_ sender: UIButton){
+        if sender.backgroundColor == UIColor.white {
+            sender.setTitleColor(UIColor.white, for: UIControlState())
             sender.backgroundColor = headerColor
         }else{
-            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
-            sender.backgroundColor = UIColor.whiteColor()
+            sender.setTitleColor(headerColor, for: UIControlState())
+            sender.backgroundColor = UIColor.white
         }
     }
     
-    func previousView(sender: UIButton){
-        self.navigationController?.popViewControllerAnimated(true)
+    func previousView(_ sender: UIButton){
+        self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func selectedNextView(sender: UIButton){
+    @IBAction func selectedNextView(_ sender: UIButton){
         var metasticStr: String = ""
         for button in buttonSection.subviews {
             if button is UIButton {
@@ -163,11 +163,11 @@ class MetasticViewController: UIViewController {
         }
         if isUpdate {
             metastasisSettingVCDelegate?.updateMetastasis(metasticStr)
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }else{
-            let profileSet = NSUserDefaults.standardUserDefaults()
-            profileSet.setObject(metasticStr, forKey: metastasisNSUserData)
-            self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
+            let profileSet = UserDefaults.standard
+            profileSet.set(metasticStr, forKey: metastasisNSUserData)
+            self.performSegue(withIdentifier: "geneticMutationSegue", sender: self)
         }
     }
 }

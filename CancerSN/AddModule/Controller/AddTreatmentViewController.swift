@@ -24,7 +24,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     var treatmentList = NSMutableArray()
     var isPosted: Int = 0
     var keyboardheight:CGFloat = 0
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
 
     //
     var scrollView = UIScrollView()
@@ -44,8 +44,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         initVariables()
         initContentView()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillAppear:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillDisappear:", name:UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTreatmentViewController.keyboardWillAppear(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTreatmentViewController.keyboardWillDisappear(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func getTreatmentFormatList(){
@@ -53,14 +53,14 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         let hudProcess = HudProgressManager.sharedInstance
         //        hudProcess.showHudProgress(self, title: "loading")
         let jsonResult = NetRequest.sharedInstance.GET_A(getTreatmentformatURL, parameters: parameters as! Dictionary<String, AnyObject>)
-        if (jsonResult.objectForKey("content") != nil){
-            treatmentFormatList = jsonResult.objectForKey("content") as! NSArray
+        if (jsonResult.object(forKey: "content") != nil){
+            treatmentFormatList = jsonResult.object(forKey: "content") as! NSArray
             for treatment in treatmentFormatList {
-                if ((treatment as! NSDictionary).objectForKey("type") as! String) == "TKI" {
-                    treatmentFormatOfTKI.addObject(treatment)
+                if ((treatment as! NSDictionary).object(forKey: "type") as! String) == "TKI" {
+                    treatmentFormatOfTKI.add(treatment)
                 }
-                if ((treatment as! NSDictionary).objectForKey("type") as! String) == "CHEMO" {
-                    treatmentFormatOfChemo.addObject(treatment)
+                if ((treatment as! NSDictionary).object(forKey: "type") as! String) == "CHEMO" {
+                    treatmentFormatOfChemo.add(treatment)
                 }
             }
         }else{
@@ -72,8 +72,8 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
     }
     
     func initVariables(){
-        screenWidth = UIScreen.mainScreen().bounds.width
-        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
+        screenWidth = UIScreen.main.bounds.width
+        headerHeight = UIApplication.shared.statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         getTreatmentFormatList()
         treatmentTextInput.delegate = self
     }
@@ -82,12 +82,12 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
 
         //添加 治疗方案类别 按钮
         treatmentTypeBtnW = (screenWidth - treatmentTypeSectionLeftSpace - treatmentTypeSectionRightSpace)/CGFloat(treatmentTypeArr.count)
-        for var typeIndex = 0; typeIndex < treatmentTypeArr.count; typeIndex++ {
+        for typeIndex in 0 ..< treatmentTypeArr.count {
             let treatmentTypeBtn = UIButton(frame: CGRect(x: treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW, y: 0, width: treatmentTypeBtnW, height: treatmentTypeSectionHeight))
-            treatmentTypeBtn.setTitle(treatmentTypeArr[typeIndex] as? String, forState: UIControlState.Normal)
-            treatmentTypeBtn.setTitleColor(treatmentTypeSectionTextColor, forState: UIControlState.Normal)
+            treatmentTypeBtn.setTitle(treatmentTypeArr[typeIndex] as? String, for: UIControlState())
+            treatmentTypeBtn.setTitleColor(treatmentTypeSectionTextColor, for: UIControlState())
             treatmentTypeBtn.titleLabel?.font = treatmentTypeSectionUIFont
-            treatmentTypeBtn.addTarget(self, action: "selectedTreatmentType:", forControlEvents: UIControlEvents.TouchUpInside)
+            treatmentTypeBtn.addTarget(self, action: #selector(AddTreatmentViewController.selectedTreatmentType(_:)), for: UIControlEvents.touchUpInside)
             if typeIndex == 0 {
                 selectedTreatmentType(treatmentTypeBtn)
             }
@@ -107,7 +107,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         //添加底部选择框
         let privateCheckUIView = PrivateCheckUIView()
         treatmentBtmSectionView = privateCheckUIView.createCheckedSection()
-        privateCheckUIView.checkbox.addTarget(self, action: "checkedPrivate:", forControlEvents: UIControlEvents.TouchUpInside)
+        privateCheckUIView.checkbox.addTarget(self, action: #selector(AddTreatmentViewController.checkedPrivate(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(treatmentBtmSectionView)
         
         //scrollView
@@ -115,7 +115,7 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         self.view.addSubview(scrollView)
     }
     
-    func selectedTreatmentType(sender: UIButton){
+    func selectedTreatmentType(_ sender: UIButton){
         var isSelectedTreatment:Bool = false
         for treatmentButtonView in treatmentFormatSectionView.subviews {
             if treatmentButtonView is UIButton && treatmentButtonView.backgroundColor == headerColor{
@@ -124,26 +124,26 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         }
         if isSelectedTreatment || ((treatmentTextInput.textColor != treatmentTextInputViewColor) && (treatmentTextInput.text != "")){
             
-            let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "保存您正在编辑的治疗方案吗？", message: nil, preferredStyle: .alert)
             
-            let OKAction = UIAlertAction(title: "好的", style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: "好的", style: .default) { (action) in
                 self.getTreatmentDetail()
                 self.resetView(sender)
             }
             
             alertController.addAction(OKAction)
-            let cancelAction = UIAlertAction(title: "不要", style: .Cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "不要", style: .cancel) { (action) in
                 self.resetView(sender)
             }
             alertController.addAction(cancelAction)
             
-            let ContinueAction = UIAlertAction(title: "继续编辑", style: .Default){ (action)in
+            let ContinueAction = UIAlertAction(title: "继续编辑", style: .default){ (action)in
                 //...
 //                self.treatmentTypeSegment.selectedSegmentIndex = Int(self.pointer.center.x / self.segmentSectionWidth)
             }
             alertController.addAction(ContinueAction)
             
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }else{
@@ -152,49 +152,49 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
 
     }
     
-    @IBAction func loadPreviousView(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func loadPreviousView(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    func keyboardWillAppear(notification: NSNotification) {
-        if self.treatmentBtmSectionView.center.y > UIScreen.mainScreen().bounds.height - 50{
+    func keyboardWillAppear(_ notification: Notification) {
+        if self.treatmentBtmSectionView.center.y > UIScreen.main.bounds.height - 50{
             
             // 获取键盘信息
             let keyboardinfo = notification.userInfo![UIKeyboardFrameBeginUserInfoKey]
             
-            keyboardheight = (keyboardinfo?.CGRectValue.size.height)!
+            keyboardheight = ((keyboardinfo as AnyObject).cgRectValue.size.height)
             self.scrollView.frame = CGRECT(0, self.scrollView.frame.origin.y, screenWidth, self.scrollView.frame.height - keyboardheight)
-            self.scrollView.contentOffset = CGPointMake(0, treatmentTextInputY)
+            self.scrollView.contentOffset = CGPoint(x: 0, y: treatmentTextInputY)
             self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y - keyboardheight)
             
         }
     }
     
-    func keyboardWillDisappear(notification:NSNotification){
+    func keyboardWillDisappear(_ notification:Notification){
         self.treatmentBtmSectionView.center = CGPoint(x: self.treatmentBtmSectionView.center.x, y: self.treatmentBtmSectionView.center.y + keyboardheight)
         self.scrollView.frame = CGRECT(0, self.scrollView.frame.origin.y, screenWidth, self.scrollView.frame.height + keyboardheight)
-        self.scrollView.contentOffset = CGPointMake(0, 0)
+        self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
     }
     
-    func checkedPrivate(sender: UIButton){
+    func checkedPrivate(_ sender: UIButton){
         if isPosted == 0 {
             isPosted = 1
             sender.backgroundColor = headerColor
             let checkImgView = UIImageView(image: UIImage(named: "btn_check"))
             checkImgView.frame = CGRECT(0, 0, sender.frame.width, sender.frame.height)
-            checkImgView.contentMode = UIViewContentMode.ScaleAspectFit
-            sender.layer.borderColor = headerColor.CGColor
+            checkImgView.contentMode = UIViewContentMode.scaleAspectFit
+            sender.layer.borderColor = headerColor.cgColor
             sender.addSubview(checkImgView)
         }else{
             isPosted = 0
-            sender.backgroundColor = UIColor.whiteColor()
-            sender.layer.borderColor = privateLabelColor.CGColor
+            sender.backgroundColor = UIColor.white
+            sender.layer.borderColor = privateLabelColor.cgColor
             sender.removeAllSubviews()
         }
     }
     
-    func resetView(sender: UIButton){
-        let typeIndex = treatmentTypeArr.indexOfObject((sender.titleLabel?.text)!)
+    func resetView(_ sender: UIButton){
+        let typeIndex = treatmentTypeArr.index(of: (sender.titleLabel?.text)!)
         selectedIndex = typeIndex
         treatmentTypeBtmLineView.frame = CGRECT(treatmentTypeSectionLeftSpace + CGFloat(typeIndex) * treatmentTypeBtnW,  treatmentTypeSectionHeight, treatmentTypeBtnW, treatmentTypeBtmLineHeight)
         //添加治疗方案 选择 按钮
@@ -211,21 +211,21 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             var treatmentBtnX: CGFloat = treatmentBtnLeftSpace
             var treatmentBtnY: CGFloat =  treatmentBtnTopSpace
             for treatment in selectedTreatmentList{
-                let treatmentName: String = (treatment as! NSDictionary).objectForKey("treatmentName") as! String
-                let treatmentNameTextSize = (treatmentName).sizeWithFont(treatmentBtnTextFont, maxSize: CGSize(width: CGFloat.max, height: treatmentBtnHeight))
+                let treatmentName: String = (treatment as! NSDictionary).object(forKey: "treatmentName") as! String
+                let treatmentNameTextSize = (treatmentName).sizeWithFont(treatmentBtnTextFont, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: treatmentBtnHeight))
                 if (treatmentNameTextSize.width + treatmentBtnX + treatmentBtnTextHorizonSpace * 2 + treatmentBtnTextHorizonSpace ) > screenWidth - treatmentBtnLeftSpace * 2 {
                     treatmentBtnX = treatmentBtnLeftSpace
                     treatmentBtnY += treatmentBtnHeight + treatmentBtnVerticalSpace
                 }
                 let treatmentNameBtn = UIButton(frame: CGRect(x: treatmentBtnX, y: treatmentBtnY, width: treatmentNameTextSize.width + treatmentBtnTextHorizonSpace * 2, height: treatmentBtnHeight))
-                treatmentNameBtn.setTitle(treatmentName, forState: UIControlState.Normal)
-                treatmentNameBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
+                treatmentNameBtn.setTitle(treatmentName, for: UIControlState())
+                treatmentNameBtn.setTitleColor(headerColor, for: UIControlState())
                 treatmentNameBtn.titleLabel?.font = treatmentBtnTextFont
-                treatmentNameBtn.layer.borderColor = treatmentBtnBorderColor.CGColor
+                treatmentNameBtn.layer.borderColor = treatmentBtnBorderColor.cgColor
                 treatmentNameBtn.layer.borderWidth = treatmentBtnBorderWidth
                 treatmentNameBtn.layer.cornerRadius = treatmentBtnCornerRadius
-                treatmentNameBtn.backgroundColor = UIColor.whiteColor()
-                treatmentNameBtn.addTarget(self, action: "selectTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+                treatmentNameBtn.backgroundColor = UIColor.white
+                treatmentNameBtn.addTarget(self, action: "selectTreatment:", for: UIControlEvents.touchUpInside)
                 treatmentFormatSectionView.addSubview(treatmentNameBtn)
                 treatmentBtnX += treatmentNameBtn.frame.width + treatmentBtnHorizonSpace
             }
@@ -241,11 +241,11 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         treatmentTextInput.text = "请输入剂量及使用方法..."
         treatmentTextInput.font = treatmentTextInputViewFont
         treatmentTextInput.textColor = treatmentTextInputViewColor
-        treatmentTextInput.returnKeyType = UIReturnKeyType.Done
+        treatmentTextInput.returnKeyType = UIReturnKeyType.done
         self.scrollView.addSubview(treatmentTextInput)
         
-        self.scrollView.userInteractionEnabled = true
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapDismiss")
+        self.scrollView.isUserInteractionEnabled = true
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTreatmentViewController.tapDismiss))
         self.scrollView.addGestureRecognizer(tapGesture)
     }
     
@@ -261,27 +261,27 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             }
         }
         if (treatmentName as NSString).length == 0{
-            treatmentName = treatmentTypeArr.objectAtIndex(selectedIndex) as! String
+            treatmentName = treatmentTypeArr.object(at: selectedIndex) as! String
         }
         var treatmentDosage = String()
-        if treatmentTextInput.textColor == UIColor.blackColor(){
+        if treatmentTextInput.textColor == UIColor.black{
             treatmentDosage = treatmentTextInput.text!
         }
-        let treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName", "dosage"])
-        treatmentList.addObject(treatment)
+        let treatment = NSMutableDictionary(objects: [treatmentName, treatmentDosage], forKeys: ["treatmentName" as NSCopying, "dosage" as NSCopying])
+        treatmentList.add(treatment)
     }
     
-    func selectTreatment(sender:UIButton){
-        if sender.backgroundColor == UIColor.whiteColor(){
+    func selectTreatment(_ sender:UIButton){
+        if sender.backgroundColor == UIColor.white{
             sender.backgroundColor = headerColor
-            sender.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            sender.setTitleColor(UIColor.white, for: UIControlState())
         }else{
-            sender.backgroundColor = UIColor.whiteColor()
-            sender.setTitleColor(headerColor, forState: UIControlState.Normal)
+            sender.backgroundColor = UIColor.white
+            sender.setTitleColor(headerColor, for: UIControlState())
         }
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n"{
             textView.resignFirstResponder()
             return false
@@ -289,10 +289,10 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         return true
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
-        if textView.textColor != UIColor.blackColor() {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor != UIColor.black {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
     }
     
@@ -300,36 +300,36 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         self.getTreatmentDetail()
         if treatmentList.count > 0 {
             for treatment in treatmentList{
-                treatment.setObject(isPosted, forKey:"isPosted")
-                let beginDate: Int = profileSet.objectForKey(newTreatmentBegindate) as! Int
+                (treatment as AnyObject).set(isPosted, forKey:"isPosted")
+                let beginDate: Int = profileSet.object(forKey: newTreatmentBegindate) as! Int
                 
                 let doubleBeginDate: Double = Double(beginDate) * 1000
                 
-                let endDate: Int = profileSet.objectForKey(newTreatmentEnddate) as! Int
+                let endDate: Int = profileSet.object(forKey: newTreatmentEnddate) as! Int
                 
                 let doubleEndDate: Double = Double(endDate) * 1000
-                treatment.setObject(doubleBeginDate, forKey: "beginDate")
-                if profileSet.objectForKey(newTreatmentEnddate) != nil {
-                    treatment.setObject(doubleEndDate, forKey: "endDate")
+                (treatment as AnyObject).set(doubleBeginDate, forKey: "beginDate")
+                if profileSet.object(forKey: newTreatmentEnddate) != nil {
+                    (treatment as AnyObject).set(doubleEndDate, forKey: "endDate")
                 }
             }
             addTreatment(treatmentList)
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     func saveTreatmentToLocalDB() {
-        let appDel:AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        let appDel:AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
         let context: NSManagedObjectContext = appDel.managedObjectContext!
         for treatment in treatmentList {
-            let treatmentLocalDBItem = NSEntityDescription.insertNewObjectForEntityForName(tableTreatment, inManagedObjectContext: context)
+            let treatmentLocalDBItem = NSEntityDescription.insertNewObject(forEntityName: tableTreatment, into: context)
             let treatmentObjItem = treatment as! NSDictionary
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("treatmentName") , forKey: propertyTreatmentName)
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("username") , forKey: propertyTreatmentUsername)
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("dosage") , forKey: propertyDosage)
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("beginDate") , forKey: propertyBeginDate)
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("endDate") , forKey: propertyEndDate)
-            treatmentLocalDBItem.setValue(treatmentObjItem.objectForKey("treatmentID"), forKey: propertyTreatmentID)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "treatmentName") , forKey: propertyTreatmentName)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "username") , forKey: propertyTreatmentUsername)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "dosage") , forKey: propertyDosage)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "beginDate") , forKey: propertyBeginDate)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "endDate") , forKey: propertyEndDate)
+            treatmentLocalDBItem.setValue(treatmentObjItem.object(forKey: "treatmentID"), forKey: propertyTreatmentID)
         }
         do {
             try context.save()
@@ -337,20 +337,20 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func addTreatment(treatmentList: NSArray){
-        var accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+    func addTreatment(_ treatmentList: NSArray){
+        var accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken == nil {
             getAccessToken.getAccessToken()
-            accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         }
         let urlPath:String = (addTreatmentURL as String) + "?access_token=" + (accessToken as! String);
-        let url : NSURL = NSURL(string: urlPath)!
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
+        let url : URL = URL(string: urlPath)!
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "POST"
         let requestBody = NSMutableDictionary()
-        requestBody.setObject(treatmentList, forKey: "treatments")
-        requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+        requestBody.setObject(treatmentList, forKey: "treatments" as NSCopying)
+        requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "insertUsername" as NSCopying)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
@@ -358,11 +358,11 @@ class AddTreatmentViewController: UIViewController, UITextViewDelegate {
             
             success: { (content , message) -> Void in
                 let dict: NSDictionary = content as! NSDictionary
-                let treatmentIdList = dict.objectForKey("treatmentIDList") as! [Int]
+                let treatmentIdList = dict.object(forKey: "treatmentIDList") as! [Int]
                 var index  = 0
                 for treatment in self.treatmentList {
-                    (treatment as! NSMutableDictionary).setObject(treatmentIdList[index], forKey: "treatmentID")
-                    index++
+                    (treatment as! NSMutableDictionary).setObject(treatmentIdList[index], forKey: "treatmentID" as NSCopying)
+                    index += 1
                 }
                 self.saveTreatmentToLocalDB()
             }) { (content, message) -> Void in

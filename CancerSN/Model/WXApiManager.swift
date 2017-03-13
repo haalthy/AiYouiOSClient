@@ -13,27 +13,29 @@ import Foundation
 //}
 
 class WXApiManager: NSObject, WXApiDelegate {
+/*private static var __once: () = { () -> Void in
+                SingletonStruct.singleton = WXApiManager()
+            }()*/
 //    var wxReturnDelegate: WXReturnDelegate?
     class var sharedInstance: WXApiManager {
         
         get {
             struct SingletonStruct {
-                static var onceToken: dispatch_once_t = 0
+                static var onceToken: Int = 0
                 static var singleton: WXApiManager? = nil
             }
-            dispatch_once(&SingletonStruct.onceToken) { () -> Void in
+            _ = { () -> Void in
                 SingletonStruct.singleton = WXApiManager()
-            }
-            
+            }()
             return SingletonStruct.singleton!
         }
     }
     
-    func onReq(req: BaseReq!) {
+    func onReq(_ req: BaseReq!) {
         print("on req")
     }
     
-    func onResp(resp: BaseResp!) {
+    func onResp(_ resp: BaseResp!) {
     }
 
 }

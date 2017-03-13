@@ -21,24 +21,24 @@ class CommentListTableViewCell: UITableViewCell {
         }
     }
     func updateUI(){
-        username.text = comment.objectForKey("insertUsername") as? String
-        commentContent.text = comment.objectForKey("body") as? String
-        if comment.objectForKey("image") != nil{
-            let dataString = comment.valueForKey("image") as! String
-            userPortrait.image = UIImage(data: NSData(base64EncodedString: dataString, options: NSDataBase64DecodingOptions(rawValue: 0))!)
+        username.text = comment.object(forKey: "insertUsername") as? String
+        commentContent.text = comment.object(forKey: "body") as? String
+        if comment.object(forKey: "image") != nil{
+            let dataString = comment.value(forKey: "image") as! String
+            userPortrait.image = UIImage(data: Data(base64Encoded: dataString, options: NSData.Base64DecodingOptions(rawValue: 0))!)
         }
         //insert date View
-        let dateFormatter = NSDateFormatter()
-        let insertedDate = NSDate(timeIntervalSince1970: (comment.valueForKey("dateInserted") as! Double)/1000 as NSTimeInterval)
+        let dateFormatter = DateFormatter()
+        let insertedDate = Foundation.Date(timeIntervalSince1970: (comment.value(forKey: "dateInserted") as! Double)/1000 as TimeInterval)
         dateFormatter.dateFormat = "yyyy-MM-dd" // superset of OP's format
-        let insertedDayStr = dateFormatter.stringFromDate(insertedDate)
-        let currentDayStr = dateFormatter.stringFromDate(NSDate())
+        let insertedDayStr = dateFormatter.string(from: insertedDate)
+        let currentDayStr = dateFormatter.string(from: Foundation.Date())
         if(currentDayStr > insertedDayStr){
             dateFormatter.dateFormat = "MM-dd"
-            date.text = dateFormatter.stringFromDate(insertedDate)
+            date.text = dateFormatter.string(from: insertedDate)
         }else{
             dateFormatter.dateFormat = "HH:mm"
-            date.text = dateFormatter.stringFromDate(insertedDate)
+            date.text = dateFormatter.string(from: insertedDate)
         }
     }
     override func awakeFromNib() {
@@ -46,7 +46,7 @@ class CommentListTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

@@ -10,7 +10,7 @@ import Foundation
 
 //restful service URL setting
 
-let haalthyServiceRestfulURL : String = "http://content.haalthy.com/"
+let haalthyServiceRestfulURL : String = "http://54.202.104.99:8080/haalthyservice/"
 
 // MARK: - 智囊圈模块
 

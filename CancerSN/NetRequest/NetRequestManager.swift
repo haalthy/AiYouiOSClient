@@ -10,21 +10,21 @@ import UIKit
 
 class NetRequestManager: NSObject {
 
-    var session: NSURLSession!
+    var session: URLSession!
     let url: String! // 网络请求链接
     var request: NSMutableURLRequest!
-    var task: NSURLSessionTask!
+    var task: URLSessionTask!
     
     let method: String! // 请求方法
     let parameters: Dictionary<String, AnyObject> // 请求参数
-    let callback: (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void // 返回值
+    let callback: (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void // 返回值
     //let files: Array<File> // 图片传输
     
     
-    init(url: String, method: String, parameters:Dictionary<String, AnyObject> = Dictionary<String, AnyObject>(), callback: (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void) {
+    init(url: String, method: String, parameters:Dictionary<String, AnyObject> = Dictionary<String, AnyObject>(), callback: @escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void) {
         
         self.url = url
-        self.request = NSMutableURLRequest(URL: NSURL(string: url)!)
+        self.request = NSMutableURLRequest(url: URL(string: url)!)
         self.method = method
         self.parameters = parameters
         self.callback = callback
@@ -34,11 +34,11 @@ class NetRequestManager: NSObject {
         // 相关网络请求配置
         
         // 网络配置
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let config = URLSessionConfiguration.default
         // 设置请求超时时间
         config.timeoutIntervalForRequest = 30
         
-        self.session = NSURLSession(configuration: config)
+        self.session = URLSession(configuration: config)
         
     }
     
@@ -57,10 +57,10 @@ class NetRequestManager: NSObject {
         
         // GET 方法
         if self.method == "GET" && parameters.count > 0 {
-            self.request = NSMutableURLRequest(URL: NSURL(string: self.url + "?" + buildParameters(self.parameters))!)
+            self.request = NSMutableURLRequest(url: URL(string: self.url + "?" + buildParameters(self.parameters))!)
         }
         
-        self.request.HTTPMethod = self.method
+        self.request.httpMethod = self.method
         
         if self.parameters.count > 0 {
             
@@ -78,8 +78,8 @@ class NetRequestManager: NSObject {
             
             do {
                 // 建立HTTPBody
-                let jsonData:NSData! = try NSJSONSerialization.dataWithJSONObject(                 self.parameters, options: NSJSONWritingOptions())
-                self.request.HTTPBody = jsonData
+                let jsonData:Data! = try JSONSerialization.data(                 withJSONObject: self.parameters, options: JSONSerialization.WritingOptions())
+                self.request.httpBody = jsonData
             }
             catch {
             
@@ -92,10 +92,11 @@ class NetRequestManager: NSObject {
     
     func buildTask() {
     
-        task = session.dataTaskWithRequest(self.request, completionHandler: { (data, response, error) -> Void in
+        task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             // 返回任务结果
-            self.callback(data: data, response: response, error: error)
+            //waiting for researh
+            self.callback(data, response, error)
         })
         // 任务结束
         task.resume()
@@ -103,18 +104,18 @@ class NetRequestManager: NSObject {
     
     // MARK: - 动态拼接参数
     
-    func buildParameters(parameters: [String : AnyObject]) -> String {
+    func buildParameters(_ parameters: [String : AnyObject]) -> String {
         
         var components: [(String, String)] = []
-        for key in Array(parameters.keys).sort(<) {
+        for key in Array(parameters.keys).sorted(by: <) {
             let value: AnyObject! = parameters[key]
             components += self.queryComponents(key, value)
         }
-        return (components.map{"\($0)=\($1)"} as [String]).joinWithSeparator("&")
+        return (components.map{"\($0)=\($1)"} as [String]).joined(separator: "&")
     }
     
     
-    func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
+    func queryComponents(_ key: String, _ value: AnyObject) -> [(String, String)] {
         var components: [(String, String)] = []
         if let dictionary = value as? [String: AnyObject] {
             for (nestedKey, value) in dictionary {
@@ -125,20 +126,20 @@ class NetRequestManager: NSObject {
                 components += queryComponents("\(key)", value)
             }
         } else {
-            components.appendContentsOf([(escape(key), escape("\(value)"))])
+            components.append(contentsOf: [(escape(key), escape("\(value)"))])
         }
         
         return components
     }
     
-    func escape(string: String) -> String {
+    func escape(_ string: String) -> String {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         
-        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
-        allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
+        let allowedCharacterSet = (CharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as! NSMutableCharacterSet
+        allowedCharacterSet.removeCharacters(in: generalDelimitersToEncode + subDelimitersToEncode)
         
-        return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? ""
+        return string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet as CharacterSet) ?? ""
     }
 
 }

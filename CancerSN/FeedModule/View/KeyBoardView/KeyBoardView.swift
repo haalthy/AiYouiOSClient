@@ -13,7 +13,7 @@ import UIKit
 // 底部textView高度
 let kKeyBoardTextViewHeight: CGFloat = 36.0
 // textView背景色
-let kKeyBoardTextViewBgColor: UIColor = UIColor.whiteColor()
+let kKeyBoardTextViewBgColor: UIColor = UIColor.white
 // 横向间隔
 let kHorizontalPadding: CGFloat = 8.0
 // 纵向间隔
@@ -32,7 +32,7 @@ let kKeyBoardFaceBtnWidth: CGFloat = 30
 
 protocol KeyBoardDelegate {
     // 发送评论
-    func sendCommentAction(commentStr: String)
+    func sendCommentAction(_ commentStr: String)
 }
 
 class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
@@ -61,7 +61,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
     
     // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Drawing code
     }
 
@@ -72,17 +72,17 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
         self.backgroundColor = kKeyBoardColor
         self.layer.borderWidth = 1.0
-        self.layer.borderColor = kKeyBoardWColor.CGColor
+        self.layer.borderColor = kKeyBoardWColor.cgColor
         
         // 添加点击事件
-        self.userInteractionEnabled = true
+        self.isUserInteractionEnabled = true
     }
     
     // MARK: - 初始化通知
     
     func initNaitfication() {
     
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillChangeFrame:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardView.keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     
     // MARK: - 设置键盘布局
@@ -91,7 +91,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
         // 评论内容textView
         textView.frame = CGRECT(kTextViewLeftMargin, kVerticalPadding, self.frame.size.width - kTextViewLeftMargin - kTextViewRightMargin - kKeyBoardFaceBtnWidth - 8, kKeyBoardTextViewHeight)
-        textView.returnKeyType = UIReturnKeyType.Send
+        textView.returnKeyType = UIReturnKeyType.send
        // textView.scrollEnabled = false
 
         textView.backgroundColor = kKeyBoardTextViewBgColor
@@ -99,11 +99,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         self.addSubview(textView)
         
         // 标签按钮
-        let faceBtn: UIButton = UIButton(type: UIButtonType.Custom)
-        faceBtn.frame = CGRECT(CGRectGetMaxX(textView.frame) + kTextViewRightMargin, kVerticalPadding + 3, kKeyBoardFaceBtnWidth, kKeyBoardFaceBtnWidth)
-        faceBtn.setBackgroundImage(UIImage(named: "btn_emoji"), forState: UIControlState.Normal)
-        faceBtn.setBackgroundImage(UIImage(named: "btn_publish_keyboard_a"), forState: UIControlState.Selected)
-        faceBtn.addTarget(self, action: "willShowFaceView:", forControlEvents: UIControlEvents.TouchUpInside)
+        let faceBtn: UIButton = UIButton(type: UIButtonType.custom)
+        faceBtn.frame = CGRECT(textView.frame.maxX + kTextViewRightMargin, kVerticalPadding + 3, kKeyBoardFaceBtnWidth, kKeyBoardFaceBtnWidth)
+        faceBtn.setBackgroundImage(UIImage(named: "btn_emoji"), for: UIControlState())
+        faceBtn.setBackgroundImage(UIImage(named: "btn_publish_keyboard_a"), for: UIControlState.selected)
+        faceBtn.addTarget(self, action: #selector(KeyBoardView.willShowFaceView(_:)), for: UIControlEvents.touchUpInside)
         self.addSubview(faceBtn)
         
         // 添加表情View
@@ -112,9 +112,9 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
             self.faceView = FaceView()
             self.faceView?.frame = CGRECT(0, 0, SCREEN_WIDTH, 235)
             self.faceView?.createEmojiKeyBoard()
-            self.faceView?.backgroundColor = UIColor.whiteColor()
+            self.faceView?.backgroundColor = UIColor.white
             self.faceView?.delegate = self
-            self.faceView?.autoresizingMask = UIViewAutoresizing.FlexibleTopMargin
+            self.faceView?.autoresizingMask = UIViewAutoresizing.flexibleTopMargin
         }
         
 
@@ -124,11 +124,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
     // MARK: 展示表情view
     
-    func willShowFaceView(btn: UIButton) {
+    func willShowFaceView(_ btn: UIButton) {
         
-        btn.selected = !btn.selected
+        btn.isSelected = !btn.isSelected
         
-        if btn.selected == true {
+        if btn.isSelected == true {
         
             self.textView.inputView = self.faceView
             self.textView.reloadInputViews()
@@ -152,12 +152,12 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
     // MARK: 改变键盘frame
     
-    func keyboardWillChangeFrame(noti: NSNotification) {
+    func keyboardWillChangeFrame(_ noti: Notification) {
     
-        let userInfo: NSDictionary = noti.userInfo!
-        let endFrame: CGRect = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue
+        let userInfo: NSDictionary = noti.userInfo! as NSDictionary
+        let endFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey]! as AnyObject).cgRectValue
         // 动画时间
-        let duration: NSTimeInterval = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
+        let duration: TimeInterval = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
         //var viewCurve: UIViewAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as Int
         
         // 动画
@@ -176,26 +176,26 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
             (finished: Bool) -> Void in
         }
         
-        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState, animations: animations, completion: completion)
+        UIView.animate(withDuration: duration, delay: 0.0, options: UIViewAnimationOptions.beginFromCurrentState, animations: animations, completion: completion)
         
     }
     
     // MARK: 设置placeHolder
     
-    func setPlaceHolderText(text: String) {
+    func setPlaceHolderText(_ text: String) {
         
-        self.textView.placeHolder = text
+        self.textView.placeHolder = text as NSString?
     }
     
     // MARK: 设置placeHolder颜色
     
-    func setPlaceHolderTextColor(color: UIColor) {
+    func setPlaceHolderTextColor(_ color: UIColor) {
         self.textView.placeHolderColor = color
     }
     
     // MARK: - 添加表情代理
     
-    func sendFaceSelected(face: String) {
+    func sendFaceSelected(_ face: String) {
         
         self.textView.insertText(face)
     }
@@ -210,11 +210,11 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
     
     // MARK: - UITextView Delegate
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
 //        self.showBottomView(nil)
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
      
         // 设置placeHolder
         if textView.text == "" {
@@ -222,7 +222,7 @@ class KeyBoardView: UIView, UITextViewDelegate, FaceDelegate {
         }
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         if text == "\n" {
         

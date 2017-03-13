@@ -23,18 +23,18 @@ class KBTextView: UITextView {
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textChange:", name:UITextViewTextDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(KBTextView.textChange(_:)), name:NSNotification.Name.UITextViewTextDidChange, object: nil)
         
         self.autoresizesSubviews = false
         
         // 默认字体与颜色
         self.placeHolder = ""
         self.placeHolderColor = RGB(204, 204, 204)
-        self.layer.borderColor = kKBTextViewBoardColor.CGColor
+        self.layer.borderColor = kKBTextViewBoardColor.cgColor
         self.layer.borderWidth = kKBTextViewBoardWidth
         self.layer.cornerRadius = 4.0
         
-        self.font = UIFont.systemFontOfSize(18)
+        self.font = UIFont.systemFont(ofSize: 18)
         
 
     }
@@ -45,7 +45,7 @@ class KBTextView: UITextView {
     }
     
     // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Drawing code
         
         if self.text == "" {
@@ -53,9 +53,9 @@ class KBTextView: UITextView {
             var placeHolderRect: CGRect = CGRECT(0, 0, 0, 0)
             placeHolderRect.origin.y = 9
 
-            placeHolderRect.size.height = CGRectGetHeight(self.frame) - 8
+            placeHolderRect.size.height = self.frame.height - 8
             placeHolderRect.origin.x = 5
-            placeHolderRect.size.width = CGRectGetWidth(self.frame) - 5
+            placeHolderRect.size.width = self.frame.width - 5
             
            // self.placeHolderColor!.set()
            
@@ -65,24 +65,24 @@ class KBTextView: UITextView {
 
             // 定义属性
             let paragraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
-            paragraphStyle.alignment = NSTextAlignment.Left
-            let dict = [NSFontAttributeName : UIFont.systemFontOfSize(16),
+            paragraphStyle.lineBreakMode = NSLineBreakMode.byWordWrapping
+            paragraphStyle.alignment = NSTextAlignment.left
+            let dict = [NSFontAttributeName : UIFont.systemFont(ofSize: 16),
                 NSParagraphStyleAttributeName : paragraphStyle.copy(),
             ]
-            self.placeHolder?.drawInRect(placeHolderRect, withAttributes: dict)
+            self.placeHolder?.draw(in: placeHolderRect, withAttributes: dict)
 
         }
     }
 
 
-    func textChange(noti: NSNotification) {
+    func textChange(_ noti: Notification) {
         
         self.setNeedsDisplay()
     }
     
     
-    func setPlaceHolderText(text: String) {
+    func setPlaceHolderText(_ text: String) {
     
         self.text = text
         self.setNeedsDisplay()

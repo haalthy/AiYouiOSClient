@@ -15,14 +15,14 @@ class TreatmentCell: UITableViewCell {
     let portraitLength: CGFloat = 40
     
     let profileLeftSpace: CGFloat = 66
-    let textFont: UIFont = UIFont.systemFontOfSize(12)
+    let textFont: UIFont = UIFont.systemFont(ofSize: 12)
     
     let highlightTopSpace: CGFloat = 42
     let highlightVerticalMargin: CGFloat = 2.5
     let highlightHorizonMargin: CGFloat = 4
     let highlightBtnHeight: CGFloat = 18
     
-    let bodyFont: UIFont = UIFont.systemFontOfSize(14)
+    let bodyFont: UIFont = UIFont.systemFont(ofSize: 14)
     
     let dateTopSpace: CGFloat = 12
     
@@ -47,7 +47,7 @@ class TreatmentCell: UITableViewCell {
         profileLabel.textColor = lightTextColor
         self.addSubview(profileLabel)
         
-        let highLightList = treatmentObj.treatmentName.componentsSeparatedByString(" ")
+        let highLightList = treatmentObj.treatmentName.components(separatedBy: " ")
         var buttonX: CGFloat = profileLeftSpace
         var buttonY: CGFloat = highlightTopSpace
         for highLight in highLightList {
@@ -58,9 +58,9 @@ class TreatmentCell: UITableViewCell {
                     buttonY += 26
                 }
                 let highLightButton = UIButton(frame: CGRect(x: buttonX, y: buttonY, width: buttonText.width + highlightHorizonMargin * 2, height: highlightBtnHeight))
-                highLightButton.setTitle(highLight, forState: UIControlState.Normal)
-                highLightButton.setTitleColor(defaultTextColor, forState: UIControlState.Normal)
-                highLightButton.layer.borderColor = lightTextColor.CGColor
+                highLightButton.setTitle(highLight, for: UIControlState())
+                highLightButton.setTitleColor(defaultTextColor, for: UIControlState())
+                highLightButton.layer.borderColor = lightTextColor.cgColor
                 highLightButton.layer.borderWidth = 1
                 highLightButton.layer.cornerRadius = 2
                 highLightButton.layer.masksToBounds = true
@@ -81,8 +81,8 @@ class TreatmentCell: UITableViewCell {
         
         //date label
         // add date button
-        let beginDateStr = (treatmentObj.beginDate as NSString).substringToIndex(10)
-        let endDateStr = (treatmentObj.endDate as NSString).substringToIndex(10)
+        let beginDateStr = (treatmentObj.beginDate as NSString).substring(to: 10)
+        let endDateStr = (treatmentObj.endDate as NSString).substring(to: 10)
         let dateLabel = UILabel(frame: CGRect(x: profileLeftSpace, y: dosageLabel.frame.origin.y + dosageLabel.frame.height, width: screenWidth - profileLeftSpace, height: 13))
         dateLabel.text = beginDateStr + "-" + endDateStr
         dateLabel.textColor = lightTextColor
@@ -100,7 +100,7 @@ class TreatmentCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

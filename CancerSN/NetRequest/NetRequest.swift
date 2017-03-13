@@ -10,36 +10,40 @@ import UIKit
 import Foundation
 
 // 获取数据成功 block
-typealias successBlock = (content: AnyObject, message: String) -> Void
+typealias successBlock = (_ content: AnyObject, _ message: String) -> Void
 // 获取数据失败 block
-typealias failedBlock = (content: AnyObject, message: String) -> Void
+typealias failedBlock = (_ content: AnyObject, _ message: String) -> Void
 
 
 class NetRequest: NSObject {
     
-    
+/*        private static var __once: () = { () -> Void in
+                    SingletonStruct.singleton = NetRequest()
+                }()
+ */
     // MARK: - 单例模式
+    //waiting for more research....
     class var sharedInstance: NetRequest {
         
         get {
             struct SingletonStruct {
-                static var onceToken: dispatch_once_t = 0
+                static var onceToken: Int = 0
                 static var singleton: NetRequest? = nil
             }
-            dispatch_once(&SingletonStruct.onceToken) { () -> Void in
+            _ = { () -> Void in
                 SingletonStruct.singleton = NetRequest()
-            }
+            }()
             
             // 得到变量
             return SingletonStruct.singleton!
         }
     }
-    
+
     // MARK: - POST请求
     
     // MARK: include Params
     
-    func POST(url: String, parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    func POST(_ url: String, parameters: Dictionary<String, AnyObject>, success: @escaping successBlock, failed: @escaping failedBlock) {
     
         let manager = NetRequestManager(url: url, method: "POST", parameters: parameters) { (data, response, error) -> Void in
             
@@ -50,7 +54,7 @@ class NetRequest: NSObject {
     
     // MARK: not Params
     
-    func POST(url: String, success: successBlock, failed: failedBlock) {
+    func POST(_ url: String, success: @escaping successBlock, failed: @escaping failedBlock) {
     
         let manager = NetRequestManager(url: url, method: "POST") { (data, response, error) -> Void in
             
@@ -62,7 +66,7 @@ class NetRequest: NSObject {
     
     // MARK: include token and Params
     
-    func POST(url: String, isToken: Bool, parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    func POST(_ url: String, isToken: Bool, parameters: Dictionary<String, AnyObject>, success: @escaping successBlock, failed: @escaping failedBlock) {
         
         if isToken == true {
         
@@ -77,49 +81,49 @@ class NetRequest: NSObject {
     //同步POST请求
     // MARK: 同步GET请求, 带参数
 //    
-    func POST_A(url: String,  parameters: Dictionary<String, AnyObject>)-> NSDictionary {
-        var session: NSURLSession = NSURLSession()
+    func POST_A(_ url: String,  parameters: Dictionary<String, AnyObject>)-> NSDictionary {
+        var session: URLSession = URLSession()
         var request: NSMutableURLRequest = NSMutableURLRequest()
-        var task: NSURLSessionTask!
+        var task: URLSessionTask!
         var json: NSDictionary = NSDictionary()
 
-        let semaphore = dispatch_semaphore_create(0)
-        request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        request.HTTPMethod = "POST"
+        let semaphore = DispatchSemaphore(value: 0)
+        request = NSMutableURLRequest(url: URL(string: url)!)
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(parameters, options: NSJSONWritingOptions())
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions())
         // 网络配置
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let config = URLSessionConfiguration.default
         // 设置请求超时时间
         config.timeoutIntervalForRequest = 30
         
-        session = NSURLSession(configuration: config)
+        session = URLSession(configuration: config)
         
-        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             // 返回任务结果
             if error == nil {
                 do{
                     // 解析json
-                    json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                    json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                     //                self.callbackWithResult(json, success: success, failed: failed)
                 }catch let error as NSError {
                     print("ERROR: \(error)")
                 }
             }
             else {
-                json = NSDictionary(object: "content", forKey: "网络异常")
+                json = NSDictionary(object: "content", forKey: "网络异常" as NSCopying)
                 //                failed(content: ["": ""], message: "网络异常")
             }
             
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
             }
         )
 
         // 任务结束
         task.resume()
         
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        semaphore.wait(timeout: DispatchTime.distantFuture)
         return json
     }
 //
@@ -127,7 +131,7 @@ class NetRequest: NSObject {
     
     // MARK: include Params
     
-    func GET(url: String, parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    func GET(_ url: String, parameters: Dictionary<String, AnyObject>, success: @escaping successBlock, failed: @escaping failedBlock) {
         
         let manager = NetRequestManager(url: url, method: "GET", parameters: parameters) { (data, response, error) -> Void in
     
@@ -140,7 +144,7 @@ class NetRequest: NSObject {
     
     // MARK: not Params
     
-    func GET(url: String, success: successBlock, failed: failedBlock) {
+    func GET(_ url: String, success: @escaping successBlock, failed: @escaping failedBlock) {
         
         let manager = NetRequestManager(url: url, method: "GET") { (data, response, error) -> Void in
             
@@ -153,39 +157,39 @@ class NetRequest: NSObject {
     
     //    MARK: 同步GET请求, by lily
     
-    func GET_A(url: String,  parameters: Dictionary<String, AnyObject>) -> NSDictionary{
+    func GET_A(_ url: String,  parameters: Dictionary<String, AnyObject>) -> NSDictionary{
         
         
-        var session: NSURLSession = NSURLSession()
+        var session: URLSession = URLSession()
         var request: NSMutableURLRequest = NSMutableURLRequest()
-        var task: NSURLSessionTask!
+        var task: URLSessionTask!
         
-        var json: NSDictionary = NSDictionary(object: -1000, forKey: "result")
+        var json: NSDictionary = NSDictionary(object: -1000, forKey: "result" as NSCopying)
         
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         if parameters.count > 0 {
-            request = NSMutableURLRequest(URL: NSURL(string: url + "?" + self.buildParameters(parameters))!)
+            request = NSMutableURLRequest(url: URL(string: url + "?" + self.buildParameters(parameters))!)
         }else{
-            request = NSMutableURLRequest(URL: NSURL(string: url)!)
+            request = NSMutableURLRequest(url: URL(string: url)!)
         }
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         // 网络配置
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let config = URLSessionConfiguration.default
         // 设置请求超时时间
         config.timeoutIntervalForRequest = 30
         
-        session = NSURLSession(configuration: config)
+        session = URLSession(configuration: config)
         
-        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             // 返回任务结果
             if error == nil {
                 
                 // 解析json
                 if data != nil {
-                    json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                    json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                 }
                 
             }
@@ -194,63 +198,63 @@ class NetRequest: NSObject {
 //                failed(content: ["": ""], message: "网络异常")
             }
             
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         })
         // 任务结束
         task.resume()
         
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        semaphore.wait(timeout: DispatchTime.distantFuture)
         return json
     }
     
     // MARK: 同步GET请求, 带参数
     
-    func GET_A(url: String,  parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    func GET_A(_ url: String,  parameters: Dictionary<String, AnyObject>, success: @escaping successBlock, failed: @escaping failedBlock) {
     
-        var session: NSURLSession = NSURLSession()
+        var session: URLSession = URLSession()
         var request: NSMutableURLRequest = NSMutableURLRequest()
-        var task: NSURLSessionTask!
+        var task: URLSessionTask!
         
-        let semaphore = dispatch_semaphore_create(0)
-        request = NSMutableURLRequest(URL: NSURL(string: url + "?" + self.buildParameters(parameters))!)
+        let semaphore = DispatchSemaphore(value: 0)
+        request = NSMutableURLRequest(url: URL(string: url + "?" + self.buildParameters(parameters))!)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         // 网络配置
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let config = URLSessionConfiguration.default
         // 设置请求超时时间
         config.timeoutIntervalForRequest = 30
         
-        session = NSURLSession(configuration: config)
+        session = URLSession(configuration: config)
 
-        task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             // 返回任务结果
             if error == nil {
             
                 // 解析json
-                let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                let json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                 self.callbackWithResult(json, success: success, failed: failed)
                 
             }
             else {
                 
-                failed(content: ["": ""], message: "网络异常")
+                failed("" as AnyObject, "网络异常")
             }
         
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         })
         // 任务结束
         task.resume()
 
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        semaphore.wait(timeout: DispatchTime.distantFuture)
     }
     
     // MARK: - 自定义
     
     // MARK: not Params
     
-    func request(method: String, url: String,  success: successBlock, _ failed: failedBlock) {
+    func request(_ method: String, url: String,  success: @escaping successBlock, _ failed: @escaping failedBlock) {
         
         let manager = NetRequestManager(url: url, method: method) { (data, response, error) -> Void in
             
@@ -263,7 +267,7 @@ class NetRequest: NSObject {
     
     // MARK: include Params
 
-    func request(method: String, url: String,  parameters: Dictionary<String, AnyObject>, success: successBlock, failed: failedBlock) {
+    func request(_ method: String, url: String,  parameters: Dictionary<String, AnyObject>, success: @escaping successBlock, failed: @escaping failedBlock) {
         
         let manager = NetRequestManager(url: url, method: method, parameters: parameters) { (data, response, error) -> Void in
             
@@ -275,14 +279,14 @@ class NetRequest: NSObject {
     
     // MARK: - 解析协定结构体
     
-    func callbackWithResult(data: NSDictionary, success: successBlock, failed: failedBlock) {
+    func callbackWithResult(_ data: NSDictionary, success: @escaping successBlock, failed: @escaping failedBlock) {
     
         // token无效
         if (data["error"] as? String) == "invalid_token" {
             
             // 回归主线程
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                failed(content: ["": ""], message: "token失效，请重新登录")
+            DispatchQueue.main.async(execute: { () -> Void in
+                failed("" as AnyObject, "token失效，请重新登录")
             })
             
             return;
@@ -292,37 +296,37 @@ class NetRequest: NSObject {
         if (data["result"] as! Int) == 1 {
         
             // 回归主线程
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                success(content: data["content"]!, message: "")
+            DispatchQueue.main.async(execute: { () -> Void in
+                success(data["content"]! as AnyObject, "")
             })
         }
         else {
         
             // 回归主线程
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                failed(content: ["": ""], message: data["resultDesp"] as! String)
+            DispatchQueue.main.async(execute: { () -> Void in
+                failed("" as AnyObject, data["resultDesp"] as! String)
             })
         }
     }
     
     // MARK: - 异常处理及获取数据
     
-    func getDataAndCheck(data: NSData?, _ error: NSError!, _ success: successBlock, _ failed: failedBlock) {
+    func getDataAndCheck(_ data: Data?, _ error: Error!, _ success: @escaping successBlock, _ failed: @escaping failedBlock) {
     
         // 获取成功
         if error == nil {
             
             // 解析json
-            let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-            if (json.objectForKey("result") != nil) && (json.objectForKey("content") != nil){
+            let json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+            if (json.object(forKey: "result") != nil) && (json.object(forKey: "content") != nil){
                 self.callbackWithResult(json, success: success, failed: failed)
             }
             
         }
         else {
             // 回归主线程
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                failed(content: ["": ""], message: "网络异常")
+            DispatchQueue.main.async(execute: { () -> Void in
+                failed("" as AnyObject, "网络异常")
             })
         }
 
@@ -332,8 +336,8 @@ class NetRequest: NSObject {
     
     struct File {
         let name: String!
-        let url: NSURL!
-        init(name: String, url: NSURL) {
+        let url: URL!
+        init(name: String, url: URL) {
             self.name = name
             self.url = url
         }
@@ -341,18 +345,18 @@ class NetRequest: NSObject {
     
     // MARK: - 动态拼接参数
     
-    func buildParameters(parameters: [String : AnyObject]) -> String {
+    func buildParameters(_ parameters: [String : AnyObject]) -> String {
         
         var components: [(String, String)] = []
-        for key in Array(parameters.keys).sort(<) {
+        for key in Array(parameters.keys).sorted(by: <) {
             let value: AnyObject! = parameters[key]
             components += self.queryComponents(key, value)
         }
-        return (components.map{"\($0)=\($1)"} as [String]).joinWithSeparator("&")
+        return (components.map{"\($0)=\($1)"} as [String]).joined(separator: "&")
     }
     
     
-    func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
+    func queryComponents(_ key: String, _ value: AnyObject) -> [(String, String)] {
         var components: [(String, String)] = []
         if let dictionary = value as? [String: AnyObject] {
             for (nestedKey, value) in dictionary {
@@ -363,29 +367,29 @@ class NetRequest: NSObject {
                 components += queryComponents("\(key)", value)
             }
         } else {
-            components.appendContentsOf([(escape(key), escape("\(value)"))])
+            components.append(contentsOf: [(escape(key), escape("\(value)"))])
         }
         
         return components
     }
     
-    func escape(string: String) -> String {
+    func escape(_ string: String) -> String {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         
-        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
-        allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
+        let allowedCharacterSet = (CharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as! NSMutableCharacterSet
+        allowedCharacterSet.removeCharacters(in: generalDelimitersToEncode + subDelimitersToEncode)
         
-        return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? ""
+        return string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet as CharacterSet) ?? ""
     }
     
     // MARK: - 添加存储本地token
     
-    func addTokenToURL(url: String) -> String {
+    func addTokenToURL(_ url: String) -> String {
         
         let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         let urlPath:String = (url as String) + "?access_token=" + (accessToken as! String)
         return urlPath
         
@@ -397,7 +401,7 @@ class NetRequest: NSObject {
     
         let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
-        let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let access_Token = UserDefaults.standard.object(forKey: accessNSUserData)
         if (access_Token != nil){
             //已经登陆
             //if(access_token == networkErrorCode) // networkErrorCode == -1000

@@ -34,7 +34,7 @@ class UserCell: UITableViewCell {
     
     func updateUI(){
         let imageURL = userObj.imageURL + "@80h_80w_1e"
-        portraitImage.backgroundColor = UIColor.whiteColor()
+        portraitImage.backgroundColor = UIColor.white
         portraitImage.addImageCache(imageURL, placeHolder: "defaultUserImage")
         nameLabel.text = userObj.displayname
         var userInfo: String = ""
@@ -60,16 +60,16 @@ class UserCell: UITableViewCell {
         let addFollowingImage = UIImageView(image: UIImage(named: "btn_addFollowing"))
         self.addBtn.removeAllSubviews()
         self.addBtn.addSubview(addFollowingImage)
-        self.addBtn.enabled = true
+        self.addBtn.isEnabled = true
         if userObj.isFollowedByCurrentUser == 1 {
 //            self.addBtn.hidden = true
-            self.addBtn.enabled = false
+            self.addBtn.isEnabled = false
             let followedImageView = UIImageView(frame: CGRECT(0, 0, self.addBtn.frame.width, self.addBtn.frame.height))
             followedImageView.image = UIImage(named: "btn_Followed")
             self.addBtn.removeAllSubviews()
             self.addBtn.addSubview(followedImageView)
         }else{
-            self.addBtn.hidden = false
+            self.addBtn.isHidden = false
         }
     }
     
@@ -88,22 +88,22 @@ class UserCell: UITableViewCell {
         self.portraitImage.clipsToBounds = true
         
         self.addBtn.layer.cornerRadius = 4.0
-        self.addBtn.layer.borderColor = RGB(222, 228, 229).CGColor
+        self.addBtn.layer.borderColor = RGB(222, 228, 229).cgColor
         self.addBtn.layer.borderWidth = 2.0
-        self.addBtn.addTarget(self, action: "addFollowing:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.addBtn.addTarget(self, action: #selector(UserCell.addFollowing(_:)), for: UIControlEvents.touchUpInside)
     }
     
-    func addFollowing(sender: UIButton){
+    func addFollowing(_ sender: UIButton){
         userObj.isFollowedByCurrentUser = 1
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (addFollowingURL as String) + "?access_token=" + (accessToken as! String);
             
             let requestBody = NSMutableDictionary()
-            requestBody.setObject(userObj.username, forKey: "followingUser")
-            requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
-            sender.enabled = false
+            requestBody.setObject(userObj.username, forKey: "followingUser" as NSCopying)
+            requestBody.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username" as NSCopying)
+            sender.isEnabled = false
             let followedImageView = UIImageView(frame: CGRECT(0, 0, sender.frame.width, sender.frame.height))
             followedImageView.image = UIImage(named: "btn_Followed")
             sender.removeAllSubviews()
@@ -122,7 +122,7 @@ class UserCell: UITableViewCell {
         }
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

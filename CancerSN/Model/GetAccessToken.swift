@@ -11,7 +11,7 @@ import Foundation
 class GetAccessToken: NSObject {
     
     func getAccessToken(){
-        let profileSet = NSUserDefaults.standardUserDefaults()
+        let profileSet = UserDefaults.standard
         let keychainAccess = KeychainAccess()
 
         if((keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil)){
@@ -20,24 +20,24 @@ class GetAccessToken: NSObject {
             let publicService = PublicService()
             passwordStr = publicService.passwordEncode(passwordStr)
             
-            let parameters = NSDictionary(objects: [usernameStr, passwordStr, "my-trusted-client", "password"], forKeys: ["username", "password", "client_id", "grant_type"])
+            let parameters = NSDictionary(objects: [usernameStr, passwordStr, "my-trusted-client", "password"], forKeys: ["username" as NSCopying, "password" as NSCopying, "client_id" as NSCopying, "grant_type" as NSCopying])
             let jsonResult = NetRequest.sharedInstance.GET_A(getOauthTokenURL, parameters: parameters as! Dictionary<String, AnyObject>)
-            if (jsonResult.objectForKey("access_token") != nil){
-                let accessToken  = jsonResult.objectForKey("access_token")
-                let refreshToken = jsonResult.objectForKey("refresh_token")
-                profileSet.setObject(accessToken, forKey: accessNSUserData)
-                profileSet.setObject(refreshToken, forKey: refreshNSUserData)
-            }else if(jsonResult.objectForKey("error") != nil) && ((jsonResult.objectForKey("error") as! String) == "unauthorized"){
-                profileSet.setObject(nil, forKey: accessNSUserData)
-                profileSet.setObject(nil, forKey: refreshNSUserData)
+            if (jsonResult.object(forKey: "access_token") != nil){
+                let accessToken  = jsonResult.object(forKey: "access_token") as! String
+                let refreshToken = jsonResult.object(forKey: "refresh_token") as! String
+                profileSet.set(accessToken, forKey: accessNSUserData)
+                profileSet.set(refreshToken, forKey: refreshNSUserData)
+            }else if(jsonResult.object(forKey: "error") != nil) && ((jsonResult.object(forKey: "error") as! String) == "unauthorized"){
+                profileSet.removeObject(forKey: accessNSUserData)
+                profileSet.removeObject(forKey: refreshNSUserData)
             }
             else{
-                profileSet.setObject(networkErrorCode, forKey: accessNSUserData)
+                profileSet.set(networkErrorCode, forKey: accessNSUserData)
 //                profileSet.setObject(nil, forKey: refreshNSUserData)
             }
         }else{
-            profileSet.setObject(nil, forKey: accessNSUserData)
-            profileSet.setObject(nil, forKey: refreshNSUserData)
+            profileSet.removeObject(forKey: accessNSUserData)
+            profileSet.removeObject(forKey: refreshNSUserData)
         }
     }
 

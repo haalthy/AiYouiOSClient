@@ -31,12 +31,12 @@ class CalenderViewController: UIViewController {
         // Menu delegate [Required]
         self.menuView.menuViewDelegate = self
 
-        monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
+        monthLabel.setTitle(CVDate(date: Foundation.Date()).globalDescription, for: UIControlState())
 
     }
     
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .None
+    func adaptivePresentationStyleForPresentationController(_ controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,36 +54,36 @@ class CalenderViewController: UIViewController {
 
 extension CalenderViewController: CVCalendarViewDelegate
 {
-    func presentedDateUpdated(date: CVDate) {
+    func presentedDateUpdated(_ date: CVDate) {
         if monthLabel.titleLabel!.text != date.globalDescription && self.animationFinished {
             let updatedMonthLabel = UILabel()
             updatedMonthLabel.textColor = monthLabel.titleLabel!.textColor
             updatedMonthLabel.font = monthLabel.titleLabel!.font
-            updatedMonthLabel.textAlignment = .Center
+            updatedMonthLabel.textAlignment = .center
             updatedMonthLabel.text = date.globalDescription
             updatedMonthLabel.sizeToFit()
             updatedMonthLabel.alpha = 0
             updatedMonthLabel.center = self.monthLabel.center
             
             let offset = CGFloat(48)
-            updatedMonthLabel.transform = CGAffineTransformMakeTranslation(0, offset)
-            updatedMonthLabel.transform = CGAffineTransformMakeScale(1, 0.1)
+            updatedMonthLabel.transform = CGAffineTransform(translationX: 0, y: offset)
+            updatedMonthLabel.transform = CGAffineTransform(scaleX: 1, y: 0.1)
             
-            UIView.animateWithDuration(0.35, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+            UIView.animate(withDuration: 0.35, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: {
                 self.animationFinished = false
-                self.monthLabel.transform = CGAffineTransformMakeTranslation(0, -offset)
-                self.monthLabel.transform = CGAffineTransformMakeScale(1, 0.1)
+                self.monthLabel.transform = CGAffineTransform(translationX: 0, y: -offset)
+                self.monthLabel.transform = CGAffineTransform(scaleX: 1, y: 0.1)
                 self.monthLabel.alpha = 0
                 
                 updatedMonthLabel.alpha = 1
-                updatedMonthLabel.transform = CGAffineTransformIdentity
+                updatedMonthLabel.transform = CGAffineTransform.identity
                 
                 }) { _ in
                     
                     self.animationFinished = true
                     self.monthLabel.frame = updatedMonthLabel.frame
-                    self.monthLabel.setTitle(updatedMonthLabel.text, forState: UIControlState.Normal)
-                    self.monthLabel.transform = CGAffineTransformIdentity
+                    self.monthLabel.setTitle(updatedMonthLabel.text, for: UIControlState())
+                    self.monthLabel.transform = CGAffineTransform.identity
                     self.monthLabel.alpha = 1
                     updatedMonthLabel.removeFromSuperview()
             }
@@ -94,7 +94,7 @@ extension CalenderViewController: CVCalendarViewDelegate
     
     func preliminaryView(viewOnDayView dayView: DayView) -> UIView
     {
-        let circleView = CVAuxiliaryView(dayView: dayView, rect: dayView.bounds, shape: CVShape.Circle)
+        let circleView = CVAuxiliaryView(dayView: dayView, rect: dayView.bounds, shape: CVShape.circle)
         circleView.fillColor = .colorFromCode(0xCCCCCC)
         return circleView
     }
@@ -122,7 +122,7 @@ extension CalenderViewController: CVCalendarViewDelegate
 
 extension CalenderViewController: CVCalendarViewAppearanceDelegate {
     func presentationMode() -> CalendarMode {
-        return .MonthView
+        return .monthView
     }
     
     func shouldShowWeekdaysOut() -> Bool {
@@ -130,11 +130,11 @@ extension CalenderViewController: CVCalendarViewAppearanceDelegate {
     }
     
     func firstWeekday() -> Weekday {
-        return .Sunday
+        return .sunday
     }
     
     
-    func didSelectDayView(dayView: CVCalendarDayView) {
+    func didSelectDayView(_ dayView: CVCalendarDayView) {
         let date = dayView.date
     }
     
@@ -159,14 +159,14 @@ extension CalenderViewController: CVCalendarMenuViewDelegate {
 }
 
 extension CalenderViewController {
-    func toggleMonthViewWithMonthOffset(offset: Int) {
-        let calendar = NSCalendar.currentCalendar()
+    func toggleMonthViewWithMonthOffset(_ offset: Int) {
+        let calendar = Calendar.current
         let calendarManager = calendarView.manager
-        let components = Manager.componentsForDate(NSDate()) // from today
+        var components = Manager.componentsForDate(Foundation.Date()) // from today
         
-        components.month += offset
+        components.month = components.month! + offset
         
-        let resultDate = calendar.dateFromComponents(components)!
+        let resultDate = calendar.date(from: components)!
         
         self.calendarView.toggleViewWithDate(resultDate)
     }

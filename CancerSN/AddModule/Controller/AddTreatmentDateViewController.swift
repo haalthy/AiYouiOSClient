@@ -13,10 +13,10 @@ class AddTreatmentDateViewController: CalenderViewController {
 //    var haalthyService = HaalthyService()
     var keychainAccess = KeychainAccess()
     var username:String?
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
     var datePickerContainerView = UIView()
     var datePicker = UIDatePicker()
-    var dateInserted:NSDate?
+    var dateInserted:Foundation.Date?
     
     @IBOutlet weak var currentmonthLabel: UIButton!
     @IBOutlet weak var currentmenuView: CVCalendarMenuView!
@@ -26,7 +26,7 @@ class AddTreatmentDateViewController: CalenderViewController {
         let getAccessToken = GetAccessToken()
         getAccessToken.getAccessToken()
         
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         
         if accessToken != nil {
             super.calendarView = self.currentcalendarView
@@ -35,24 +35,24 @@ class AddTreatmentDateViewController: CalenderViewController {
             super.viewDidLoad()
             
             username = keychainAccess.getPasscode(usernameKeyChain) as? String
-            profileSet.removeObjectForKey(newTreatmentBegindate)
+            profileSet.removeObject(forKey: newTreatmentBegindate)
         }else{
-            let alertController = UIAlertController(title: "需要登录才能添加信息", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "需要登录才能添加信息", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
-                self.dismissViewControllerAnimated(true, completion: nil)
+            let cancelAction = UIAlertAction(title: "取消", style: .default) { (action) in
+                self.dismiss(animated: true, completion: nil)
             }
             
             alertController.addAction(cancelAction)
-            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+            let loginAction = UIAlertAction(title: "登陆", style: .cancel) { (action) in
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
-                self.presentViewController(controller, animated: true, completion: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as UIViewController
+                self.present(controller, animated: true, completion: nil)
             }
             alertController.addAction(loginAction)
             
             
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
@@ -60,33 +60,33 @@ class AddTreatmentDateViewController: CalenderViewController {
     
     func dateChanged(){
         dateInserted = datePicker.date
-        profileSet.setObject(dateInserted?.timeIntervalSince1970, forKey: newTreatmentBegindate)
-        monthLabel.setTitle(CVDate(date: dateInserted!).globalDescription, forState: UIControlState.Normal)
+        profileSet.set(dateInserted?.timeIntervalSince1970, forKey: newTreatmentBegindate)
+        monthLabel.setTitle(CVDate(date: dateInserted!).globalDescription, for: UIControlState())
         self.datePickerContainerView.removeFromSuperview()
     }
     
-    @IBAction func loadPrevious(sender: AnyObject) {
+    @IBAction func loadPrevious(_ sender: AnyObject) {
         calendarView.loadPreviousView()
     }
     
     
-    @IBAction func loadNext(sender: AnyObject) {
+    @IBAction func loadNext(_ sender: AnyObject) {
         calendarView.loadNextView()
     }
     
-    @IBAction func cancelNewTreatment(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancelNewTreatment(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func submitNewTreatmentBeginDate(sender: UIButton) {
-        if profileSet.objectForKey(newTreatmentBegindate) == nil{
-            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentBegindate)
+    @IBAction func submitNewTreatmentBeginDate(_ sender: UIButton) {
+        if profileSet.object(forKey: newTreatmentBegindate) == nil{
+            profileSet.set(Foundation.Date().timeIntervalSince1970, forKey: newTreatmentBegindate)
         }
-        self.performSegueWithIdentifier("selectEndDateSegue", sender: self)
+        self.performSegue(withIdentifier: "selectEndDateSegue", sender: self)
     }
     
-    override func didSelectDayView(dayView: CVCalendarDayView) {
+    override func didSelectDayView(_ dayView: CVCalendarDayView) {
         super.didSelectDayView(dayView)
-        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
+        profileSet.set(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentBegindate)
     }
 }

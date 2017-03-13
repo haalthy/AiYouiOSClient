@@ -10,6 +10,11 @@ import Foundation
 
 class HudProgressManager: NSObject, MBProgressHUDDelegate {
 
+ //   waiting for more research
+/*    private static var __once: () = { () -> Void in
+                SingletonStruct.singleton = HudProgressManager()
+            }()
+*/
     
     var progressHUD: MBProgressHUD?
     
@@ -18,12 +23,13 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
         
         get {
             struct SingletonStruct {
-                static var onceToken: dispatch_once_t = 0
+                static var onceToken: Int = 0
                 static var singleton: HudProgressManager? = nil
             }
-            dispatch_once(&SingletonStruct.onceToken) { () -> Void in
+            _ = { () -> Void in
                 SingletonStruct.singleton = HudProgressManager()
-            }
+            }()
+
             // 得到变量
             return SingletonStruct.singleton!
         }
@@ -38,7 +44,7 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
     
     // MARK: - 展示hud加载
     
-    func showHudProgress(viewController: UIViewController, title: String) {
+    func showHudProgress(_ viewController: UIViewController, title: String) {
     
         if self.progressHUD == nil {
         
@@ -60,14 +66,14 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
     
     // MARK: - 展示成功hud
     
-    func showSuccessHudProgress(viewController: UIViewController, title: String) {
+    func showSuccessHudProgress(_ viewController: UIViewController, title: String) {
     
-        MBProgressHUD.hideAllHUDsForView(viewController.view, animated: true)
+        MBProgressHUD.hideAllHUDs(for: viewController.view, animated: true)
         let hud: MBProgressHUD = MBProgressHUD.init(view: viewController.view)
         viewController.view.addSubview(hud)
         hud.customView = UIImageView(image: UIImage(named: "37x-Checkmark.png"))
         hud.labelText = title
-        hud.mode = .CustomView
+        hud.mode = .customView
         hud.delegate = self
         hud.show(true)
         hud.hide(true, afterDelay: 1.5)
@@ -75,12 +81,12 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
     
     // MARK: - 仅展示文字
     
-    func showOnlyTextHudProgress(viewController: UIViewController, title: String) {
+    func showOnlyTextHudProgress(_ viewController: UIViewController, title: String) {
     
-        MBProgressHUD.hideAllHUDsForView(viewController.view, animated: true)
-        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(viewController.view, animated: true)
+        MBProgressHUD.hideAllHUDs(for: viewController.view, animated: true)
+        let hud: MBProgressHUD = MBProgressHUD.showAdded(to: viewController.view, animated: true)
         hud.labelText = title
-        hud.mode = .Text
+        hud.mode = .text
         hud.margin = 10.0
         hud.removeFromSuperViewOnHide = true
         hud.hide(true, afterDelay: 2)
@@ -89,8 +95,9 @@ class HudProgressManager: NSObject, MBProgressHUDDelegate {
     
     // Delegate
     
-    func hudWasHidden(var hud: MBProgressHUD!) {
-        hud.removeFromSuperview()
+    func hudWasHidden(_ hud: MBProgressHUD!) {
+        var hud = hud
+        hud?.removeFromSuperview()
         hud = nil
         
     }

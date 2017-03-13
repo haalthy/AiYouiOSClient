@@ -10,20 +10,25 @@ import UIKit
 
 class RedBadgeManager: NSObject {
     
+/*    private static var __once: () = { () -> Void in
+                
+                SingletonStruct.singleton = RedBadgeManager()
+            }()
+    */
     class var sharedInstance: RedBadgeManager {
     
         get {
         
             struct SingletonStruct {
                 
-                static var onceToken: dispatch_once_t = 0
+                static var onceToken: Int = 0
                 static var singleton: RedBadgeManager? = nil
             }
             
-            dispatch_once(&SingletonStruct.onceToken) { () -> Void in
+            _ = { () -> Void in
                 
                 SingletonStruct.singleton = RedBadgeManager()
-            }
+            }()
             
             return SingletonStruct.singleton!
         }
@@ -40,8 +45,8 @@ class RedBadgeManager: NSObject {
     
     func sendAddRedDotBadgeNotification() {
     
-        let notify: NSNotification = NSNotification(name: addTabbarRedDotBadge, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notify)
+        let notify: Notification = Notification(name: Notification.Name(rawValue: addTabbarRedDotBadge), object: nil)
+        NotificationCenter.default.post(notify)
     }
     
     // MARK: - 移除tabbarItem的红点
@@ -49,7 +54,7 @@ class RedBadgeManager: NSObject {
     func deleteAddRedDotBadgeNotification() {
     
         
-        let notify: NSNotification = NSNotification(name: deleteTabbarRedDotBadge, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notify)
+        let notify: Notification = Notification(name: Notification.Name(rawValue: deleteTabbarRedDotBadge), object: nil)
+        NotificationCenter.default.post(notify)
     }
 }
