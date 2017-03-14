@@ -13,7 +13,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     let heightForSction: CGFloat = CGFloat(35)
     let headerTitleLeftSpace: CGFloat = CGFloat(15)
-    let sectionTitleFont = UIFont.systemFontOfSize(14)
+    let sectionTitleFont = UIFont.systemFont(ofSize: 14)
     let sectionTitleLeftSpace = CGFloat(15)
     let subTitleRightSpace: CGFloat = 15
     let portraitViewLength: CGFloat = 40
@@ -45,7 +45,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
         imagePicker.delegate = self
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
     }
     override func didReceiveMemoryWarning() {
@@ -55,12 +55,12 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         var numberOfRows: Int = 0
         switch section {
@@ -78,25 +78,25 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cellWidth = cell.frame.width
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = "头像"
-                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-                let portraitView = UIImageView(frame: CGRectMake(cellWidth - portraitViewLength - 40, headerTitleLeftSpace, portraitViewLength, portraitViewLength))
+                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                let portraitView = UIImageView(frame: CGRect(x: cellWidth - portraitViewLength - 40, y: headerTitleLeftSpace, width: portraitViewLength, height: portraitViewLength))
                 portraitView.layer.cornerRadius = 20
                 portraitView.layer.masksToBounds = true
                 if self.userProfile?.portraitData != nil {
-                    portraitView.image = UIImage(data: NSData(base64EncodedString: (self.userProfile?.portraitData)!, options: [])!)
+                    portraitView.image = UIImage(data: Data(base64Encoded: (self.userProfile?.portraitData)!, options: [])!)
                 } else if self.userProfile?.portraitUrl != nil {
                     let imageURL = (self.userProfile?.portraitUrl)! + "@80h_80w_1e"
-                    portraitView.addImageCache(imageURL, placeHolder: "icon_profile")
+                    portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
 
                 }else{
-                    portraitView.image = UIImage(named: "Mario.jpg")
+                    portraitView.image = UIImage(named: "defaultUserImage")
                 }
                 cell.addSubview(portraitView)
                 cell.detailTextLabel?.text = ""
@@ -115,12 +115,12 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                     cell.textLabel?.text = "电话"
                     subTitleStr = (self.userProfile?.phone)!
                 }
-                cell.accessoryType = UITableViewCellAccessoryType.None
+                cell.accessoryType = UITableViewCellAccessoryType.none
                 cell.detailTextLabel?.text = subTitleStr
                 break
             case 3:
                 cell.textLabel?.text = "昵称"
-                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 if self.userProfile?.nick != nil {
                     let subTitleStr: String = (self.userProfile?.nick)!
                     cell.detailTextLabel?.text = subTitleStr
@@ -129,7 +129,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
             case 4:
                 cell.textLabel?.text = "重置密码"
                 cell.detailTextLabel?.text = ""
-                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             default:
                 break
             }
@@ -181,14 +181,14 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
             cell.detailTextLabel?.font = cellTextFont
             cell.detailTextLabel?.textColor = subTitleTextColor
             cell.detailTextLabel?.text = subTitleStr
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 //            cell.addSubview(subTitleLabel)
         }
         cell.textLabel?.textColor = cellTextColor
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var heightForRow = self.heightForRow
         if (indexPath.section == 0) && (indexPath.row == 0) {
             heightForRow = 69
@@ -196,22 +196,22 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
         return heightForRow
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return heightForSction
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
                 imagePicker.allowsEditing = true //2
-                imagePicker.sourceType = .PhotoLibrary //3
-                presentViewController(imagePicker, animated: true, completion: nil)//4
+                imagePicker.sourceType = .photoLibrary //3
+                present(imagePicker, animated: true, completion: nil)//4
             case 3:
-                self.performSegueWithIdentifier("updateNickSegue", sender: self)
+                self.performSegue(withIdentifier: "updateNickSegue", sender: self)
                 break
             case 4:
-                self.performSegueWithIdentifier("updatePasswordSegue", sender: self)
+                self.performSegue(withIdentifier: "updatePasswordSegue", sender: self)
                 break
             default:
                 break
@@ -221,7 +221,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
             switch indexPath.row {
             case 0:
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let genderController = storyboard.instantiateViewControllerWithIdentifier("genderSetting") as! GenderSettingViewController
+                let genderController = storyboard.instantiateViewController(withIdentifier: "genderSetting") as! GenderSettingViewController
                 genderController.isUpdate = true
                 genderController.genderSettingVCDelegate = self
                 genderController.ageSettingVCDelegate = self
@@ -229,7 +229,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 break
             case 1:
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let cancerTypeController = storyboard.instantiateViewControllerWithIdentifier("cancerTypeSetting") as! CancerTypeSettingViewController
+                let cancerTypeController = storyboard.instantiateViewController(withIdentifier: "cancerTypeSetting") as! CancerTypeSettingViewController
                 cancerTypeController.isUpdate = true
                 cancerTypeController.cancerTypeSettingVCDelegate = self
                 cancerTypeController.pathologicalSettingVCDelegate = self
@@ -237,21 +237,21 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 break
             case 2:
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let geneticMutationViewController = storyboard.instantiateViewControllerWithIdentifier("geneticMutationSetting") as! GeneticMutationViewController
+                let geneticMutationViewController = storyboard.instantiateViewController(withIdentifier: "geneticMutationSetting") as! GeneticMutationViewController
                 geneticMutationViewController.isUpdate = true
                 geneticMutationViewController.geneticMutationVCDelegate = self
                 self.navigationController?.pushViewController(geneticMutationViewController, animated: true)
                 break
             case 3:
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let stageViewController = storyboard.instantiateViewControllerWithIdentifier("stageSetting") as! StageViewController
+                let stageViewController = storyboard.instantiateViewController(withIdentifier: "stageSetting") as! StageViewController
                 stageViewController.isUpdate = true
                 stageViewController.stageSettingVCDelegate = self
                 self.navigationController?.pushViewController(stageViewController, animated: true)
                 break
             case 4:
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let metasticViewController = storyboard.instantiateViewControllerWithIdentifier("MetasticsSetting") as! MetasticViewController
+                let metasticViewController = storyboard.instantiateViewController(withIdentifier: "MetasticsSetting") as! MetasticViewController
                 metasticViewController.isUpdate = true
                 metasticViewController.metastasisSettingVCDelegate = self
                 self.navigationController?.pushViewController(metasticViewController, animated: true)
@@ -262,7 +262,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
         }
     }
     
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRECT(0, 0, self.tableView.frame.width, heightForSction))
         var titleStr: String?
         switch section {
@@ -285,29 +285,29 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
         return headerView
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "updateNickSegue" {
-            (segue.destinationViewController as! UpdateNickTableViewController).settingNickVCDelegate = self
+            (segue.destination as! UpdateNickTableViewController).settingNickVCDelegate = self
         }
     }
     
-    func updateDisplayname(displayname: String) {
+    func updateDisplayname(_ displayname: String) {
         userProfile?.nick =  displayname
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
             if userProfile!.nick != nil {
                 requestBody.setValue(userProfile!.nick!, forKey: "displayname")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -324,23 +324,23 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateGender(gender: String){
+    func updateGender(_ gender: String){
         userProfile?.gender = gender
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
             if userProfile!.gender != nil {
                 requestBody.setValue(userProfile!.gender!, forKey: "gender")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -357,23 +357,23 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateAge(age: Int){
+    func updateAge(_ age: Int){
         userProfile?.age = age
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
             if userProfile!.age != nil {
                 requestBody.setValue(userProfile!.age!, forKey: "age")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -390,23 +390,23 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateCancerType(cancerType: String) {
+    func updateCancerType(_ cancerType: String) {
         userProfile?.cancerType = cancerType
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
             if userProfile!.cancerType != nil {
                 requestBody.setValue(userProfile!.cancerType!, forKey: "cancerType")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -423,16 +423,16 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updatePathological(pathological: String) {
+    func updatePathological(_ pathological: String) {
         userProfile?.pathological = pathological
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
 
@@ -440,7 +440,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 requestBody.setValue(userProfile!.pathological!, forKey: "pathological")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -457,15 +457,15 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateGeneticMutation(geneticMutation: String) {
+    func updateGeneticMutation(_ geneticMutation: String) {
         userProfile?.geneticMutation = geneticMutation
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
 
@@ -473,7 +473,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 requestBody.setValue(userProfile!.geneticMutation!, forKey: "geneticMutation")
             }
 
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -490,23 +490,23 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateStage(stage: String) {
+    func updateStage(_ stage: String) {
         userProfile?.stage = stage
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
 
             if userProfile!.stage != nil {
                 requestBody.setValue(userProfile!.stage!, forKey: "stage")
             }
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -523,16 +523,16 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
 
     }
     
-    func updateMetastasis(metastasis: String) {
+    func updateMetastasis(_ metastasis: String) {
         userProfile?.metastics = metastasis
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
 
@@ -540,7 +540,7 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 requestBody.setValue(userProfile!.metastics!, forKey: "metastasis")
             }
 
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -558,40 +558,33 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
     }
     
     //MARK: Delegates
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         var selectedImage = UIImage()
         let publicService = PublicService()
-        selectedImage = publicService.cropToSquare(image: chosenImage)
         
-        let newSize = CGSizeMake(128.0, 128.0)
-        UIGraphicsBeginImageContext(newSize)
-        selectedImage.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
-        let portraitImage = UIGraphicsGetImageFromCurrentImageContext()
+        let newSize = CGSize(width: 256.0, height: 256.0)
         
-        let imageData: NSData = UIImagePNGRepresentation(selectedImage)!
-        let imageDataStr:String = imageData.base64EncodedStringWithOptions([])
-        
-        userProfile!.portraitData = imageDataStr
-        
-        UIGraphicsEndImageContext()
+        selectedImage = publicService.resizeImage(chosenImage, newSize: newSize)
+        let imageData: Data = UIImagePNGRepresentation(selectedImage)!
+        userProfile!.portraitData = imageData.base64EncodedString(options: [])
         
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
 
             if userProfile!.portraitData != nil {
-                let imageInfo = NSDictionary(objects: [userProfile!.portraitData!,"jpg"], forKeys: ["data", "type"])
+                let imageInfo = NSDictionary(objects: [userProfile!.portraitData!,"jpg"], forKeys: ["data" as NSCopying, "type" as NSCopying])
                 requestBody.setValue(imageInfo, forKey: "imageInfo")
             }
             
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
@@ -606,26 +599,26 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                     HudProgressManager.sharedInstance.dismissHud()
             }
         }
-        dismissViewControllerAnimated(true, completion: nil) //5
+        dismiss(animated: true, completion: nil) //5
         
     }
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
 //        updateUserProfile(userProfile!)
     }
     
-    func updateUserProfile(userProfile: UserProfile){
+    func updateUserProfile(_ userProfile: UserProfile){
 
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil {
             let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
-            let url : NSURL = NSURL(string: urlPath)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
             let requestBody = NSMutableDictionary()
             requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
             if userProfile.nick != nil {
@@ -653,18 +646,17 @@ class UserBasicInfoTableViewController: UITableViewController, SettingNickVCDele
                 requestBody.setValue(userProfile.geneticMutation!, forKey: "geneticMutation")
             }
             if userProfile.portraitData != nil {
-                let imageInfo = NSDictionary(objects: [userProfile.portraitData!,"jpg"], forKeys: ["data", "type"])
+                let imageInfo = NSDictionary(objects: [userProfile.portraitData!,"jpg"], forKeys: ["data" as NSCopying, "type" as NSCopying])
                 requestBody.setValue(imageInfo, forKey: "imageInfo")
             }
 
-            request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(requestBody as NSDictionary, options: NSJSONWritingOptions())
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
             NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,
                 
                 success: { (content , message) -> Void in
-                    print(content)
                     
                 }) { (content, message) -> Void in
                     HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: message)

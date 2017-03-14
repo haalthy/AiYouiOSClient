@@ -11,31 +11,30 @@ import CoreData
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate{
 
     var window: UIWindow?
 
     var tabVC: TabViewController = TabViewController()
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
-        if UIScreen.mainScreen().currentMode!.size.height == 568 {
+    var profileSet = UserDefaults.standard
+    let haalthyService = HaalthyService()
+    let keychainAccess = KeychainAccess()
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    
+        if UIScreen.main.currentMode!.size.height == 568 {
         
-            self.window = UIWindow(frame: CGRECT(0, 0, UIScreen.mainScreen().bounds.size.width, 568))
+            self.window = UIWindow(frame: CGRECT(0, 0, UIScreen.main.bounds.size.width, 568))
         }
         
-        print(UIScreen.mainScreen().currentMode!.size)
+        print(UIScreen.main.currentMode!.size)
         
-        Growing.startWithAccountId("81234af7e631c255")
-        
-        let publicSerice = PublicService()
-        print(publicSerice.passwordEncode("password"))
-//        let keychainAccess = KeychainAccess()
-//        keychainAccess.setPasscode(usernameKeyChain, passcode: "AY1455509990925.619")
-//        keychainAccess.setPasscode(passwordKeyChain, passcode: "password")
+        Growing.start(withAccountId: "81234af7e631c255")
         
         // Override point for customization after application launch.
         WXApi.registerApp(WXAppID)
+        
         let tabViewController : TabViewController = TabViewController()
                 
         self.window!.rootViewController = tabViewController
@@ -54,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.registerRemoteNotificaiton(application)
         
-        JPUSHService.setupWithOption(launchOptions, appKey: appKey, channel: channel, apsForProduction: isProduction)
+        JPUSHService.setup(withOption: launchOptions, appKey: appKey, channel: channel, apsForProduction: isProduction)
 
         return true
     }
@@ -65,28 +64,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 定义navigation属性
         UINavigationBar.appearance().barTintColor = headerColor
-        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
-        let dict = [NSFontAttributeName : UIFont.systemFontOfSize(20)]
+        UINavigationBar.appearance().tintColor = UIColor.white
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+        let dict = [NSFontAttributeName : UIFont.systemFont(ofSize: 20)]
         UINavigationBar.appearance().titleTextAttributes = dict
-        UINavigationBar.appearance().barStyle = .Black
+        UINavigationBar.appearance().barStyle = .black
     }
     
     // MARK: - 是否进入到主页界面
     
     func checkUserStatus() {
-
-        let keychainAccess = KeychainAccess()
-
-        if (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) == nil) || (NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray).count == 0{
-//            keychainAccess.deletePasscode(usernameKeyChain)
-//            keychainAccess.deletePasscode(passwordKeyChain)
+        if (UserDefaults.standard.object(forKey: favTagsNSUserData) == nil) || (UserDefaults.standard.object(forKey: favTagsNSUserData) as! NSArray).count == 0{
             let getAccessToken = GetAccessToken()
             getAccessToken.getAccessToken()
-            let access_Token = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+            let access_Token = UserDefaults.standard.object(forKey: accessNSUserData)
             if (access_Token == nil) || ((access_Token as! String) == "") {
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
+                let rootController = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as! UINavigationController
                 if self.window != nil {
                     self.window!.rootViewController = rootController
 //                    rootController.isRootViewController = true
@@ -97,18 +91,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    func registerRemoteNotificaiton(application: UIApplication) {
+    func registerRemoteNotificaiton(_ application: UIApplication) {
         
-        if String(UTF8String: UIDevice.currentDevice().systemVersion)! >= "8.0" {
+        if String(validatingUTF8: UIDevice.current.systemVersion)! >= "8.0" {
         
 
         //application.registerUserNotificationSettings ( UIUserNotificationSettings (forTypes:  [UIUserNotificationType .Sound, UIUserNotificationType .Alert , UIUserNotificationType .Badge], categories:  nil ))
             
-            JPUSHService.registerForRemoteNotificationTypes(UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Badge.rawValue | UIUserNotificationType.Alert.rawValue , categories: nil)
+            JPUSHService.register(forRemoteNotificationTypes: UIUserNotificationType.badge.rawValue | UIUserNotificationType.badge.rawValue | UIUserNotificationType.alert.rawValue , categories: nil)
         }
         else {
             
-            JPUSHService.registerForRemoteNotificationTypes(UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Badge.rawValue | UIRemoteNotificationType.Alert.rawValue , categories: nil)
+            JPUSHService.register(forRemoteNotificationTypes: UIRemoteNotificationType.badge.rawValue | UIRemoteNotificationType.badge.rawValue | UIRemoteNotificationType.alert.rawValue , categories: nil)
 
         }
         
@@ -116,39 +110,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - 获取deviceToken
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         
-        let token: NSString = NSString(format: "%@", deviceToken)
+        let token: NSString = NSString(format: "%@", deviceToken as CVarArg)
         
         JPUSHService.registerDeviceToken(deviceToken)
         
         let registrationID = JPUSHService.registrationID()
         
-        print(registrationID)
-        
         if registrationID != nil || registrationID != ""  {
-        
-            self.submitRegistrationIDToServer(registrationID)
+            self.submitRegistrationIDToServer(registrationID!)
         }
         
-        NSUserDefaults.standardUserDefaults().setValue(registrationID, forKey:kDeviceToken)
+        UserDefaults.standard.setValue(registrationID, forKey:kDeviceToken)
     }
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        print(error)
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     }
     
     
     // MARK: 更新registrationID 
     
-    func submitRegistrationIDToServer(registrationID: String) {
+    func submitRegistrationIDToServer(_ registrationID: String) {
     
-        let keychainAccess = KeychainAccess()
         
         let username = keychainAccess.getPasscode(usernameKeyChain)
         if username != nil {
         
-            let paramtersDict: Dictionary<String, AnyObject> = ["userName" : username!, "fromUserName" : registrationID]
+            let paramtersDict: Dictionary<String, AnyObject> = ["userName" : username!, "fromUserName" : registrationID as AnyObject]
             NetRequest.sharedInstance.POST(pushIdURL, parameters: paramtersDict, success: { (content, message) -> Void in
                 
                 }, failed: { (content, message) -> Void in
@@ -162,7 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: 跳转到消息中心
     
-    func enterMessageView(count: Int) {
+    func enterMessageView(_ count: Int) {
     
         // 判断用户是否登录
         
@@ -170,7 +159,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
         
-        let postVC: PostsViewController = profileSB.instantiateViewControllerWithIdentifier("PostView") as! PostsViewController
+        let postVC: PostsViewController = profileSB.instantiateViewController(withIdentifier: "PostView") as! PostsViewController
         postVC.username = keychainAccess.getPasscode(usernameKeyChain) as! String
         postVC.commentCount = count
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(postVC, animated: true)
@@ -184,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
         
-        let followVC: UserFollowViewController = profileSB.instantiateViewControllerWithIdentifier("FollowView") as! UserFollowViewController
+        let followVC: UserFollowViewController = profileSB.instantiateViewController(withIdentifier: "FollowView") as! UserFollowViewController
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(followVC, animated: true)
     }
     
@@ -196,43 +185,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let profileSB: UIStoryboard = UIStoryboard(name: "User", bundle: nil)
         
-        let mentionedVC: MentionedViewController = profileSB.instantiateViewControllerWithIdentifier("MentionedView") as! MentionedViewController
+        let mentionedVC: MentionedViewController = profileSB.instantiateViewController(withIdentifier: "MentionedView") as! MentionedViewController
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(mentionedVC, animated: true)
     }
     
     // MARK: 跳转到内容详情
     
-    func enterFeedDetailView(feedId: Int) {
+    func enterFeedDetailView(_ feedId: Int) {
     
         let feedSB: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
         
-        let feedDetailVC: FeedDetailViewController = feedSB.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        let feedDetailVC: FeedDetailViewController = feedSB.instantiateViewController(withIdentifier: "FeedDetailView") as! FeedDetailViewController
         feedDetailVC.feedId = feedId
 
         (self.tabVC.viewControllers![tabVC.curIndex] as! UINavigationController).pushViewController(feedDetailVC, animated: true)
     }
 
-    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
         
     }
     
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+    func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
         
         
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         
         JPUSHService.handleRemoteNotification(userInfo)
         
         print(userInfo)
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
         JPUSHService.handleRemoteNotification(userInfo)
         
-        if application.applicationState == .Active {
+        if application.applicationState == .active {
         
             self.judgeRemoteIsActive(userInfo)
         }
@@ -244,7 +233,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
     
-    func judgeRemoteIsActive(userInfo: [NSObject : AnyObject]) {
+    func judgeRemoteIsActive(_ userInfo: [AnyHashable: Any]) {
     
         let type: String = userInfo["type"] as! String
         
@@ -253,13 +242,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         case "commented":
             
 
-            let alertController = UIAlertController(title: "收到了新的评论，马上看看", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "收到了新的评论，马上看看", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (action) in
             
             }
             alertController.addAction(cancelAction)
-            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+            let confirmAction = UIAlertAction(title: "查看", style: .default, handler: { (action) -> Void in
                 
                 self.enterMessageView(userInfo["count"] as! Int)
             })
@@ -267,53 +256,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             
             alertController.addAction(confirmAction)
-            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            self.tabVC.viewControllers![self.tabVC.curIndex].present(alertController, animated: true, completion: nil)
             
             break
         case "followed":
             
-            let alertController = UIAlertController(title: "收到了新的@我的，马上看看", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "收到了新的@我的，马上看看", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (action) in
                 
             }
             alertController.addAction(cancelAction)
-            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+            let confirmAction = UIAlertAction(title: "查看", style: .default, handler: { (action) -> Void in
                 
                 self.enterMentionedView()
             })
             alertController.addAction(confirmAction)
-            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            self.tabVC.viewControllers![self.tabVC.curIndex].present(alertController, animated: true, completion: nil)
             break
         case "mentioned":
             
-            let alertController = UIAlertController(title: "收到了新的关注信息，马上看看", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "收到了新的关注信息，马上看看", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (action) in
                 
             }
             alertController.addAction(cancelAction)
-            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+            let confirmAction = UIAlertAction(title: "查看", style: .default, handler: { (action) -> Void in
                 
                 self.enterFollowView()
             })
             alertController.addAction(confirmAction)
-            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            self.tabVC.viewControllers![self.tabVC.curIndex].present(alertController, animated: true, completion: nil)
             break
         case "feed":
             
-            let alertController = UIAlertController(title: "收到了新的推荐，马上看看", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "收到了新的推荐，马上看看", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (action) in
                 
             }
             alertController.addAction(cancelAction)
-            let confirmAction = UIAlertAction(title: "查看", style: .Default, handler: { (action) -> Void in
+            let confirmAction = UIAlertAction(title: "查看", style: .default, handler: { (action) -> Void in
                 
                 self.enterFeedDetailView(userInfo["id"] as! Int)
             })
             alertController.addAction(confirmAction)
-            self.tabVC.viewControllers![self.tabVC.curIndex].presentViewController(alertController, animated: true, completion: nil)
+            self.tabVC.viewControllers![self.tabVC.curIndex].present(alertController, animated: true, completion: nil)
             break
             
         default:
@@ -322,7 +311,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
     
-    func judgeRemoteTypeFromParam(userInfo: [NSObject : AnyObject]) {
+    func judgeRemoteTypeFromParam(_ userInfo: [AnyHashable: Any]) {
     
         let type: String = userInfo["type"] as! String
         
@@ -352,18 +341,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         application.applicationIconBadgeNumber = 0
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         
         application.applicationIconBadgeNumber = 0
@@ -371,48 +360,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        self.tabVC.getUnreadCommentCountFromServer()
-        self.tabVC.getUnreadFollowCountFromServer()
-        self.tabVC.getUnreadMentionedCountFromServer()
+        let keychainAccess: KeychainAccess = KeychainAccess()
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
+            self.tabVC.getUnreadCommentCountFromServer()
+            self.tabVC.getUnreadFollowCountFromServer()
+            self.tabVC.getUnreadMentionedCountFromServer()
+        }
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         self.saveContext()
     }
 
     // MARK: - Core Data stack
     
-    lazy var applicationDocumentsDirectory: NSURL = {
+    lazy var applicationDocumentsDirectory: URL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "fili99.CancerSN" in the application's documents Application Support directory.
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1] 
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("CancerSN", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        let modelURL = Bundle.main.url(forResource: "CancerSN", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
         }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CancerSN.sqlite")
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("CancerSN.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
         } catch var error1 as NSError {
             error = error1
             coordinator = nil
             // Report any error we got.
             var dict = [String: AnyObject]()
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
+            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
+            dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
             dict[NSUnderlyingErrorKey] = error
             error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
@@ -455,34 +447,103 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        WXApi.handleOpen(url, delegate: self)
+        return TencentOAuth.handleOpen(url)
+    }
+    
+    func onResp(_ resp: BaseResp!) {
+        if resp is SendAuthResp {
+            let authResp = resp as! SendAuthResp
+            if authResp.code != nil {
+                let code: String = authResp.code
+                let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&grant_type=authorization_code&code=" + code
+                let result = NetRequest.sharedInstance.GET_A(url, parameters: [:])
+                if (result.object(forKey: "access_token") != nil) &&  (result.object(forKey: "openid") != nil) {
+                    let username = result.object(forKey: "openid") as! String
+                    let password = result.object(forKey: "openid") as! String
+                    let userType = "WC"
+                    let keychainAccess = KeychainAccess()
+                    keychainAccess.setPasscode(usernameKeyChain, passcode: username)
+                    keychainAccess.setPasscode(passwordKeyChain, passcode: password)
+                    profileSet.set(userType, forKey: userTypeUserData)
+                    let getAccessToken = GetAccessToken()
+                    getAccessToken.getAccessToken()
 
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
-        return TencentOAuth.HandleOpenURL(url)
-        
-    }
-    
-    func onReq(req: BaseReq!) {
-        print("on req")
-    }
-    
-    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
-        WXApi.handleOpenURL(url, delegate: WXApiManager.sharedInstance)
-        return TencentOAuth.HandleOpenURL(url)
-    }
-    
-    func onResp(resp: BaseResp!) {
-        print("on resp")
-//        if ([resp isKindOfClass:[SendAuthResp class]]) {
-//            if (_delegate
-//            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
-//                SendAuthResp *authResp = (SendAuthResp *)resp;
-//                [_delegate managerDidRecvAuthResponse:authResp];
-//            }
-//        }
-        if resp.isKindOfClass(SendAuthResp) {
-            
+                    if profileSet.object(forKey: accessNSUserData) != nil {
+                        let tabViewController : TabViewController = TabViewController()
+                        
+                        self.window!.rootViewController = tabViewController
+                    }else{
+                        let getWXUserInfoURL = "https://api.weixin.qq.com/sns/userinfo?access_token=" + (result.object(forKey: "access_token") as! String) + "&openid=" + (result.object(forKey: "openid") as! String)
+                        let userinfo: NSDictionary = NetRequest.sharedInstance.GET_A(getWXUserInfoURL, parameters: [:])
+                        profileSet.set(userinfo.object(forKey: "nickname") as! String, forKey: displaynameUserData)
+                        if (userinfo.object(forKey: "sex") as! Int) == 1 {
+                            profileSet.set("M", forKey: genderNSUserData)
+                        }else{
+                            profileSet.set("F", forKey: genderNSUserData)
+                        }
+                        let addUserResult: NSDictionary = haalthyService.addUser(userType)
+                        if (addUserResult.object(forKey: "result") != nil) && (((addUserResult.object(forKey: "result") as! Int) == -4) || ((addUserResult.object(forKey: "result") as! Int) == 1)) {
+                            getWXImage(userinfo.object(forKey: "headimgurl") as! String)
+                            let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
+                            let rootController = storyboard.instantiateViewController(withIdentifier: "RegisterEntry") as! UINavigationController
+                            if self.window != nil {
+                                self.window!.rootViewController = rootController
+                                //                    rootController.isRootViewController = true
+                            }
+//                            let genderSettingViewController : GenderSettingViewController = GenderSettingViewController()
+//                            self.window!.rootViewController = genderSettingViewController
+                            
+                        }else{
+                            keychainAccess.deletePasscode(passwordKeyChain)
+                            keychainAccess.deletePasscode(usernameKeyChain)
+                        }
+                    }
+                }
+            }
         }
     }
+    
+    func getWXImage(_ urlPath: String){
+        URLSession.shared.dataTask(with: URL(string: urlPath)!, completionHandler: {(data, response, error) -> Void in
+            // 返回任务结果
+            if (error == nil) && (data != nil) {
+                let imageDataStr = data!.base64EncodedString(options: [])
+                
+                self.profileSet.set(imageDataStr, forKey: imageNSUserData)
+                self.updatePortrait()
+            }
+        }).resume()
+    }
+    
+    func updatePortrait(){
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
+        if accessToken != nil {
+            let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
+            let requestBody = NSMutableDictionary()
+            requestBody.setValue(keychainAccess.getPasscode(usernameKeyChain), forKey: "username")
+            
+            if profileSet.object(forKey: imageNSUserData) != nil {
+                let imageInfo = NSDictionary(objects: [(profileSet.object(forKey: imageNSUserData) as! String),"jpg"], forKeys: ["data" as NSCopying, "type" as NSCopying])
+                requestBody.setValue(imageInfo, forKey: "imageInfo")
+            }
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            NetRequest.sharedInstance.POST(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>,success: { (content , message) -> Void in
+                print("upload wx portrait sucessful")
+            }) { (content, message) -> Void in
+                print("failed")
+            }
+        }
+    }
+
 }
 

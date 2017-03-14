@@ -15,7 +15,7 @@ let kCellLeftInside: CGFloat = CGFloat(15)
 // cell上边间距
 let kCellTopInside: CGFloat = CGFloat(20.0)
 // 昵称的font
-let kNicknameFontSize: UIFont = UIFont.systemFontOfSize(16)
+let kNicknameFontSize: UIFont = UIFont.systemFont(ofSize: 16)
 
 // 距离头像的距离
 let kPortraitMargin: CGFloat = CGFloat(10.0)
@@ -26,7 +26,7 @@ let kNicknameHeight: CGFloat = CGFloat(17.0)
 
 // 帖子类别
 
-func getFeedTypeName(type: Int, isBroadcast: Int) -> String {
+func getFeedTypeName(_ type: Int, isBroadcast: Int) -> String {
 
     var resultStr: String = ""
     switch type {
@@ -118,43 +118,43 @@ class FeedOriginalFrame: NSObject {
         self.portraitFrame = CGRECT(portraitX, portraitY, portraitW, portraitH)
         
         // 2.昵称
-        let nicknameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let nicknameX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
         let nicknameY: CGFloat = kCellTopInside
-        let nicknameW: CGFloat = (feedModel?.displayname)!.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.max, height: kNicknameHeight)).width
+        let nicknameW: CGFloat = (feedModel?.displayname)!.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: kNicknameHeight)).width
         let nicknameH: CGFloat = kNicknameHeight
         self.nicknameFrame = CGRECT(nicknameX, nicknameY, nicknameW, nicknameH)
         
         // 3.feed type
-        let feedTypeX: CGFloat = CGRectGetMaxX(self.nicknameFrame!)
+        let feedTypeX: CGFloat = self.nicknameFrame!.maxX
         let feedTypeY: CGFloat = kCellTopInside
-        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!, isBroadcast: (self.feedModel?.isBroadcast)!).sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(CGFloat.max, kNicknameHeight)).width)
+        let feedTypeW: CGFloat = (getFeedTypeName((self.feedModel?.type)!, isBroadcast: (self.feedModel?.isBroadcast)!).sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: kNicknameHeight)).width)
         let feedTypeH: CGFloat = kNicknameHeight
         self.feedTypeFrame = CGRECT(feedTypeX, feedTypeY, feedTypeW, feedTypeH)
         
         // 4.性别
-        let sexX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-        let sexY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
+        let sexX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+        let sexY: CGFloat = self.nicknameFrame!.maxY + 7.0
         let sexW: CGFloat = 20.0
         let sexH: CGFloat = 20.0
         self.genderFrame = CGRECT(sexX, sexY, sexW, sexH)
         
         // 5.年龄
-        let ageX: CGFloat = CGRectGetMaxX(self.genderFrame!) + CGFloat(5)
-        let ageY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
+        let ageX: CGFloat = self.genderFrame!.maxX + CGFloat(5)
+        let ageY: CGFloat = self.nicknameFrame!.maxY + 7.0
         let ageW: CGFloat = 40.0
         let ageH: CGFloat = 20.0
         self.ageFrame = CGRECT(ageX, ageY, ageW, ageH)
         
         // 6.患者状态
-        let statusX: CGFloat = CGRectGetMaxX(self.ageFrame!) + 5
-        let statusY: CGFloat = CGRectGetMaxY(self.nicknameFrame!) + 7.0
+        let statusX: CGFloat = self.ageFrame!.maxX + 5
+        let statusY: CGFloat = self.nicknameFrame!.maxY + 7.0
         let statusW: CGFloat = SCREEN_WIDTH - statusX - kCellLeftInside
         let statusH: CGFloat = 20.0
         self.userStatusFrame = CGRECT(statusX, statusY, statusW, statusH)
         
         // 7.tag标签
-        let tagX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-        let tagY: CGFloat = CGRectGetMaxY(self.ageFrame!) + 8.0
+        let tagX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+        let tagY: CGFloat = self.ageFrame!.maxY + 8.0
         let tagW = SCREEN_WIDTH - tagX
         var tagH: CGFloat = 24
         if (self.feedModel!.highlight == "") || (self.feedModel!.highlight == "<null>"){
@@ -164,48 +164,48 @@ class FeedOriginalFrame: NSObject {
         
         
         // 8.clinic
-        let clinicX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let clinicX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
         var clinicY: CGFloat = 0
         var clinicSize: CGSize = CGSize(width: 0, height: 0)
         if (self.feedModel?.clinicReport != "") && (self.feedModel!.clinicReport != "<null>") {
-            clinicSize = (self.feedModel?.clinicReport.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: SCREEN_WIDTH - clinicX - kCellLeftInside, height: CGFloat.max)))!
+            clinicSize = (self.feedModel?.clinicReport.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: SCREEN_WIDTH - clinicX - kCellLeftInside, height: CGFloat.greatestFiniteMagnitude)))!
         }
         if (self.feedModel!.highlight == "") || (self.feedModel!.highlight == "<null>"){
-            clinicY = CGRectGetMaxY(self.ageFrame!) + 8.0
+            clinicY = self.ageFrame!.maxY + 8.0
         }
         else {
-            clinicY = CGRectGetMaxY(self.cureFrame!) + 8.0
+            clinicY = self.cureFrame!.maxY + 8.0
         }
         self.clinicFrame = CGRECT(clinicX, clinicY, clinicSize.width, clinicSize.height)
         
         
         // 9.内容详情
-        let contentX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let contentX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
         var contentY: CGFloat = 0
         var feedContentFrameHMax: CGFloat = 130
         if isShowFullText {
-            feedContentFrameHMax = CGFloat.max
+            feedContentFrameHMax = CGFloat.greatestFiniteMagnitude
         }
-        let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSizeMake(SCREEN_WIDTH - contentX - kCellLeftInside, feedContentFrameHMax)))!
+        let contentSize: CGSize = (self.feedModel?.body.sizeWithFont(kNicknameFontSize, maxSize: CGSize(width: SCREEN_WIDTH - contentX - kCellLeftInside, height: feedContentFrameHMax)))!
         
         if (self.feedModel?.clinicReport == "") || (self.feedModel!.clinicReport == "<null>"){
             if (self.feedModel?.highlight == "") || (self.feedModel!.highlight == "<null>") {
-                contentY = CGRectGetMaxY(self.ageFrame!) + 8.0
+                contentY = self.ageFrame!.maxY + 8.0
             }
             else {
-                contentY = CGRectGetMaxY(self.cureFrame!) + 8.0
+                contentY = self.cureFrame!.maxY + 8.0
             }
         }
         else {
-            contentY = CGRectGetMaxY(self.clinicFrame!) + 8.0
+            contentY = self.clinicFrame!.maxY + 8.0
 
         }
         self.contentFrame = CGRECT(contentX, contentY, contentSize.width, contentSize.height)
         
         
         // 10.图片相册
-        let photosX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-        let photosY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8.0
+        let photosX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+        let photosY: CGFloat = self.contentFrame!.maxY + 8.0
         
         let photosSize: CGSize = FeedPhotosView.layoutForPhotos(self.feedModel!.hasImage)
         self.photosFrame = CGRECT(photosX, photosY, photosSize.width, photosSize.height)
@@ -213,8 +213,8 @@ class FeedOriginalFrame: NSObject {
         if self.feedModel?.hasImage == 0 {
             
             // 11.tag标签（下面的）
-            let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let tagsY: CGFloat = CGRectGetMaxY(self.contentFrame!) + 8
+            let tagsX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+            let tagsY: CGFloat = self.contentFrame!.maxY + 8
             let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
             let tagsH: CGFloat = 17
             self.tagFrame = CGRECT(tagsX, tagsY, tagsW, tagsH)
@@ -222,8 +222,8 @@ class FeedOriginalFrame: NSObject {
         else {
         
             // 11.tag标签（下面的）
-            let tagsX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let tagsY: CGFloat = CGRectGetMaxY(self.photosFrame!) + 8
+            let tagsX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+            let tagsY: CGFloat = self.photosFrame!.maxY + 8
             let tagsW: CGFloat = SCREEN_WIDTH - tagsX - kCellLeftInside
             let tagsH: CGFloat = 17
             self.tagFrame = CGRECT(tagsX, tagsY, tagsW, tagsH)
@@ -233,16 +233,16 @@ class FeedOriginalFrame: NSObject {
         // toolBar frame
         if self.feedModel?.tags == "" || self.feedModel?.tags == "<null>" {
         
-            let toolX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+            let toolX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
             var toolY: CGFloat = 0
             
             if feedModel?.hasImage == 0  {
                 
-                toolY = CGRectGetMaxY(self.contentFrame!) + 8
+                toolY = self.contentFrame!.maxY + 8
             }
             else {
                 
-                toolY = CGRectGetMaxY(self.photosFrame!) + 8
+                toolY = self.photosFrame!.maxY + 8
             }
             let toolW: CGFloat = SCREEN_WIDTH - toolX
             let toolH: CGFloat = 30
@@ -251,8 +251,8 @@ class FeedOriginalFrame: NSObject {
         }
         else {
             
-            let toolX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
-            let toolY: CGFloat = CGRectGetMaxY(self.tagFrame!) + 8
+            let toolX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
+            let toolY: CGFloat = self.tagFrame!.maxY + 8
             let toolW: CGFloat = SCREEN_WIDTH - toolX
             let toolH: CGFloat = 30
             self.toolBarFrame = CGRECT(toolX, toolY, toolW, toolH)
@@ -260,12 +260,12 @@ class FeedOriginalFrame: NSObject {
         }
     
         // 12.帖子的frame
-        let frameX: CGFloat = CGRectGetMaxX(self.portraitFrame!) + kPortraitMargin
+        let frameX: CGFloat = self.portraitFrame!.maxX + kPortraitMargin
         let frameY: CGFloat = 0
         var frameHeight: CGFloat = 0
         let frameWidth: CGFloat  = SCREEN_WIDTH - frameX
         
-        frameHeight = CGRectGetMaxY(self.toolBarFrame!) + 10
+        frameHeight = self.toolBarFrame!.maxY + 10
         
         self.frame = CGRECT(frameX, frameY, frameWidth, frameHeight)
         

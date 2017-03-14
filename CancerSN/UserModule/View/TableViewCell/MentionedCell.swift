@@ -38,7 +38,7 @@ class MentionedCell: UITableViewCell {
         self.initContentView()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -51,7 +51,7 @@ class MentionedCell: UITableViewCell {
 
     }
     
-    func setContentViewAction(feedModel: PostFeedStatus) {
+    func setContentViewAction(_ feedModel: PostFeedStatus) {
         let imageURL = (feedModel.portraitURL) + "@80h_80w_1e"
         self.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         self.nameLabel.text = feedModel.displayname
@@ -61,7 +61,7 @@ class MentionedCell: UITableViewCell {
         self.showContentViewForType(feedModel.type, feedModel: feedModel)
     }
     
-    func setContentViewForUserComment(commentModel: UserCommentModel) {
+    func setContentViewForUserComment(_ commentModel: UserCommentModel) {
     
         let imageURL = (commentModel.imageURL) + "@40h_40w_1e"
         self.portraitImage.addImageCache(imageURL, placeHolder: placeHolderStr)
@@ -74,14 +74,14 @@ class MentionedCell: UITableViewCell {
     
     // MARK: - 功能方法
     
-    func getMentionedAndBody(body: String) -> String {
+    func getMentionedAndBody(_ body: String) -> String {
     
-        let bodyArr: Array<String> = body.componentsSeparatedByString(" ")
+        let bodyArr: Array<String> = body.components(separatedBy: " ")
         
         var resultStr: String = ""
         
         
-        for var i = 0; i < bodyArr.count; i++ {
+        for i in 0 ..< bodyArr.count {
         
             let str: NSString = NSString(string: bodyArr[i])
             
@@ -89,11 +89,11 @@ class MentionedCell: UITableViewCell {
                 continue
             }
             
-            if str.substringToIndex(1) == "@" {
+            if str.substring(to: 1) == "@" {
                 
                 let mentionedStr: NSMutableAttributedString = NSMutableAttributedString(string: bodyArr[i])
-                mentionedStr.addAttribute(NSForegroundColorAttributeName, value: RGB(111, 111, 111).CGColor, range: NSRange.init(location: 0, length: str.length))
-                resultStr = resultStr + " " + String(mentionedStr)
+                mentionedStr.addAttribute(NSForegroundColorAttributeName, value: RGB(111, 111, 111).cgColor, range: NSRange.init(location: 0, length: str.length))
+                resultStr = resultStr + " " + String(describing: mentionedStr)
 
             }
             else {
@@ -107,36 +107,36 @@ class MentionedCell: UITableViewCell {
     
     // MARK: 不同类别，展示不同数据
     
-    func showContentViewForType(type: Int, feedModel: PostFeedStatus) {
+    func showContentViewForType(_ type: Int, feedModel: PostFeedStatus) {
     
         
         if type == 0 && feedModel.isBroadcast == 1 || (type == 0 && feedModel.isBroadcast == 0) {
         
-            self.tagLabel.hidden = true
-            self.showImage.hidden = false
+            self.tagLabel.isHidden = true
+            self.showImage.isHidden = false
             
-            let picArr: Array<String> = ((feedModel.imageURL).componentsSeparatedByString(";"))
+            let picArr: Array<String> = ((feedModel.imageURL).components(separatedBy: ";"))
             let imageURL = picArr[0] + "@100h_100w_1e"
             self.showImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         }
         else if type == 1 {
         
-            self.tagLabel.hidden = false
-            self.showImage.hidden = true
+            self.tagLabel.isHidden = false
+            self.showImage.isHidden = true
             
             self.tagLabel.layer.cornerRadius = 1.0
             self.tagLabel.layer.borderWidth = 1.0
-            self.tagLabel.layer.borderColor = kMentionedTagBorderColor.CGColor
+            self.tagLabel.layer.borderColor = kMentionedTagBorderColor.cgColor
             self.tagLabel.textColor = kMentionedTagTextColor
-            let highTagsArr: [String] = feedModel.highlight.componentsSeparatedByString(" ")
+            let highTagsArr: [String] = feedModel.highlight.components(separatedBy: " ")
             self.tagLabel.text = highTagsArr[0]
         }
         
         else if type == 2 {
         
-            self.tagLabel.hidden = false
-            self.showImage.hidden = true
-            let tagArr: Array<String> = feedModel.tags.componentsSeparatedByString("，")
+            self.tagLabel.isHidden = false
+            self.showImage.isHidden = true
+            let tagArr: Array<String> = feedModel.tags.components(separatedBy: "，")
             self.tagLabel.text = "“" + tagArr[0] + "”"
 
         }
@@ -144,20 +144,20 @@ class MentionedCell: UITableViewCell {
     
     // MARK: - 显示不同的用户评论列表数据
     
-    func showContentViewForUserComment(commentModel: UserCommentModel) {
+    func showContentViewForUserComment(_ commentModel: UserCommentModel) {
     
         
         if (commentModel.postImageURL as NSString).length > 0 {
         
-            self.tagLabel.hidden = true
-            self.showImage.hidden = false
-            let picArr: Array<String> = ((commentModel.postImageURL).componentsSeparatedByString(";"))
+            self.tagLabel.isHidden = true
+            self.showImage.isHidden = false
+            let picArr: Array<String> = ((commentModel.postImageURL).components(separatedBy: ";"))
             let imageURL = picArr[0] + "@100h_100w_1e"
             self.showImage.addImageCache(imageURL, placeHolder: placeHolderStr)
         }
         else {
-            self.tagLabel.hidden = false
-            self.showImage.hidden = true
+            self.tagLabel.isHidden = false
+            self.showImage.isHidden = true
             self.tagLabel.text = "“" + commentModel.postBody + "”"
         
         }

@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ClinicCellDelegate{
-    func updateCellHeight(height: CGFloat)
+    func updateCellHeight(_ height: CGFloat)
     
 }
 
@@ -24,12 +24,12 @@ class ClinicCell: UITableViewCell {
     let labelLeftSpace: CGFloat = 15
     
     let drugNameTopSpace: CGFloat = 15
-    let drugNameFont: UIFont = UIFont.systemFontOfSize(14)
+    let drugNameFont: UIFont = UIFont.systemFont(ofSize: 14)
     
     let labelButtonSpace: CGFloat = 15
     
     let otherInfoTopSpace: CGFloat = 39
-    let otherInfoFont = UIFont.systemFontOfSize(13)
+    let otherInfoFont = UIFont.systemFont(ofSize: 13)
     
     var otherInfoStr: String = ""
     
@@ -38,6 +38,13 @@ class ClinicCell: UITableViewCell {
             initVariables()
             updateUI()
         }
+    }
+    
+    func openUrl(_ sender:UIButton) {
+        let url: String = (sender.titleLabel?.text)!
+        let targetURL=URL(string: url)
+        let application=UIApplication.shared
+        application.openURL(targetURL!);
     }
     
     func initVariables(){
@@ -52,15 +59,48 @@ class ClinicCell: UITableViewCell {
         drugnameLabel.textColor = headerColor
         drugnameLabel.font = drugNameFont
         self.addSubview(drugnameLabel)
-        let otherInfoLabelSize = otherInfoStr.sizeWithFont(otherInfoFont, maxSize: CGSize(width: screenWidth - labelLeftSpace * 2, height: CGFloat.max))
+        let otherInfoLabelSize = otherInfoStr.sizeWithFont(otherInfoFont, maxSize: CGSize(width: screenWidth - labelLeftSpace * 2, height: CGFloat.greatestFiniteMagnitude))
 
         otherInfoLabel.frame = CGRect(x: labelLeftSpace, y: otherInfoTopSpace, width: screenWidth - labelLeftSpace * 2, height:otherInfoLabelSize.height )
         otherInfoLabel.text = otherInfoStr
         otherInfoLabel.textColor = defaultTextColor
         otherInfoLabel.font = otherInfoFont
         otherInfoLabel.numberOfLines = 0
-        otherInfoLabel.lineBreakMode = NSLineBreakMode.ByCharWrapping
+        otherInfoLabel.lineBreakMode = NSLineBreakMode.byCharWrapping
         self.addSubview(otherInfoLabel)
+        
+        let sourceLabel = UILabel(frame: CGRect(x: 15, y: drugnameLabel.frame.height + otherInfoLabel.frame.height + 34, width: 40, height: 12))
+        sourceLabel.text = "来源:"
+        sourceLabel.font = UIFont.systemFont(ofSize: 12.0)
+        sourceLabel.textColor = defaultTextColor
+        self.addSubview(sourceLabel)
+        
+        let sourceButton = UIButton(frame: CGRect(x: 55, y: sourceLabel.frame.origin.y, width: screenWidth - 70, height: 12))
+        sourceButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+        sourceButton.contentVerticalAlignment = UIControlContentVerticalAlignment.center
+        var attrs = Dictionary<String, Any>.init()
+        if URL(string: clinicTrial.original) != nil {
+            sourceButton.addTarget(self, action: #selector(ClinicCell.openUrl(_:)), for: UIControlEvents.touchUpInside)
+            
+            attrs = [
+                NSFontAttributeName : UIFont.systemFont(ofSize: 12.0),
+                NSForegroundColorAttributeName : UIColor.blue,
+                NSUnderlineStyleAttributeName : 1]
+
+        }else{
+            attrs = [
+            NSFontAttributeName: UIFont.systemFont(ofSize: 12.0),
+            NSForegroundColorAttributeName : defaultTextColor,
+            NSUnderlineStyleAttributeName : 0]
+        }
+        let labelAttrs = [
+            NSFontAttributeName: UIFont.systemFont(ofSize: 12.0),
+            NSForegroundColorAttributeName : defaultTextColor]
+//        var attributedString = NSMutableAttributedString(string:"来源:", attributes: labelAttrs)
+        let buttonTitleStr = NSMutableAttributedString(string:clinicTrial.original, attributes:attrs as! [String : AnyObject])
+//        attributedString.appendAttributedString(buttonTitleStr)
+        sourceButton.setAttributedTitle(buttonTitleStr, for: UIControlState())
+        self.addSubview(sourceButton)
         
 //        getMoreBtn.frame = CGRect(x: labelLeftSpace, y: otherInfoTopSpace + otherInfoLabel.frame.height, width: 50, height: 29)
 //        getMoreBtn.setTitle("更多...", forState: UIControlState.Normal)
@@ -103,7 +143,7 @@ class ClinicCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

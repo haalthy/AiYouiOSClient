@@ -35,15 +35,15 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.hidden = false
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     func initContentView(){
         //textInputView
         let textInputView: UIView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: textFieldHeight * CGFloat(textFieldLineCount) + 4))
         textInputView.layer.cornerRadius = 4
-        textInputView.backgroundColor = UIColor.whiteColor()
+        textInputView.backgroundColor = UIColor.white
         
         //id
         id.frame = CGRect(x: textFieldLeftSpace, y: 0, width: textInputView.frame.width, height: textFieldHeight )
@@ -63,10 +63,10 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         authCode.delegate = self
         textInputView.addSubview(authCode)
         let getAuthBtn = UIButton(frame: CGRect(x: textInputView.frame.width - getAuthCodeBtnW, y: textFieldHeight + 1, width: getAuthCodeBtnW, height: textFieldHeight))
-        getAuthBtn.setTitle("获取验证码", forState: UIControlState.Normal)
-        getAuthBtn.setTitleColor(headerColor, forState: UIControlState.Normal)
+        getAuthBtn.setTitle("获取验证码", for: UIControlState())
+        getAuthBtn.setTitleColor(headerColor, for: UIControlState())
         getAuthBtn.titleLabel?.font = getAuthCodeBtnFont
-        getAuthBtn.addTarget(self, action: "getAuthCode:", forControlEvents: UIControlEvents.TouchUpInside)
+        getAuthBtn.addTarget(self, action: #selector(ForgetPwdViewController.getAuthCode(_:)), for: UIControlEvents.touchUpInside)
         textInputView.addSubview(getAuthBtn)
         let seperateLine2 = UIView(frame: CGRect(x: 0, y: textFieldHeight*2 + 1, width: textInputView.frame.width, height: 1))
         seperateLine2.backgroundColor = seperateLineColor
@@ -80,7 +80,7 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         password.font = inputViewFont
         password.placeholder = "密码"
         password.delegate = self
-        password.secureTextEntry = true
+        password.isSecureTextEntry = true
         let seperateLine3 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*3 - 1, width: textInputView.frame.width, height: 1))
         seperateLine3.backgroundColor = seperateLineColor
         textInputView.addSubview(seperateLine3)
@@ -91,7 +91,7 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         reenterpassword.font = inputViewFont
         reenterpassword.placeholder = "请再次输入密码"
         reenterpassword.delegate = self
-        reenterpassword.secureTextEntry = true
+        reenterpassword.isSecureTextEntry = true
         textInputView.addSubview(reenterpassword)
         let seperateLine4 = UIView(frame: CGRect(x: 0, y: (textFieldHeight + 1)*4 - 1, width: textInputView.frame.width, height: 1))
         seperateLine4.backgroundColor = seperateLineColor
@@ -101,16 +101,16 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
         //sign up Btn
         let signUpBtn: UIButton = UIButton(frame: CGRect(x: loginBtnMargin, y: textInputView.frame.origin.y + textInputView.frame.height + 20, width: screenWidth - 2 * loginBtnMargin, height: loginBtnHeight))
         signUpBtn.backgroundColor =  headerColor
-        signUpBtn.setTitle("重置密码", forState: UIControlState.Normal)
+        signUpBtn.setTitle("重置密码", for: UIControlState())
         signUpBtn.titleLabel?.font = loginBtnFont
-        signUpBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        signUpBtn.setTitleColor(UIColor.white, for: UIControlState())
         signUpBtn.layer.cornerRadius = 4
         signUpBtn.layer.masksToBounds = true
-        signUpBtn.addTarget(self, action: "resetPassword:", forControlEvents: UIControlEvents.TouchUpInside)
+        signUpBtn.addTarget(self, action: #selector(ForgetPwdViewController.resetPassword(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(signUpBtn)
     }
     
-    func getAuthCode(sender: UIButton){
+    func getAuthCode(_ sender: UIButton){
         HudProgressManager.sharedInstance.dismissHud()
         HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "正在发送验证码")
         let idStr: String = id.text!
@@ -121,25 +121,25 @@ class ForgetPwdViewController: UIViewController, UITextFieldDelegate{
 
     }
 
-    func resetPassword(sender: UIButton){
+    func resetPassword(_ sender: UIButton){
         if password.text != reenterpassword.text {
-            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }else{
             let passwordStr: String = publicService.passwordEncode(password.text!)
-            let resetPwdRequest = NSDictionary(objects: [passwordStr, id.text!, authCode.text!], forKeys: ["password", "id", "authCode"])
+            let resetPwdRequest = NSDictionary(objects: [passwordStr, id.text!, authCode.text!], forKeys: ["password" as NSCopying, "id" as NSCopying, "authCode" as NSCopying])
             if haalthyService.resetPasswordWithCode(resetPwdRequest) {
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "密码重置成功，请重新登录！")
             }else{
                 HudProgressManager.sharedInstance.showOnlyTextHudProgress(self, title: "密码重置失败，稍后再试！")
 
             }
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }

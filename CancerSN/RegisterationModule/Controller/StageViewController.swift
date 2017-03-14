@@ -8,7 +8,7 @@
 
 import UIKit
 protocol StageSettingVCDelegate{
-    func updateStage(stage: String)
+    func updateStage(_ stage: String)
 }
 
 //class StageViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
@@ -33,9 +33,9 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
             offsetHeightForNavigation = 30
         }
     }
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if isUpdate == false {
-            self.navigationController?.navigationBar.hidden = true
+            self.navigationController?.navigationBar.isHidden = true
         }
     }
     
@@ -45,7 +45,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         let previousBtn = UIButton(frame: CGRect(x: 0, y: previousBtnTopSpace, width: previousBtnWidth + previousBtnLeftSpace + btnMargin, height: previousBtnHeight + btnMargin * 2))
         let previousImgView = UIImageView(frame: CGRECT(previousBtnLeftSpace, btnMargin, previousBtnWidth, previousBtnHeight))
         previousImgView.image = UIImage(named: "btn_previous")
-        previousBtn.addTarget(self, action: "previousView:", forControlEvents: UIControlEvents.TouchUpInside)
+        previousBtn.addTarget(self, action: #selector(StageViewController.previousView(_:)), for: UIControlEvents.touchUpInside)
         previousBtn.addSubview(previousImgView)
         self.view.addSubview(previousBtn)
         
@@ -54,7 +54,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的初诊分期"
-        signUpTitle.textAlignment = NSTextAlignment.Center
+        signUpTitle.textAlignment = NSTextAlignment.center
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
@@ -62,7 +62,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
         signUpSubTitle.text = ""
-        signUpSubTitle.textAlignment = NSTextAlignment.Center
+        signUpSubTitle.textAlignment = NSTextAlignment.center
         self.view.addSubview(signUpSubTitle)
         
         //top Item Name
@@ -70,7 +70,7 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "分期"
-        topItemNameLbl.textAlignment = NSTextAlignment.Center
+        topItemNameLbl.textAlignment = NSTextAlignment.center
         self.view.addSubview(topItemNameLbl)
         
         //top pickerView
@@ -83,24 +83,24 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
             //next view button
             let btnMargin: CGFloat = 15
             let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
-            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.setTitle("下一题", for: UIControlState())
+            nextViewBtn.setTitleColor(nextViewBtnColor, for: UIControlState())
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(StageViewController.selectedNextView(_:)), for: UIControlEvents.touchUpInside)
             self.view.addSubview(nextViewBtn)
         }
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
-            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))
+            pickerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 270, height: 32))
         }else{
             pickerLabel = view as! UILabel
         }
 
         pickerLabel.text = stagePickerDataSource[row]
-        pickerLabel.textAlignment = NSTextAlignment.Center
+        pickerLabel.textAlignment = NSTextAlignment.center
         pickerLabel.textColor = pickerUnselectedColor
         pickerLabel.font = pickerUnselectedFont
         return pickerLabel
@@ -108,41 +108,41 @@ class StageViewController: UIViewController,UIPickerViewDataSource, UIPickerView
     
     //MARK: - Delegates and data sources
     //MARK: Data Sources
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return stagePickerDataSource.count
     }
     
-    func pickerView(pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return pickerComponentHeight
     }
     
     //
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let pickerLabel = pickerView.viewForRow(row, forComponent: 0) as! UILabel
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let pickerLabel = pickerView.view(forRow: row, forComponent: 0) as! UILabel
         pickerLabel.textColor = pickerSelectedColor
         pickerLabel.font = pickerSelectedFont
     }
     
-    func previousView(sender: UIButton){
-        self.navigationController?.popViewControllerAnimated(true)
+    func previousView(_ sender: UIButton){
+        self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func selectedNextView(sender: UIButton){
-        let profileSet = NSUserDefaults.standardUserDefaults()
-        let stage = stagePickerDataSource[topPickerView.selectedRowInComponent(0)]
-        profileSet.setObject(stage, forKey: stageNSUserData)
+    @IBAction func selectedNextView(_ sender: UIButton){
+        let profileSet = UserDefaults.standard
+        let stage = stagePickerDataSource[topPickerView.selectedRow(inComponent: 0)]
+        profileSet.set(stage, forKey: stageNSUserData)
         if isUpdate {
             stageSettingVCDelegate?.updateStage(stage)
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }else {
-            if topPickerView.selectedRowInComponent(0) == 3 {
-                self.performSegueWithIdentifier("metasticSegue", sender: self)
+            if topPickerView.selectedRow(inComponent: 0) == 3 {
+                self.performSegue(withIdentifier: "metasticSegue", sender: self)
             }else{
-                self.performSegueWithIdentifier("geneticMutationSegue", sender: self)
+                self.performSegue(withIdentifier: "geneticMutationSegue", sender: self)
             }
         }
     }

@@ -13,35 +13,35 @@ import UIKit
 
 // RGBA颜色方法
 
-func RGBA(r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat) -> UIColor {
+func RGBA(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat) -> UIColor {
 
     return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
 }
 
 // RGB颜色方法
 
-func RGB(r: CGFloat, _ g: CGFloat, _ b: CGFloat) -> UIColor {
+func RGB(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat) -> UIColor {
     
     return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: 1.0)
 }
 
 // frameMake方法
 
-func CGRECT(x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) -> CGRect {
+func CGRECT(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) -> CGRect {
 
-    return CGRectMake(x, y, w, h)
+    return CGRect(x: x, y: y, width: w, height: h)
 }
 
 // MARK: - 常用常量
 
 // 屏幕尺寸
-let SCREEN_WIDTH = UIScreen.mainScreen().bounds.width
-let SCREEN_HEIGHT = UIScreen.mainScreen().bounds.height
+let SCREEN_WIDTH = UIScreen.main.bounds.width
+let SCREEN_HEIGHT = UIScreen.main.bounds.height
 
 // 系统版本
-let IOS_7 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 7.0
-let IOS_8 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 8.0
-let IOS_9 = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 9.0
+let IOS_7 = (UIDevice.current.systemVersion as NSString).doubleValue >= 7.0
+let IOS_8 = (UIDevice.current.systemVersion as NSString).doubleValue >= 8.0
+let IOS_9 = (UIDevice.current.systemVersion as NSString).doubleValue >= 9.0
 
 
 // MARK: - String Name
@@ -79,11 +79,12 @@ let appKey = "659e4023ae5d594b3ab2cf81"
 
 let channel = "Publish channel"
 
-let isProduction: Bool = false
+let isProduction: Bool = true
 
 let kDeviceToken = "kDeviceToken"
 
 //store info in NSUserData
+let setTagListTimeStamp = "setTagListTimeStamp"
 let favTagsNSUserData = "favoriteTags"
 let genderNSUserData = "haalthyUserGender"
 let ageNSUserData = "haalthyUserAge"
@@ -109,13 +110,13 @@ let newTreatmentEnddate = "haalthyNewTreatmentEndDate"
 
 // MARK: - UI Displayname<--> Database Mapping
 
-let genderMapping = NSDictionary(objects:["M","F"], forKeys:["男","女"])
-let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝癌", "肾癌", "肺癌", "胆管癌", "肠癌", "胃癌", "妇科", "血液"])
-let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma"], forKeys: ["腺癌","鳞癌","腺鳞癌"])
-let stageMapping = NSDictionary(objects: [1,2,3,4], forKeys: ["I","II","III","IV"])
-let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否","是"])
-let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"], forKeys: ["肝转移","骨转移","肾上腺转移","脑转移"])
-let geneticMutationMapping = NSDictionary(objects: ["KRAS", "EGFR", "ALK", "OTHERS", "NONE"], forKeys: ["KRAS","EGFR","ALK","其他","没有基因突变"])
+let genderMapping = NSDictionary(objects:["M","F"], forKeys:["男" as NSCopying,"女" as NSCopying])
+let cancerTypeMapping = NSDictionary(objects: ["liver", "kidney", "lung", "bravery", "intestine", "stomach", "female", "blood"], forKeys: ["肝癌" as NSCopying, "肾癌" as NSCopying, "肺癌" as NSCopying, "胆管癌" as NSCopying, "肠癌" as NSCopying, "胃癌" as NSCopying, "妇科" as NSCopying, "血液" as NSCopying])
+let pathologicalMapping = NSDictionary(objects: ["adenocarcinoma","carcinoma","AdenosquamousCarcinoma"], forKeys: ["腺癌" as NSCopying,"鳞癌" as NSCopying,"腺鳞癌" as NSCopying])
+let stageMapping = NSDictionary(objects: [1,2,3,4], forKeys: ["I" as NSCopying,"II" as NSCopying,"III" as NSCopying,"IV" as NSCopying])
+let smokingMapping = NSDictionary(objects: [0,1], forKeys: ["否" as NSCopying,"是" as NSCopying])
+let metastasisMapping = NSDictionary(objects: ["liver","bone","adrenal","brain"], forKeys: ["肝转移" as NSCopying,"骨转移" as NSCopying,"肾上腺转移" as NSCopying,"脑转移" as NSCopying])
+let geneticMutationMapping = NSDictionary(objects: ["KRAS", "EGFR", "ALK", "OTHERS", "NONE"], forKeys: ["KRAS" as NSCopying,"EGFR" as NSCopying,"ALK" as NSCopying,"其他" as NSCopying,"没有基因突变" as NSCopying])
 
 // MARK: - Color
 
@@ -145,7 +146,7 @@ let fontBoldStr: String = "Helvetica-Bold"
 
 let seperateLineColor: UIColor = UIColor.init(red:221 / 255.0, green:221 / 255.0, blue:224 / 255.0, alpha:1)
 
-let defaultTreatmentEndDate: NSTimeInterval = 1767225600
+let defaultTreatmentEndDate: TimeInterval = 1767225600
 //默认图片背景色（当图片加载错误时）edeeee
 let imageViewBackgroundColor: UIColor = UIColor.init(red:237 / 255.0, green:238 / 255.0, blue:238 / 255.0, alpha:1)
 
@@ -155,11 +156,11 @@ var screenHeight = CGFloat()
 
 let uploadImageSize: CGSize = CGSize(width: 400, height: 600)
 
-let qqAppID: String = "1104886596"
+let qqAppID: String = "1105273097"
 
-let WXAppID: String = "wxd930ea5d5a258f4f"
+let WXAppID: String = "wx1606d9f1f10de6b4"
 
-let WXAppSecret: String = "145f45c39e367d6b2cf9865cf1971096"
+let WXAppSecret: String = "1b6d6a7b5c2fced9436deee258e4ef58"
 
 let numberOfLinesInFeedVC: Int = 6
 

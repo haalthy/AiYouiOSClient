@@ -9,11 +9,11 @@
 import UIKit
 
 protocol GenderSettingVCDelegate{
-    func updateGender(gender: String)
+    func updateGender(_ gender: String)
 }
 
 protocol AgeSettingVCDelegate{
-    func updateAge(age: Int)
+    func updateAge(_ age: Int)
 }
 
 class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -34,10 +34,10 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         initContentView()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isUpdate == false {
-            self.navigationController?.navigationBar.hidden = true
+            self.navigationController?.navigationBar.isHidden = true
         }
     }
 
@@ -59,7 +59,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         signUpTitle.font = signUpTitleFont
         signUpTitle.textColor = signUpTitleTextColor
         signUpTitle.text = "请选择病人的性别和年龄"
-        signUpTitle.textAlignment = NSTextAlignment.Center
+        signUpTitle.textAlignment = NSTextAlignment.center
         self.view.addSubview(signUpTitle)
         
         //sign up subTitle
@@ -67,7 +67,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         signUpSubTitle.font = signUpSubTitleFont
         signUpSubTitle.textColor = signUpTitleTextColor
         signUpSubTitle.text = "你知道吗？一些治疗药物的剂量需要根据性别和年龄进行调整"
-        signUpSubTitle.textAlignment = NSTextAlignment.Center
+        signUpSubTitle.textAlignment = NSTextAlignment.center
         self.view.addSubview(signUpSubTitle)
         
         //male 
@@ -75,14 +75,14 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         let maleImageView = UIImageView(frame: CGRECT(0, 0, maleWidth, genderBtnHeight))
         maleImageView.image = UIImage(named: "btn_maleUnselected")
         maleBtn.addSubview(maleImageView)
-        maleBtn.addTarget(self, action: "selectGender:", forControlEvents: UIControlEvents.TouchUpInside)
+        maleBtn.addTarget(self, action: #selector(GenderSettingViewController.selectGender(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(maleBtn)
         //female
         femaleBtn.frame = CGRect(x: screenWidth - femaleWidth - femaleRightSpace, y: genderBtnTopSpace + offsetHeightForNavigation, width: femaleWidth, height: genderBtnHeight)
         let femaleImageView = UIImageView(frame: CGRECT(0, 0, femaleWidth, genderBtnHeight))
         femaleImageView.image = UIImage(named: "btn_femaleUnselected")
         femaleBtn.addSubview(femaleImageView)
-        femaleBtn.addTarget(self, action: "selectGender:", forControlEvents: UIControlEvents.TouchUpInside)
+        femaleBtn.addTarget(self, action: #selector(GenderSettingViewController.selectGender(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(femaleBtn)
         
         //top Item Name
@@ -90,7 +90,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         topItemNameLbl.font = signUpItemNameFont
         topItemNameLbl.textColor = headerColor
         topItemNameLbl.text = "性别"
-        topItemNameLbl.textAlignment = NSTextAlignment.Center
+        topItemNameLbl.textAlignment = NSTextAlignment.center
         self.view.addSubview(topItemNameLbl)
         
         //seperate Line
@@ -103,7 +103,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         buttomItemNameLbl.font = signUpItemNameFont
         buttomItemNameLbl.textColor = headerColor
         buttomItemNameLbl.text = "年龄"
-        buttomItemNameLbl.textAlignment = NSTextAlignment.Center
+        buttomItemNameLbl.textAlignment = NSTextAlignment.center
         self.view.addSubview(buttomItemNameLbl)
         
         //age picker view
@@ -111,7 +111,7 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         agePickerView.frame = CGRect(x: pickerMargin, y: screenHeight - agePickerYToButtom, width: screenWidth - pickerMargin * 2, height: agePickerViewHeight)
         agePickerView.delegate = self
         agePickerView.dataSource = self
-        for var index = 1; index<90; ++index{
+        for index in 1 ..< 90 {
             pickerDataSource.append(String(index))
         }
         self.view.addSubview(agePickerView)
@@ -120,19 +120,19 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         if isUpdate == false {
             let btnMargin: CGFloat = 15
             let nextViewBtn = UIButton(frame: CGRect(x: 0, y: screenHeight - nextViewBtnButtomSpace - nextViewBtnHeight - btnMargin, width: screenWidth, height: nextViewBtnHeight + btnMargin * 2))
-            nextViewBtn.setTitle("下一题", forState: UIControlState.Normal)
-            nextViewBtn.setTitleColor(nextViewBtnColor, forState: UIControlState.Normal)
+            nextViewBtn.setTitle("下一题", for: UIControlState())
+            nextViewBtn.setTitleColor(nextViewBtnColor, for: UIControlState())
             nextViewBtn.titleLabel?.font = nextViewBtnFont
-            nextViewBtn.addTarget(self, action: "selectedNextView:", forControlEvents: UIControlEvents.TouchUpInside)
+            nextViewBtn.addTarget(self, action: #selector(GenderSettingViewController.selectedNextView(_:)), for: UIControlEvents.touchUpInside)
             self.view.addSubview(nextViewBtn)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         agePickerView.selectRow(60, inComponent: 0, animated: false)
     }
 
-     func selectGender(sender: UIButton) {
+     func selectGender(_ sender: UIButton) {
         if sender == maleBtn{
             gender = "M"
             if (maleBtn.subviews.count > 0) && (maleBtn.subviews[0] is UIImageView){
@@ -152,59 +152,59 @@ class GenderSettingViewController: UIViewController, UIPickerViewDelegate, UIPic
         }
     }
 //
-   @IBAction func selectedNextView(sender: UIButton) {
-        let selectedAge: Int = Int(pickerDataSource[agePickerView.selectedRowInComponent(0)])!
+   @IBAction func selectedNextView(_ sender: UIButton) {
+        let selectedAge: Int = Int(pickerDataSource[agePickerView.selectedRow(inComponent: 0)])!
         if gender == nil{
-            let alert = UIAlertController(title: "提示", message: "请您选择病人性别。", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "提示", message: "请您选择病人性别。", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }else{
             if isUpdate{
                 genderSettingVCDelegate?.updateGender(gender!)
                 ageSettingVCDelegate?.updateAge(selectedAge)
 //                self.dismissViewControllerAnimated(true, completion: nil)
-                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.popViewController(animated: true)
             }else{
-                let profileSet = NSUserDefaults.standardUserDefaults()
-                profileSet.setObject(gender, forKey: genderNSUserData)
-                profileSet.setObject(selectedAge, forKey: ageNSUserData)
-                self.performSegueWithIdentifier("cancerTypeSegue", sender: self)
+                let profileSet = UserDefaults.standard
+                profileSet.set(gender, forKey: genderNSUserData)
+                profileSet.set(selectedAge, forKey: ageNSUserData)
+                self.performSegue(withIdentifier: "cancerTypeSegue", sender: self)
             }
         }
     }
 //
-    func pickerView(pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return pickerComponentHeight
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var pickerLabel = UILabel()
         if view == nil {
-            pickerLabel = UILabel(frame: CGRectMake(0, 0, 270, 32))
+            pickerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 270, height: 32))
         }else{
             pickerLabel = view as! UILabel
         }
-        pickerLabel.textAlignment = NSTextAlignment.Center
+        pickerLabel.textAlignment = NSTextAlignment.center
         pickerLabel.textColor = pickerUnselectedColor
         pickerLabel.text = pickerDataSource[row]
         pickerLabel.font = pickerUnselectedFont
         return pickerLabel
     }
 //
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let pickerLabel = agePickerView.viewForRow(row, forComponent: 0) as! UILabel
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let pickerLabel = agePickerView.view(forRow: row, forComponent: 0) as! UILabel
         pickerLabel.textColor = pickerSelectedColor
         pickerLabel.font = pickerSelectedFont
     }
     //MARK: - Delegates and data sources
     //MARK: Data Sources
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerDataSource.count
     }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerDataSource[row]
     }
 }

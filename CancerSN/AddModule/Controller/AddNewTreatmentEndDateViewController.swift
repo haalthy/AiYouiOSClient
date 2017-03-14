@@ -10,22 +10,22 @@ import UIKit
 
 class AddNewTreatmentEndDateViewController: CalenderViewController {
 //    var animationFinished = true
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
     
     @IBOutlet weak var currentmonthLabel: UIButton!
     @IBOutlet weak var currentmenuView: CVCalendarMenuView!
     @IBOutlet weak var currentcalendarView: CVCalendarView!
     
-    @IBAction func loadPreviousView(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func loadPreviousView(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func loadPrevious(sender: AnyObject) {
+    @IBAction func loadPrevious(_ sender: AnyObject) {
         calendarView.loadPreviousView()
     }
     
     
-    @IBAction func loadNext(sender: AnyObject) {
+    @IBAction func loadNext(_ sender: AnyObject) {
         calendarView.loadNextView()
     }
     
@@ -34,28 +34,26 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
         super.menuView = self.currentmenuView
         super.monthLabel = self.currentmonthLabel
         super.viewDidLoad()
-        profileSet.removeObjectForKey(newTreatmentEnddate)
-        monthLabel.setTitle(CVDate(date: NSDate()).globalDescription, forState: UIControlState.Normal)
+        profileSet.removeObject(forKey: newTreatmentEnddate)
+        monthLabel.setTitle(CVDate(date: Foundation.Date()).globalDescription, for: UIControlState())
     }
     
-    @IBAction func submitTreatmentEndDate(sender: UIButton) {
-        if profileSet.objectForKey(newTreatmentEnddate) == nil{
-            profileSet.setObject(NSDate().timeIntervalSince1970, forKey: newTreatmentEnddate)
+    @IBAction func submitTreatmentEndDate(_ sender: UIButton) {
+        if profileSet.object(forKey: newTreatmentEnddate) == nil{
+            profileSet.set(Foundation.Date().timeIntervalSince1970, forKey: newTreatmentEnddate)
         }
-        print(profileSet.objectForKey(newTreatmentEnddate) as! Int)
-        print(profileSet.objectForKey(newTreatmentBegindate) as! Int)
-        if (profileSet.objectForKey(newTreatmentEnddate) as! Int) <= ((profileSet.objectForKey(newTreatmentBegindate) as! Int) + 60) {
-            let alertController = UIAlertController(title: "结束时间必须大于开始时间", message: nil, preferredStyle: .Alert)
-            let ContinueAction = UIAlertAction(title: "返回", style: .Default){ (action)in
+        if (profileSet.object(forKey: newTreatmentEnddate) as! Int) <= ((profileSet.object(forKey: newTreatmentBegindate) as! Int) + 60) {
+            let alertController = UIAlertController(title: "结束时间必须大于开始时间", message: nil, preferredStyle: .alert)
+            let ContinueAction = UIAlertAction(title: "返回", style: .default){ (action)in
             }
             alertController.addAction(ContinueAction)
 //            
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
 
         }else{
-            self.performSegueWithIdentifier("treatmentDetailSegue", sender: self)
+            self.performSegue(withIdentifier: "treatmentDetailSegue", sender: self)
         }
     }
     
@@ -71,10 +69,10 @@ class AddNewTreatmentEndDateViewController: CalenderViewController {
         menuView.commitMenuViewUpdate()
     }
     
-    override func didSelectDayView(dayView: CVCalendarDayView) {
+    override func didSelectDayView(_ dayView: CVCalendarDayView) {
         let date = dayView.date
         super.didSelectDayView(dayView)
-        profileSet.setObject(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentEnddate)
+        profileSet.set(calendarView.presentedDate.convertedDate()?.timeIntervalSince1970, forKey: newTreatmentEnddate)
     }
 }
 

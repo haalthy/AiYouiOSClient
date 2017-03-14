@@ -2,25 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UILaunchImages</key>
-	<array>
-		<dict>
-			<key>UILaunchImageName</key>
-			<string>Default</string>
-		</dict>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Ai友</string>
+	<string>科利</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -36,7 +27,7 @@
 			<string>tecentopenapi</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>tencent1104886596</string>
+				<string>tencent1105273097</string>
 			</array>
 		</dict>
 		<dict>
@@ -46,7 +37,7 @@
 			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wxd930ea5d5a258f4f</string>
+				<string>wx1606d9f1f10de6b4</string>
 			</array>
 		</dict>
 		<dict>
@@ -64,6 +55,8 @@
 	<string>1.0.2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -78,6 +71,13 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+	</array>
+	<key>UILaunchImages</key>
+	<array>
+		<dict>
+			<key>UILaunchImageName</key>
+			<string>Default</string>
+		</dict>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>

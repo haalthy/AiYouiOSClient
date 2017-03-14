@@ -14,10 +14,10 @@ class PostTableViewCell: UITableViewCell {
     let dayLabelTopSpace:CGFloat = 17
     let dayLabelWidth:CGFloat = 22
     let dayLabelHeight:CGFloat = 18
-    let dayLabelFont: UIFont = UIFont.systemFontOfSize(18)
+    let dayLabelFont: UIFont = UIFont.systemFont(ofSize: 18)
     
     let monthTopSpace: CGFloat = 22
-    let monthLabelFont: UIFont = UIFont.systemFontOfSize(10)
+    let monthLabelFont: UIFont = UIFont.systemFont(ofSize: 10)
     
     let postContentTopSpace: CGFloat = 15
     let postContentLeftSpace: CGFloat = 80
@@ -26,7 +26,7 @@ class PostTableViewCell: UITableViewCell {
     
     let postLabelTopSpace: CGFloat = 0
     let postLabelLeftSpace: CGFloat = 10
-    let postLabelFont: UIFont = UIFont.systemFontOfSize(14)
+    let postLabelFont: UIFont = UIFont.systemFont(ofSize: 14)
     
     let postImageLength: CGFloat = 50
     
@@ -44,7 +44,7 @@ class PostTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -56,14 +56,14 @@ class PostTableViewCell: UITableViewCell {
         }
     }
     
-    func getDayAndMonth(dateInserted: NSDate){
-        let calendar = NSCalendar.currentCalendar()
-        let dateComponents = calendar.components([NSCalendarUnit.Day, NSCalendarUnit.Month], fromDate: dateInserted)
-        day = String(dateComponents.day)
-        if dateComponents.day < 10 {
+    func getDayAndMonth(_ dateInserted: Foundation.Date){
+        let calendar = Calendar.current
+        let dateComponents = (calendar as NSCalendar).components([NSCalendar.Unit.day, NSCalendar.Unit.month], from: dateInserted)
+        day = String(describing: dateComponents.day)
+        if dateComponents.day! < 10 {
             day = "0" + day
         }
-        switch dateComponents.month{
+        switch dateComponents.month! {
         case 1:
             month = "一月"
             break
@@ -107,7 +107,7 @@ class PostTableViewCell: UITableViewCell {
     
     func updateUI(){
         self.removeAllSubviews()
-        let dateInserted = NSDate.createDate(post.dateInserted / 1000)
+        let dateInserted = Foundation.Date.createDate(Int64(post.dateInserted) / 1000)
         getDayAndMonth(dateInserted!)
         //add day label
         dayLabel.frame = CGRect(x: dayLabelLeftSpace, y: dayLabelTopSpace, width: dayLabelWidth, height: dayLabelHeight)
@@ -130,7 +130,7 @@ class PostTableViewCell: UITableViewCell {
             postContent.frame = CGRect(x: postContentLeftSpace, y: postContentTopSpace, width: postContentWidth, height: postImageLength)
             let postImageView = UIImageView(frame: CGRECT(0, 0, postImageLength, postImageLength))
             if post.imageURL != "" {
-                let localImageList = post.imageURL.componentsSeparatedByString(";")
+                let localImageList = post.imageURL.components(separatedBy: ";")
                 if (localImageList.count > 0) && (localImageList[0] != ""){
                     let imageURL = localImageList[0] + "@100h_100w_1e"
                     postImageView.addImageCache(imageURL, placeHolder: placeHolderStr)
@@ -141,7 +141,7 @@ class PostTableViewCell: UITableViewCell {
                 postLabel.frame = CGRect(x: postImageLength + postLabelLeftSpace, y: postLabelTopSpace, width: postContentWidth - postImageLength - postLabelLeftSpace*2, height: postLabelSize.height)
                 postLabel.text = post.body
                 postLabel.numberOfLines = 2
-                postLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+                postLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
                 postLabel.sizeToFit()
                 postContent.backgroundColor = UIColor.init(red: 242/255, green: 248/255, blue: 248/255, alpha: 1)
             }
@@ -150,7 +150,7 @@ class PostTableViewCell: UITableViewCell {
             postLabel.frame = CGRect(x: postLabelLeftSpace, y: postLabelTopSpace, width: postContentWidth - postLabelLeftSpace*2, height: postLabelSize.height)
             postLabel.text = post.body
             postLabel.numberOfLines = 2
-            postLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+            postLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
             postLabel.sizeToFit()
             
             postContent.frame = CGRECT(postContentLeftSpace, postContentTopSpace, postContentWidth, postLabelSize.height + postLabelTopSpace * 2)

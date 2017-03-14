@@ -47,6 +47,11 @@
 		2AFDEB0C1C7D5730008545D5 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */; };
 		2AFDEB0E1C7DA3A1008545D5 /* PostCellFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */; };
 		2AFDEB111C7EDACB008545D5 /* ClinicTrailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */; };
+		2AFE5AAC1CBECD1F00730D85 /* dbMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE5AAB1CBECD1F00730D85 /* dbMapping.swift */; };
+		2AFE5AAE1CC166FB00730D85 /* TreatmentObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE5AAD1CC166FB00730D85 /* TreatmentObj.swift */; };
+		2AFE5AB01CC1C26400730D85 /* PatientStatusObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE5AAF1CC1C26400730D85 /* PatientStatusObj.swift */; };
+		2AFE5AB21CC589B400730D85 /* ClinicDataObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE5AB11CC589B400730D85 /* ClinicDataObj.swift */; };
+		2AFE5AB61CC5A5F700730D85 /* SubClinicDataObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE5AB51CC5A5F700730D85 /* SubClinicDataObj.swift */; };
 		6B0A0BBC1C2E5FF500E01585 /* HttpUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */; };
 		6B0A0BBD1C2E5FF500E01585 /* NetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */; };
 		6B25A3B61C95A0D300138043 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC321C1E5A4F00A81EA9 /* AddPostViewController.swift */; };
@@ -376,6 +381,11 @@
 		2AFDEB0B1C7D5730008545D5 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		2AFDEB0D1C7DA3A1008545D5 /* PostCellFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCellFrame.swift; sourceTree = "<group>"; };
 		2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicTrailModel.swift; sourceTree = "<group>"; };
+		2AFE5AAB1CBECD1F00730D85 /* dbMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dbMapping.swift; sourceTree = "<group>"; };
+		2AFE5AAD1CC166FB00730D85 /* TreatmentObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreatmentObj.swift; sourceTree = "<group>"; };
+		2AFE5AAF1CC1C26400730D85 /* PatientStatusObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientStatusObj.swift; sourceTree = "<group>"; };
+		2AFE5AB11CC589B400730D85 /* ClinicDataObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicDataObj.swift; sourceTree = "<group>"; };
+		2AFE5AB51CC5A5F700730D85 /* SubClinicDataObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubClinicDataObj.swift; sourceTree = "<group>"; };
 		6B0A0BBA1C2E5FF500E01585 /* HttpUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpUrl.swift; sourceTree = "<group>"; };
 		6B0A0BBB1C2E5FF500E01585 /* NetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetRequest.swift; sourceTree = "<group>"; };
 		6B25A3BA1C979EBB00138043 /* PostsListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostsListTableViewController.swift; sourceTree = "<group>"; };
@@ -919,6 +929,10 @@
 			children = (
 				2AE23B611C466B8500B3A86F /* PatientStatus.swift */,
 				2A0A16F81C6AEE35005F4E47 /* UserProfile.swift */,
+				2AFE5AAD1CC166FB00730D85 /* TreatmentObj.swift */,
+				2AFE5AAF1CC1C26400730D85 /* PatientStatusObj.swift */,
+				2AFE5AB11CC589B400730D85 /* ClinicDataObj.swift */,
+				2AFE5AB51CC5A5F700730D85 /* SubClinicDataObj.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -929,6 +943,7 @@
 				2AFDEB101C7EDACB008545D5 /* ClinicTrailModel.swift */,
 			);
 			name = ClinicTrailModel;
+			path = ../../Model;
 			sourceTree = "<group>";
 		};
 		6B0A0BB91C2E5FF500E01585 /* NetRequest */ = {
@@ -1010,6 +1025,7 @@
 		6B8412371C4F7E2900BE54B0 /* HudProgressManager */ = {
 			isa = PBXGroup;
 			children = (
+				2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */,
 				6B8412381C4F7E5900BE54B0 /* HudProgressManager.swift */,
 			);
 			path = HudProgressManager;
@@ -1088,7 +1104,8 @@
 				6B8A47271C434E940001F164 /* emoji_unselected_center_bg@2x.png */,
 				6B8A47281C434E940001F164 /* EmojisList.plist */,
 			);
-			path = faceResouces;
+			name = faceResouces;
+			path = ../Resources/faceResouces;
 			sourceTree = "<group>";
 		};
 		6B93FBF71C1E58A000A81EA9 /* Model */ = {
@@ -1096,7 +1113,6 @@
 			children = (
 				6B25A3BE1C97A98F00138043 /* UserCommentModel */,
 				2AC54CF91C849CED00CFFA85 /* TreatmentModel */,
-				2AFDEB0F1C7EDA8C008545D5 /* ClinicTrailModel */,
 				6B9D04691C83D73300248681 /* FollowModel */,
 				6B25C4571C72B55900CFFDD0 /* CommentModel */,
 				6BA14E7F1C4CB34D00B6FDD1 /* TagModel */,
@@ -1264,7 +1280,6 @@
 		6B93FC8A1C1E5C9500A81EA9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6B8A46F31C434E410001F164 /* faceResouces */,
 				6B93FCD41C1E682300A81EA9 /* Images */,
 				6B93FCE71C1E685E00A81EA9 /* CancerSN.xcdatamodeld */,
 			);
@@ -1274,11 +1289,13 @@
 		6B93FC9D1C1E5CBE00A81EA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6B8A46F31C434E410001F164 /* faceResouces */,
 				6BD5FFE61C9014C3003170C1 /* RedBadgeManager */,
 				6B8412371C4F7E2900BE54B0 /* HudProgressManager */,
 				6BA46E351C31145800DCBD11 /* UtilsFunction */,
 				6B93FC9F1C1E66CA00A81EA9 /* CanlendarManager */,
 				6B7FA2AF1C21248C00094FB0 /* HealthyConfigure.swift */,
+				2AFE5AAB1CBECD1F00730D85 /* dbMapping.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1934,7 +1951,9 @@
 				TargetAttributes = {
 					2AC59C0D1B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 3Q3R8F55RD;
+						DevelopmentTeam = Y53V92P3MW;
+						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1949,6 +1968,7 @@
 					};
 					2AC59C221B5D77C600C4FE36 = {
 						CreatedOnToolsVersion = 6.4;
+						LastSwiftMigration = 0820;
 						TestTargetID = 2AC59C0D1B5D77C600C4FE36;
 					};
 				};
@@ -2095,6 +2115,7 @@
 				6BBFD9021C3273F900282573 /* MJRefreshAutoGifFooter.m in Sources */,
 				6B93FC871C1E5C3800A81EA9 /* StageViewController.swift in Sources */,
 				DDD6A1391C37C28C00C258D2 /* PNRadarChart.m in Sources */,
+				2AFE5AAE1CC166FB00730D85 /* TreatmentObj.swift in Sources */,
 				2ABEFDB11C523FD7004D8EE9 /* AddPatientStatusViewController.swift in Sources */,
 				6BC05A261C882B2A006F0A65 /* ZLPhotoPickerGroupViewController.m in Sources */,
 				6B93FCE91C1E685E00A81EA9 /* CancerSN.xcdatamodeld in Sources */,
@@ -2109,6 +2130,7 @@
 				6BC05A1E1C882B2A006F0A65 /* ZLPhotoPickerBrowserPhotoScrollView.m in Sources */,
 				6BBFD9061C3273F900282573 /* MJRefreshBackNormalFooter.m in Sources */,
 				2AFDEB0A1C7AE008008545D5 /* AddImageView.swift in Sources */,
+				2AFE5AB01CC1C26400730D85 /* PatientStatusObj.swift in Sources */,
 				6B9D04711C858D3D00248681 /* MentionedCell.swift in Sources */,
 				6B93FC3D1C1E5A4F00A81EA9 /* AddTreatmentViewController.swift in Sources */,
 				6B93FC811C1E5C3800A81EA9 /* GenderSettingViewController.swift in Sources */,
@@ -2125,6 +2147,7 @@
 				DDD6A13C1C37C28C00C258D2 /* PNScatterChartData.m in Sources */,
 				6BBFD90E1C3273F900282573 /* UIScrollView+MJRefresh.m in Sources */,
 				6BA14E7E1C4C881000B6FDD1 /* FeedTagsViewController.swift in Sources */,
+				2AFE5AB61CC5A5F700730D85 /* SubClinicDataObj.swift in Sources */,
 				2A6836DE1C5DE7E5006C1CC2 /* AddPostNavigationViewController.swift in Sources */,
 				6BBFD8FD1C3273F900282573 /* MJRefreshAutoFooter.m in Sources */,
 				6B93FCC91C1E66CA00A81EA9 /* CVCalendarViewDelegate.swift in Sources */,
@@ -2155,6 +2178,7 @@
 				6BBFD8FE1C3273F900282573 /* MJRefreshBackFooter.m in Sources */,
 				6B7FA2B01C21248C00094FB0 /* HealthyConfigure.swift in Sources */,
 				2AFC09061C7020D60001652D /* ContactsTableViewCell.swift in Sources */,
+				2AFE5AB21CC589B400730D85 /* ClinicDataObj.swift in Sources */,
 				6BBFD9081C3273F900282573 /* MJRefreshGifHeader.m in Sources */,
 				2A1E69F01C3CCDEA00C882B7 /* ChartSummaryTableViewCell.swift in Sources */,
 				6BC05A1D1C882B2A006F0A65 /* ZLPhotoPickerBrowserPhotoImageView.m in Sources */,
@@ -2278,6 +2302,7 @@
 				6BBFD8AD1C326FBF00282573 /* SDImageCache.m in Sources */,
 				6B93FC831C1E5C3800A81EA9 /* LoginViewController.swift in Sources */,
 				DDD6A1351C37C28C00C258D2 /* PNLineChartData.m in Sources */,
+				2AFE5AAC1CBECD1F00730D85 /* dbMapping.swift in Sources */,
 				6BC05A1B1C882B2A006F0A65 /* ZLPhotoPickerBrowserViewController+SignlePhotoBrowser.m in Sources */,
 				6BC05A161C882B2A006F0A65 /* ZLCameraImageView.m in Sources */,
 			);
@@ -2359,7 +2384,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "de408442-ad2d-4bc1-ba1f-0a41c185e174";
@@ -2400,7 +2425,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "de408442-ad2d-4bc1-ba1f-0a41c185e174";
 				SDKROOT = iphoneos;
@@ -2415,8 +2440,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: luohui925@gmail.com (XH8ER3K4H4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = Y53V92P3MW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2424,6 +2450,7 @@
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/Tencent",
 				);
 				INFOPLIST_FILE = CancerSN/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2436,10 +2463,11 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fili.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2450,8 +2478,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CancerSN/CancerSN.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: luohui925@gmail.com (XH8ER3K4H4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = Y53V92P3MW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2459,6 +2488,7 @@
 					"$(PROJECT_DIR)/CancerSN/ThirdPart/Tencent",
 				);
 				INFOPLIST_FILE = CancerSN/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2471,10 +2501,11 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.haalthy.aiyou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fili.aiyou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1761624f-75bc-4655-9f87-65ef0fcee537";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CancerSNiOSClient-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2494,6 +2525,7 @@
 				INFOPLIST_FILE = CancerSNTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CancerSN.app/CancerSN";
 			};
 			name = Debug;
@@ -2509,6 +2541,7 @@
 				INFOPLIST_FILE = CancerSNTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CancerSN.app/CancerSN";
 			};
 			name = Release;

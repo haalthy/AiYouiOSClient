@@ -13,9 +13,9 @@ import UIKit
   *  Instead use native Swift Set<T> collection.
 */
 
-struct CVSet<T: AnyObject>: NilLiteralConvertible {
+struct CVSet<T: AnyObject>: ExpressibleByNilLiteral {
     // MARK: - Private properties
-    private var storage = [T]()
+    fileprivate var storage = [T]()
     
     // MARK: - Public properties
     var count: Int {
@@ -45,28 +45,28 @@ struct CVSet<T: AnyObject>: NilLiteralConvertible {
 // MARK: - Mutating methods
 
 extension CVSet {
-    mutating func addObject(object: T) {
+    mutating func addObject(_ object: T) {
         if indexObject(object) == nil {
             storage.append(object)
         }
     }
     
-    mutating func removeObject(object: T) {
+    mutating func removeObject(_ object: T) {
         if let index = indexObject(object) {
-            storage.removeAtIndex(index)
+            storage.remove(at: index)
         }
     }
     
-    mutating func removeAll(keepCapacity: Bool) {
-        storage.removeAll(keepCapacity: keepCapacity)
+    mutating func removeAll(_ keepCapacity: Bool) {
+        storage.removeAll(keepingCapacity: keepCapacity)
     }
 }
 
 // MARK: - Util 
 
 private extension CVSet {
-    func indexObject(object: T) -> Int? {
-        for (index, storageObj) in storage.enumerate() {
+    func indexObject(_ object: T) -> Int? {
+        for (index, storageObj) in storage.enumerated() {
             if storageObj === object {
                 return index
             }
@@ -78,12 +78,19 @@ private extension CVSet {
 
 
 // MARK: - SequenceType
-extension CVSet: SequenceType {
-    func generate() -> AnyGenerator<T> {
+extension CVSet: Sequence {
+    func makeIterator() -> AnyIterator<T> {
         var power = 0
         let nextClosure : () -> T? = {
-            (power < self.count) ? self.storage[power++] : nil
+            power += 1
+            //(power < self.count) ? self.storage[power] : nil
+            if (power < self.count){
+                return self.storage[power]
+            }
+            else{
+                return nil
+            }
         }
-        return anyGenerator(nextClosure)
+        return AnyIterator(nextClosure)
     }
 }

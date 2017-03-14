@@ -14,7 +14,7 @@ class PostFeedStatus: D3Model {
     
     
     // 更新时间
-    var dateUpdated: String = ""
+    var dateUpdated: Double = 0
     
     //
     var isActive: Int = 0
@@ -40,7 +40,7 @@ class PostFeedStatus: D3Model {
     var isBroadcast: Int = 0
     
     // 插入时间
-    var dateInserted: Int64 = 0
+    var dateInserted: Double = 0
 
     
     //

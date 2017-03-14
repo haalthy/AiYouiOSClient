@@ -13,25 +13,25 @@ class HaalthyService:NSObject{
     let keychainAccess = KeychainAccess()
     let publicService = PublicService()
 
-    func addPost(post : NSDictionary)->Int{
+    func addPost(_ post : NSDictionary)->Int{
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         let urlPath:String = (addPostURL as String) + "?access_token=" + (accessToken as! String);
         
         let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: post as! Dictionary<String, AnyObject>)
         if ((result.count > 0) &&
-            (result.objectForKey("result") as! Int) == 1) &&
-            (result.objectForKey("content") is NSDictionary){
-                return (result.objectForKey("content") as! NSDictionary).objectForKey("count") as! Int
+            (result.object(forKey: "result") as! Int) == 1) &&
+            (result.object(forKey: "content") is NSDictionary){
+                return (result.object(forKey: "content") as! NSDictionary).object(forKey: "count") as! Int
         }else {
             return 0
         }
     }
     
-    func addUser(userType:String)->NSDictionary{
+    func addUser(_ userType:String)->NSDictionary{
         //upload UserInfo to Server
         let keychainAccess = KeychainAccess()
-        let profileSet = NSUserDefaults.standardUserDefaults()
+        let profileSet = UserDefaults.standard
         
         var email = String()
         var username = String()
@@ -45,14 +45,14 @@ class HaalthyService:NSObject{
         var cancerType  = String()
         var metastasis  = String()
 //        var image       = String()
-        var imageInfo = NSMutableDictionary()
+        let imageInfo = NSMutableDictionary()
         var geneticMutation = String()
         var phone = String()
-        if profileSet.objectForKey(emailNSUserData) != nil{
-            email = (profileSet.objectForKey(emailNSUserData))! as! String
+        if profileSet.object(forKey: emailNSUserData) != nil{
+            email = (profileSet.object(forKey: emailNSUserData))! as! String
         }
-        if profileSet.objectForKey(phoneNSUserData) != nil {
-            phone = (profileSet.objectForKey(phoneNSUserData))! as! String
+        if profileSet.object(forKey: phoneNSUserData) != nil {
+            phone = (profileSet.object(forKey: phoneNSUserData))! as! String
         }
         if keychainAccess.getPasscode(usernameKeyChain) != nil{
             username = (keychainAccess.getPasscode(usernameKeyChain))! as String
@@ -60,47 +60,104 @@ class HaalthyService:NSObject{
         if keychainAccess.getPasscode(passwordKeyChain) != nil{
             password = (keychainAccess.getPasscode(passwordKeyChain))! as String
         }
-        if profileSet.objectForKey(displaynameUserData) != nil{
-            displayname = (profileSet.objectForKey(displaynameUserData))! as! String
+        if profileSet.object(forKey: displaynameUserData) != nil{
+            displayname = (profileSet.object(forKey: displaynameUserData))! as! String
         }else{
             displayname = username
         }
-        if profileSet.objectForKey(genderNSUserData) != nil{
-            gender = (profileSet.objectForKey(genderNSUserData))! as! String
+        if profileSet.object(forKey: genderNSUserData) != nil{
+            gender = (profileSet.object(forKey: genderNSUserData))! as! String
         }
-        if profileSet.objectForKey(smokingNSUserData) != nil{
-            isSmocking = (profileSet.objectForKey(smokingNSUserData))! as! Int
+        if profileSet.object(forKey: smokingNSUserData) != nil{
+            isSmocking = (profileSet.object(forKey: smokingNSUserData))! as! Int
         }
-        if profileSet.objectForKey(pathologicalNSUserData) != nil{
-            pathological = (profileSet.objectForKey(pathologicalNSUserData))! as! String
+        if profileSet.object(forKey: pathologicalNSUserData) != nil{
+            pathological = (profileSet.object(forKey: pathologicalNSUserData))! as! String
         }
-        if profileSet.objectForKey(stageNSUserData) != nil{
-            stage = (profileSet.objectForKey(stageNSUserData))! as! String
+        if profileSet.object(forKey: stageNSUserData) != nil{
+            stage = (profileSet.object(forKey: stageNSUserData))! as! String
         }
-        if profileSet.objectForKey(ageNSUserData) != nil{
-            age = (profileSet.objectForKey(ageNSUserData))! as! Int
+        if profileSet.object(forKey: ageNSUserData) != nil{
+            age = (profileSet.object(forKey: ageNSUserData))! as! Int
         }
-        if profileSet.objectForKey(cancerTypeNSUserData) != nil {
-            cancerType = (profileSet.objectForKey(cancerTypeNSUserData))! as! String
+        if profileSet.object(forKey: cancerTypeNSUserData) != nil {
+            cancerType = (profileSet.object(forKey: cancerTypeNSUserData))! as! String
         }
-        if profileSet.objectForKey(metastasisNSUserData) != nil{
-            metastasis = (profileSet.objectForKey(metastasisNSUserData))! as! String
+        if profileSet.object(forKey: metastasisNSUserData) != nil{
+            metastasis = (profileSet.object(forKey: metastasisNSUserData))! as! String
         }
-        if profileSet.objectForKey(imageNSUserData) != nil{
-            imageInfo.setObject(profileSet.objectForKey(imageNSUserData)!, forKey: "data")
-            imageInfo.setObject("jpg", forKey: "type")
-//            image = (profileSet.objectForKey(imageNSUserData))! as! String
+        if profileSet.object(forKey: imageNSUserData) != nil{
+            imageInfo.setObject(profileSet.object(forKey: imageNSUserData)!, forKey: "data" as NSCopying)
+            imageInfo.setObject("jpg", forKey: "type" as NSCopying)
         }
-        if profileSet.objectForKey(geneticMutationNSUserData) != nil{
-            geneticMutation = profileSet.objectForKey(geneticMutationNSUserData)! as! String
+        if profileSet.object(forKey: geneticMutationNSUserData) != nil{
+            geneticMutation = profileSet.object(forKey: geneticMutationNSUserData)! as! String
         }
         let passwordStr = publicService.passwordEncode(password)
-        let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone], forKeys: ["email", "password", "gender", "isSmoking", "pathological", "stage", "age", "cancerType", "metastasis","imageInfo", "userType", "displayname", "geneticMutation", "username", "phone"])
+        let addUserBody = NSDictionary(objects: [email, passwordStr, gender, isSmocking, pathological, stage, age, cancerType, metastasis, imageInfo, userType, displayname, geneticMutation, username, phone, userType], forKeys: ["email" as NSCopying, "password" as NSCopying, "gender" as NSCopying, "isSmoking" as NSCopying, "pathological" as NSCopying, "stage" as NSCopying, "age" as NSCopying, "cancerType" as NSCopying, "metastasis" as NSCopying,"imageInfo" as NSCopying, "userType" as NSCopying, "displayname" as NSCopying, "geneticMutation" as NSCopying, "username" as NSCopying, "phone" as NSCopying, "userType" as NSCopying])
         return NetRequest.sharedInstance.POST_A(addNewUserURL, parameters: addUserBody as! Dictionary<String, AnyObject>)
     }
     
-    func getAuthCode(id: String)->Bool{
-        let requestBody = NSDictionary(object: id, forKey: "eMail")
+    func updateUser()->NSDictionary {
+        //upload UserInfo to Server
+        let keychainAccess = KeychainAccess()
+        let profileSet = UserDefaults.standard
+        
+        var gender   = String()
+        var age     = Int()
+        var cancerType  = String()
+        var pathological = String()
+        
+        var stage   = String()
+        var metastasis  = String()
+        var geneticMutation = String()
+        
+        if profileSet.object(forKey: genderNSUserData) != nil{
+            gender = (profileSet.object(forKey: genderNSUserData))! as! String
+        }
+        if profileSet.object(forKey: pathologicalNSUserData) != nil{
+            pathological = (profileSet.object(forKey: pathologicalNSUserData))! as! String
+        }
+        if profileSet.object(forKey: stageNSUserData) != nil{
+            stage = (profileSet.object(forKey: stageNSUserData))! as! String
+        }
+        if profileSet.object(forKey: ageNSUserData) != nil{
+            age = (profileSet.object(forKey: ageNSUserData))! as! Int
+        }
+        if profileSet.object(forKey: cancerTypeNSUserData) != nil {
+            cancerType = (profileSet.object(forKey: cancerTypeNSUserData))! as! String
+        }
+        if profileSet.object(forKey: metastasisNSUserData) != nil{
+            metastasis = (profileSet.object(forKey: metastasisNSUserData))! as! String
+        }
+        if profileSet.object(forKey: geneticMutationNSUserData) != nil{
+            geneticMutation = profileSet.object(forKey: geneticMutationNSUserData)! as! String
+        }
+        
+        getAccessToken.getAccessToken()
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
+        if accessToken != nil {
+            let urlPath:String = (updateUserURL as String) + "?access_token=" + (accessToken as! String);
+            let url : URL = URL(string: urlPath)!
+            let request = NSMutableURLRequest(url: url)
+            request.httpMethod = "POST"
+            let requestBody = NSDictionary(objects: [gender, age, cancerType, pathological, stage, metastasis, geneticMutation, keychainAccess.getPasscode(usernameKeyChain)!], forKeys: ["gender" as NSCopying, "age" as NSCopying, "cancerType" as NSCopying, "pathological" as NSCopying, "stage" as NSCopying, "metastasis" as NSCopying, "geneticMutation" as NSCopying, "username" as NSCopying])
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody as NSDictionary, options: JSONSerialization.WritingOptions())
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            return NetRequest.sharedInstance.POST_A(urlPath, parameters: (requestBody as NSDictionary) as! Dictionary<String, AnyObject>)
+            
+            
+        }else{
+            return NSDictionary()
+        }
+        
+    }
+    
+    func getAuthCode(_ id: String)->Bool{
+        let requestBody = NSDictionary(object: id, forKey: "eMail" as NSCopying)
         var result: NSDictionary?
 
         if publicService.checkIsEmail(id) {
@@ -112,15 +169,15 @@ class HaalthyService:NSObject{
         }else{
             return false
         }
-        if (result == nil) || (result?.count == 0) || ((result!.objectForKey("result") != nil) && (result!.objectForKey("result") as! Int) != 1) {
+        if (result == nil) || (result?.count == 0) || ((result!.object(forKey: "result") != nil) && (result!.object(forKey: "result") as! Int) != 1) {
             return false
         }
         return true
     }
     
-    func checkAuthCode(checkAuthRequest: NSDictionary)->Bool{
+    func checkAuthCode(_ checkAuthRequest: NSDictionary)->Bool{
         var result: NSDictionary?
-        let id: String = checkAuthRequest.objectForKey("eMail") as! String
+        let id: String = checkAuthRequest.object(forKey: "eMail") as! String
         if publicService.checkIsEmail(id) {
             result = NetRequest.sharedInstance.POST_A(checkEmailAuthCodeURL, parameters: checkAuthRequest as! Dictionary<String, AnyObject>)
         }else if publicService.checkIsPhoneNumber(id){
@@ -128,7 +185,7 @@ class HaalthyService:NSObject{
         }else{
             return false
         }
-        if (result == nil) || ((result!.objectForKey("result") != nil) && (result!.objectForKey("result") as! Int) != 1) {
+        if (result == nil) || ((result!.object(forKey: "result") != nil) && (result!.object(forKey: "result") as! Int) != 1) {
             return false
         }
         return true
@@ -136,12 +193,12 @@ class HaalthyService:NSObject{
     
     func getUserFavTags()->NSArray{
         getAccessToken.getAccessToken()
-        if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) == nil {
+        if UserDefaults.standard.object(forKey: accessNSUserData) == nil {
             return []
         }
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData) as! String
         let urlPath:String = getUserFavTagsURL + "?access_token=" + accessToken
-        let content = NetRequest.sharedInstance.POST_A(urlPath, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)! as String ]).objectForKey("content")
+        let content = NetRequest.sharedInstance.POST_A(urlPath, parameters: ["username" : keychainAccess.getPasscode(usernameKeyChain)! as AnyObject ]).object(forKey: "content")
         if content != nil {
             return content as! NSArray
         }else {
@@ -151,71 +208,69 @@ class HaalthyService:NSObject{
     }
     
     
-    func resetPassword(newPassword: String)->Bool{
+    func resetPassword(_ newPassword: String)->Bool{
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData) as! String
         let urlPath:String = resetPasswordURL + "?access_token=" + accessToken
-        let requestBody = NSDictionary(object: newPassword, forKey: "password")
+        let requestBody = NSDictionary(object: newPassword, forKey: "password" as NSCopying)
 //        requestBody.setValue(newPassword, forKey: "password")
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if (result.count == 0) || (result.objectForKey("result") == nil) || (result.objectForKey("result") as! Int) != 1 {
+        if (result.count == 0) || (result.object(forKey: "result") == nil) || (result.object(forKey: "result") as! Int) != 1 {
             return false
         }
         return true
     }
     
-    func resetPasswordWithCode(requestBody: NSDictionary)->Bool{
+    func resetPasswordWithCode(_ requestBody: NSDictionary)->Bool{
         let urlPath:String = resetPasswordWithCodeURL
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if (result.count == 0) || (result.objectForKey("result") == nil) || (result.objectForKey("result") as! Int) != 1 {
+        if (result.count == 0) || (result.object(forKey: "result") == nil) || (result.object(forKey: "result") as! Int) != 1 {
             return false
         }
         return true
     }
     
-    func getFollowingUsers(username: String)->NSArray{
+    func getFollowingUsers(_ username: String)->NSArray{
         getAccessToken.getAccessToken()
-        if NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) == nil {
+        if UserDefaults.standard.object(forKey: accessNSUserData) == nil {
             return []
         }
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData) as! String
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData) as! String
         let urlPath:String = getFollowingUserURL + "?access_token=" + accessToken
         let requestBody = NSMutableDictionary()
         requestBody.setValue(username, forKey: "username")
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: requestBody as! Dictionary<String, AnyObject>)
-        if (result.objectForKey("content") != nil) &&  (result.objectForKey("result") != nil) && ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
-            return result.objectForKey("content") as! NSArray
+        if (result.object(forKey: "content") != nil) &&  (result.object(forKey: "result") != nil) && ((result.object(forKey: "result") as! Int) == 1) &&  (result.object(forKey: "content") is NSArray){
+            return result.object(forKey: "content") as! NSArray
         }else{
             return []
         }
     }
     
-    func updateUserTag(selectedTags: NSArray){
+    func updateUserTag(_ selectedTags: NSArray){
         getAccessToken.getAccessToken()
-        let accessToken: AnyObject? = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken: AnyObject? = UserDefaults.standard.object(forKey: accessNSUserData) as AnyObject?
         
         if accessToken != nil{
             let urlPath: String = updateFavTagsURL + "?access_token=" + (accessToken as! String)
-            let parameters = NSDictionary(objects: [keychainAccess.getPasscode(usernameKeyChain)!,selectedTags], forKeys: ["username", "tags"])
+            let parameters = NSDictionary(objects: [keychainAccess.getPasscode(usernameKeyChain)!,selectedTags], forKeys: ["username" as NSCopying, "tags" as NSCopying])
             NetRequest.sharedInstance.POST(urlPath, parameters: parameters as! Dictionary<String, AnyObject>,
                 success: { (content , message) -> Void in
-                    print(content)
                     
                 }) { (content, message) -> Void in
-                    print(content)
             }
         }
     }
     
-    func updateTreatment(treatment: NSDictionary)->Int{
+    func updateTreatment(_ treatment: NSDictionary)->Int{
         getAccessToken.getAccessToken()
         var ret: Int = 0
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil{
             let urlPath:String = (updateTreatmentURL as String) + "?access_token=" + (accessToken as! String);
             let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
-            if result.objectForKey("result") != nil {
-                ret = result.objectForKey("result") as! Int
+            if result.object(forKey: "result") != nil {
+                ret = result.object(forKey: "result") as! Int
             }else{
                 ret = 0
             }
@@ -223,15 +278,15 @@ class HaalthyService:NSObject{
         return ret
     }
     
-    func deleteTreatment(treatment: NSDictionary)->Int{
+    func deleteTreatment(_ treatment: NSDictionary)->Int{
         getAccessToken.getAccessToken()
         var ret: Int = 0
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil{
             let urlPath:String = (deleteTreatmentURL as String) + "?access_token=" + (accessToken as! String);
             let result: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: treatment as! Dictionary<String, AnyObject>)
-            if result.objectForKey("result") != nil {
-                ret = result.objectForKey("result") as! Int
+            if result.object(forKey: "result") != nil {
+                ret = result.object(forKey: "result") as! Int
             }else {
                 ret = 0
             }
@@ -240,29 +295,29 @@ class HaalthyService:NSObject{
         return ret
     }
     
-    func getUsername(email:String)-> String{
+    func getUsername(_ email:String)-> String{
         var username: String = ""
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         if accessToken != nil{
             let urlPath: String = getUsernameURL + "?access_token=" + (accessToken as! String)
-            let parameters = NSDictionary(object: email, forKey: "username")
+            let parameters = NSDictionary(object: email, forKey: "username" as NSCopying)
             let jsonResult: NSDictionary = NetRequest.sharedInstance.POST_A(urlPath, parameters: parameters as! Dictionary<String, AnyObject>)
-            if (jsonResult.objectForKey("result") != nil) && (jsonResult.objectForKey("result") as! Int == 1) && (jsonResult.objectForKey("content") != nil) {
-                username = ((jsonResult ).objectForKey("content") as! NSDictionary).objectForKey("result") as! String
+            if (jsonResult.object(forKey: "result") != nil) && (jsonResult.object(forKey: "result") as! Int == 1) && (jsonResult.object(forKey: "content") != nil) {
+                username = ((jsonResult ).object(forKey: "content") as! NSDictionary).object(forKey: "result") as! String
             }
         }
         return username
     }
 
-    func getUsersByDisplayname(getMentionedUsernamesRequest: NSDictionary)->NSArray{
+    func getUsersByDisplayname(_ getMentionedUsernamesRequest: NSDictionary)->NSArray{
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         let urlPath: String = getUsersByDisplaynameURL + "?access_token=" + (accessToken as! String)
 
         let result = NetRequest.sharedInstance.POST_A(urlPath, parameters: getMentionedUsernamesRequest as! Dictionary<String, AnyObject>)
-        if (result.objectForKey("result") != nil) && ((result.objectForKey("result") as! Int) == 1) &&  (result.objectForKey("content") is NSArray){
-            return result.objectForKey("content") as! NSArray
+        if (result.object(forKey: "result") != nil) && ((result.object(forKey: "result") as! Int) == 1) &&  (result.object(forKey: "content") is NSArray){
+            return result.object(forKey: "content") as! NSArray
         }else{
             return []
         }
@@ -270,8 +325,8 @@ class HaalthyService:NSObject{
     
     func getClinicTrailList() -> NSArray{
         let result: NSDictionary = NetRequest.sharedInstance.GET_A(getClinicTrailListURL,  parameters: [:])
-        if (result.objectForKey("content") != nil) && (result.objectForKey("content") is NSArray){
-            return result.objectForKey("content") as! NSArray
+        if (result.object(forKey: "content") != nil) && (result.object(forKey: "content") is NSArray){
+            return result.object(forKey: "content") as! NSArray
         }else{
             return []
         }

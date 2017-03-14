@@ -22,8 +22,8 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        screenWidth = UIScreen.mainScreen().bounds.width
-        screenHeight = UIScreen.mainScreen().bounds.height
+        screenWidth = UIScreen.main.bounds.width
+        screenHeight = UIScreen.main.bounds.height
         // Do any additional setup after loading the view.
         self.loadTabItems()
     }
@@ -40,7 +40,7 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         let postVC = PostViewController()
         postVC.tabBarItem = UITabBarItem.init()
         postVC.tabBarItem.tag = 1
-        postVC.tabBarItem.enabled = false
+        postVC.tabBarItem.isEnabled = false
         
         let profile : UIStoryboard = UIStoryboard.init(name: "User", bundle: nil)
         
@@ -64,14 +64,13 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         self.initNotification()
         
         // 初始化加红点状态（个数）
-        
-        if keychainAccess.getPasscode(accessNSUserData) != nil {
+        if (keychainAccess.getPasscode(accessNSUserData) != nil) && (keychainAccess.getPasscode(usernameKeyChain) != nil) && (keychainAccess.getPasscode(passwordKeyChain) != nil ){
             
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadCommentBadgeCount)
+            UserDefaults.standard.set(false, forKey: unreadCommentBadgeCount)
             
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadFollowBadgeCount)
+            UserDefaults.standard.set(false, forKey: unreadFollowBadgeCount)
             
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: unreadMentionedBadgeCount)
+            UserDefaults.standard.set(false, forKey: unreadMentionedBadgeCount)
             
             self.getUnreadCommentCountFromServer()
             self.getUnreadFollowCountFromServer()
@@ -83,35 +82,35 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func addPostBtn() {
     
-        let postBtn = UIButton.init(type: UIButtonType.Custom)
+        let postBtn = UIButton.init(type: UIButtonType.custom)
         
         let barSize : CGSize = self.tabBar.frame.size;
-        postBtn.frame = CGRectMake(0, 0, barSize.height, barSize.height)
-        postBtn.center = CGPointMake(barSize.width * 0.5, barSize.height * 0.5)
+        postBtn.frame = CGRect(x: 0, y: 0, width: barSize.height, height: barSize.height)
+        postBtn.center = CGPoint(x: barSize.width * 0.5, y: barSize.height * 0.5)
         postBtn.layer.cornerRadius = 0.3
         
-        postBtn.setBackgroundImage(UIImage(named: "btn_post"), forState: UIControlState.Normal )
+        postBtn.setBackgroundImage(UIImage(named: "btn_post"), for: UIControlState() )
         self.tabBar .addSubview(postBtn)
         
-        postBtn.addTarget(self, action: "addPost", forControlEvents: UIControlEvents.TouchUpInside)
+        postBtn.addTarget(self, action: #selector(TabViewController.addPost), for: UIControlEvents.touchUpInside)
         
     }
     
     func addPost(){
-        var topVC = UIApplication.sharedApplication().keyWindow?.rootViewController
+        var topVC = UIApplication.shared.keyWindow?.rootViewController
         while topVC?.presentedViewController != nil {
             topVC = topVC?.presentedViewController
         }
         //add blur view
-        blurView.frame = CGRECT(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
-        blurView.backgroundColor = UIColor.clearColor()
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.ExtraLight)
+        blurView.frame = CGRECT(0, 0, UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        blurView.backgroundColor = UIColor.clear
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = CGRECT(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
+        blurEffectView.frame = CGRECT(0, 0, UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         blurView.addSubview(blurEffectView)
 
         //add transparent View
-        let transparentView = UIView(frame: CGRECT(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
+        let transparentView = UIView(frame: CGRECT(0, 0, UIScreen.main.bounds.width, UIScreen.main.bounds.height))
         transparentView.alpha = 0.6
         blurView.addSubview(transparentView)
         topVC?.view.addSubview(blurView)
@@ -121,9 +120,14 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         blurView.addSubview(addBtn("addQuestionBtn"))
         blurView.addSubview(addBtn("addMoodBtn"))
         blurView.addSubview(addBtn("cancelBtn"))
+        
+        blurView.addSubview(addLabel("addTreatmentBtn"))
+        blurView.addSubview(addLabel("addStatusBtn"))
+        blurView.addSubview(addLabel("addQuestionBtn"))
+        blurView.addSubview(addLabel("addMoodBtn"))
     }
     
-    func addBtn(btnName: String)->UIButton{
+    func addBtn(_ btnName: String)->UIButton{
         if screenWidth < 350 {
             //btn1
              btn1LeftSpace = CGFloat(55)
@@ -135,78 +139,103 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
              btn4RightSpace = CGFloat(55)
         }
         let btn = UIButton()
-        btn.backgroundColor = headerColor
+//        btn.backgroundColor = headerColor
         let backgroundImgView = UIImageView()
         if btnName == "addTreatmentBtn"{
             btn.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addTreatment")
-            btn.addTarget(self, action: "addTreatment:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.addTarget(self, action: #selector(TabViewController.addTreatment(_:)), for: UIControlEvents.touchUpInside)
+            btn.backgroundColor = UIColor.init(red: 64 / 255, green: 125 / 255, blue: 201 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addStatusBtn" {
             btn.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addStatus")
-            btn.addTarget(self, action: "addStatus:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.addTarget(self, action: #selector(TabViewController.addStatus(_:)), for: UIControlEvents.touchUpInside)
+            btn.backgroundColor = UIColor.init(red: 61 / 255, green: 208 / 255, blue: 221 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addQuestionBtn" {
             btn.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addQuestion")
-            btn.addTarget(self, action: "addQuestion:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.addTarget(self, action: #selector(TabViewController.addQuestion(_:)), for: UIControlEvents.touchUpInside)
+            btn.backgroundColor = UIColor.init(red: 89 / 255, green: 200 / 255, blue: 121 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "addMoodBtn" {
             btn.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace - addBtnW, width: addBtnW, height: addBtnW)
             backgroundImgView.image = UIImage(named: "btn_addMood")
-            btn.addTarget(self, action: "addMood:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.addTarget(self, action: #selector(TabViewController.addMood(_:)), for: UIControlEvents.touchUpInside)
+            btn.backgroundColor = UIColor.init(red: 255 / 255, green: 173 / 255, blue: 56 / 255, alpha: 1)
             backgroundImgView.frame = CGRECT(10, 10, btn.frame.width - 20, btn.frame.height - 20)
         }else if btnName == "cancelBtn" {
-            let cancelBtnMargin: CGFloat = 10
+            let cancelBtnMargin: CGFloat = 2
             let cancelBtnX: CGFloat = (screenWidth - cancelBtnW)/2.0
             btn.frame = CGRect(x: cancelBtnX - cancelBtnMargin, y: screenHeight - cancelBtnButtomSpace - cancelBtnW - cancelBtnMargin, width: cancelBtnW + cancelBtnMargin * 2, height: cancelBtnW + cancelBtnMargin * 2)
             backgroundImgView.frame = CGRECT(cancelBtnMargin + cancelBtnW/4, cancelBtnMargin + cancelBtnW/4, cancelBtnW/2, cancelBtnW/2)
             backgroundImgView.image = UIImage(named: "btn_cancelAdd")
-            btn.backgroundColor = UIColor.clearColor()
-            btn.addTarget(self, action: "cancel:", forControlEvents: UIControlEvents.TouchUpInside)
+            btn.backgroundColor = textInputViewPlaceholderColor
+            btn.addTarget(self, action: #selector(TabViewController.cancel(_:)), for: UIControlEvents.touchUpInside)
         }
         btn.layer.cornerRadius = btn.frame.width/2
         btn.layer.masksToBounds = true
-        backgroundImgView.contentMode = UIViewContentMode.ScaleAspectFit
+        backgroundImgView.contentMode = UIViewContentMode.scaleAspectFit
         btn.addSubview(backgroundImgView)
         return btn
     }
     
-    func addTreatment(sender: UIButton){
-        blurView.removeFromSuperview()
-        let storyboard = UIStoryboard(name: "Add", bundle: nil)
-        let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddTreatment")
-        self.presentViewController(addViewController, animated: true, completion: nil)
+    func addLabel(_ labelname: String)->UILabel{
+        let lbl = UILabel()
+        lbl.textColor = UIColor.init(red: 151 / 255, green: 151 / 255, blue: 151 / 255, alpha: 1)
+        lbl.font = UIFont.systemFont(ofSize: 9)
+        if labelname == "addTreatmentBtn"{
+            lbl.frame = CGRect(x: btn1LeftSpace, y: screenHeight - btn1ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "治疗方案"
+        }else if labelname == "addStatusBtn" {
+            lbl.frame = CGRect(x: btn2LeftSpace, y: screenHeight - btn2ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "病人状态"
+        }else if labelname == "addQuestionBtn" {
+            lbl.frame = CGRect(x: screenWidth - btn3RightSpace - addBtnW, y: screenHeight - btn3ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "提出问题"
+        }else if labelname == "addMoodBtn" {
+            lbl.frame = CGRect(x: screenWidth - btn4RightSpace - addBtnW, y: screenHeight - btn4ButtomSpace + 5, width: addBtnW, height: 10)
+            lbl.text = "发表心得"
+        }
+
+        return lbl
     }
     
-    func addStatus(sender: UIButton){
+    func addTreatment(_ sender: UIButton){
+        blurView.removeFromSuperview()
+        let storyboard = UIStoryboard(name: "Add", bundle: nil)
+        let addViewController = storyboard.instantiateViewController(withIdentifier: "AddTreatment")
+        self.present(addViewController, animated: true, completion: nil)
+    }
+    
+    func addStatus(_ sender: UIButton){
         //
         blurView.removeFromSuperview()
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
-        let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddPatientStatus")
-        self.presentViewController(addViewController, animated: true, completion: nil)
+        let addViewController = storyboard.instantiateViewController(withIdentifier: "AddPatientStatus")
+        self.present(addViewController, animated: true, completion: nil)
     }
     
-    func addQuestion(sender: UIButton){
+    func addQuestion(_ sender: UIButton){
         blurView.removeFromSuperview()
         //AddPost
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
-        let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostNavigationViewController
+        let addViewController = storyboard.instantiateViewController(withIdentifier: "AddPost") as! AddPostNavigationViewController
         addViewController.isQuestion = true
-        self.presentViewController(addViewController, animated: true, completion: nil)
+        self.present(addViewController, animated: true, completion: nil)
     }
     
-    func addMood(sender: UIButton){
+    func addMood(_ sender: UIButton){
         blurView.removeFromSuperview()
         //AddPost
         let storyboard = UIStoryboard(name: "Add", bundle: nil)
-        let addViewController = storyboard.instantiateViewControllerWithIdentifier("AddPost") as! AddPostNavigationViewController
+        let addViewController = storyboard.instantiateViewController(withIdentifier: "AddPost") as! AddPostNavigationViewController
         addViewController.isQuestion = false
-        self.presentViewController(addViewController, animated: true, completion: nil)
+        self.present(addViewController, animated: true, completion: nil)
     }
     
-    func cancel(sender: UIButton){
+    func cancel(_ sender: UIButton){
         blurView.removeFromSuperview()
     }
     // MARK: - set TabBar attributes
@@ -225,19 +254,19 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
         self.tabBar.addSubview(self.redDotBadge)
     }
     
-    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         
         self.curIndex = item.tag
     }
     
     // MARK: - Navigation 
     
-    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         
         let rootVC: UIViewController = navigationController.viewControllers[0]
         if rootVC != viewController {
         
-            viewController.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "btn_back"), style: UIBarButtonItemStyle.Plain, target: self, action: "callback")
+            viewController.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "btn_back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(TabViewController.callback))
         }
     }
     
@@ -245,31 +274,31 @@ class TabViewController: UITabBarController,UINavigationControllerDelegate {
     
     func callback() {
     
-        (self.viewControllers![self.selectedIndex] as! UINavigationController).popViewControllerAnimated(true)
+        (self.viewControllers![self.selectedIndex] as! UINavigationController).popViewController(animated: true)
     }
     
     // MARK: - 初始化通知
     
     func initNotification() {
     
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showRedDotBadge", name: addTabbarRedDotBadge, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "deleteRedDotBadge", name: deleteTabbarRedDotBadge, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(TabViewController.showRedDotBadge), name: NSNotification.Name(rawValue: addTabbarRedDotBadge), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(TabViewController.deleteRedDotBadge), name: NSNotification.Name(rawValue: deleteTabbarRedDotBadge), object: nil)
     }
     
     // MARK: 展示智囊圈badge
     
     func showRedDotBadge() {
     
-        let isComment: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadCommentBadgeCount)
+        let isComment: Bool = UserDefaults.standard.bool(forKey: unreadCommentBadgeCount)
         
-        let isFollow: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadFollowBadgeCount)
+        let isFollow: Bool = UserDefaults.standard.bool(forKey: unreadFollowBadgeCount)
         
-        let isMentioned: Bool = NSUserDefaults.standardUserDefaults().boolForKey(unreadMentionedBadgeCount)
+        let isMentioned: Bool = UserDefaults.standard.bool(forKey: unreadMentionedBadgeCount)
         
         if isComment || isFollow || isMentioned {
         
             //self.tabBar.items![0].badgeValue = ""
-            self.redDotBadge.showBadgeWithShowType(.Up)
+            self.redDotBadge.showBadge(withShowType: .up)
         
         }
         else {

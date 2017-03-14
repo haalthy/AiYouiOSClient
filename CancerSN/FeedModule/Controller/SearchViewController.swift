@@ -67,11 +67,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //        self.searchBar.becomeFirstResponder()
 //        
 //    }
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         initRefresh()
         getSuggestedUser()
@@ -101,7 +101,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - 初始化相关View
     
     func initContentView() {
-        self.typeView.hidden = true
+        self.typeView.isHidden = true
 
         self.searchViewController = UISearchController(searchResultsController: nil)
         self.searchViewController.searchResultsUpdater = self
@@ -113,16 +113,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
         //self.searchBar.becomeFirstResponder()
         
-        self.userBtn.setImage(UIImage(named: "btn_user_selected"), forState: .Selected)
-        self.userBtn.setImage(UIImage(named: "btn_user"), forState: .Normal)
+        self.userBtn.setImage(UIImage(named: "btn_user_selected"), for: .selected)
+        self.userBtn.setImage(UIImage(named: "btn_user"), for: UIControlState())
 
-        self.methodBtn.setImage(UIImage(named: "btn_manage"), forState: .Normal)
-        self.methodBtn.setImage(UIImage(named: "btn_manage_selected"), forState: .Selected)
+        self.methodBtn.setImage(UIImage(named: "btn_manage"), for: UIControlState())
+        self.methodBtn.setImage(UIImage(named: "btn_manage_selected"), for: .selected)
         
-        self.patientBtn.setImage(UIImage(named: "btn_patientData"), forState: .Normal)
-        self.patientBtn.setImage(UIImage(named: "btn_patientData_selected"), forState: .Selected)
+        self.patientBtn.setImage(UIImage(named: "btn_patientData"), for: UIControlState())
+        self.patientBtn.setImage(UIImage(named: "btn_patientData_selected"), for: .selected)
         
-        self.userBtn.selected = true
+        self.userBtn.isSelected = true
         
         self.curSelectedBtn = self.userBtn
         
@@ -133,18 +133,18 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func registerCell() {
     
-        self.tableView.registerClass(TreatmentCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
+        self.tableView.register(TreatmentCell.self, forCellReuseIdentifier: cellSearchTreatmentIdentifier)
         
-        self.tableView.registerNib(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
+        self.tableView.register(UINib(nibName: cellSearchUserIdentifier, bundle: nil), forCellReuseIdentifier: cellSearchUserIdentifier)
         
-        self.tableView.registerClass(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
+        self.tableView.register(ClinicCell.self, forCellReuseIdentifier: cellSearchClinicTrailIdentifier)
     }
     
     // MARK: - 功能方法
     
     // MARK: 搜索用户
     
-    @IBAction func searchUserAction(sender: UIButton) {
+    @IBAction func searchUserAction(_ sender: UIButton) {
         
         if self.curSelectedBtn == self.userBtn {
         
@@ -153,8 +153,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         else
         {
             self.searchViewController.searchBar.placeholder = "用户"
-            self.curSelectedBtn?.selected = false
-            self.userBtn.selected = true
+            self.curSelectedBtn?.isSelected = false
+            self.userBtn.isSelected = true
             self.curSelectedBtn = self.userBtn
             self.searchType = 1
         }
@@ -162,7 +162,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索治疗方案
     
-    @IBAction func searchMethodAction(sender: UIButton) {
+    @IBAction func searchMethodAction(_ sender: UIButton) {
         
         if self.curSelectedBtn == self.methodBtn {
         
@@ -170,8 +170,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else {
             self.searchViewController.searchBar.placeholder = "治疗方案"
-            self.curSelectedBtn?.selected = false
-            self.methodBtn.selected = true
+            self.curSelectedBtn?.isSelected = false
+            self.methodBtn.isSelected = true
             self.curSelectedBtn = self.methodBtn
             self.searchType = 2
         }
@@ -179,7 +179,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索临床数据
     
-    @IBAction func searchPatientAction(sender: UIButton) {
+    @IBAction func searchPatientAction(_ sender: UIButton) {
         
         if self.curSelectedBtn == self.patientBtn {
         
@@ -188,8 +188,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         else {
         
             self.searchViewController.searchBar.placeholder = "临床数据"
-            self.curSelectedBtn?.selected = false
-            self.patientBtn.selected = true
+            self.curSelectedBtn?.isSelected = false
+            self.patientBtn.isSelected = true
             self.curSelectedBtn = self.patientBtn
             self.searchType = 3
         }
@@ -212,15 +212,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //获得推荐用户列表
     func getSuggestedUser() {
         getAccessToken.getAccessToken()
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         var urlStr: String = ""
-        var parameters = [:]
+        var parameters = Dictionary<String, Any>()
         if accessToken != nil {
             urlStr = getSuggestUserByProfileURL + "?access_token=" + (accessToken as! String)
             parameters = ["page" : page, "count" : count, "username" : keychainAccess.getPasscode(usernameKeyChain)!]
         }else{
             urlStr = getSuggestUserByTagsURL
-            let tags = NSUserDefaults.standardUserDefaults().objectForKey(favTagsNSUserData) as! NSArray
+            let tags = UserDefaults.standard.object(forKey: favTagsNSUserData) as! NSArray
 //            let tagIDs = NSMutableArray()
 //            for tag in tags {
 //                tagIDs.addObject(((tag as! NSDictionary).objectForKey("tagId")!) as! Int)
@@ -231,15 +231,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         NetRequest.sharedInstance.POST(urlStr, parameters: parameters as! Dictionary<String, AnyObject>, success: { (content, message) -> Void in
             self.tableView.mj_footer.endRefreshing()
 //            self.searchDataArr?.removeAllObjects()
-            let dict: NSArray = content as! NSArray
-            let userData = UserModel.jsonToModelList(dict as Array) as! Array<UserModel>
+            let dict = content as! Array<Any>
+            let userData = UserModel.jsonToModelList(dict as AnyObject?) as! Array<UserModel>
             let appendDataArr = NSMutableArray(array: userData as NSArray)
-            self.searchDataArr?.addObjectsFromArray(appendDataArr as [AnyObject])
+            self.searchDataArr?.addObjects(from: appendDataArr as [AnyObject])
             self.tableView.reloadData()
 //            HudProgressManager.sharedInstance.dismissHud()
 //            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
-            self.typeView.hidden = true
-            self.page++
+            self.typeView.isHidden = true
+            self.page += 1
             }) { (content, message) -> Void in
                 self.tableView.mj_footer.endRefreshing()
 //                HudProgressManager.sharedInstance.dismissHud()
@@ -249,19 +249,19 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索用户
     
-    func getUserDataFromServer(parameters: Dictionary<String, AnyObject>) {
+    func getUserDataFromServer(_ parameters: Dictionary<String, AnyObject>) {
 //        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
         NetRequest.sharedInstance.POST(searchUserURL, parameters: parameters, success: { (content, message) -> Void in
 //            self.searchDataArr?.removeAllObjects()
             let dict: NSArray = content as! NSArray
-            let userData = UserModel.jsonToModelList(dict as Array) as! Array<UserModel>
+            let userData = UserModel.jsonToModelList(dict as NSObject) as! Array<UserModel>
             let searchResult = NSMutableArray(array: userData as NSArray)
-            self.searchDataArr?.addObjectsFromArray(searchResult as [AnyObject])
+            self.searchDataArr?.addObjects(from: searchResult as [AnyObject])
             self.tableView.reloadData()
 //            HudProgressManager.sharedInstance.dismissHud()
 //            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
-            self.typeView.hidden = true
-            self.page++
+            self.typeView.isHidden = true
+            self.page += 1
             self.tableView.mj_footer.endRefreshing()
 
         }) { (content, message) -> Void in
@@ -274,7 +274,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索治疗方案
     
-    func getCureFuncDataFromServer(parameters: Dictionary<String, AnyObject>) {
+    func getCureFuncDataFromServer(_ parameters: Dictionary<String, AnyObject>) {
 
 //        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
 
@@ -285,12 +285,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
 //            self.searchDataArr?.removeAllObjects()
             let dict: NSArray = content as! NSArray
-            let homeData = TreatmentModel.jsonToModelList(dict as Array) as! Array<TreatmentModel>
-            self.searchDataArr?.addObjectsFromArray(homeData)
+            let homeData = TreatmentModel.jsonToModelList(dict as NSObject) as! Array<TreatmentModel>
+            self.searchDataArr?.addObjects(from: homeData)
             //            self.changeDataToFrame(homeData)
             self.tableView.reloadData()
-            self.typeView.hidden = true
-            self.page++
+            self.typeView.isHidden = true
+            self.page += 1
             }) { (content, message) -> Void in
                 self.tableView.mj_footer.endRefreshing()
 
@@ -301,7 +301,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: 搜索临床数据
     
-    func getPatientDataFromServer(parameters: Dictionary<String, AnyObject>) {
+    func getPatientDataFromServer(_ parameters: Dictionary<String, AnyObject>) {
 
 //        HudProgressManager.sharedInstance.showHudProgress(self, title: "")
 
@@ -310,23 +310,23 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.tableView.mj_footer.endRefreshing()
 
             let dict: NSArray = content as! NSArray
-            let homeData = ClinicTrailObj.jsonToModelList(dict as Array) as! Array<ClinicTrailObj>
+            let homeData = ClinicTrailObj.jsonToModelList(dict as NSObject) as! Array<ClinicTrailObj>
             
-            self.searchDataArr?.addObjectsFromArray(homeData)
+            self.searchDataArr?.addObjects(from: homeData)
             self.heightForCinicInfo.removeAllObjects()
             var index = 0
             for data in self.searchDataArr! {
                 let clinicTrial = data as! ClinicTrailObj
                 let clinicStr: String = clinicTrial.subGroup + " " + clinicTrial.stage + "\n" + clinicTrial.effect + "\n" + clinicTrial.sideEffect + "\n" + clinicTrial.researchInfo
-                let clinicInfoHeight: CGFloat = clinicStr.sizeWithFont(UIFont.systemFontOfSize(13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.max)).height
-                self.heightForCinicInfo.setObject(clinicInfoHeight, forKey: index)
-                index++
+                let clinicInfoHeight: CGFloat = clinicStr.sizeWithFont(UIFont.systemFont(ofSize: 13), maxSize: CGSize(width: screenWidth - 30, height: CGFloat.greatestFiniteMagnitude)).height
+                self.heightForCinicInfo.setObject(clinicInfoHeight, forKey: index as NSCopying)
+                index += 1
             }
             self.tableView.reloadData()
 //            HudProgressManager.sharedInstance.dismissHud()
 //            HudProgressManager.sharedInstance.showSuccessHudProgress(self, title: "搜索成功")
-            self.typeView.hidden = true
-            self.page++
+            self.typeView.isHidden = true
+            self.page += 1
             }) { (content, message) -> Void in
                 self.tableView.mj_footer.endRefreshing()
 
@@ -337,48 +337,48 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     // MARK: - UISearchResultsUpdating
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         
         
     }
     
-    func willDismissSearchController(searchController: UISearchController) {
+    func willDismissSearchController(_ searchController: UISearchController) {
         
         self.searchViewController.searchBar.resignFirstResponder()
         
-        self.typeView.hidden = true
+        self.typeView.isHidden = true
     }
     
-    func willPresentSearchController(searchController: UISearchController) {
+    func willPresentSearchController(_ searchController: UISearchController) {
         
-        self.typeView.hidden = false
+        self.typeView.isHidden = false
     }
     
     // MARK: - searchBar Delegate
     
     
     
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 //        self.typeView.hidden = false
         //self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         return true
     }
     
-    func getResult(searchStr: String){
+    func getResult(_ searchStr: String){
         var username: String = ""
         
         if keychainAccess.getPasscode(usernameKeyChain) != nil {
             username = keychainAccess.getPasscode(usernameKeyChain) as! String
         }
         let parameters: Dictionary<String, AnyObject> = [
-            "searchString" : searchStr,
-            "page" : page,
-            "count" : count,
-            "username": username
+            "searchString" : searchStr as AnyObject,
+            "page" : page as AnyObject,
+            "count" : count as AnyObject,
+            "username": username as AnyObject
         ]
         
         switch self.searchType {
@@ -397,7 +397,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.searchDataArr?.removeAllObjects()
         self.heightForCinicInfo.removeAllObjects()
         page = 0
@@ -417,17 +417,17 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: - Table view data source
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.searchDataArr!.count
         
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         var height: CGFloat = 70
         switch self.searchType {
@@ -441,7 +441,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             height = 120
             break
         case 3:
-            height = (self.heightForCinicInfo.objectForKey(indexPath.row) as! CGFloat) + 70
+            height = (self.heightForCinicInfo.object(forKey: indexPath.row) as! CGFloat) + 70
             break
             
         default:
@@ -452,11 +452,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if self.searchType == 2 {
         
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchTreatmentIdentifier, forIndexPath: indexPath) as! TreatmentCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellSearchTreatmentIdentifier, for: indexPath) as! TreatmentCell
             
 //            
 //            let feedFrame: PostFeedFrame = self.searchDataArr![indexPath.row] as! PostFeedFrame
@@ -468,7 +468,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else if self.searchType == 3 {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchClinicTrailIdentifier, forIndexPath: indexPath) as! ClinicCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellSearchClinicTrailIdentifier, for: indexPath) as! ClinicCell
 
             cell.clinicTrial = self.searchDataArr![indexPath.row] as! ClinicTrailObj
 //            cell.clinicCellDelegate = self
@@ -477,7 +477,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         else {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellSearchUserIdentifier, forIndexPath: indexPath) as! UserCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellSearchUserIdentifier, for: indexPath) as! UserCell
             let userModel: UserModel = self.searchDataArr![indexPath.row] as! UserModel
 //            for followingUser in self.followingList {
 //                if followingUser.username == userModel.username {
@@ -500,46 +500,46 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //        self.searchDisplayController?.searchResultsTableView.endUpdates()
 //    }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         getAccessToken.getAccessToken()
         
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         
         if accessToken != nil {
             
             self.searchViewController.searchBar.resignFirstResponder()
             
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
             
             let storyboard = UIStoryboard(name: "User", bundle: nil)
-            let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
+            let userProfileController = storyboard.instantiateViewController(withIdentifier: "UserContent") as! UserProfileViewController
             let info = self.searchDataArr![indexPath.row]
             if info is UserModel {
-                userProfileController.profileOwnername = (info as! UserModel).username
+                userProfileController.profileOwnername = (info as! UserModel).username as NSString?
                 self.navigationController?.pushViewController(userProfileController, animated: true)
             }
             if info is TreatmentModel{
-                userProfileController.profileOwnername = (info as! TreatmentModel).username
+                userProfileController.profileOwnername = (info as! TreatmentModel).username as NSString?
                 self.navigationController?.pushViewController(userProfileController, animated: true)
             }
         }else{
-            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .default) { (action) in
 
             }
             
             alertController.addAction(cancelAction)
-            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+            let loginAction = UIAlertAction(title: "登陆", style: .cancel) { (action) in
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
-                self.presentViewController(controller, animated: true, completion: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as UIViewController
+                self.present(controller, animated: true, completion: nil)
             }
             alertController.addAction(loginAction)
             
             
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
@@ -562,22 +562,22 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //        self.typeView.hidden = false
 //    }
     func unlogin(){
-        let alertController = UIAlertController(title: "需要登录才能关注该用户", message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "需要登录才能关注该用户", message: nil, preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+        let cancelAction = UIAlertAction(title: "取消", style: .default) { (action) in
 
         }
         
         alertController.addAction(cancelAction)
-        let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+        let loginAction = UIAlertAction(title: "登陆", style: .cancel) { (action) in
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
-            self.presentViewController(controller, animated: true, completion: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as UIViewController
+            self.present(controller, animated: true, completion: nil)
         }
         alertController.addAction(loginAction)
         
         
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
             // ...
         }
     }

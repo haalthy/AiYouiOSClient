@@ -10,8 +10,7 @@ import Foundation
 
 //restful service URL setting
 
-//let haalthyServiceRestfulURL : String = "http://127.0.0.1:8080/haalthyservice/"
-let haalthyServiceRestfulURL : String = "http://content.haalthy.com/"
+let haalthyServiceRestfulURL : String = "http://54.202.104.99:8080/haalthyservice/"
 
 // MARK: - 智囊圈模块
 
@@ -116,8 +115,11 @@ let getTopTagListURL = haalthyServiceRestfulURL + "open/tag/toplist"
 let getPostsByUsername = haalthyServiceRestfulURL + "security/post/posts/username"
 let getClinicTrailListURL = haalthyServiceRestfulURL + "open/clinictrail/list"
 let addPostImageURL = haalthyServiceRestfulURL + "security/post/appendimage"
+let addPatientImageURL =  haalthyServiceRestfulURL + "security/patient/appendimage"
 
 let getCinicTrialDrugType = haalthyServiceRestfulURL + "open/clinictrail/drugtype"
 
 let getCinicTrialSubGroup = haalthyServiceRestfulURL + "open/clinictrail/subgroup"
+
+let getPatientStatusByID = haalthyServiceRestfulURL + "open/patient/patientstatus"
 

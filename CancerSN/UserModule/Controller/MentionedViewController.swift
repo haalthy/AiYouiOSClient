@@ -33,7 +33,7 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
         self.initContentView()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // 重置未读个数为0
@@ -60,7 +60,7 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     
     func registerCell() {
         
-        self.tableView.registerNib(UINib(nibName: cellMentionedIdentifier, bundle: nil), forCellReuseIdentifier: cellMentionedIdentifier)
+        self.tableView.register(UINib(nibName: cellMentionedIdentifier, bundle: nil), forCellReuseIdentifier: cellMentionedIdentifier)
     }
     
     // MARK: - 初始化刷新
@@ -80,15 +80,15 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     // MARK: - 功能方法
-    func getParamters(since_id: Int, max_id: Int, pageIndex: Int) -> Dictionary<String, AnyObject> {
+    func getParamters(_ since_id: Int, max_id: Int, pageIndex: Int) -> Dictionary<String, AnyObject> {
     
         let keychainAccess = KeychainAccess()
         
         let parameters: Dictionary<String, AnyObject> = [
-            "since_id" : since_id,
-            "max_id" : max_id,
-            "count" : self.countPerPage,
-            "page" : pageIndex,
+            "since_id" : since_id as AnyObject,
+            "max_id" : max_id as AnyObject,
+            "count" : self.countPerPage as AnyObject,
+            "page" : pageIndex as AnyObject,
             "username" : keychainAccess.getPasscode(usernameKeyChain)!]
         return parameters
     }
@@ -107,7 +107,7 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
             
             let mentioned: NSArray = content as! NSArray
             
-            let mentionedArr = PostFeedStatus.jsonToModelList(mentioned as Array) as! Array<PostFeedStatus>
+            let mentionedArr = PostFeedStatus.jsonToModelList(mentioned) as! Array<PostFeedStatus>
             if mentionedArr.count > 0 {
                 self.maxID = mentionedArr[0].postID
                 for dataItem in mentionedArr {
@@ -130,14 +130,14 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     
     func getMoreMentionedDataFromServer() {
     
-        self.pageIndex++
+        self.pageIndex += 1
 
         NetRequest.sharedInstance.POST(userMentionedURL, isToken: true, parameters: self.getParamters(0, max_id: self.maxID, pageIndex: self.pageIndex), success: { (content, message) -> Void in
             
             
             let mentioned: NSArray = content as! NSArray
             
-            let mentionedArr = PostFeedStatus.jsonToModelList(mentioned as Array) as! Array<PostFeedStatus>
+            let mentionedArr = PostFeedStatus.jsonToModelList(mentioned) as! Array<PostFeedStatus>
             
             if mentionedArr.count == 0   {
             
@@ -146,7 +146,7 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
             else {
             
                 self.tableView.mj_footer.endRefreshing()
-                self.mentionedData.addObjectsFromArray(mentionedArr)
+                self.mentionedData.addObjects(from: mentionedArr)
                 
                 self.tableView.reloadData()
 
@@ -176,25 +176,25 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
     
     // MARK: - Table view data source
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.mentionedData.count
     
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         return 70
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellMentionedIdentifier)! as! MentionedCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellMentionedIdentifier)! as! MentionedCell
         
         let feedModel: PostFeedStatus = self.mentionedData[indexPath.row] as! PostFeedStatus
         cell.setContentViewAction(feedModel)
@@ -202,9 +202,9 @@ class MentionedViewController: UIViewController, UITableViewDataSource, UITableV
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }

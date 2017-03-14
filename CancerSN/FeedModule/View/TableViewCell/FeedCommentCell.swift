@@ -34,16 +34,16 @@ class FeedCommentCell: UITableViewCell {
         self.userPortrait.clipsToBounds = true
     }
     
-    func showFeedInfo(commentModel: CommentModel) {
+    func showFeedInfo(_ commentModel: CommentModel) {
         
         self.userNickname.text = commentModel.displayname
         let imageURL = commentModel.imageURL + "@80h_80w_1e"
         self.userPortrait.addImageCache(imageURL, placeHolder: placeHolderStr)
-        self.dateLabel.text = NSDate.createDate(commentModel.dateInserted / 1000)?.fullDescription()
+        self.dateLabel.text = Foundation.Date.createDate(commentModel.dateInserted / 1000)?.fullDescription()
         self.feedContentLabel.text = commentModel.body
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

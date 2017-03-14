@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SettingNickVCDelegate{
-    func updateDisplayname(displayname: String)
+    func updateDisplayname(_ displayname: String)
 }
 
 class UpdateNickTableViewController: UITableViewController, UITextFieldDelegate {
@@ -22,7 +22,7 @@ class UpdateNickTableViewController: UITableViewController, UITextFieldDelegate 
     let textInputLeftSpace = CGFloat(85)
     let textInput = UITextField()
     
-    let cellTextFont = UIFont.systemFontOfSize(13)
+    let cellTextFont = UIFont.systemFont(ofSize: 13)
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -36,27 +36,27 @@ class UpdateNickTableViewController: UITableViewController, UITextFieldDelegate 
         if (textInput.text != nil) && (textInput.text != "") {
             settingNickVCDelegate?.updateDisplayname(textInput.text!)
         }
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 1
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return heightForRow
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
         // Configure the cell...
         cell.textLabel?.textColor = cellTextColor
@@ -71,7 +71,7 @@ class UpdateNickTableViewController: UITableViewController, UITextFieldDelegate 
         return cell
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }

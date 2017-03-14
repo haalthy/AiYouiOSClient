@@ -1,38 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14F27" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Broadcast" syncable="YES">
-        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="countBookmarks" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="countComments" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="countViews" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="dateInserted" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="dateUpdated" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 4.3">
+    <entity name="ClinicData" syncable="YES">
+        <attribute name="clinicDataID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="clinicItemName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="clinicItemValue" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="insertDate" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="insertUsername" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isBroadcast" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ownerName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="postID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="statusID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="ClinicTrial" syncable="YES">
+        <attribute name="drugName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="drugType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="effect" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="original" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="researchInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sideEffect" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subGroup" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Feed" syncable="YES">
+        <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cancerType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="clinicReport" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="closed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="countBookmarks" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="countComments" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="countViews" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="dateInserted" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="dateUpdated" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="dateInserted" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="dateUpdated" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="displayname" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="geneticMutation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hasImage" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="header" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="highlight" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="insertUsername" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="insertUserProfile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isActive" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="isBroadcast" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ownerName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="patientProfile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="metastasis" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="moreInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pathological" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="patientStatusID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="portraitURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="postID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="stage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topCommentBody" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="treatmentID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Following" syncable="YES">
@@ -43,25 +59,65 @@
         <attribute name="userProfile" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="PatientStatus" syncable="YES">
-        <attribute name="clinicReport" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="insertedDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="hasImage" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="insertedDate" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="isPosted" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ownerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scanData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="statusDesc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="statusID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Tag" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rankInType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tagId" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="typeName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="typeRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Treatment" syncable="YES">
-        <attribute name="beginDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="beginDate" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="dosage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="endDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="isPosted" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ownerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="treatmentID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="treatmentName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="TreatmentFormat" syncable="YES">
+        <attribute name="treatmentID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="treatmentName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="treatmentType" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="User" syncable="YES">
+        <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="cancerType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="displayname" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="followCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="geneticMutation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isSmoking" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="metastasis" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pathological" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updateDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userType" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Broadcast" positionX="-54" positionY="72" width="128" height="255"/>
-        <element name="Feed" positionX="-63" positionY="-18" width="128" height="300"/>
+        <element name="ClinicData" positionX="9" positionY="189" width="128" height="135"/>
+        <element name="ClinicTrial" positionX="-36" positionY="153" width="128" height="163"/>
+        <element name="Feed" positionX="-63" positionY="-18" width="128" height="510"/>
         <element name="Following" positionX="-54" positionY="81" width="128" height="120"/>
-        <element name="PatientStatus" positionX="-54" positionY="126" width="128" height="120"/>
-        <element name="Treatment" positionX="-54" positionY="126" width="128" height="135"/>
+        <element name="PatientStatus" positionX="-54" positionY="126" width="128" height="163"/>
+        <element name="Tag" positionX="-45" positionY="144" width="128" height="135"/>
+        <element name="Treatment" positionX="-54" positionY="126" width="128" height="148"/>
+        <element name="TreatmentFormat" positionX="9" positionY="171" width="128" height="90"/>
+        <element name="User" positionX="-54" positionY="135" width="128" height="298"/>
     </elements>
 </model>

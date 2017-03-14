@@ -23,7 +23,7 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
     
     // 自定义变量
     
@@ -39,10 +39,10 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         getAccessToken.getAccessToken()
-        if profileSet.objectForKey(accessNSUserData) == nil{
+        if profileSet.object(forKey: accessNSUserData) == nil{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
-            self.presentViewController(rootController, animated: true, completion: nil)
+            let rootController = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as! UINavigationController
+            self.present(rootController, animated: true, completion: nil)
         }else{
             initVariables()
             initRefresh()
@@ -58,28 +58,28 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         postList = NSMutableArray()
         postTableView = self.tableView
         
-        self.tableView.registerClass(PostTableViewCell.self, forCellReuseIdentifier: cellPostIdentifier)
+        self.tableView.register(PostTableViewCell.self, forCellReuseIdentifier: cellPostIdentifier)
 
     }
     
     func getFeedListURL()->String{
         var feedListURL: String = ""
-        let accessToken = profileSet.objectForKey(accessNSUserData)
+        let accessToken = profileSet.object(forKey: accessNSUserData)
         if accessToken != nil{
             feedListURL = getPostsByUsername + "?access_token=" + (accessToken as! String)
         }
         return feedListURL
     }
     
-    func getFeedListParameter(since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
+    func getFeedListParameter(_ since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
         let parameter = NSMutableDictionary()
-        let accessToken = profileSet.objectForKey(accessNSUserData)
+        let accessToken = profileSet.object(forKey: accessNSUserData)
         if accessToken != nil{
-            parameter.setObject(since_id, forKey: "since_id")
-            parameter.setObject(max_id, forKey: "max_id")
-            parameter.setObject(countPerPage, forKey: "count")
-            parameter.setObject(pageIndex, forKey: "page")
-            parameter.setObject(username, forKey: "username")
+            parameter.setObject(since_id, forKey: "since_id" as NSCopying)
+            parameter.setObject(max_id, forKey: "max_id" as NSCopying)
+            parameter.setObject(countPerPage, forKey: "count" as NSCopying)
+            parameter.setObject(pageIndex, forKey: "page" as NSCopying)
+            parameter.setObject(username, forKey: "username" as NSCopying)
         }
         return parameter
     }
@@ -92,12 +92,12 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        headerView.layer.borderWidth = 0.7
 //        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
         
-        self.commentListBtn.setTitle("你有" + String(self.commentCount) + "条新评论", forState: .Normal)
+        self.commentListBtn.setTitle("你有" + String(self.commentCount) + "条新评论", for: UIControlState())
         
         // tableView 注册
-        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
+        self.tableView.register(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "changeBtnShowing", name: "refreshCommentNoti", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PostsViewController.changeBtnShowing), name: NSNotification.Name(rawValue: "refreshCommentNoti"), object: nil)
         
         self.tableView.mj_header.beginRefreshing()
     }
@@ -130,14 +130,14 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.tableView.mj_header.endRefreshing()
                 self.postList.removeAllObjects()
                 let dict: NSArray = content as! NSArray
-                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+                let homeData = PostFeedStatus.jsonToModelList(dict) as! Array<PostFeedStatus>
                 if homeData.count > 0 {
                     self.maxID = homeData[0].postID
                     for dataItem in homeData {
                         self.maxID = self.maxID > dataItem.postID ? self.maxID: dataItem.postID
                     }
                 }
-                self.postList.addObjectsFromArray(homeData)
+                self.postList.addObjects(from: homeData)
                 self.tableView.reloadData()
                 
                 
@@ -155,14 +155,14 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-                self.pageIndex++
+                self.pageIndex += 1
                 
                 self.tableView.mj_footer.endRefreshing()
                 
                 
                 let dict: NSArray = content as! NSArray
-                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
-                self.postList.addObjectsFromArray(homeData)
+                let homeData = PostFeedStatus.jsonToModelList(dict) as! Array<PostFeedStatus>
+                self.postList.addObjects(from: homeData)
                 self.tableView.reloadData()
                 
             }) { (content, message) -> Void in
@@ -179,48 +179,48 @@ class PostsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         self.commentCount = 0
     
-        self.commentListBtn.setTitle("没有未读评论", forState: .Normal)
+        self.commentListBtn.setTitle("没有未读评论", for: UIControlState())
     }
     
-    @IBAction func commentListAction(sender: AnyObject) {
+    @IBAction func commentListAction(_ sender: AnyObject) {
         
-        self.performSegueWithIdentifier("EnterCommentListView", sender: self)
+        self.performSegue(withIdentifier: "EnterCommentListView", sender: self)
     }
 
     // MARK: - Table view data source
 
-     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return self.postList.count
     }
 
     
-     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellPostIdentifier, forIndexPath: indexPath) as! PostTableViewCell
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellPostIdentifier, for: indexPath) as! PostTableViewCell
         
         cell.post = postList[indexPath.row] as! PostFeedStatus
         return cell
     }
     
-     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let postCellFrame: PostCellFrame = PostCellFrame()
         postCellFrame.post = postList[indexPath.row] as! PostFeedStatus
         return postCellFrame.cellHeight + 30
     }
     
-     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let feedStatus: PostFeedStatus = postList[indexPath.row] as! PostFeedStatus
         
         let storyBoard: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
-        let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewController(withIdentifier: "FeedDetailView") as! FeedDetailViewController
         feedDetailVC.feedId = feedStatus.postID
         self.navigationController?.pushViewController(feedDetailVC, animated: true)
 

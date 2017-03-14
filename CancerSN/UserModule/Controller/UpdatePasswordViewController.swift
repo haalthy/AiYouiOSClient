@@ -25,7 +25,7 @@ class UpdatePasswordViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerHeight = UIApplication.sharedApplication().statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
+        headerHeight = UIApplication.shared.statusBarFrame.height + (self.navigationController?.navigationBar.frame.height)!
         initContentView()
     }
     
@@ -34,15 +34,15 @@ class UpdatePasswordViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.hidden = false
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     func initContentView(){
         //textInputView
         let textInputView: UIView = UIView(frame: CGRect(x: 0, y: headerHeight, width: screenWidth, height: textFieldHeight * CGFloat(textFieldLineCount) + 2))
         textInputView.layer.cornerRadius = 4
-        textInputView.backgroundColor = UIColor.whiteColor()
+        textInputView.backgroundColor = UIColor.white
         
         //pwd
         password.frame = CGRect(x: textFieldLeftSpace, y: 0, width: textInputView.frame.width, height: textFieldHeight )
@@ -67,11 +67,11 @@ class UpdatePasswordViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    @IBAction func resetPassword(sender: UIButton){
+    @IBAction func resetPassword(_ sender: UIButton){
         if password.text != reenterpassword.text {
-            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "提示", message: "密码输入不一致，请重新输入", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }else{
             let passwordStr: String = publicService.passwordEncode(password.text!)
 
@@ -82,11 +82,11 @@ class UpdatePasswordViewController: UIViewController, UITextFieldDelegate {
                 print("密码重置失败，请稍候再试！")
             }
             //            self.dismissViewControllerAnimated(true, completion: nil)
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }

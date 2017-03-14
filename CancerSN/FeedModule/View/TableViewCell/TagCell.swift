@@ -7,16 +7,29 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 
 protocol SelectedTagVCDelegate {
-    func selectedTag(tag: String)
-    func unselectedTag(tag: String)
+    func selectedTag(_ tag: String)
+    func unselectedTag(_ tag: String)
 }
 
 // 相关常量
 
-let tagFont: UIFont = UIFont.systemFontOfSize(15)
+let tagFont: UIFont = UIFont.systemFont(ofSize: 15)
 
 // 边框颜色
 let tagBorderColor: UIColor = RGB(61, 208, 221)
@@ -45,7 +58,7 @@ class TagCell: UITableViewCell {
         self.contentView.backgroundColor = RGB(242, 248, 248)
 
     }
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -64,28 +77,28 @@ class TagCell: UITableViewCell {
     
     func layoutTags() {
     
-        
         // 控制换行
         var rowStatus: Int = 0
         var row: Int = 0
         
-        for var i = 0; i < tagArr?.count; i++ {
-        
+        for i in 0..<Int((tagArr?.count)!){
             var lastBtnMaxX: CGFloat = 0
             if self.contentView.subviews.count != 0 && i != 0 {
             
                 let btn: UIButton = self.contentView.subviews.last as! UIButton
-                lastBtnMaxX = CGRectGetMaxX(btn.frame)
+                lastBtnMaxX = btn.frame.maxX
             }
             
             let nameStr = self.tagArr![i].name
-            let tagBtn: UIButton = UIButton(type: .Custom)
-            let tagW: CGFloat = nameStr.sizeWithFont(tagFont, maxSize: CGSize(width: CGFloat.max, height: 15)).width + 22
+            let tagBtn: UIButton = UIButton(type: .custom)
+            
+            let tagW: CGFloat
+               tagW = (nameStr?.sizeWithFont(tagFont, maxSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 15)).width)! + 22
 
             if tagW + lastBtnMaxX + 15 >= SCREEN_WIDTH {
             
                 rowStatus = 0
-                row++
+                row += 1
             }
             else {
                 rowStatus = 1
@@ -94,22 +107,21 @@ class TagCell: UITableViewCell {
             let tagY: CGFloat = CGFloat(10 + 35 * row)
             let tagH: CGFloat = 25
             tagBtn.frame = CGRECT(tagX, tagY, tagW, tagH)
-            tagBtn.titleLabel?.textAlignment = NSTextAlignment.Center
-            tagBtn.setTitle(nameStr, forState: .Normal)
-            tagBtn.setTitleColor(tagBorderColor, forState: .Normal)
-            tagBtn.backgroundColor = UIColor.clearColor()
+            tagBtn.titleLabel?.textAlignment = NSTextAlignment.center
+            tagBtn.setTitle(nameStr, for: UIControlState())
+            tagBtn.setTitleColor(tagBorderColor, for: UIControlState())
+            tagBtn.backgroundColor = UIColor.clear
             tagBtn.layer.cornerRadius = 2.0
-            tagBtn.layer.borderColor = tagBorderColor.CGColor
+            tagBtn.layer.borderColor = tagBorderColor.cgColor
             tagBtn.layer.borderWidth = 1.0
-            tagBtn.titleLabel?.font = UIFont.systemFontOfSize(13)
-            tagBtn.addTarget(self, action: "selectedTag:", forControlEvents: UIControlEvents.TouchUpInside)
+            tagBtn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+            tagBtn.addTarget(self, action: #selector(TagCell.selectedTag(_:)), for: UIControlEvents.touchUpInside)
             self.contentView.addSubview(tagBtn)
             
             // 获取cell高度
             if i == (tagArr?.count)! - 1 {
             
                 self.tagCellHeight = tagY + tagH + 10
-                print(self.tagCellHeight)
             }
             
         }
@@ -117,19 +129,19 @@ class TagCell: UITableViewCell {
     
     // MARK: - 功能方法
     
-    func selectedTag(btn: UIButton) {
+    func selectedTag(_ btn: UIButton) {
         
-        btn.selected = !btn.selected
-        if btn.selected {
+        btn.isSelected = !btn.isSelected
+        if btn.isSelected {
         
             btn.backgroundColor = tagBorderColor
-            btn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Selected)
+            btn.setTitleColor(UIColor.white, for: UIControlState.selected)
             selectedTagVCDelegate?.selectedTag((btn.titleLabel?.text)!)
         }
         else {
         
-            btn.backgroundColor = UIColor.clearColor()
-            btn.setTitleColor(tagBorderColor, forState: UIControlState.Normal)
+            btn.backgroundColor = UIColor.clear
+            btn.setTitleColor(tagBorderColor, for: UIControlState())
             selectedTagVCDelegate?.unselectedTag((btn.titleLabel?.text)!)
         }
         

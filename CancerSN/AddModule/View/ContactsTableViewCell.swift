@@ -9,8 +9,8 @@
 import UIKit
 
 protocol CheckedBtnDelegate {
-    func checked(displayname: String)
-    func unchecked(displayname: String)
+    func checked(_ displayname: String)
+    func unchecked(_ displayname: String)
 }
 
 class ContactsTableViewCell: UITableViewCell {
@@ -28,7 +28,7 @@ class ContactsTableViewCell: UITableViewCell {
     let portraitLength: CGFloat = 40
     
     let nameLabelLeftSpace: CGFloat = 105
-    let nameLabelFont: UIFont = UIFont.systemFontOfSize(14)
+    let nameLabelFont: UIFont = UIFont.systemFont(ofSize: 14)
     let nameLabelTextColor = defaultTextColor
     
     let checkBtn = UIButton()
@@ -42,12 +42,12 @@ class ContactsTableViewCell: UITableViewCell {
     func updateUI(){
         //checkBtn
         checkBtn.frame = CGRect(x: checkBtnLeftSpace, y: checkBtnTopSpace, width: checkBtnLength, height: checkBtnLength)
-        checkBtn.layer.borderColor = checkBtnBorderColor.CGColor
+        checkBtn.layer.borderColor = checkBtnBorderColor.cgColor
         checkBtn.layer.borderWidth = checkBtnBorderWidth
         checkBtn.layer.cornerRadius = checkBtnLength / 2
         checkBtn.layer.masksToBounds = true
-        checkBtn.addTarget(self, action: "checkedUser:", forControlEvents: UIControlEvents.TouchUpInside)
-        checkBtn.backgroundColor = UIColor.whiteColor()
+        checkBtn.addTarget(self, action: #selector(ContactsTableViewCell.checkedUser(_:)), for: UIControlEvents.touchUpInside)
+        checkBtn.backgroundColor = UIColor.white
         self.addSubview(checkBtn)
         
         //portraitImage
@@ -55,8 +55,8 @@ class ContactsTableViewCell: UITableViewCell {
         portraitImageView.layer.cornerRadius = portraitLength / 2
         portraitImageView.layer.masksToBounds = true
         if(userObj.portraitUrl != nil){
-            let url : NSURL = NSURL(string: userObj.portraitUrl!)!
-            let imageData = NSData(contentsOfURL: url)
+            let url : URL = URL(string: userObj.portraitUrl!)!
+            let imageData = try? Data(contentsOf: url)
             if imageData != nil {
                 portraitImageView.image = UIImage(data: imageData!)
             }else{
@@ -74,16 +74,16 @@ class ContactsTableViewCell: UITableViewCell {
         
     }
     
-    func checkedUser(sender: UIButton){
+    func checkedUser(_ sender: UIButton){
         if sender.backgroundColor != checkedBtnBackgroundColor {
             sender.backgroundColor = checkedBtnBackgroundColor
             let checkedImgView = UIImageView(frame: CGRect(x: 5, y: 5, width: checkBtnLength - 10, height: checkBtnLength - 10))
             checkedImgView.image = UIImage(named: "btn_checked")
-            checkedImgView.contentMode = UIViewContentMode.ScaleAspectFit
+            checkedImgView.contentMode = UIViewContentMode.scaleAspectFit
             checkBtn.addSubview(checkedImgView)
             checkBtnDelegate?.checked(userObj.nick!)
         }else {
-            sender.backgroundColor = UIColor.whiteColor()
+            sender.backgroundColor = UIColor.white
             sender.removeAllSubviews()
             checkBtnDelegate?.unchecked(userObj.nick!)
         }
@@ -94,7 +94,7 @@ class ContactsTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

@@ -15,7 +15,7 @@ class PostCellFrame: NSObject {
     let postContentLeftSpace: CGFloat = 80
     let postContentRightSpace: CGFloat = 5
     let postContentButtomSpace: CGFloat = 15
-    let postLabelFont: UIFont = UIFont.systemFontOfSize(14)
+    let postLabelFont: UIFont = UIFont.systemFont(ofSize: 14)
     let postLabelLeftSpace: CGFloat = 10
     let postLabelTopSpace: CGFloat = 0
 
@@ -39,7 +39,7 @@ class PostCellFrame: NSObject {
             postLabel.frame = CGRect(x: postLabelLeftSpace, y: postLabelTopSpace, width: postContentWidth - postLabelLeftSpace*2, height: postLabelSize.height)
             postLabel.text = post.body
             postLabel.numberOfLines = 2
-            postLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+            postLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
             postLabel.sizeToFit()
             cellHeight = postLabel.frame.height
         }

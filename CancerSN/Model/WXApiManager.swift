@@ -8,41 +8,34 @@
 
 import Foundation
 
+//protocol WXReturnDelegate {
+//    func getWXAccessToken(result: String)
+//}
+
 class WXApiManager: NSObject, WXApiDelegate {
+/*private static var __once: () = { () -> Void in
+                SingletonStruct.singleton = WXApiManager()
+            }()*/
+//    var wxReturnDelegate: WXReturnDelegate?
     class var sharedInstance: WXApiManager {
         
         get {
             struct SingletonStruct {
-                static var onceToken: dispatch_once_t = 0
+                static var onceToken: Int = 0
                 static var singleton: WXApiManager? = nil
             }
-            dispatch_once(&SingletonStruct.onceToken) { () -> Void in
+            _ = { () -> Void in
                 SingletonStruct.singleton = WXApiManager()
-            }
-            
+            }()
             return SingletonStruct.singleton!
         }
     }
     
-    func onReq(req: BaseReq!) {
+    func onReq(_ req: BaseReq!) {
         print("on req")
     }
     
-    func onResp(resp: BaseResp!) {
-        print("on resp")
-        //        if ([resp isKindOfClass:[SendAuthResp class]]) {
-        //            if (_delegate
-        //            && [_delegate respondsToSelector:@selector(managerDidRecvAuthResponse:)]) {
-        //                SendAuthResp *authResp = (SendAuthResp *)resp;
-        //                [_delegate managerDidRecvAuthResponse:authResp];
-        //            }
-        //        }
-        if resp.isKindOfClass(SendAuthResp) {
-            let authResp = resp as! SendAuthResp
-            let code: String = authResp.code
-            let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&grant_type=authorization_code&code=" + code
-            NetRequest.sharedInstance.GET_A(url, parameters: [:])
-        }
+    func onResp(_ resp: BaseResp!) {
     }
 
 }

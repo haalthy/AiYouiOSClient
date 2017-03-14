@@ -7,6 +7,30 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 // MARK: - 配置常量
 
@@ -36,7 +60,7 @@ let kContentFontSize: CGFloat = 16.0
 
 // 得到病变位置
 
-func getPatientLocation(name: String) -> String {
+func getPatientLocation(_ name: String) -> String {
 
     var resultStr: String = ""
     switch name {
@@ -75,7 +99,7 @@ func getPatientLocation(name: String) -> String {
 
 // 得到病例分析
 
-func getPathological(name: String) -> String {
+func getPathological(_ name: String) -> String {
 
     var resultStr: String = ""
     switch name {
@@ -99,7 +123,7 @@ func getPathological(name: String) -> String {
 
 // 得到病例期号
 
-func getPatientNum(index: Int) -> String {
+func getPatientNum(_ index: Int) -> String {
 
     var resultStr: String = ""
     switch index {
@@ -128,9 +152,9 @@ func getPatientNum(index: Int) -> String {
 }
 
 protocol FeedTableCellDelegate{
-    func checkUserProfile(username: String)
+    func checkUserProfile(_ username: String)
     
-    func checkPostComment(postID: Int)
+    func checkPostComment(_ postID: Int)
 }
 
 class FeedCell: UITableViewCell {
@@ -158,7 +182,7 @@ class FeedCell: UITableViewCell {
         
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -176,11 +200,12 @@ class FeedCell: UITableViewCell {
         let imageURL = (feedModel?.portraitURL)! + "@80h_80w_1e"
         portraitView.addImageCache(imageURL, placeHolder: "defaultUserImage")
         portraitView.frame = CGRECT(5, 5, portraitButton.frame.width - 10, portraitButton.frame.height - 10)
+        portraitButton.backgroundColor = UIColor.white
         portraitButton.addSubview(portraitView)
         
         portraitView.layer.cornerRadius = portraitView.bounds.size.height / 2
         portraitView.clipsToBounds = true
-        portraitButton.addTarget(self, action: "checkUserProfile:", forControlEvents: UIControlEvents.TouchUpInside)
+        portraitButton.addTarget(self, action: #selector(FeedCell.checkUserProfile(_:)), for: UIControlEvents.touchUpInside)
         self.addSubview(portraitButton)
         
         // 2.昵称
@@ -188,7 +213,7 @@ class FeedCell: UITableViewCell {
         nickname.text = feedModel?.displayname
         nickname.frame = (self.feedOriginFrame?.nicknameFrame)!
         nickname.textColor = kNicknameColor
-        nickname.font = UIFont.systemFontOfSize(kCellNicknameFontSize)
+        nickname.font = UIFont.systemFont(ofSize: kCellNicknameFontSize)
         self.addSubview(nickname)
         
         // 3.帖子类别
@@ -196,7 +221,7 @@ class FeedCell: UITableViewCell {
         feedTypeLabel.text = getFeedTypeName((feedModel?.type)!, isBroadcast: (feedModel?.isBroadcast)!)
         feedTypeLabel.frame = (self.feedOriginFrame?.feedTypeFrame)!
         feedTypeLabel.textColor = kAgeColor
-        feedTypeLabel.font = UIFont.systemFontOfSize(kFeedTypeFontSize)
+        feedTypeLabel.font = UIFont.systemFont(ofSize: kFeedTypeFontSize)
         self.addSubview(feedTypeLabel)
         
         // 4.性别
@@ -216,7 +241,6 @@ class FeedCell: UITableViewCell {
         // 5.年龄
         let ageLabel = UILabel()
         ageLabel.text = String.intToString((feedModel?.age)!)
-        //print(String(feedModel?.age))
         ageLabel.frame = (self.feedOriginFrame?.ageFrame)!
         ageLabel.textColor = kAgeColor
         self.addSubview(ageLabel)
@@ -241,7 +265,7 @@ class FeedCell: UITableViewCell {
         if (feedModel?.highlight) != "" {
             
             // 6.标签
-            var highTagsArr: [String] = ((feedModel?.highlight)?.componentsSeparatedByString(" "))!
+            let highTagsArr: [String] = ((feedModel?.highlight)?.components(separatedBy: " "))!
             var newHighlightTagsArr: [String] = []
             for highTag in highTagsArr {
                 if (highTag != "") && (highTag != "<null>") {
@@ -260,7 +284,7 @@ class FeedCell: UITableViewCell {
             clinicLabel.text = feedModel?.clinicReport
             clinicLabel.frame = (self.feedOriginFrame?.clinicFrame)!
             clinicLabel.textColor = kClinicColor
-            clinicLabel.font = UIFont.systemFontOfSize(16)
+            clinicLabel.font = UIFont.systemFont(ofSize: 16)
             self.addSubview(clinicLabel)
         }
         
@@ -271,13 +295,13 @@ class FeedCell: UITableViewCell {
         contentLabel.text = feedModel?.body
         contentLabel.frame = (self.feedOriginFrame?.contentFrame)!
         contentLabel.textColor = kContentColor
-        contentLabel.font = UIFont.systemFontOfSize(kContentFontSize)
+        contentLabel.font = UIFont.systemFont(ofSize: kContentFontSize)
         if isShowFullText {
             contentLabel.numberOfLines = 0
-            contentLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            contentLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         }else{
             contentLabel.numberOfLines = numberOfLinesInFeedVC
-            contentLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+            contentLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
         }
 
         self.addSubview(contentLabel)
@@ -288,7 +312,7 @@ class FeedCell: UITableViewCell {
             let picsView = FeedPhotosView(feedModel: feedModel!, frame: self.feedOriginFrame!.photosFrame!)
             picsView.frame = (self.feedOriginFrame?.photosFrame)!
             
-            let originPicArr: Array<String> = ((feedModel!.imageURL).componentsSeparatedByString(";"))
+            let originPicArr: Array<String> = ((feedModel!.imageURL).components(separatedBy: ";"))
             var picArr: Array<String> = []
             for picurl in originPicArr {
                 if picurl != "" {
@@ -307,20 +331,20 @@ class FeedCell: UITableViewCell {
             tagsLabel.textColor = kAgeColor
             // 获取内容
             tagsLabel.text = self.showTagsWithString((feedModel?.tags)!)
-            tagsLabel.font = UIFont.systemFontOfSize(kContentFontSize)
+            tagsLabel.font = UIFont.systemFont(ofSize: kContentFontSize)
             self.addSubview(tagsLabel)
         }
         
         // 9.toolbar
         let toolsView: PostFeedToolBar = PostFeedToolBar()
         toolsView.frame = (self.feedOriginFrame?.toolBarFrame)!
-        toolsView.backgroundColor = UIColor.clearColor()
+        toolsView.backgroundColor = UIColor.clear
         toolsView.initVariables(feedModel!)
         toolsView.layoutWithContent()
         self.addSubview(toolsView)
         
         // 10.分割线
-        let cellSeparateView: UIView = UIView(frame: CGRect(x: 0, y: CGRectGetMaxY(toolsView.frame) + 9, width: SCREEN_WIDTH, height: 0.8))
+        let cellSeparateView: UIView = UIView(frame: CGRect(x: 0, y: toolsView.frame.maxY + 9, width: SCREEN_WIDTH, height: 0.8))
         cellSeparateView.backgroundColor = RGB(221, 221, 224)
         self.addSubview(cellSeparateView)
     }
@@ -329,9 +353,9 @@ class FeedCell: UITableViewCell {
     
     // MARK: tag标签处理
     
-    func showTagsWithString(tagsStr: String) -> String {
+    func showTagsWithString(_ tagsStr: String) -> String {
     
-        let tagArr: Array<String> = tagsStr.componentsSeparatedByString("**")
+        let tagArr: Array<String> = tagsStr.components(separatedBy: "**")
         
         var resultStr: String = "Tag: "
         
@@ -346,12 +370,12 @@ class FeedCell: UITableViewCell {
         
         let result: NSString = resultStr as NSString
         // 去除最后一个逗号
-        resultStr = result.substringToIndex(result.length - 2)
+        resultStr = result.substring(to: result.length - 2)
         
         return resultStr
     }
     
-    func checkUserProfile(sender: UIButton){
+    func checkUserProfile(_ sender: UIButton){
         feedTableCellDelegate?.checkUserProfile(((self.feedOriginFrame?.feedModel)?.insertUsername)!)
     }
     

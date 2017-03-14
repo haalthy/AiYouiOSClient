@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 let cellFeedIdentifier = "FeedCell"
 
 class FeedTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FeedTableCellDelegate  {
+    
+    //
+    var context: NSManagedObjectContext?
 
     // 控件关联
     @IBOutlet weak var tableView: UITableView!
@@ -19,7 +23,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
     
     // 自定义变量
     
@@ -27,7 +31,7 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     let defaultMaxID: Int = 99999999
     var pageIndex: Int = 0
-    var countPerPage: Int  = 5
+    var countPerPage: Int  = 10
     var maxID: Int = 0
 
     override func viewDidLoad() {
@@ -41,41 +45,110 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
 
     // MARK: - Init Variables
     
+    func getFeedsFromLocalDB() {
+        let feedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: tableFeed)
+        feedRequest.returnsDistinctResults = true
+        feedRequest.returnsObjectsAsFaults = false
+        feedRequest.sortDescriptors = [NSSortDescriptor(key: propertyDateInserted, ascending: false)]
+        feedRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+        let feedList = try! context!.fetch(feedRequest)
+        if feedList.count > 0 {
+        let homeData = PostFeedStatus.jsonToModelList(feedList as NSObject) as! Array<PostFeedStatus>
+        self.dataArr.removeAllObjects()
+        self.changeDataToFrame(homeData)
+        }
+    }
+    
+    func saveFeedToLocalDB(_ feedList: Array<PostFeedStatus>) {
+        for feed in feedList {
+//            let feed = data as! PostFeedStatus
+            let feedLocalDBItem = NSEntityDescription.insertNewObject(forEntityName: tableFeed, into: context!)
+            feedLocalDBItem.setValue(feed.dateUpdated, forKey: propertyDateUpdated)
+            feedLocalDBItem.setValue(feed.isActive, forKey: propertyIsActive)
+            feedLocalDBItem.setValue(feed.treatmentID, forKey: propertyFeedTreatmentID)
+            feedLocalDBItem.setValue(feed.countComments, forKey: propertyCountComments)
+            feedLocalDBItem.setValue(feed.countBookmarks, forKey: propertyCountBookmarks)
+            feedLocalDBItem.setValue(feed.countViews, forKey: propertyCountViews)
+            feedLocalDBItem.setValue(feed.closed, forKey: propertyClosed)
+            feedLocalDBItem.setValue(feed.isBroadcast, forKey: propertyIsBroadcast)
+            feedLocalDBItem.setValue(feed.dateInserted, forKey: propertyDateInserted)
+            feedLocalDBItem.setValue(feed.type, forKey: propertyType)
+            feedLocalDBItem.setValue(feed.patientStatusID, forKey: propertyFeedPatientStatusID)
+            feedLocalDBItem.setValue(feed.gender, forKey: propertyGender)
+            feedLocalDBItem.setValue(feed.pathological, forKey: propertyPathological)
+            feedLocalDBItem.setValue(feed.age, forKey: propertyAge)
+            feedLocalDBItem.setValue(feed.cancerType, forKey: propertyCancerType)
+            feedLocalDBItem.setValue(feed.metastasis, forKey: propertyMetastasis)
+            feedLocalDBItem.setValue(feed.stage, forKey: propertyStage)
+            feedLocalDBItem.setValue(feed.hasImage, forKey: propertyHasImage)
+            feedLocalDBItem.setValue(feed.highlight, forKey: propertyHighlight)
+            feedLocalDBItem.setValue(feed.clinicReport, forKey: propertyClinicReport)
+            feedLocalDBItem.setValue(feed.imageURL, forKey: propertyImageURL)
+            feedLocalDBItem.setValue(feed.portraitURL, forKey: propertyPortraitURL)
+            feedLocalDBItem.setValue(feed.body, forKey: propertyBody)
+            feedLocalDBItem.setValue(feed.tags, forKey: propertyTags)
+            feedLocalDBItem.setValue(feed.postID, forKey: propertyPostID)
+            feedLocalDBItem.setValue(feed.insertUsername, forKey: propertyInsertUsername)
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
+    func cleanFeedInLocalDB() {
+        let deleteFeedRequet = NSFetchRequest<NSFetchRequestResult>(entityName: tableFeed)
+        if let results = try? context!.fetch(deleteFeedRequet) {
+            for param in results {
+                context!.delete(param as! NSManagedObject);
+            }
+        }
+        do {
+            try context!.save()
+        } catch _ {
+        }
+    }
+    
     func initVariables() {
 
         dataArr = NSMutableArray()
 
         getAccessToken.getAccessToken()
-
+        
+        let appDel:AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        context = appDel.managedObjectContext!
+        
+        getFeedsFromLocalDB()
     }
     
     func getFeedListURL()->String{
         var feedListURL: String = ""
         getAccessToken.getAccessToken()
-        let accessToken = profileSet.objectForKey(accessNSUserData)
+        let accessToken = profileSet.object(forKey: accessNSUserData)
         if accessToken != nil{
             feedListURL = getFeedsURL + "?access_token=" + (accessToken as! String)
         }else{
             feedListURL = getBroadcastsByTagsURL
         }
+        print(feedListURL)
         return feedListURL
     }
     
-    func getFeedListParameter(since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
+    func getFeedListParameter(_ since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
         let parameter = NSMutableDictionary()
         getAccessToken.getAccessToken()
-        let accessToken = profileSet.objectForKey(accessNSUserData)
+        let accessToken = profileSet.object(forKey: accessNSUserData)
         if accessToken != nil{
-            parameter.setObject(since_id, forKey: "since_id")
-            parameter.setObject(max_id, forKey: "max_id")
-            parameter.setObject(countPerPage, forKey: "count")
-            parameter.setObject(pageIndex, forKey: "page")
-            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+            parameter.setObject(since_id, forKey: "since_id" as NSCopying)
+            parameter.setObject(max_id, forKey: "max_id" as NSCopying)
+            parameter.setObject(countPerPage, forKey: "count" as NSCopying)
+            parameter.setObject(pageIndex, forKey: "page" as NSCopying)
+            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username" as NSCopying)
         }else{
-            parameter.setObject(since_id, forKey: "since_id")
-            parameter.setObject(max_id, forKey: "max_id")
-            parameter.setObject(countPerPage, forKey: "count")
-            parameter.setObject(pageIndex, forKey: "page")
+            parameter.setObject(since_id, forKey: "since_id" as NSCopying)
+            parameter.setObject(max_id, forKey: "max_id" as NSCopying)
+            parameter.setObject(countPerPage, forKey: "count" as NSCopying)
+            parameter.setObject(pageIndex, forKey: "page" as NSCopying)
         }
         return parameter
     }
@@ -86,10 +159,10 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
         // headerView样式
         headerView.layer.borderWidth = 0.7
-        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).CGColor
+        headerView.layer.borderColor = UIColor.init(red: 236/255.0, green: 239/255.0, blue: 237/255.0, alpha: 1).cgColor
         
         // tableView 注册
-        self.tableView.registerClass(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
+        self.tableView.register(FeedCell.self, forCellReuseIdentifier: cellFeedIdentifier)
         
         self.tableView.mj_header.beginRefreshing()
     }
@@ -115,13 +188,15 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         maxID = defaultMaxID
         self.pageIndex = 0
         NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
-            
             success: { (content , message) -> Void in
                 self.pageIndex = 1
                 self.tableView.mj_header.endRefreshing()
                 self.dataArr.removeAllObjects()
+//                print(String(data: content as! Data, encoding: .utf8))
+
                 let dict: NSArray = content as! NSArray
-                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+                print(dict.count)
+                let homeData = PostFeedStatus.jsonToModelList(content) as! Array<PostFeedStatus>
                 if homeData.count > 0 {
                     self.maxID = homeData[0].postID
                     for dataItem in homeData {
@@ -130,9 +205,11 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
                 }
                 self.changeDataToFrame(homeData)
                 self.tableView.reloadData()
-
+                self.cleanFeedInLocalDB()
+                self.saveFeedToLocalDB(homeData)
                 
-            }) { (content, message) -> Void in
+            }
+            ) { (content, message) -> Void in
                 
                 self.tableView.mj_header.endRefreshing()
                 
@@ -146,16 +223,17 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         NetRequest.sharedInstance.POST(getFeedListURL(), parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-                self.pageIndex++
+                self.pageIndex += 1
                 
                 self.tableView.mj_footer.endRefreshing()
 
                 
                 let dict: NSArray = content as! NSArray
-                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
+                let homeData = PostFeedStatus.jsonToModelList(dict as NSObject) as! Array<PostFeedStatus>
                 
                 self.changeDataToFrame(homeData)
                 self.tableView.reloadData()
+                self.saveFeedToLocalDB(homeData)
                 
             }) { (content, message) -> Void in
                 
@@ -168,42 +246,42 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
     
     // 处理数据
     
-    func changeDataToFrame(dataArr: Array<PostFeedStatus>)  {
+    func changeDataToFrame(_ dataArr: Array<PostFeedStatus>)  {
     
         for feedData in dataArr {
         
             let feedFrame: PostFeedFrame = PostFeedFrame(feedModel: feedData, isShowFullText: false)
-            self.dataArr.addObject(feedFrame)
+            self.dataArr.add(feedFrame)
         }
     }
     
     // 进入到查看临床数据
     
-    @IBAction func pushClinicalDataAction(sender: AnyObject) {
+    @IBAction func pushClinicalDataAction(_ sender: AnyObject) {
         
-        performSegueWithIdentifier("EnterClinicTVC", sender: self)
+        performSegue(withIdentifier: "EnterClinicTVC", sender: self)
     }
     
     // 进入到选择标签页
 
-    @IBAction func pushTagAction(sender: AnyObject) {
+    @IBAction func pushTagAction(_ sender: AnyObject) {
 
-        let feedTagsVC = self.storyboard?.instantiateViewControllerWithIdentifier("FeedTagsView")
+        let feedTagsVC = self.storyboard?.instantiateViewController(withIdentifier: "FeedTagsView")
         let navigation: UINavigationController = UINavigationController.init(rootViewController: feedTagsVC!)
-        self.presentViewController(navigation, animated: true, completion: nil)
+        self.present(navigation, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataArr.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
         
@@ -211,9 +289,9 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellFeedIdentifier, forIndexPath: indexPath) as! FeedCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellFeedIdentifier, for: indexPath) as! FeedCell
         cell.feedTableCellDelegate = self
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
@@ -223,54 +301,53 @@ class FeedTableViewController: UIViewController, UITableViewDataSource, UITableV
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let feedFrame: PostFeedFrame = dataArr[indexPath.row] as! PostFeedFrame
         
-        let feedDetailVC: FeedDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        let feedDetailVC: FeedDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "FeedDetailView") as! FeedDetailViewController
         feedDetailVC.feedId = feedFrame.feedModel.postID
         self.navigationController?.pushViewController(feedDetailVC, animated: true)
         
         //self.performSegueWithIdentifier("EnterDetailView", sender: self)
     }
     
-    func checkUserProfile(username: String) {
+    func checkUserProfile(_ username: String) {
         
         getAccessToken.getAccessToken()
         
-        let accessToken = NSUserDefaults.standardUserDefaults().objectForKey(accessNSUserData)
+        let accessToken = UserDefaults.standard.object(forKey: accessNSUserData)
         
         if accessToken != nil {
             
             let storyboard = UIStoryboard(name: "User", bundle: nil)
-            let userProfileController = storyboard.instantiateViewControllerWithIdentifier("UserContent") as! UserProfileViewController
-            userProfileController.profileOwnername = username
+            let userProfileController = storyboard.instantiateViewController(withIdentifier: "UserContent") as! UserProfileViewController
+            userProfileController.profileOwnername = username as NSString?
             self.navigationController?.pushViewController(userProfileController, animated: true)
         }else{
-            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "需要登录才能查看更多用户信息", message: nil, preferredStyle: .alert)
             
-            let cancelAction = UIAlertAction(title: "取消", style: .Default) { (action) in
+            let cancelAction = UIAlertAction(title: "取消", style: .default) { (action) in
                 
             }
             
             alertController.addAction(cancelAction)
-            let loginAction = UIAlertAction(title: "登陆", style: .Cancel) { (action) in
+            let loginAction = UIAlertAction(title: "登陆", style: .cancel) { (action) in
                 let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-                let controller = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as UIViewController
-                self.presentViewController(controller, animated: true, completion: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as UIViewController
+                self.present(controller, animated: true, completion: nil)
             }
             alertController.addAction(loginAction)
             
             
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
     }
     
-    func checkPostComment(postID: Int) {
-        print(postID)
+    func checkPostComment(_ postID: Int) {
     }
 }

@@ -15,7 +15,7 @@ let hisProfileStr: String = String("他发布的")
 let processHeaderStr: String = String("治疗过程")
 
 //nickname
-let nicknameFont = UIFont.systemFontOfSize(14)
+let nicknameFont = UIFont.systemFont(ofSize: 14)
 let nicknameColor = UIColor.init(red: 51 / 255.0, green: 51 / 255.0, blue: 51 / 255.0, alpha: 1)
 
 //关注 按钮
@@ -28,7 +28,7 @@ let followBtnBorderWidth: CGFloat = CGFloat(1)
 let followBtnBorderColor: UIColor = UIColor.init(red:228 / 255.0, green:228 / 255.0, blue:228 / 255.0, alpha:1)
 
 //chart图表内框架设置
-let userProfileChartHeaderFontSize: UIFont = UIFont.systemFontOfSize(12)
+let userProfileChartHeaderFontSize: UIFont = UIFont.systemFont(ofSize: 12)
 
 //chart header左距离
 let chartHeaderLeftSpace: CGFloat = CGFloat(30)
@@ -43,18 +43,18 @@ let chartBackgroundColor : UIColor = UIColor.init(red:242 / 255.0, green:248 / 2
 //treatment header title
 let treatmentHeaderStr: String = "治疗过程"
 //“治疗过程”字体
-let treatmentHeaderFont: UIFont = UIFont.systemFontOfSize(13)
+let treatmentHeaderFont: UIFont = UIFont.systemFont(ofSize: 13)
 //"治疗过程"左边距
 let treatmentHeaderLeftSpace: CGFloat = CGFloat(15)
 //"治疗过程"上边距
 let treatmentHeaderTopSpace: CGFloat = CGFloat(16)
 
 //treatment title
-let treatmentTitleFont: UIFont = UIFont.systemFontOfSize(17)
+let treatmentTitleFont: UIFont = UIFont.systemFont(ofSize: 17)
 let treatmentTitleColor : UIColor = UIColor.init(red:102 / 255.0, green:102 / 255.0, blue:102 / 255.0, alpha:1)
-let dosageFont: UIFont = UIFont.systemFontOfSize(13)
+let dosageFont: UIFont = UIFont.systemFont(ofSize: 13)
 let dosageColor : UIColor = UIColor.init(red:153 / 255.0, green:153 / 255.0, blue:143 / 255, alpha:1)
-let dateFont: UIFont = UIFont.systemFontOfSize(12)
+let dateFont: UIFont = UIFont.systemFont(ofSize: 12)
 let dateColor : UIColor = UIColor.init(red:204 / 255.0, green:204 / 255.0, blue:204 / 255.0, alpha:1)
 //treatment frame
 let treatmentTitleLeftSpace: CGFloat = CGFloat(15)
@@ -88,7 +88,7 @@ let patientstatusHighlightRightSpace: CGFloat = CGFloat(15)
 let patientstatusHighlightButtonVerticalEdge: CGFloat = CGFloat(2.5)
 let patientstatusHighlightButtonHorizonEdge: CGFloat = CGFloat(4)
 let patientstatusHighlightButtonHeight: CGFloat = CGFloat(20)
-let patientstatusHighlightFont = UIFont.systemFontOfSize(12)
+let patientstatusHighlightFont = UIFont.systemFont(ofSize: 12)
 let patientstatusHighlightColor:UIColor = UIColor.init(red:51 / 255.0, green:51 / 255.0, blue:51 / 255.0, alpha:1)
 let patientstatusHighlightBorderWidth: CGFloat = CGFloat.init(1)
 let patientstatusHighlightBorderColor: UIColor = UIColor.init(red:153 / 255.0, green:153 / 255.0, blue:153 / 255.0, alpha:1)
@@ -99,7 +99,7 @@ let patientstatusDetailButtomSpace: CGFloat = CGFloat(13)
 let patientstatusDetailRightSpace: CGFloat = CGFloat(16)
 let patientstatusDetailTopSpace: CGFloat = CGFloat(7.5)
 
-let patientstatusDetailFont: UIFont = UIFont.systemFontOfSize(13)
+let patientstatusDetailFont: UIFont = UIFont.systemFont(ofSize: 13)
 let patientstatusDetailColor: UIColor = UIColor.init(red:153 / 255.0, green:153 / 255.0, blue:153 / 255.0, alpha:1)
 
 let patientstatusDateRightSpace: CGFloat = CGFloat(15)
@@ -119,14 +119,14 @@ let patientstatusSeperateStr: String = String("::")
 //与我相关
 let cellHeight: CGFloat = CGFloat(49)
 let cellTextColor: UIColor = UIColor.init(red: 51 / 255.0, green: 51 / 255.0, blue: 51 / 255.0, alpha: 1)
-let cellTextFont: UIFont = UIFont.systemFontOfSize(15)
+let cellTextFont: UIFont = UIFont.systemFont(ofSize: 15)
 //退出登录
 let logoutCellHeight: CGFloat = CGFloat(105)
 let logoutBtnTopSpace: CGFloat = CGFloat(30)
 let logoutBtnLeftSpace: CGFloat = CGFloat(15)
 let logoutBtnRightSpce: CGFloat = CGFloat(15)
 let logoutBtnHeight: CGFloat = CGFloat(45)
-let logoutBtnTextFont: UIFont = UIFont.systemFontOfSize(17)
+let logoutBtnTextFont: UIFont = UIFont.systemFont(ofSize: 17)
 
 //chart图表
 let chartLeftSpace: CGFloat = CGFloat(18)
@@ -138,7 +138,7 @@ let chartButtomLineColor: UIColor = UIColor.init(red:204 / 255.0, green:204 / 25
 let chartDateLabelWidth: CGFloat = CGFloat(30)
 let chartDateLabelHeight: CGFloat = CGFloat(9)
 let chartDateTopSpace: CGFloat = CGFloat(2)
-let chartDateFont = UIFont.systemFontOfSize(9)
+let chartDateFont = UIFont.systemFont(ofSize: 9)
 let dataValueMinY: CGFloat = CGFloat(30)
 let dataValueMaxY: CGFloat = CGFloat(130)
 let dataMarkWidth: CGFloat = CGFloat(8)
@@ -146,6 +146,6 @@ let dataMarkBorderWidth: CGFloat = CGFloat(2)
 let dataValueLblW: CGFloat = CGFloat(33)
 let dataValueLblH: CGFloat = CGFloat(18)
 let dataValueSpace: CGFloat = CGFloat(2.5)
-let dataMarkLblFont: UIFont = UIFont.systemFontOfSize(10)
+let dataMarkLblFont: UIFont = UIFont.systemFont(ofSize: 10)
 let dataTrendLineWidth: CGFloat = CGFloat(1.5)
 

@@ -18,7 +18,7 @@ class CommentViewController: UIViewController {
     
     let keychainAccess = KeychainAccess()
     let getAccessToken = GetAccessToken()
-    let profileSet = NSUserDefaults.standardUserDefaults()
+    let profileSet = UserDefaults.standard
     
     // 自定义变量
     
@@ -36,10 +36,10 @@ class CommentViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         getAccessToken.getAccessToken()
-        if profileSet.objectForKey(accessNSUserData) == nil{
+        if profileSet.object(forKey: accessNSUserData) == nil{
             let storyboard = UIStoryboard(name: "Registeration", bundle: nil)
-            let rootController = storyboard.instantiateViewControllerWithIdentifier("LoginEntry") as! UINavigationController
-            self.presentViewController(rootController, animated: true, completion: nil)
+            let rootController = storyboard.instantiateViewController(withIdentifier: "LoginEntry") as! UINavigationController
+            self.present(rootController, animated: true, completion: nil)
         }else{
             initVariables()
             initRefresh()
@@ -60,19 +60,19 @@ class CommentViewController: UIViewController {
     
     func initContentView() {
     
-        self.tableView.registerNib(UINib(nibName: cellCommentIdentifier, bundle: nil), forCellReuseIdentifier: cellCommentIdentifier)
+        self.tableView.register(UINib(nibName: cellCommentIdentifier, bundle: nil), forCellReuseIdentifier: cellCommentIdentifier)
         self.tableView.mj_header.beginRefreshing()
     }
 
-    func getFeedListParameter(since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
+    func getFeedListParameter(_ since_id: Int, max_id: Int, pageIndex: Int)-> NSDictionary{
         let parameter = NSMutableDictionary()
-        let accessToken = profileSet.objectForKey(accessNSUserData)
+        let accessToken = profileSet.object(forKey: accessNSUserData)
         if accessToken != nil{
-            parameter.setObject(since_id, forKey: "since_id")
-            parameter.setObject(max_id, forKey: "max_id")
-            parameter.setObject(countPerPage, forKey: "count")
-            parameter.setObject(pageIndex, forKey: "page")
-            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username")
+            parameter.setObject(since_id, forKey: "since_id" as NSCopying)
+            parameter.setObject(max_id, forKey: "max_id" as NSCopying)
+            parameter.setObject(countPerPage, forKey: "count" as NSCopying)
+            parameter.setObject(pageIndex, forKey: "page" as NSCopying)
+            parameter.setObject(keychainAccess.getPasscode(usernameKeyChain)!, forKey: "username" as NSCopying)
 
         }
         return parameter
@@ -107,14 +107,14 @@ class CommentViewController: UIViewController {
                 self.tableView.mj_header.endRefreshing()
                 self.commentData.removeAllObjects()
                 let dict: NSArray = content as! NSArray
-                let homeData = UserCommentModel.jsonToModelList(dict as Array) as! Array<UserCommentModel>
+                let homeData = UserCommentModel.jsonToModelList(dict) as! Array<UserCommentModel>
                 if homeData.count > 0 {
                     self.maxID = homeData[0].postID
                     for dataItem in homeData {
                         self.maxID = self.maxID > dataItem.postID ? self.maxID: dataItem.postID
                     }
                 }
-                self.commentData.addObjectsFromArray(homeData)
+                self.commentData.addObjects(from: homeData)
                 self.tableView.reloadData()
                 
                 
@@ -132,14 +132,14 @@ class CommentViewController: UIViewController {
         NetRequest.sharedInstance.POST(getCommentsByUsernameURL, isToken: true,  parameters:getFeedListParameter(0, max_id: maxID, pageIndex: self.pageIndex) as! Dictionary<String, AnyObject>,
             
             success: { (content , message) -> Void in
-                self.pageIndex++
+                self.pageIndex += 1
                 
                 self.tableView.mj_footer.endRefreshing()
                 
                 
                 let dict: NSArray = content as! NSArray
-                let homeData = PostFeedStatus.jsonToModelList(dict as Array) as! Array<PostFeedStatus>
-                self.commentData.addObjectsFromArray(homeData)
+                let homeData = PostFeedStatus.jsonToModelList(dict) as! Array<PostFeedStatus>
+                self.commentData.addObjects(from: homeData)
                 self.tableView.reloadData()
                 
             }) { (content, message) -> Void in
@@ -156,8 +156,8 @@ class CommentViewController: UIViewController {
         
         NetRequest.sharedInstance.POST(refreshNewCommentURL , isToken: true, parameters: [ "username" : keychainAccess.getPasscode(usernameKeyChain)!], success: { (content, message) -> Void in
             
-            let notification: NSNotification = NSNotification(name: "refreshCommentNoti", object: nil)
-            NSNotificationCenter.defaultCenter().postNotification(notification)
+            let notification: Notification = Notification(name: Notification.Name(rawValue: "refreshCommentNoti"), object: nil)
+            NotificationCenter.default.post(notification)
             
             }) { (content, message) -> Void in
                 
@@ -168,37 +168,37 @@ class CommentViewController: UIViewController {
     
     // MARK: - Table view data source
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(_ tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return self.commentData.count
     }
     
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellCommentIdentifier, forIndexPath: indexPath) as! MentionedCell
+    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellCommentIdentifier, for: indexPath) as! MentionedCell
         
         cell.setContentViewForUserComment(commentData[indexPath.row] as! UserCommentModel)
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
 
         return 70
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let feedStatus: UserCommentModel = commentData[indexPath.row] as! UserCommentModel
         
         let storyBoard: UIStoryboard = UIStoryboard(name: "Feed", bundle: nil)
-        let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewControllerWithIdentifier("FeedDetailView") as! FeedDetailViewController
+        let feedDetailVC: FeedDetailViewController = storyBoard.instantiateViewController(withIdentifier: "FeedDetailView") as! FeedDetailViewController
         feedDetailVC.feedId = feedStatus.postID
         self.navigationController?.pushViewController(feedDetailVC, animated: true)
         
